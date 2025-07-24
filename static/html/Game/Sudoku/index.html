@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>数独游戏</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/jquery-1.9.1.min.js"></script>
+    <script src="assets/js/PracticalFunction.js"></script>
+    <script src="assets/js/shudu.js"></script>
+    <script src="assets/js/view.js"></script>
+    <script src="assets/js/UI.js"></script>
+</head>
+<body style="zoom: 70%;">
+    <div id="container">
+        <table id="sudokuBoard">
+            <tbody>
+                <tr>
+                    <td class="boardCellGroupA">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="0"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="1"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="2"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="9"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="10"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="11"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="18"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="19"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="20"></div>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="boardCellGroupB">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="3"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="4"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="5"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="12"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="13"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="14"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="21"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="22"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="23"></div>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="boardCellGroupA">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="6"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="7"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="8"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="15"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="16"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="17"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="24"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="25"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="26"></div>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="boardCellGroupB">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="27"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="28"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="29"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="36"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="37"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="38"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="45"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="46"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="47"></div>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="boardCellGroupA">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="30"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="31"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="32"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="39"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="40"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="41"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="48"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="49"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="50"></div>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="boardCellGroupB">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="33"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="34"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="35"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="42"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="43"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="44"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="51"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="52"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="53"></div>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="boardCellGroupA">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="54"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="55"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="56"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="63"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="64"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="65"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="72"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="73"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="74"></div>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="boardCellGroupB">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="57"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="58"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="59"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="66"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="67"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="68"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="75"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="76"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="77"></div>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="boardCellGroupA">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="60"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="61"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="62"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="69"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="70"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="71"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="boardCell">
+                                        <div id="78"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="79"></div>
+                                    </td>
+                                    <td class="boardCell">
+                                        <div id="80"></div>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="buttons">
+            <ul>
+                <li id="refresh"><a href="#" id="">刷新</a></li>
+                <li id="level1"><a href="#">等级1</a></li>
+                <li id="level2"><a href="#">等级2</a></li>
+                <li id="level3"><a href="#">等级3</a></li>
+                <li id="submit"><a href="#">提交</a></li>
+            </ul>
+            <div id="button-hover"></div>
+        </div>
+    </div>
+    <div id="message-container">
+        <div id="message">
+            <p id="message-info" >错误：在第4行的第9个数和第0个数冲突!</p>
+            <div><a href="#" id="info-button">确定</a></div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en" data-color-mode="dark">
+<head>
+<meta charset="utf-8">
+<title>Oracle 备忘清单
+ &#x26;  oracle cheatsheet &#x26;  Quick Reference</title>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta description="入门，为开发人员分享快速参考备忘单。">
+<meta keywords="oracle,reference,Quick,Reference,cheatsheet,cheat,sheet">
+<meta name="author" content="jaywcjlove">
+<meta name="license" content="MIT">
+<meta name="funding" content="https://jaywcjlove.github.io/#/sponsor">
+<meta rel="apple-touch-icon" href="../icons/touch-icon-iphone.png">
+<meta rel="apple-touch-icon" sizes="152x152" href="../icons/touch-icon-ipad.png">
+<meta rel="apple-touch-icon" sizes="180x180" href="../icons/touch-icon-iphone.png">
+<meta rel="apple-touch-icon" sizes="167x167" href="../icons/touch-icon-ipad-retina.png">
+<meta rel="apple-touch-icon" sizes="120x120" href="../icons/touch-icon-iphone-retina.png">
+<link rel="icon" href="../icons/favicon.svg" type="image/svg+xml">
+<link href="../style/style.css" rel="stylesheet">
+<link href="../style/katex.css" rel="stylesheet">
+</head>
+<body><nav class="header-nav"><div class="max-container"><a href="../index.html" class="logo"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" height="1em" width="1em">
+  <path d="m21.66 10.44-.98 4.18c-.84 3.61-2.5 5.07-5.62 4.77-.5-.04-1.04-.13-1.62-.27l-1.68-.4c-4.17-.99-5.46-3.05-4.48-7.23l.98-4.19c.2-.85.44-1.59.74-2.2 1.17-2.42 3.16-3.07 6.5-2.28l1.67.39c4.19.98 5.47 3.05 4.49 7.23Z" fill="#c9d1d9"></path>
+  <path d="M15.06 19.39c-.62.42-1.4.77-2.35 1.08l-1.58.52c-3.97 1.28-6.06.21-7.35-3.76L2.5 13.28c-1.28-3.97-.22-6.07 3.75-7.35l1.58-.52c.41-.13.8-.24 1.17-.31-.3.61-.54 1.35-.74 2.2l-.98 4.19c-.98 4.18.31 6.24 4.48 7.23l1.68.4c.58.14 1.12.23 1.62.27Zm2.43-8.88c-.06 0-.12-.01-.19-.02l-4.85-1.23a.75.75 0 0 1 .37-1.45l4.85 1.23a.748.748 0 0 1-.18 1.47Z" fill="#228e6c"></path>
+  <path d="M14.56 13.89c-.06 0-.12-.01-.19-.02l-2.91-.74a.75.75 0 0 1 .37-1.45l2.91.74c.4.1.64.51.54.91-.08.34-.38.56-.72.56Z" fill="#228e6c"></path>
+</svg>
+<span class="title">Quick Reference</span></a><div class="menu"><a href="javascript:void(0);" class="searchbtn" id="searchbtn"><svg xmlns="http://www.w3.org/2000/svg" height="1em" width="1em" viewBox="0 0 18 18">
+  <path fill="currentColor" d="M17.71,16.29 L14.31,12.9 C15.4069846,11.5024547 16.0022094,9.77665502 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 C9.77665502,16.0022094 11.5024547,15.4069846 12.9,14.31 L16.29,17.71 C16.4777666,17.8993127 16.7333625,18.0057983 17,18.0057983 C17.2666375,18.0057983 17.5222334,17.8993127 17.71,17.71 C17.8993127,17.5222334 18.0057983,17.2666375 18.0057983,17 C18.0057983,16.7333625 17.8993127,16.4777666 17.71,16.29 Z M2,8 C2,4.6862915 4.6862915,2 8,2 C11.3137085,2 14,4.6862915 14,8 C14,11.3137085 11.3137085,14 8,14 C4.6862915,14 2,11.3137085 2,8 Z"></path>
+</svg><span>搜索</span><span>⌘K</span></a><a href="https://github.com/jaywcjlove/reference/blob/main/docs/oracle.md" class="" target="__blank"><svg viewBox="0 0 36 36" fill="currentColor" height="1em" width="1em"><path d="m33 6.4-3.7-3.7a1.71 1.71 0 0 0-2.36 0L23.65 6H6a2 2 0 0 0-2 2v22a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V11.76l3-3a1.67 1.67 0 0 0 0-2.36ZM18.83 20.13l-4.19.93 1-4.15 9.55-9.57 3.23 3.23ZM29.5 9.43 26.27 6.2l1.85-1.85 3.23 3.23Z"></path><path fill="none" d="M0 0h36v36H0z"></path></svg><span>编辑</span></a><button id="darkMode" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="light" height="1em" width="1em">
+  <path d="M6.995 12c0 2.761 2.246 5.007 5.007 5.007s5.007-2.246 5.007-5.007-2.246-5.007-5.007-5.007S6.995 9.239 6.995 12zM11 19h2v3h-2zm0-17h2v3h-2zm-9 9h3v2H2zm17 0h3v2h-3zM5.637 19.778l-1.414-1.414 2.121-2.121 1.414 1.414zM16.242 6.344l2.122-2.122 1.414 1.414-2.122 2.122zM6.344 7.759 4.223 5.637l1.415-1.414 2.12 2.122zm13.434 10.605-1.414 1.414-2.122-2.122 1.414-1.414z"></path>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="dark" height="1em" width="1em">
+  <path d="M12 11.807A9.002 9.002 0 0 1 10.049 2a9.942 9.942 0 0 0-5.12 2.735c-3.905 3.905-3.905 10.237 0 14.142 3.906 3.906 10.237 3.905 14.143 0a9.946 9.946 0 0 0 2.735-5.119A9.003 9.003 0 0 1 12 11.807z"></path>
+</svg>
+</button><script src="../js/dark.js?v=1.8.1"></script><a href="https://github.com/jaywcjlove/reference" class="" target="__blank"><svg viewBox="0 0 16 16" fill="currentColor" height="1em" width="1em"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></nav><div class="wrap h1body-exist max-container"><header class="wrap-header h1wrap"><h1 id="oracle-备忘清单"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="1em" width="1em">
+  <path fill="currentColor" fill-rule="evenodd" d="M7.957 18.912A6.953 6.953 0 0 1 1 11.962 6.963 6.963 0 0 1 7.957 5h8.087A6.961 6.961 0 0 1 23 11.962a6.952 6.952 0 0 1-6.956 6.95H7.957Zm7.907-2.453a4.497 4.497 0 0 0 4.503-4.497 4.507 4.507 0 0 0-4.503-4.508H8.136a4.507 4.507 0 0 0-4.503 4.508 4.498 4.498 0 0 0 4.503 4.497h7.728Z"></path>
+</svg>
+<a aria-hidden="true" tabindex="-1" href="#oracle-备忘清单"><span class="icon icon-link"></span></a>Oracle 备忘清单</h1><div class="wrap-body">
+</div></header><div class="menu-tocs"><div class="menu-btn"><svg aria-hidden="true" fill="currentColor" height="1em" width="1em" viewBox="0 0 16 16" version="1.1" data-view-component="true">
+  <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+</svg></div><div class="menu-modal"><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#入门">入门</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#select-语句">SELECT 语句</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#select-into-语句">SELECT INTO 语句</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#insert-语句">INSERT 语句</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#delete-语句">DELETE 语句</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#update-语句">UPDATE 语句</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#sequences">SEQUENCES</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#create-sequence">CREATE SEQUENCE</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#alter-sequence">ALTER SEQUENCE</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#从字符串生成查询">从字符串生成查询</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#字符串操作">字符串操作</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#instr">Instr</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#replace">Replace</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#substr">Substr</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#trim">Trim</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#ddl-sql">DDL SQL</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#创建表">创建表</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#添加列">添加列</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#修改列">修改列</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#删除列">删除列</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#约束类型和代码">约束类型和代码</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#显示约束">显示约束</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#选择参照约束">选择参照约束</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#对表设置约束">对表设置约束</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#表上的唯一索引">表上的唯一索引</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#添加唯一约束">添加唯一约束</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#添加外部约束">添加外部约束</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#删除约束">删除约束</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#indexes">INDEXES</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#创建索引">创建索引</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#创建基于函数的索引">创建基于函数的索引</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#重命名索引">重命名索引</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#收集索引的统计信息">收集索引的统计信息</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#删除索引">删除索引</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#dba-相关">DBA 相关</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#创建用户">创建用户</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#授予特权">授予特权</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#更改密码">更改密码</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#查看表空间的名称以及大小">查看表空间的名称以及大小</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#查看还没提交的事务">查看还没提交的事务</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#查看数据库库对象">查看数据库库对象</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#查看数据库的版本">查看数据库的版本</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#查看数据库的创建日期和归档方式">查看数据库的创建日期和归档方式</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#查看控制文件">查看控制文件</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#查看日志文件">查看日志文件</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#查看表空间的使用情況">查看表空间的使用情況</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#捕捉运行很久的sol">捕捉运行很久的SOL</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#另见">另见</a></div></div><div class="h1wrap-body"><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="入门"><a aria-hidden="true" tabindex="-1" href="#入门"><span class="icon icon-link"></span></a>入门</h2><div class="wrap-body">
+<!--rehype:body-class=cols-2-->
+</div></div><div class="h2wrap-body cols-2"><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="select-语句"><a aria-hidden="true" tabindex="-1" href="#select-语句"><span class="icon icon-link"></span></a>SELECT 语句</h3><div class="wrap-body">
+<pre class="wrap-text"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">SELECT</span> <span class="token operator">*</span> 
+</span><span class="code-line"><span class="token keyword">FROM</span> beverages 
+</span><span class="code-line"><span class="token keyword">WHERE</span> field1 <span class="token operator">=</span> <span class="token string">'Kona'</span> 
+</span><span class="code-line">  <span class="token operator">AND</span> field2 <span class="token operator">=</span> <span class="token string">'coffee'</span> 
+</span><span class="code-line">  <span class="token operator">AND</span> field3 <span class="token operator">=</span> <span class="token number">122</span><span class="token punctuation">;</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="select-into-语句"><a aria-hidden="true" tabindex="-1" href="#select-into-语句"><span class="icon icon-link"></span></a>SELECT INTO 语句</h3><div class="wrap-body">
+<pre class="wrap-text"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">SELECT</span> name<span class="token punctuation">,</span> address<span class="token punctuation">,</span> phone_number 
+</span><span class="code-line"><span class="token keyword">INTO</span> v_employee_name<span class="token punctuation">,</span> v_employee_address<span class="token punctuation">,</span> v_employee_phone_number 
+</span><span class="code-line"><span class="token keyword">FROM</span> employee 
+</span><span class="code-line"><span class="token keyword">WHERE</span> employee_id <span class="token operator">=</span> <span class="token number">6</span><span class="token punctuation">;</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+</div></div></div><div class="wrap h3body-not-exist row-span-2"><div class="wrap-header h3wrap"><h3 id="insert-语句"><a aria-hidden="true" tabindex="-1" href="#insert-语句"><span class="icon icon-link"></span></a>INSERT 语句</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-2-->
+<p>使用 VALUES 关键字插入</p>
+<pre class="wrap-text"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> table_name 
+</span><span class="code-line"><span class="token keyword">VALUES</span> <span class="token punctuation">(</span><span class="token string">'Value1'</span><span class="token punctuation">,</span> <span class="token string">'Value2'</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> table_name <span class="token punctuation">(</span>Column1<span class="token punctuation">,</span> Column2<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">)</span> 
+</span><span class="code-line"><span class="token keyword">VALUES</span> <span class="token punctuation">(</span> <span class="token string">'Value1'</span><span class="token punctuation">,</span> <span class="token string">'Value2'</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>使用 SELECT 语句插入</p>
+<pre class="wrap-text"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> table_name
+</span><span class="code-line"><span class="token keyword">SELECT</span> Value1<span class="token punctuation">,</span> Value2<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+</span><span class="code-line"><span class="token keyword">FROM</span> table_name<span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> table_name <span class="token punctuation">(</span>Column1<span class="token punctuation">,</span> Column2<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">SELECT</span> Value1<span class="token punctuation">,</span> Value2<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+</span><span class="code-line"><span class="token keyword">FROM</span> table_name<span class="token punctuation">;</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="delete-语句"><a aria-hidden="true" tabindex="-1" href="#delete-语句"><span class="icon icon-link"></span></a>DELETE 语句</h3><div class="wrap-body">
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">DELETE</span> <span class="token keyword">FROM</span> table_name 
+</span><span class="code-line"><span class="token keyword">WHERE</span> some_column <span class="token operator">=</span> some_value<span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">DELETE</span> <span class="token keyword">FROM</span> customer 
+</span><span class="code-line"><span class="token keyword">WHERE</span> sold <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="update-语句"><a aria-hidden="true" tabindex="-1" href="#update-语句"><span class="icon icon-link"></span></a>UPDATE 语句</h3><div class="wrap-body">
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token comment">-- 更新该表的整个列，设置 `state` 列所有值为 `CA`</span>
+</span><span class="code-line"><span class="token keyword">UPDATE</span> customer <span class="token keyword">SET</span> state<span class="token operator">=</span><span class="token string">'CA'</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token comment">-- 更新表的具体记录eg：</span>
+</span><span class="code-line"><span class="token keyword">UPDATE</span> customer <span class="token keyword">SET</span> name<span class="token operator">=</span><span class="token string">'Joe'</span> <span class="token keyword">WHERE</span> customer_id<span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token comment">-- 当 `paid` 列大于零时，将列 `invoice` 更新为 `paid`</span>
+</span><span class="code-line"><span class="token keyword">UPDATE</span> movies <span class="token keyword">SET</span> invoice<span class="token operator">=</span><span class="token string">'paid'</span> <span class="token keyword">WHERE</span> paid <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="sequences"><a aria-hidden="true" tabindex="-1" href="#sequences"><span class="icon icon-link"></span></a>SEQUENCES</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="create-sequence"><a aria-hidden="true" tabindex="-1" href="#create-sequence"><span class="icon icon-link"></span></a>CREATE SEQUENCE</h3><div class="wrap-body">
+<p>序列的语法是</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> SEQUENCE sequence_name
+</span><span class="code-line">    MINVALUE <span class="token keyword">value</span>
+</span><span class="code-line">    MAXVALUE <span class="token keyword">value</span>
+</span><span class="code-line">    <span class="token keyword">START</span> <span class="token keyword">WITH</span> <span class="token keyword">value</span>
+</span><span class="code-line">    INCREMENT <span class="token keyword">BY</span> <span class="token keyword">value</span>
+</span><span class="code-line">    CACHE <span class="token keyword">value</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>例如</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> SEQUENCE supplier_seq
+</span><span class="code-line">    MINVALUE <span class="token number">1</span>
+</span><span class="code-line">    MAXVALUE <span class="token number">999999999999999999999999999</span>
+</span><span class="code-line">    <span class="token keyword">START</span> <span class="token keyword">WITH</span> <span class="token number">1</span>
+</span><span class="code-line">    INCREMENT <span class="token keyword">BY</span> <span class="token number">1</span>
+</span><span class="code-line">    CACHE <span class="token number">20</span><span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="alter-sequence"><a aria-hidden="true" tabindex="-1" href="#alter-sequence"><span class="icon icon-link"></span></a>ALTER SEQUENCE</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+<p>将序列增加一定数量</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> SEQUENCE <span class="token operator">&#x3C;</span>sequence_name<span class="token operator">></span> INCREMENT <span class="token keyword">BY</span> <span class="token operator">&#x3C;</span><span class="token keyword">integer</span><span class="token operator">></span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">ALTER</span> SEQUENCE seq_inc_by_ten  INCREMENT <span class="token keyword">BY</span> <span class="token number">10</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>改变序列的最大值</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> SEQUENCE <span class="token operator">&#x3C;</span>sequence_name<span class="token operator">></span> MAXVALUE <span class="token operator">&#x3C;</span><span class="token keyword">integer</span><span class="token operator">></span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">ALTER</span> SEQUENCE seq_maxval  MAXVALUE  <span class="token number">10</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>设置序列循环或不循环</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> SEQUENCE <span class="token operator">&#x3C;</span>sequence_name<span class="token operator">></span> <span class="token operator">&#x3C;</span><span class="token keyword">CYCLE</span> <span class="token operator">|</span> NOCYCLE<span class="token operator">></span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">ALTER</span> SEQUENCE seq_cycle NOCYCLE<span class="token punctuation">;</span>
+</span></code></pre>
+<p>配置序列以缓存值</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> SEQUENCE <span class="token operator">&#x3C;</span>sequence_name<span class="token operator">></span> CACHE <span class="token operator">&#x3C;</span><span class="token keyword">integer</span><span class="token operator">></span> <span class="token operator">|</span> NOCACHE<span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">ALTER</span> SEQUENCE seq_cache NOCACHE<span class="token punctuation">;</span>
+</span></code></pre>
+<p>设置是否按顺序返回值</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> SEQUENCE <span class="token operator">&#x3C;</span>sequence_name<span class="token operator">></span> <span class="token operator">&#x3C;</span><span class="token keyword">ORDER</span> <span class="token operator">|</span> NOORDER<span class="token operator">></span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">ALTER</span> SEQUENCE seq_order NOORDER<span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">ALTER</span> SEQUENCE seq_order<span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist row-span-2"><div class="wrap-header h3wrap"><h3 id="从字符串生成查询"><a aria-hidden="true" tabindex="-1" href="#从字符串生成查询"><span class="icon icon-link"></span></a>从字符串生成查询</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-2-->
+<p>有时需要从字符串创建查询</p>
+<pre class="wrap-text"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">PROCEDURE</span> oracle_runtime_query_pcd <span class="token operator">IS</span>
+</span><span class="code-line">    <span class="token keyword">TYPE</span> ref_cursor <span class="token operator">IS</span> REF <span class="token keyword">CURSOR</span><span class="token punctuation">;</span>
+</span><span class="code-line">    l_cursor        ref_cursor<span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line">    v_query         varchar2<span class="token punctuation">(</span><span class="token number">5000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">    v_name          varchar2<span class="token punctuation">(</span><span class="token number">64</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">BEGIN</span>
+</span><span class="code-line">    v_query :<span class="token operator">=</span> <span class="token string">'SELECT name FROM employee WHERE employee_id=5'</span><span class="token punctuation">;</span>
+</span><span class="code-line">    <span class="token keyword">OPEN</span> l_cursor <span class="token keyword">FOR</span> v_query<span class="token punctuation">;</span>
+</span><span class="code-line">    <span class="token keyword">LOOP</span>
+</span><span class="code-line">      <span class="token keyword">FETCH</span> l_cursor <span class="token keyword">INTO</span> v_name<span class="token punctuation">;</span>
+</span><span class="code-line">      <span class="token keyword">EXIT</span> <span class="token keyword">WHEN</span> l_cursor<span class="token operator">%</span>NOTFOUND<span class="token punctuation">;</span>
+</span><span class="code-line">    <span class="token keyword">END</span> <span class="token keyword">LOOP</span><span class="token punctuation">;</span>
+</span><span class="code-line">    <span class="token keyword">CLOSE</span> l_cursor<span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">END</span><span class="token punctuation">;</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>这是一个如何完成动态查询的非常简单的示例</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="字符串操作"><a aria-hidden="true" tabindex="-1" href="#字符串操作"><span class="icon icon-link"></span></a>字符串操作</h3><div class="wrap-body">
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line">length<span class="token punctuation">(</span> string1 <span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<hr>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">SELECT</span> length<span class="token punctuation">(</span><span class="token string">'hello world'</span><span class="token punctuation">)</span> <span class="token keyword">FROM</span> dual<span class="token punctuation">;</span>
+</span></code></pre>
+<p>这将返回 11，因为参数由 11 个字符组成，包括空格</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">SELECT</span> lengthb<span class="token punctuation">(</span><span class="token string">'hello world'</span><span class="token punctuation">)</span> <span class="token keyword">FROM</span> dual<span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">SELECT</span> lengthc<span class="token punctuation">(</span><span class="token string">'hello world'</span><span class="token punctuation">)</span> <span class="token keyword">FROM</span> dual<span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">SELECT</span> length2<span class="token punctuation">(</span><span class="token string">'hello world'</span><span class="token punctuation">)</span> <span class="token keyword">FROM</span> dual<span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">SELECT</span> length4<span class="token punctuation">(</span><span class="token string">'hello world'</span><span class="token punctuation">)</span> <span class="token keyword">FROM</span> dual<span class="token punctuation">;</span>
+</span></code></pre>
+<p>这些也返回 <code>11</code>，因为调用的函数是等价的</p>
+</div></div></div><div class="wrap h3body-not-exist row-span-2"><div class="wrap-header h3wrap"><h3 id="instr"><a aria-hidden="true" tabindex="-1" href="#instr"><span class="icon icon-link"></span></a>Instr</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-2-->
+<p><code>Instr</code>（在字符串中）返回一个整数，该整数指定字符串中子字符串的位置。程序员可以指定他们想要检测的字符串的外观以及起始位置。不成功的搜索返回 <code>0</code></p>
+<pre class="wrap-text"><code class="language-sql code-highlight"><span class="code-line">instr<span class="token punctuation">(</span> string1<span class="token punctuation">,</span> string2<span class="token punctuation">,</span> <span class="token punctuation">[</span> start_position <span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span> nth_appearance <span class="token punctuation">]</span> <span class="token punctuation">)</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<hr>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line">instr<span class="token punctuation">(</span> <span class="token string">'oracle pl/sql cheatsheet'</span><span class="token punctuation">,</span> <span class="token string">'/'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>这将返回 <code>10</code>，因为第一次出现的 <code>/</code> 是第十个字符</p>
+<pre class="wrap-text"><code class="language-sql code-highlight"><span class="code-line">instr<span class="token punctuation">(</span> <span class="token string">'oracle pl/sql cheatsheet'</span><span class="token punctuation">,</span> <span class="token string">'e'</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>这将返回 <code>17</code>，因为第二次出现的 <code>e</code> 是第 <code>17</code> 个字符</p>
+<pre class="wrap-text"><code class="language-sql code-highlight"><span class="code-line">instr<span class="token punctuation">(</span> <span class="token string">'oracle pl/sql cheatsheet'</span><span class="token punctuation">,</span> <span class="token string">'/'</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>这将返回 <code>0</code>，因为第一次出现的 <code>/</code> 在起点之前，即第 <code>12</code> 个字符</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="replace"><a aria-hidden="true" tabindex="-1" href="#replace"><span class="icon icon-link"></span></a>Replace</h3><div class="wrap-body">
+<pre class="wrap-text"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">replace</span><span class="token punctuation">(</span>string1<span class="token punctuation">,</span> string_to_replace<span class="token punctuation">,</span> <span class="token punctuation">[</span> replacement_string <span class="token punctuation">]</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">replace</span><span class="token punctuation">(</span><span class="token string">'i am here'</span><span class="token punctuation">,</span><span class="token string">'am'</span><span class="token punctuation">,</span><span class="token string">'am not'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>这返回 <code>i am not here</code></p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="substr"><a aria-hidden="true" tabindex="-1" href="#substr"><span class="icon icon-link"></span></a>Substr</h3><div class="wrap-body">
+<pre class="wrap-text"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">SELECT</span> substr<span class="token punctuation">(</span> <span class="token string">'oracle pl/sql cheatsheet'</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span> <span class="token keyword">FROM</span> dual<span class="token punctuation">;</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>返回 <code>pl/sql</code>，因为 <code>pl/sql</code> 中的 <code>p</code> 在字符串中的第 <code>8</code> 个位置（从 <code>oracle</code> 中的 <code>o</code> 处的 <code>1</code> 开始计算）</p>
+<pre class="wrap-text"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">SELECT</span> substr<span class="token punctuation">(</span> <span class="token string">'oracle pl/sql cheatsheet'</span><span class="token punctuation">,</span> <span class="token number">15</span><span class="token punctuation">)</span> <span class="token keyword">FROM</span> dual<span class="token punctuation">;</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>返回 <code>cheatsheet</code>，因为 <code>c</code> 在字符串中的第 <code>15</code> 个位置，<code>t</code>是字符串中的最后一个字符。</p>
+<pre class="wrap-text"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">SELECT</span> substr<span class="token punctuation">(</span><span class="token string">'oracle pl/sql cheatsheet'</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span> <span class="token keyword">FROM</span> dual<span class="token punctuation">;</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>返回 <code>cheat</code>，因为 <code>c</code> 是字符串中的第 <code>10</code> 个字符，从字符串末尾以 <code>t</code> 作为位置 <code>1</code> 开始计算。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="trim"><a aria-hidden="true" tabindex="-1" href="#trim"><span class="icon icon-link"></span></a>Trim</h3><div class="wrap-body">
+<p>这些函数可用于从字符串中过滤不需要的字符。默认情况下，它们会删除空格，但也可以指定要删除的字符集</p>
+<pre class="wrap-text"><code class="language-sql code-highlight"><span class="code-line">trim <span class="token punctuation">(</span> <span class="token punctuation">[</span> leading <span class="token operator">|</span> trailing <span class="token operator">|</span> both <span class="token punctuation">]</span> <span class="token punctuation">[</span> trim<span class="token operator">-</span><span class="token keyword">char</span> <span class="token punctuation">]</span> <span class="token keyword">from</span> string<span class="token operator">-</span><span class="token keyword">to</span><span class="token operator">-</span>be<span class="token operator">-</span>trimmed <span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">trim <span class="token punctuation">(</span><span class="token string">'   删除两侧的空格     '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>这将返回“<code>删除两侧的空格</code>”</p>
+<pre class="wrap-text"><code class="language-sql code-highlight"><span class="code-line">ltrim <span class="token punctuation">(</span> string<span class="token operator">-</span><span class="token keyword">to</span><span class="token operator">-</span>be<span class="token operator">-</span>trimmed <span class="token punctuation">[</span><span class="token punctuation">,</span> trimming<span class="token operator">-</span><span class="token keyword">char</span><span class="token operator">-</span><span class="token keyword">set</span> <span class="token punctuation">]</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">ltrim <span class="token punctuation">(</span><span class="token string">'   删除左侧的空格     '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>这将返回“<code>删除左侧的空格</code>      ”</p>
+<pre class="wrap-text"><code class="language-sql code-highlight"><span class="code-line">rtrim <span class="token punctuation">(</span> string<span class="token operator">-</span><span class="token keyword">to</span><span class="token operator">-</span>be<span class="token operator">-</span>trimmed <span class="token punctuation">[</span><span class="token punctuation">,</span> trimming<span class="token operator">-</span><span class="token keyword">char</span><span class="token operator">-</span><span class="token keyword">set</span> <span class="token punctuation">]</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">rtrim <span class="token punctuation">(</span><span class="token string">'   删除右侧的空格     '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>这将返回“      <code>删除右侧的空格</code>”</p>
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="ddl-sql"><a aria-hidden="true" tabindex="-1" href="#ddl-sql"><span class="icon icon-link"></span></a>DDL SQL</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="创建表"><a aria-hidden="true" tabindex="-1" href="#创建表"><span class="icon icon-link"></span></a>创建表</h3><div class="wrap-body">
+<p>创建表的语法</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> <span class="token punctuation">[</span><span class="token keyword">table</span> name<span class="token punctuation">]</span>
+</span><span class="code-line">      <span class="token punctuation">(</span> <span class="token punctuation">[</span><span class="token keyword">column</span> name<span class="token punctuation">]</span> <span class="token punctuation">[</span>datatype<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>示例：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"> <span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> employee
+</span><span class="code-line">       <span class="token punctuation">(</span>id <span class="token keyword">int</span><span class="token punctuation">,</span> name <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="添加列"><a aria-hidden="true" tabindex="-1" href="#添加列"><span class="icon icon-link"></span></a>添加列</h3><div class="wrap-body">
+<p>添加列的语法</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> <span class="token punctuation">[</span><span class="token keyword">table</span> name<span class="token punctuation">]</span>
+</span><span class="code-line">    <span class="token keyword">ADD</span> <span class="token punctuation">(</span> <span class="token punctuation">[</span><span class="token keyword">column</span> name<span class="token punctuation">]</span> <span class="token punctuation">[</span>datatype<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>示例：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> employee
+</span><span class="code-line">    <span class="token keyword">ADD</span> <span class="token punctuation">(</span>id <span class="token keyword">int</span><span class="token punctuation">)</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="修改列"><a aria-hidden="true" tabindex="-1" href="#修改列"><span class="icon icon-link"></span></a>修改列</h3><div class="wrap-body">
+<p>修改列的语法</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> <span class="token punctuation">[</span><span class="token keyword">table</span> name<span class="token punctuation">]</span>
+</span><span class="code-line">    <span class="token keyword">MODIFY</span> <span class="token punctuation">(</span> <span class="token punctuation">[</span><span class="token keyword">column</span> name<span class="token punctuation">]</span> <span class="token punctuation">[</span>new datatype<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p><code>ALTER</code> 表语法和示例：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> employee
+</span><span class="code-line">    <span class="token keyword">MODIFY</span><span class="token punctuation">(</span> sickHours s <span class="token keyword">float</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="删除列"><a aria-hidden="true" tabindex="-1" href="#删除列"><span class="icon icon-link"></span></a>删除列</h3><div class="wrap-body">
+<p>删除列的语法</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> <span class="token punctuation">[</span><span class="token keyword">table</span> name<span class="token punctuation">]</span>
+</span><span class="code-line">    <span class="token keyword">DROP</span> <span class="token keyword">COLUMN</span> <span class="token punctuation">[</span><span class="token keyword">column</span> name<span class="token punctuation">]</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>示例：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> employee
+</span><span class="code-line">    <span class="token keyword">DROP</span> <span class="token keyword">COLUMN</span> vacationPay<span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="约束类型和代码"><a aria-hidden="true" tabindex="-1" href="#约束类型和代码"><span class="icon icon-link"></span></a>约束类型和代码</h3><div class="wrap-body">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">类型代码</th><th>类型描述</th><th>作用于级别</th></tr></thead><tbody><tr><td align="left"><code>C</code></td><td>检查表</td><td>Column</td></tr><tr><td align="left"><code>O</code></td><td>在视图上只读</td><td>Object</td></tr><tr><td align="left"><code>P</code></td><td>首要的关键</td><td>Object</td></tr><tr><td align="left"><code>R</code></td><td>参考 AKA 外键</td><td>Column</td></tr><tr><td align="left"><code>U</code></td><td>唯一键</td><td>Column</td></tr><tr><td align="left"><code>V</code></td><td>检查视图上的选项</td><td>Object</td></tr></tbody></table>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="显示约束"><a aria-hidden="true" tabindex="-1" href="#显示约束"><span class="icon icon-link"></span></a>显示约束</h3><div class="wrap-body">
+<p>以下语句显示了系统中的所有约束：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">SELECT</span>
+</span><span class="code-line">    table_name<span class="token punctuation">,</span>
+</span><span class="code-line">    constraint_name<span class="token punctuation">,</span>
+</span><span class="code-line">    constraint_type
+</span><span class="code-line"><span class="token keyword">FROM</span> user_constraints<span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="选择参照约束"><a aria-hidden="true" tabindex="-1" href="#选择参照约束"><span class="icon icon-link"></span></a>选择参照约束</h3><div class="wrap-body">
+<p>以下语句显示了源和目标表/列对的所有引用约束（外键）：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">SELECT</span>
+</span><span class="code-line">    c_list<span class="token punctuation">.</span>CONSTRAINT_NAME <span class="token keyword">as</span> NAME<span class="token punctuation">,</span>
+</span><span class="code-line">    c_src<span class="token punctuation">.</span>TABLE_NAME <span class="token keyword">as</span> SRC_TABLE<span class="token punctuation">,</span>
+</span><span class="code-line">    c_src<span class="token punctuation">.</span>COLUMN_NAME <span class="token keyword">as</span> SRC_COLUMN<span class="token punctuation">,</span>
+</span><span class="code-line">    c_dest<span class="token punctuation">.</span>TABLE_NAME <span class="token keyword">as</span> DEST_TABLE<span class="token punctuation">,</span>
+</span><span class="code-line">    c_dest<span class="token punctuation">.</span>COLUMN_NAME <span class="token keyword">as</span> DEST_COLUMN
+</span><span class="code-line"><span class="token keyword">FROM</span> ALL_CONSTRAINTS c_list<span class="token punctuation">,</span>
+</span><span class="code-line">    ALL_CONS_COLUMNS c_src<span class="token punctuation">,</span>
+</span><span class="code-line">    ALL_CONS_COLUMNS c_dest
+</span><span class="code-line"><span class="token keyword">WHERE</span> c_list<span class="token punctuation">.</span>CONSTRAINT_NAME <span class="token operator">=</span> c_src<span class="token punctuation">.</span>CONSTRAINT_NAME
+</span><span class="code-line">    <span class="token operator">AND</span> c_list<span class="token punctuation">.</span>R_CONSTRAINT_NAME <span class="token operator">=</span> c_dest<span class="token punctuation">.</span>CONSTRAINT_NAME
+</span><span class="code-line">    <span class="token operator">AND</span> c_list<span class="token punctuation">.</span>CONSTRAINT_TYPE <span class="token operator">=</span> <span class="token string">'R'</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="对表设置约束"><a aria-hidden="true" tabindex="-1" href="#对表设置约束"><span class="icon icon-link"></span></a>对表设置约束</h3><div class="wrap-body">
+<p>使用 <code>CREATE TABLE</code> 语句创建检查约束的语法是：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> table_name
+</span><span class="code-line"><span class="token punctuation">(</span>
+</span><span class="code-line">    column1 datatype <span class="token boolean">null</span><span class="token operator">/</span><span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+</span><span class="code-line">    column2 datatype <span class="token boolean">null</span><span class="token operator">/</span><span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+</span><span class="code-line">    <span class="token keyword">CONSTRAINT</span> constraint_name
+</span><span class="code-line">    <span class="token keyword">CHECK</span> <span class="token punctuation">(</span>column_name condition<span class="token punctuation">)</span> <span class="token punctuation">[</span><span class="token keyword">DISABLE</span><span class="token punctuation">]</span>
+</span><span class="code-line"><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>例如：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> suppliers
+</span><span class="code-line"><span class="token punctuation">(</span>
+</span><span class="code-line">    supplier_id  <span class="token keyword">numeric</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+</span><span class="code-line">    supplier_name  varchar2<span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token keyword">CONSTRAINT</span> check_supplier_id
+</span><span class="code-line">    <span class="token keyword">CHECK</span> <span class="token punctuation">(</span>supplier_id <span class="token operator">BETWEEN</span> <span class="token number">100</span> <span class="token operator">and</span> <span class="token number">9999</span><span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="表上的唯一索引"><a aria-hidden="true" tabindex="-1" href="#表上的唯一索引"><span class="icon icon-link"></span></a>表上的唯一索引</h3><div class="wrap-body">
+<p>使用 <code>CREATE TABLE</code> 语句创建唯一约束的语法是：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> table_name
+</span><span class="code-line"><span class="token punctuation">(</span>
+</span><span class="code-line">    column1 datatype <span class="token boolean">null</span><span class="token operator">/</span><span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+</span><span class="code-line">    column2 datatype <span class="token boolean">null</span><span class="token operator">/</span><span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+</span><span class="code-line">    <span class="token keyword">CONSTRAINT</span> constraint_name 
+</span><span class="code-line">    <span class="token keyword">UNIQUE</span> <span class="token punctuation">(</span>column1<span class="token punctuation">,</span> column2<span class="token punctuation">,</span> column_n<span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>例如：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> customer
+</span><span class="code-line"><span class="token punctuation">(</span>
+</span><span class="code-line">    id   <span class="token keyword">integer</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+</span><span class="code-line">    name varchar2<span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token keyword">CONSTRAINT</span> customer_id_constraint
+</span><span class="code-line">    <span class="token keyword">UNIQUE</span> <span class="token punctuation">(</span>id<span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="添加唯一约束"><a aria-hidden="true" tabindex="-1" href="#添加唯一约束"><span class="icon icon-link"></span></a>添加唯一约束</h3><div class="wrap-body">
+<p>唯一约束的语法是：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> <span class="token punctuation">[</span><span class="token keyword">table</span> name<span class="token punctuation">]</span>
+</span><span class="code-line">    <span class="token keyword">ADD</span> <span class="token keyword">CONSTRAINT</span> <span class="token punctuation">[</span><span class="token keyword">constraint</span> name<span class="token punctuation">]</span> 
+</span><span class="code-line">    <span class="token keyword">UNIQUE</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token keyword">column</span> name<span class="token punctuation">]</span><span class="token punctuation">)</span> 
+</span><span class="code-line">    <span class="token keyword">USING</span> <span class="token keyword">INDEX</span> <span class="token punctuation">[</span><span class="token keyword">index</span> name<span class="token punctuation">]</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>例如：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> employee
+</span><span class="code-line">    <span class="token keyword">ADD</span> <span class="token keyword">CONSTRAINT</span> uniqueEmployeeId 
+</span><span class="code-line">    <span class="token keyword">UNIQUE</span><span class="token punctuation">(</span>employeeId<span class="token punctuation">)</span> 
+</span><span class="code-line">    <span class="token keyword">USING</span> <span class="token keyword">INDEX</span> ourcompanyIndx_tbs<span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="添加外部约束"><a aria-hidden="true" tabindex="-1" href="#添加外部约束"><span class="icon icon-link"></span></a>添加外部约束</h3><div class="wrap-body">
+<p>foregin 约束的语法是：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> <span class="token punctuation">[</span><span class="token keyword">table</span> name<span class="token punctuation">]</span>
+</span><span class="code-line">    <span class="token keyword">ADD</span> <span class="token keyword">CONSTRAINT</span> <span class="token punctuation">[</span><span class="token keyword">constraint</span> name<span class="token punctuation">]</span> 
+</span><span class="code-line">    <span class="token keyword">FOREIGN</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span><span class="token keyword">column</span><span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> 
+</span><span class="code-line">    <span class="token keyword">REFERENCES</span> <span class="token keyword">table</span> <span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token keyword">column</span><span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">]</span> 
+</span><span class="code-line">    <span class="token punctuation">[</span><span class="token keyword">ON</span> <span class="token keyword">DELETE</span> {<span class="token keyword">CASCADE</span> <span class="token operator">|</span> <span class="token keyword">SET</span> <span class="token boolean">NULL</span>}<span class="token punctuation">]</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>例如：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> employee
+</span><span class="code-line">    <span class="token keyword">ADD</span> <span class="token keyword">CONSTRAINT</span> fk_departament 
+</span><span class="code-line">    <span class="token keyword">FOREIGN</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span>departmentId<span class="token punctuation">)</span> 
+</span><span class="code-line">    <span class="token keyword">REFERENCES</span> departments<span class="token punctuation">(</span>Id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="删除约束"><a aria-hidden="true" tabindex="-1" href="#删除约束"><span class="icon icon-link"></span></a>删除约束</h3><div class="wrap-body">
+<p>删除（删除）约束的语法是：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> <span class="token punctuation">[</span><span class="token keyword">table</span> name<span class="token punctuation">]</span>
+</span><span class="code-line">    <span class="token keyword">DROP</span> <span class="token keyword">CONSTRAINT</span> <span class="token punctuation">[</span><span class="token keyword">constraint</span> name<span class="token punctuation">]</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>例如：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> employee
+</span><span class="code-line">    <span class="token keyword">DROP</span> <span class="token keyword">CONSTRAINT</span> uniqueEmployeeId<span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="indexes"><a aria-hidden="true" tabindex="-1" href="#indexes"><span class="icon icon-link"></span></a>INDEXES</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="创建索引"><a aria-hidden="true" tabindex="-1" href="#创建索引"><span class="icon icon-link"></span></a>创建索引</h3><div class="wrap-body">
+<p>创建索引的语法是：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token punctuation">[</span><span class="token keyword">UNIQUE</span><span class="token punctuation">]</span> <span class="token keyword">INDEX</span> index_name
+</span><span class="code-line">    <span class="token keyword">ON</span> table_name <span class="token punctuation">(</span>
+</span><span class="code-line">        column1<span class="token punctuation">,</span>
+</span><span class="code-line">        column2<span class="token punctuation">,</span>
+</span><span class="code-line">        <span class="token punctuation">.</span> 
+</span><span class="code-line">        column_n
+</span><span class="code-line">    <span class="token punctuation">)</span>
+</span><span class="code-line">    <span class="token punctuation">[</span> <span class="token keyword">COMPUTE</span> <span class="token keyword">STATISTICS</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+</span></code></pre>
+<ul>
+<li><code>UNIQUE</code> 表示索引列中值的组合必须是唯一的</li>
+<li><code>COMPUTE STATISTICS</code> 告诉 Oracle 在创建索引期间收集统计信息。然后优化器使用这些统计信息来选择执行语句时的最佳执行计划。例如：</li>
+</ul>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">INDEX</span> customer_idx
+</span><span class="code-line">    <span class="token keyword">ON</span> customer <span class="token punctuation">(</span>customer_name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>在此示例中，已在名为 <code>customer_idx</code> 的客户表上创建了一个索引。它仅包含 <code>customer_name</code> 字段</p>
+<p>下面创建一个包含多个字段的索引：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">INDEX</span> customer_idx
+</span><span class="code-line">    <span class="token keyword">ON</span> supplier <span class="token punctuation">(</span>customer_name<span class="token punctuation">,</span> country<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>以下内容在创建索引时收集统计信息：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">INDEX</span> customer_idx
+</span><span class="code-line">    <span class="token keyword">ON</span> supplier <span class="token punctuation">(</span>customer_name<span class="token punctuation">,</span> country<span class="token punctuation">)</span>
+</span><span class="code-line">    <span class="token keyword">COMPUTE</span> <span class="token keyword">STATISTICS</span><span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="创建基于函数的索引"><a aria-hidden="true" tabindex="-1" href="#创建基于函数的索引"><span class="icon icon-link"></span></a>创建基于函数的索引</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+<p>在 <code>Oracle</code> 中，您不仅限于在列上创建索引。您可以创建基于函数的索引</p>
+<p>创建基于函数的索引的语法是：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token punctuation">[</span><span class="token keyword">UNIQUE</span><span class="token punctuation">]</span> <span class="token keyword">INDEX</span> index_name
+</span><span class="code-line">    <span class="token keyword">ON</span> table_name <span class="token punctuation">(</span>function1<span class="token punctuation">,</span> function2<span class="token punctuation">,</span> <span class="token punctuation">.</span> function_n<span class="token punctuation">)</span>
+</span><span class="code-line">    <span class="token punctuation">[</span> <span class="token keyword">COMPUTE</span> <span class="token keyword">STATISTICS</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>例如：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">INDEX</span> customer_idx
+</span><span class="code-line">    <span class="token keyword">ON</span> customer <span class="token punctuation">(</span>UPPER<span class="token punctuation">(</span>customer_name<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token comment">-- 已创建基于 customer_name 字段的大写评估的索引</span>
+</span></code></pre>
+<p>为确保 <code>Oracle</code> 优化器在执行 SQL 语句时使用此索引，请确保 <code>UPPER(customer_name)</code> 的计算结果不为 <code>NULL</code> 值。 为确保这一点，请将 <code>UPPER(customer_name) IS NOT NULL</code> 添加到 <code>WHERE</code> 子句中，如下所示：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">SELECT</span> customer_id<span class="token punctuation">,</span> customer_name<span class="token punctuation">,</span> UPPER<span class="token punctuation">(</span>customer_name<span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">FROM</span> customer
+</span><span class="code-line"><span class="token keyword">WHERE</span> UPPER<span class="token punctuation">(</span>customer_name<span class="token punctuation">)</span> <span class="token operator">IS</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span>
+</span><span class="code-line"><span class="token keyword">ORDER</span> <span class="token keyword">BY</span> UPPER<span class="token punctuation">(</span>customer_name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="重命名索引"><a aria-hidden="true" tabindex="-1" href="#重命名索引"><span class="icon icon-link"></span></a>重命名索引</h3><div class="wrap-body">
+<p>重命名索引的语法是：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">INDEX</span> index_name
+</span><span class="code-line">    <span class="token keyword">RENAME</span> <span class="token keyword">TO</span> new_index_name<span class="token punctuation">;</span>
+</span></code></pre>
+<p>例如：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">INDEX</span> customer_id
+</span><span class="code-line">    <span class="token keyword">RENAME</span> <span class="token keyword">TO</span> new_customer_id<span class="token punctuation">;</span>
+</span></code></pre>
+<p>在此示例中，<code>customer_id</code> 重命名为 <code>new_customer_id</code></p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="收集索引的统计信息"><a aria-hidden="true" tabindex="-1" href="#收集索引的统计信息"><span class="icon icon-link"></span></a>收集索引的统计信息</h3><div class="wrap-body">
+<p>如果您需要在索引首次创建后收集统计信息或者您想要更新统计信息，您总是可以使用 ALTER INDEX 命令来收集统计信息。 您收集统计信息以便 <code>oracle</code> 可以有效地使用索引。 这将重新计算表大小、行数、块数、段数并更新字典表，以便 <code>oracle</code> 在选择执行计划时可以有效地使用数据。</p>
+<p>收集索引统计信息的语法是：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">INDEX</span> index_name
+</span><span class="code-line">    REBUILD <span class="token keyword">COMPUTE</span> <span class="token keyword">STATISTICS</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>例如：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">INDEX</span> customer_idx
+</span><span class="code-line">    REBUILD <span class="token keyword">COMPUTE</span> <span class="token keyword">STATISTICS</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>在此示例中，为名为 <code>customer_idx</code> 的索引收集统计信息</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="删除索引"><a aria-hidden="true" tabindex="-1" href="#删除索引"><span class="icon icon-link"></span></a>删除索引</h3><div class="wrap-body">
+<p>删除索引的语法是：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">DROP</span> <span class="token keyword">INDEX</span> index_name<span class="token punctuation">;</span>
+</span></code></pre>
+<p>例如：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">DROP</span> <span class="token keyword">INDEX</span> customer_idx<span class="token punctuation">;</span>
+</span></code></pre>
+<p>在此示例中，删除了 <code>customer_idx</code></p>
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="dba-相关"><a aria-hidden="true" tabindex="-1" href="#dba-相关"><span class="icon icon-link"></span></a>DBA 相关</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="创建用户"><a aria-hidden="true" tabindex="-1" href="#创建用户"><span class="icon icon-link"></span></a>创建用户</h3><div class="wrap-body">
+<p>创建用户的语法是：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">USER</span> username
+</span><span class="code-line">    IDENTIFIED <span class="token keyword">BY</span> password<span class="token punctuation">;</span>
+</span></code></pre>
+<p>例如：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">USER</span> brian IDENTIFIED <span class="token keyword">BY</span> brianpass<span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="授予特权"><a aria-hidden="true" tabindex="-1" href="#授予特权"><span class="icon icon-link"></span></a>授予特权</h3><div class="wrap-body">
+<p>授予权限的语法是：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">GRANT</span> privilege <span class="token keyword">TO</span> <span class="token keyword">user</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>例如：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">GRANT</span> dba <span class="token keyword">TO</span> brian<span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="更改密码"><a aria-hidden="true" tabindex="-1" href="#更改密码"><span class="icon icon-link"></span></a>更改密码</h3><div class="wrap-body">
+<p>更改用户密码的语法是：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">USER</span> username IDENTIFIED <span class="token keyword">BY</span> password<span class="token punctuation">;</span>
+</span></code></pre>
+<p>例如：</p>
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">ALTER</span> <span class="token keyword">USER</span> brian IDENTIFIED <span class="token keyword">BY</span> brianpassword<span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="查看表空间的名称以及大小"><a aria-hidden="true" tabindex="-1" href="#查看表空间的名称以及大小"><span class="icon icon-link"></span></a>查看表空间的名称以及大小</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">SELECT</span> t<span class="token punctuation">.</span>table_name<span class="token punctuation">,</span>
+</span><span class="code-line">       <span class="token function">ROUND</span><span class="token punctuation">(</span><span class="token function">SUM</span><span class="token punctuation">(</span>bytes <span class="token operator">/</span> <span class="token punctuation">(</span><span class="token number">1024</span> <span class="token operator">*</span> <span class="token number">1024</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token keyword">AS</span> ts_size
+</span><span class="code-line"><span class="token keyword">FROM</span> dba_tablespaces t<span class="token punctuation">,</span>
+</span><span class="code-line">     dba_data_files d
+</span><span class="code-line"><span class="token keyword">WHERE</span> t<span class="token punctuation">.</span>table_name <span class="token operator">=</span> d<span class="token punctuation">.</span>table_name
+</span><span class="code-line"><span class="token keyword">GROUP</span> <span class="token keyword">BY</span> t<span class="token punctuation">.</span>table_name<span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="查看还没提交的事务"><a aria-hidden="true" tabindex="-1" href="#查看还没提交的事务"><span class="icon icon-link"></span></a>查看还没提交的事务</h3><div class="wrap-body">
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> v$locked_object<span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> v$<span class="token keyword">transaction</span><span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="查看数据库库对象"><a aria-hidden="true" tabindex="-1" href="#查看数据库库对象"><span class="icon icon-link"></span></a>查看数据库库对象</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">SELECT</span> owner<span class="token punctuation">,</span> object_type<span class="token punctuation">,</span> <span class="token keyword">status</span><span class="token punctuation">,</span> <span class="token function">COUNT</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">AS</span> count<span class="token comment">#</span>
+</span><span class="code-line"><span class="token keyword">FROM</span> all_objects
+</span><span class="code-line"><span class="token keyword">GROUP</span> <span class="token keyword">BY</span> owner<span class="token punctuation">,</span> object_type<span class="token punctuation">,</span> <span class="token keyword">status</span><span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="查看数据库的版本"><a aria-hidden="true" tabindex="-1" href="#查看数据库的版本"><span class="icon icon-link"></span></a>查看数据库的版本</h3><div class="wrap-body">
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">SELECT</span> version
+</span><span class="code-line"><span class="token keyword">FROM</span> Product_component_version
+</span><span class="code-line"><span class="token keyword">WHERE</span> SUBSTR<span class="token punctuation">(</span>PRODUCT<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token string">'Oracle'</span><span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="查看数据库的创建日期和归档方式"><a aria-hidden="true" tabindex="-1" href="#查看数据库的创建日期和归档方式"><span class="icon icon-link"></span></a>查看数据库的创建日期和归档方式</h3><div class="wrap-body">
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">SELECT</span> created<span class="token punctuation">,</span> Log_Mode<span class="token punctuation">,</span> Log_Mode 
+</span><span class="code-line"><span class="token keyword">FROM</span> v$<span class="token keyword">Database</span><span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="查看控制文件"><a aria-hidden="true" tabindex="-1" href="#查看控制文件"><span class="icon icon-link"></span></a>查看控制文件</h3><div class="wrap-body">
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">select</span> name <span class="token keyword">from</span> v$controlfile<span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="查看日志文件"><a aria-hidden="true" tabindex="-1" href="#查看日志文件"><span class="icon icon-link"></span></a>查看日志文件</h3><div class="wrap-body">
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">select</span> member <span class="token keyword">from</span> v$logfile<span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="查看表空间的使用情況"><a aria-hidden="true" tabindex="-1" href="#查看表空间的使用情況"><span class="icon icon-link"></span></a>查看表空间的使用情況</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">SELECT</span> <span class="token function">SUM</span><span class="token punctuation">(</span>bytes<span class="token punctuation">)</span><span class="token operator">/</span><span class="token punctuation">(</span><span class="token number">1024</span><span class="token operator">*</span><span class="token number">1024</span><span class="token punctuation">)</span> <span class="token keyword">AS</span> free_space<span class="token punctuation">,</span>
+</span><span class="code-line">       tablespace_name
+</span><span class="code-line"><span class="token keyword">FROM</span> dba_free_space
+</span><span class="code-line"><span class="token keyword">GROUP</span> <span class="token keyword">BY</span> tablespace_name<span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="捕捉运行很久的sol"><a aria-hidden="true" tabindex="-1" href="#捕捉运行很久的sol"><span class="icon icon-link"></span></a>捕捉运行很久的SOL</h3><div class="wrap-body">
+<pre class="language-sql"><code class="language-sql code-highlight"><span class="code-line"><span class="token keyword">COLUMN</span> username FORMAT A12
+</span><span class="code-line"><span class="token keyword">COLUMN</span> opname FORMAT A16
+</span><span class="code-line"><span class="token keyword">COLUMN</span> progress FORMAT A8
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">SELECT</span> username<span class="token punctuation">,</span>
+</span><span class="code-line">       sid<span class="token punctuation">,</span>
+</span><span class="code-line">       opname<span class="token punctuation">,</span>
+</span><span class="code-line">       <span class="token function">ROUND</span><span class="token punctuation">(</span>sofar <span class="token operator">*</span> <span class="token number">100</span> <span class="token operator">/</span> totalwork<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token string">'%'</span> <span class="token keyword">AS</span> progress<span class="token punctuation">,</span>
+</span><span class="code-line">       time_remaining<span class="token punctuation">,</span>
+</span><span class="code-line">       sql_text
+</span><span class="code-line"><span class="token keyword">FROM</span> v$session_longops<span class="token punctuation">,</span> v$<span class="token keyword">sql</span>
+</span><span class="code-line"><span class="token keyword">WHERE</span> time_remaining <span class="token operator">&#x3C;></span> <span class="token number">0</span>
+</span><span class="code-line">  <span class="token operator">AND</span> sql_address <span class="token operator">=</span> address
+</span><span class="code-line">  <span class="token operator">AND</span> sql_hash_value <span class="token operator">=</span> hash_value<span class="token punctuation">;</span>
+</span></code></pre>
+</div></div></div></div></div><div class="wrap h2body-not-exist"><div class="wrap-header h2wrap"><h2 id="另见"><a aria-hidden="true" tabindex="-1" href="#另见"><span class="icon icon-link"></span></a>另见</h2><div class="wrap-body">
+<ul>
+<li><a href="https://en.wikibooks.org/wiki/Oracle_Database/SQL_Cheatsheet">Oracle Database/SQL Cheatsheet</a> <em>(wikibooks.org)</em></li>
+</ul>
+</div></div><div class="h2wrap-body"></div></div></div><script src="https://giscus.app/client.js" data-repo="jaywcjlove/reference" data-repo-id="R_kgDOID2-Mw" data-category="Q&#x26;A" data-category-id="DIC_kwDOID2-M84CS5wo" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="dark" data-lang="zh-CN" crossorigin="anonymous" async></script><div class="giscus"></div></div><footer class="footer-wrap"><footer class="max-container">© 2022 <a href="https://wangchujiang.com/#/app" target="_blank">Kenny Wang</a>.</footer></footer><script src="../data.js?v=1.8.1" defer></script><script src="../js/fuse.min.js?v=1.8.1" defer></script><script src="../js/main.js?v=1.8.1" defer></script><div id="mysearch"><div class="mysearch-box"><div class="mysearch-input"><div><svg xmlns="http://www.w3.org/2000/svg" height="1em" width="1em" viewBox="0 0 18 18">
+  <path fill="currentColor" d="M17.71,16.29 L14.31,12.9 C15.4069846,11.5024547 16.0022094,9.77665502 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 C9.77665502,16.0022094 11.5024547,15.4069846 12.9,14.31 L16.29,17.71 C16.4777666,17.8993127 16.7333625,18.0057983 17,18.0057983 C17.2666375,18.0057983 17.5222334,17.8993127 17.71,17.71 C17.8993127,17.5222334 18.0057983,17.2666375 18.0057983,17 C18.0057983,16.7333625 17.8993127,16.4777666 17.71,16.29 Z M2,8 C2,4.6862915 4.6862915,2 8,2 C11.3137085,2 14,4.6862915 14,8 C14,11.3137085 11.3137085,14 8,14 C4.6862915,14 2,11.3137085 2,8 Z"></path>
+</svg><input id="mysearch-input" type="search" placeholder="搜索" autocomplete="off"><div class="mysearch-clear"></div></div><button id="mysearch-close" type="button">搜索</button></div><div class="mysearch-result"><div id="mysearch-menu"></div><div id="mysearch-content"></div></div></div></div></body>
+</html>

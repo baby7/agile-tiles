@@ -1,0 +1,81 @@
+import os
+import shutil
+import zipfile
+import tempfile
+
+
+def get_file_size(file_path):
+    """
+    获取文件大小，返回一个带有单位的字符串表示。
+    :param file_path: 文件路径
+    :return: 带有单位的文件大小字符串
+    """
+    # 获取文件大小，单位为字节
+    size = os.path.getsize(file_path)
+    # 定义单位和对应的换算系数
+    units = ['B', 'KB', 'MB', 'GB', 'TB']
+    factor = 1024
+    # 计算合适的单位
+    for unit in units:
+        if size < factor:
+            return f"{size:.2f} {unit}"
+        size /= factor
+    return f"{size:.2f} {units[-1]}"
+
+
+def get_txt_file_words_number(file_path, encodings):
+    """
+    获取txt文件中的字数。
+    :param file_path: 文件路径
+    :return: 带有单位的字数字符串
+    """
+    try:
+        with open(file_path, 'r', encoding=encodings) as file:
+            content = file.read()
+            char_count = len(content)
+            return f"{char_count}字"
+    except FileNotFoundError:
+        return "文件未找到"
+    except Exception as e:
+        return f"发生错误: {str(e)}"
+
+
+def extract_zip(zip_path, target_folder):
+    try:
+        # 创建目标文件夹（如果不存在）
+        os.makedirs(target_folder, exist_ok=True)
+        # 解压ZIP文件
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(target_folder)
+        print(f"成功将 {zip_path} 解压到 {target_folder}")
+        return True
+    except FileNotFoundError:
+        print(f"错误：ZIP文件 {zip_path} 不存在")
+    except zipfile.BadZipFile:
+        print(f"错误：{zip_path} 不是有效的ZIP文件")
+    except Exception as e:
+        print(f"解压过程中发生未知错误: {str(e)}")
+    return False
+
+
+def atomic_delete(path: str) -> bool:
+    """原子性删除目录（全删或保留）"""
+    temp_name = None
+    try:
+        # 尝试重命名以检测文件占用
+        temp_name = os.path.join(os.path.dirname(path), f"_{os.path.basename(path)}")
+        os.rename(path, temp_name)
+        print(f"重命名成功：{path} -> {temp_name}")
+        # 执行实际删除
+        shutil.rmtree(temp_name)
+        return True
+    except Exception as e:
+        print(f"删除失败 {path}，原因：{str(e)}")
+        # 恢复重命名（如果部分成功）
+        if temp_name and os.path.exists(temp_name):
+            try:
+                print(f"恢复重命名：{temp_name} -> {path}")
+                os.rename(temp_name, path)
+            except Exception as rollback_e:
+                print(f"回滚失败：{rollback_e}")
+        return False

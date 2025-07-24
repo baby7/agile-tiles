@@ -1,0 +1,735 @@
+@media all, screen and (orientation : landscape){
+    body {
+      background-color: #233333;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      -khtml-user-select: none;
+      user-select: none;
+      font-size: 1.3em;
+    }
+
+    div{
+        text-align:center;
+    }
+
+    pre{
+        width: 70%;
+        border: 0;
+        margin: 0 auto;
+        margin-left: 0;
+        padding: 0;
+        font-size: 1em;
+        background-color: transparent;
+        overflow-y: auto;
+    }
+
+    hr{
+        margin-top: 5px;
+        margin-bottom: 5px;
+        border: 0;
+        height: 1px;
+        background-color: #CCCCCC;
+    }
+
+    .container-fluid{
+        background-color: #A1AAA1;
+        width: 1024;
+        height: 95%;
+        margin: 0 auto;
+        margin-top: 1%;
+        padding: 0;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    #background, .buildPage{
+        background-color: #FFFFFF;
+        width: 98%;
+        height: 97.5%;
+        margin: 1%;
+        padding: 5px;
+        overflow: hidden;
+        position: relative;
+        border-radius: 5px;
+    }
+
+    #footer{
+        position: absolute;
+        background-color: #FFFFFF;
+        width: 99%;
+        height: 50px;
+        bottom: 0;
+        border-radius: 5px;
+        text-align: right;
+    }
+    #footer>.btn{
+        width: auto;
+    }
+
+    .adsenseFooter{
+        float: left;
+        margin-left: 10px;
+        width: 65%;
+        height: 80%;
+        position: relative;
+        margin: 0 auto;
+        padding: 0;
+        border-radius: 0;
+        border: none;
+        background-color: transparent;
+        text-align: center;
+    }
+
+    #beforeGame{
+        position: absolute;
+        width: 98%;
+        height: 97.5%;
+        top: 1.25%;
+        left: 1%;
+        z-index: 3000;
+        border-radius: 5px;
+        background-color: #fff;
+    }
+
+    #beforeGame p button{
+        width: 200px;
+        height: 50px;
+    }
+
+    #beforeGame p{
+        margin-top: 30%;
+    }
+
+    #buildDiv{
+        margin-top: 20%;
+        margin-left: 10%;
+        text-align: center;
+        padding: 20px;
+        width: 80%;
+        border: solid 1px;
+        border-radius: 5px;
+        font-size: 1.3em;
+    }
+
+    .info{
+        margin: 0 auto;
+        margin-bottom: 20px;
+        width: 480px;
+        text-align: left;
+        font-size: 1.2em;
+    }
+
+    #buildDiv table th,#buildDiv table td{
+        font-size: 1.2em;
+        text-align: center;
+    }
+
+    #buildDiv>.info{
+        font-size: 1em;
+    }
+
+    #buildDiv table button{
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        line-height: 0px;
+        font-size: 0.8em;
+    }
+
+    #pauseDiv{
+        position: absolute;
+        padding: 20px;
+        z-index: 3000;
+        background-color: #fff;
+        border-radius: 5px;
+        width: 80%;
+        top: 10%;
+        left: 10%;
+        -webkit-box-shadow:1px 1px 3px #020202;  
+        -moz-box-shadow:1px 1px 3px #020202;  
+        box-shadow: 1px 1px 3px #020202;
+    }
+
+    #fastsave{
+        width: 105px;
+    }
+
+    .slView{
+        font-size: 1em;
+        margin-bottom: 10px;
+    }
+
+    .attrTb, .specialTb{
+        width:100%;
+    }
+    .attrTb td, .specialTb td{
+        text-align:center;
+    }
+
+    .frame{
+        width: 100%;
+        margin-top: 1%;
+        padding: 1%;
+        text-align: left;
+        font-size: 1.2em;
+        border-radius: 5px;
+        border: solid 1px;
+        position: relative;
+    }
+
+    #status{
+        float: left;
+        margin-top: 0.8%;
+        margin-bottom: 0.7%;
+        width: 59.5%;
+        height: 50px;
+        padding-left: 2%;
+    }
+
+    #bag{
+        float: right;
+        margin-bottom: 0.5%;
+        width: 40%;
+        height: 265px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    #bag button{
+        width: 50px;
+        height: 50px;
+        font-size: 0.8em;
+    }
+
+    #info {
+        float: left;
+        width: 59.5%;
+        height: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    #info button{
+        font-size: 0.9em;
+    }
+
+    .message{
+        border-radius: 5px;
+        border: solid 1px #000;
+        position: absolute;
+        background-color: #fff;
+        text-align: left;
+        font-size: 1.2em;
+        overflow-y: auto;
+        z-index: 1000;
+        color: #0080FF;
+        width: 58.9%;
+        height: 200px;
+    }
+    .messageAD{
+        width: 99%;
+        height: 150px;
+        margin: 0 auto;
+        padding: 0;
+        border-radius: 0;
+        border: none;
+        background-color: transparent;
+        text-align: center;
+    }
+    .bottomAD{
+        width: 1024px;
+        height: 200px;
+        margin: 0 auto;
+        padding: 0;
+        border-radius: 0;
+        border: none;
+        background-color: transparent;
+        text-align: center;
+    }
+
+    .frameTitle{
+        border-radius: 5px;
+        width: 120px;
+        line-height: 16px;
+        height: 20px;
+        padding: 2px;
+        border: solid 1px;
+        background-color: #FFFFFF;
+        text-align: center;
+        font-weight: normal;
+        font-size: 1.2em;
+        position: absolute;
+        top: 5px;
+        z-index: 2000;
+    }
+
+    .infoTitlePc{
+        top: 70px;
+        left: 2%;
+    }
+    .bagTitlePc{
+        right: 26.5%;
+    }
+    .mainTitlePc{
+        top: 290px;
+        left: 2%;
+    }
+
+    #bagCap{
+        margin-left: 2px;
+        font-weight: bold;
+    }
+    #boxCap{
+        margin-left: 2px;
+        font-weight: bold;
+    }
+    #farmCap{
+        margin-left: 2px;
+        font-weight: bold;
+    }
+
+    .main{
+        border-radius: 5px;
+        width: 99%;
+        top: 300px;
+        bottom: 50px;
+        padding: 10px;
+        text-align: center;
+        border: solid 1px;
+        position: absolute;
+        overflow-y: auto;
+    }
+
+    .effectGroup{
+        position: relative;
+        float: left;
+        text-align: left;
+        top: 0;
+        padding: 0;
+        width: 80%;
+        
+    }
+    .effectGroup span{
+        display: inline-block;
+    }
+
+    .label{
+        font-weight: normal;
+        font-size: 0.8em;
+        margin: 2px;
+        -webkit-box-shadow:1px 1px 3px #020202;  
+        -moz-box-shadow:1px 1px 3px #020202;  
+        box-shadow: 1px 1px 3px #020202; 
+    }
+    .label-default{
+        color: #000;
+        background-color: #FFF;
+    }
+
+    .btn{
+        background-color: transparent;
+        font-size: 1.3em;
+        margin-right: 5px;
+        margin-bottom: 10px;
+        transition: 0.1s;
+    }
+    .btn:hover{
+        background-color: #fff !important;
+        transform:scaleX(1.05) scaleY(1.05);
+        -webkit-box-shadow:1px 1px 6px #000;  
+        -moz-box-shadow:1px 1px 6px #000;  
+        box-shadow:1px 1px 6px #000;   
+    }
+    button[disabled]:hover{
+        color: #333 !important;
+        cursor: not-allowed;
+    }
+
+    .status{
+        position: relative;
+        width: 90px;
+        height: 40px;
+        cursor: default;
+        margin: 2px;
+        padding: 2px;
+        float: left;
+        text-align: center;
+        border:solid 1px ;
+        background: transparent;
+        border-radius: 5px;
+        font-size: 1em;
+        transition: 0.5s;
+    }
+
+    .status:hover{
+        color: #fff !important;
+        background-color: #000014 !important;
+    }
+
+    .goodBadge{
+        position: absolute;
+        background-color: #228B22;
+        top: -6px;
+        left: -3px;
+    }
+    .badBadge{
+        position: absolute;
+        background-color: #CC3333;
+        top: -6px;
+        left: -3px;
+    }
+    .noneBadge{
+        position: absolute;
+        background-color: #0080FF;
+        top: -6px;
+        left: -3px;
+    }
+
+    .goodBuffName{
+        font-weight: bold;
+        color: #228B22;
+    }
+    .badBuffName{
+        font-weight: bold;
+        color: #CC3333;
+    }
+    .noneBuffName{
+        font-weight: bold;
+        color: #0080FF;
+    }
+    .rare{
+        color:#FF8C00;
+        font-weight:bold;
+    }
+    .margin5{
+        margin-left: 5px;
+    }
+
+    .item{
+        z-index: 1000;
+        background-color: transparent;
+        padding: 0;
+        margin: 5px;
+        height: 60px;
+        width: 60px;
+        text-align: center;
+        line-height: 25px;
+        white-space:nowrap;
+        text-overflow:ellipsis;
+        font-size: 1.1em;
+        border:solid 0px;
+        border-radius: 5px;
+        overflow: hidden;
+        position: relative;
+        -webkit-box-shadow:1px 1px 3px #020202;  
+        -moz-box-shadow:1px 1px 3px #020202;  
+        box-shadow: 1px 1px 3px #020202; 
+        transition: 0.1s;
+    }
+    .item:hover{
+        -webkit-box-shadow:1px 1px 6px #000;  
+        -moz-box-shadow:1px 1px 6px #000;  
+        box-shadow:1px 1px 6px #000;  
+        transform:scaleX(1.1) scaleY(1.1);
+        z-index: 1001;
+        cursor: pointer;
+        background-color: #FFFFFF !important;
+    }
+
+    .moveBtn{
+        z-index: 1000;
+        background-color: transparent;
+        padding: 0;
+        margin-bottom: 10px;
+        height: 85px;
+        width: 85px;
+        display: inline-block;
+        text-align: center;
+        white-space: normal;
+        font-size: 1.1em;
+        border:solid 1px;
+        border-radius: 5px;
+        overflow: hidden;
+        transition: 0.2s;
+    }
+    .moveBtn:hover{
+        -webkit-box-shadow:1px 1px 6px #000;  
+        -moz-box-shadow:1px 1px 6px #000;  
+        box-shadow:1px 1px 6px #000;
+        border: 0;
+        color: #fff !important;
+        background-color: #333 !important;
+        transform:scaleX(1.1) scaleY(1.1);
+    }
+
+    .item>div{
+        margin-top: 10px;
+    }
+
+    .popover{
+        margin-top: 30px;
+        z-index: 3000;
+    }
+    .popover.right>.arrow{
+        margin-top: -20px;
+    }
+    .popover.left>.arrow{
+        margin-top: -20px;
+    }
+    .popover-title{
+        padding: 2px;
+        background-color: #FFFFFF;
+    }
+    .popoverButton{
+        font-weight: normal;
+        font-size: 0.6em;
+    }
+    .popoverButton>.btn{
+        margin: 2px;
+    }
+    .popover-content{
+        display: none;
+    }
+
+    #clock{
+        float: left;
+        padding-left: 10px;
+        font-size: 1.5em;
+    }
+    #beginnerFlag{
+        float: left;
+        color: #228B22;
+        padding-left: 10px;
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+
+    #overlay {
+        background: #000;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 3000;
+    }
+
+    .loadDiv, #loadGame{
+        margin: auto;
+        margin-top: 50px;
+        width: 50%;
+        height: 30px;
+        background-color: #FFFFFF;
+        border-radius: 5px;
+        border:solid 1px;
+        -mozbox-shadow:inset 0 0 3px 1px #ccc;
+        -webkit-box-shadow:inset 0 0 3px 1px #ccc;
+        box-shadow:inset 0 0 3px 1px #ccc;
+    }
+
+    #loadGame{
+        background-color: #000000;
+        width: 40%;
+        height: 50px;
+    }
+    #loadGame>.loadingBar{
+        -moz-box-shadow:0px 0px 10px 1px #FFFFFF, 0 0 1px #FFFFFF, 0 0 1px #FFFFFF, 0 0 1px #FFFFFF, 0 0 1px #FFFFFF, 0 0 1px #FFFFFF, 0 0 1px #FFFFFF;
+        -webkit-box-shadow:0px 0px 10px 1px #FFFFFF, 0 0 1px #FFFFFF, 0 0 1px #FFFFFF, 0 0 1px #FFFFFF, 0 0 1px #FFFFFF, 0 0 1px #FFFFFF, 0 0 1px #FFFFFF;
+        box-shadow:0px 0px 10px 1px #FFFFFF, 0 0 1px #FFFFFF, 0 0 1px #FFFFFF, 0 0 1px #FFFFFF, 0 0 1px #FFFFFF, 0 0 1px #FFFFFF, 0 0 1px #FFFFFF;
+        background-color: #FFFFFF;
+    }
+    #loadInfo{
+        font-size: 1.5em;
+        color: #FFFFFF;
+    }
+
+    .loadingBar{
+        border-radius: 2px;
+        display: block;
+        width: 0%;
+        height: 100%;
+        -moz-box-shadow:0px 0px 10px 1px #333333, 0 0 1px #333333, 0 0 1px #333333, 0 0 1px #333333, 0 0 1px #333333, 0 0 1px #333333, 0 0 1px #333333;
+        -webkit-box-shadow:0px 0px 10px 1px #333333, 0 0 1px #333333, 0 0 1px #333333, 0 0 1px #333333, 0 0 1px #333333, 0 0 1px #333333, 0 0 1px #333333;
+        box-shadow:0px 0px 10px 1px #333333, 0 0 1px #333333, 0 0 1px #333333, 0 0 1px #333333, 0 0 1px #333333, 0 0 1px #333333, 0 0 1px #333333;
+        background-color: #333333;
+    }
+
+    .divTb{
+        height: 85%;
+        overflow-y: auto; 
+    }
+
+    .infoTb{
+        text-align: center;
+    }
+
+    .infoTb th,
+    .infoTb td{
+        padding: 2px;
+    }
+
+    .infoTb th{
+        text-align: center;
+    }
+
+    .infoTb th:nth-child(2){
+        width: 30%;
+    }
+
+    .infoTb th:last-child{
+        width: 30%;
+    }
+
+    .infoTb td:nth-child(2){
+        font-weight: bold;
+    }
+
+    .infoTb{
+        width: 85%;
+        float: left;
+        font-size: 0.9em;
+    }
+
+    #workbench{
+        line-height: 0;
+    }
+    #workbenchTb{
+        width: 100%;
+        font-size: 1.2em;
+    }
+
+    #workbenchTb th:last-child{
+        width: 50%;
+    }
+    #workbenchTb td:last-child{
+        text-align: left;
+    }
+
+    #workBegin{
+        margin-top: 20px;
+        margin-left: 5px;
+    }
+
+    #workAmount{
+        width: 40px;
+        text-align: center;
+    }
+
+    #workSlider .ui-slider-handle{
+        cursor: pointer;
+    }
+
+    .ui-widget-header{
+        background: gray;
+    }
+
+    .battleStatus{
+        margin-top: 1%;
+        margin-bottom: 20px;
+        width: 40%;
+        overflow-y: auto;
+        border: solid 1px;
+        border-radius: 5px;
+        -webkit-box-shadow:1px 1px 3px #020202;  
+        -moz-box-shadow:1px 1px 3px #020202;  
+        box-shadow: 1px 1px 3px #020202; 
+    }
+
+    #battlePlayer{
+        float: left;
+        margin-left: 5%;
+    }
+
+    #battleEnemy{
+        float:right;
+        margin-right: 5%;
+    }
+
+    .hpDiv, .apDiv{
+        margin: 5px auto;
+        width: 90%;
+        height: 20px;
+        background-color: #FFFFFF;
+        border-radius: 5px;
+        border:solid 1px;
+        -mozbox-shadow:inset 0 0 3px 1px #ccc;
+        -webkit-box-shadow:inset 0 0 3px 1px #ccc;
+        box-shadow:inset 0 0 3px 1px #ccc;
+    }
+
+    .apDiv{
+        height: 5px;
+    }
+
+    .durabDiv{
+        position: absolute;
+        height: 3px;
+        width: 90%;
+        top: 15px;
+        left: 5%;
+        background-color: #FFFFFF;
+        border-radius: 5px;
+        border:solid 1px;
+    }
+
+    .battleTitle{
+        margin: auto;
+        background-color: #ccc;
+    }
+
+    .battleInfo, .battleDis, .battleWeapon, .battleOptions, .battleSkills{
+        clear: both;
+        width: 90%;
+        margin-top: 10px;
+        margin-left: 5%;
+        border-radius: 5px;
+    }
+
+    .battleDis{
+        font-size: 1.4em;
+    }
+
+    .battleInfo{
+        overflow-y: auto;
+        background-color: #fff;
+        height: 35%;
+        padding: 10px;
+        border: solid 1px;
+        -webkit-box-shadow:1px 1px 3px #020202;  
+        -moz-box-shadow:1px 1px 3px #020202;  
+        box-shadow: 1px 1px 3px #020202; 
+    }
+
+    .battleWeapon .table, .battleWeapon .table thead th{
+        padding: 0;
+        margin: 0;
+        font-size: 1.2em;
+        text-align: center;
+    }
+
+    .battleWeapon .table thead th:first-child{
+        width: 60%;
+    }
+
+    #stuff{
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    #diet{
+        margin-top: 10px;
+        height: 30px;
+    }
+
+    #cookAmount{
+        margin: 0 auto;
+        margin-bottom: 10px;
+        width: 50%;
+    }
+
+    #achiveTb th:first-child{
+        width: 15%;
+    }
+    #achiveTb th:last-child{
+        width: 20%;
+    }
+}

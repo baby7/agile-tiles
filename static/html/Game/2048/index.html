@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>2048_经典HTML5游戏</title>
+    <meta name="keywords" content="2048,HTML5游戏" />
+    <meta name="description" content="HTML5经典游戏2048" />
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+</head>
+<body style="margin-top: 5px;">
+<div class="container">
+    <div class="heading">
+        <h1 class="title">2048</h1>
+        <div class="scores-container">
+            <div class="score-container">0</div>
+            <div class="best-container">0</div>
+        </div>
+    </div>
+
+    <div class="above-game">
+        <p class="game-intro">移动数字合并出 <strong>2048！</strong></p>
+        <a class="restart-button">开始新游戏</a>
+    </div>
+
+    <div class="game-container">
+        <div class="game-message">
+            <p></p>
+            <div class="lower">
+                <a class="keep-playing-button">继续游戏</a>
+                <a class="retry-button">再玩一次</a>
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <div class="grid-row">
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+            </div>
+        </div>
+
+        <div class="tile-container">
+
+        </div>
+    </div>
+
+    <p class="game-explanation" style="margin-top: 10px">
+        <strong class="important">游戏玩法:</strong>在4x4的棋盘上，用方向键选择数字移动的方向，遇到相同的数字就会合并，每次移动会增加一个数字。合并出2048就算通关。
+    </p>
+</div>
+
+<script src="js/keyboard_input_manager.js"></script>
+<script src="js/html_actuator.js"></script>
+<script src="js/grid.js"></script>
+<script src="js/tile.js"></script>
+<script src="js/local_storage_manager.js"></script>
+<script src="js/game_manager.js"></script>
+<script src="js/application.js"></script>
+</body>
+</html>

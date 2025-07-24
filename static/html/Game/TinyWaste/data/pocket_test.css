@@ -1,0 +1,239 @@
+@media screen and (max-width: 640px), screen and (orientation : portrait){
+    pre{
+        font-size: 0.9em;
+    }
+    
+    .container-fluid{
+        width: 100%;
+        height: 99%;
+    }
+
+    #background{
+        text-align: left;
+    }
+    #background, .buildPage{
+        height: 99%;
+    }
+
+    #beforeGame p{
+        margin-top: 50%;
+    }
+
+    #buildDiv{
+        width: 90%;
+        margin-left: 5%;
+        font-size: 1em;
+    }
+
+    #buildDiv table{
+        padding: 0;
+        font-size: 0.9em;
+    }
+    #buildDiv table button{
+        margin: 0 auto;
+        width: 10px;
+        height: 10px;
+        font-size: 1em;
+    }
+
+    #status{
+        float: none;
+        margin: 0;
+        width: auto;
+        height: auto;
+        padding: 0;
+    }
+
+    .status{
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        line-height: 15px;
+        font-size: 0.8em;
+    }
+    .status:last-child{
+        float: right;
+    }
+
+    #bag{
+        float: none;
+        margin: 0;
+        margin-top: -10px;
+        width: 100%;
+        height: 50px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    #bag button{
+        width: 35px;
+        height: 35px;
+        line-height: 18px;
+        font-size: 0.6em;
+    }
+
+    #info{
+        float: none;
+        width: 100%;
+        height: 100px;
+        font-size: 0.9em;
+    }
+    #info button{
+        font-size: 0.9em;
+    }
+
+    .tempAD{
+        width: 95%;
+        height: 40px;
+    }
+
+    .frame{
+        width: 100%;
+        margin-top: -10px;
+        padding: 2%;
+        text-align: left;
+        font-size: 1.2em;
+        border-radius: 5px;
+        border: solid 1px;
+        position: relative;
+    }
+    .frameTitle{
+        width: 90px;
+        height: 15px;
+        line-height: 10px;
+        font-size: 0.8em;
+        top: 2px;
+        left: 10px;
+        position: relative;
+    }
+
+    .message{
+        font-size: 0.8em;
+        width: 97.5%;
+        height: 100px;
+    }
+    .messageAD{
+        width: 92%;
+        height: 100px;
+    }
+    .bottomAD{
+        width: 86%;
+        height: 60px;
+    }
+
+    .item{
+        width: 40px;
+        height: 40px;
+        line-height: 20px;
+        font-size: 0.8em;
+    }
+
+    .popover{
+        margin-top: 20px;
+    }
+    .popover-title{
+        width: 80px;
+    }
+    .popoverButton{
+        font-weight: normal;
+        font-size: 0.8em;
+    }
+
+    .durabDiv{
+        top: 6px;
+    }
+
+    .effectGroup{
+        top: 5%;
+        width: 50%;
+    }
+    .buttonGroup{
+        bottom: 0;
+    }
+
+    .btn{
+        font-size: 0.9em;
+    }
+
+    .main{
+        width: 97%;
+        top: 225px;
+        padding: 10px;
+        font-size: 0.9em;
+    }
+
+    #clock, #beginnerFlag{
+        font-size: 1.1em;
+    }
+
+    #workbenchTb{
+        font-size: 0.9em;
+        overflow-y: auto; 
+    }
+
+    #workbenchMenu{
+        font-size: 0.7em;
+    }
+
+    #workbenchMenu th,
+    .infoTb td{
+        padding: 0;
+    }
+
+    .infoTb{
+        width: 75%;
+    }
+    .infoTb th:first-child{
+        width: 30%;
+    }
+
+    #workBegin{
+        margin-top: 0;
+    }
+
+    .moveBtn{
+        width: 65px;
+        height: 65px;
+    }
+
+    #pauseDiv{
+        width: 98%;
+        padding: 5px;
+        top: 5%;
+        left: 1%;
+    }
+
+    .attrTb{
+        font-size: 0.9em;
+    }
+    .specialTb{
+        font-size: 0.9em;
+        word-break: break-all;
+    }
+
+    .info{
+        width: 90%;
+        font-size: 1em;
+        margin: 5px auto;
+    }
+
+    .battleDis{
+        font-size: 1em;
+    }
+
+    .hpDiv{
+        height: 10px;
+    }
+
+    .battleInfo, .battleDis{
+        margin-top: 0;
+    }
+
+    .battleOptions>.btn, .battleSkills>.btn{
+        margin: 0 auto;
+        padding: 2%;
+    }
+
+    .disasterInfo{
+        font-size: 0.8em;
+    }
+}

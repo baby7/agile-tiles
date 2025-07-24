@@ -1,0 +1,186 @@
+body, table, tr, td, div {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+
+body{
+    font-family: "微软雅黑", Arial;
+    color: #FFAEAE;
+    font-size: 12px;
+}
+
+html, body{
+    overflow: hidden;
+}
+
+body{
+    /*background: #E10A04 url(../img/background.jpg) no-repeat top center;*/
+    position: relative;
+}
+
+#container{
+    margin-top: 100px;
+    margin-left: auto;
+    margin: 100px auto 0 auto;
+    width: 426px;
+    position: relative;
+}
+
+#sudokuBoard{
+    margin: 0 auto;
+    border-spacing: 0;
+}
+
+#sudokuBoard table{
+    border-spacing: 1px;
+}
+
+
+td.boardCellGroupA, td.boardCellGroupB {
+    /*background-color: #020611;*/
+}
+
+td.boardCellGroupA td.boardCell {
+    width: 44px;
+    height: 44px;
+    border: 1px solid #ffffff;
+    /*background-color: #ffffff;*/
+}
+
+td.boardCellGroupB td.boardCell {
+    width: 44px;
+    height: 44px;
+    border: 1px solid #000000;
+    /*background-color: #ffffff;*/
+}
+
+.staticValue, .editValue {
+    width: 42px;
+    height: 42px;
+    padding: 0px;
+    margin: 0px;
+    border: 1px solid #ffffff;
+}
+
+.staticValue {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 30px;
+    color: #03004c;
+    line-height: 42px;
+}
+
+.editValue:hover {
+    background: #2472ba;
+}
+
+
+.editValue input {
+    font-size: 30px;
+    color: #0600ff;
+    width: 44px;
+    height: 44px;
+    padding: 0px;
+    border: 0px;
+    background: none !important;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+    left: -1px;
+}
+
+#buttons{
+    margin: 40px 0;
+    position: relative;
+}
+
+#buttons > ul{
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+}
+
+#buttons li{
+    height: 30px;
+    width: 30px;
+    margin-left: 40px;
+    margin-right: 8px;
+    float: left;
+}
+
+#buttons a{
+    display: block;
+    text-indent: -9999px;
+    height: 100%;
+}
+
+#buttons #about{
+    margin-right: 0;
+}
+
+#refresh>a{
+    background: url(../img/refresh.png) no-repeat center;
+}
+
+#level1>a{
+    background: url(../img/level1.png) no-repeat center;
+}
+
+#level2>a{
+    background: url(../img/level2.png) no-repeat center;
+}
+
+#level3>a{
+    background: url(../img/level3.png) no-repeat center;
+}
+
+#submit>a{
+    background: url(../img/submit.png) no-repeat center;
+}
+
+#message-container{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+}
+
+#message{
+    margin: 240px auto 0 auto;
+    text-align: center;
+    width: 420px;
+    height: 100px;
+    background: #83cbff;
+    border-radius: 5px;
+    font-size: 22px;
+    padding: 25px 10px;
+}
+
+#message > p{
+    margin: 0;
+    margin-top: 20px;
+    text-align: center;
+}
+
+#message  a{
+    font-size: 18px;
+    margin-top: 20px;
+    text-decoration: none;
+    color: white;
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 5px;
+    background: -webkit-gradient(linear, 0 0, 0 bottom, from(#719ef8), to(#0942b3));
+}
+
+.right{
+    color: blue;
+}
+
+.error{
+    color: red;
+}

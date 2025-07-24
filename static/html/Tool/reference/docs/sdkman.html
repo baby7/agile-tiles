@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en" data-color-mode="dark">
+<head>
+<meta charset="utf-8">
+<title>SDKMAN 备忘清单
+ &#x26;  sdkman cheatsheet &#x26;  Quick Reference</title>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta description="SDKMAN 是一款管理 java 体系中的各类 SDK 版本的工具，可以用于大多数基于 Uinx 的系统
+
+入门，为开发人员分享快速参考备忘单。">
+<meta keywords="sdkman,reference,Quick,Reference,cheatsheet,cheat,sheet">
+<meta name="author" content="jaywcjlove">
+<meta name="license" content="MIT">
+<meta name="funding" content="https://jaywcjlove.github.io/#/sponsor">
+<meta rel="apple-touch-icon" href="../icons/touch-icon-iphone.png">
+<meta rel="apple-touch-icon" sizes="152x152" href="../icons/touch-icon-ipad.png">
+<meta rel="apple-touch-icon" sizes="180x180" href="../icons/touch-icon-iphone.png">
+<meta rel="apple-touch-icon" sizes="167x167" href="../icons/touch-icon-ipad-retina.png">
+<meta rel="apple-touch-icon" sizes="120x120" href="../icons/touch-icon-iphone-retina.png">
+<link rel="icon" href="../icons/favicon.svg" type="image/svg+xml">
+<link href="../style/style.css" rel="stylesheet">
+<link href="../style/katex.css" rel="stylesheet">
+</head>
+<body><nav class="header-nav"><div class="max-container"><a href="../index.html" class="logo"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" height="1em" width="1em">
+  <path d="m21.66 10.44-.98 4.18c-.84 3.61-2.5 5.07-5.62 4.77-.5-.04-1.04-.13-1.62-.27l-1.68-.4c-4.17-.99-5.46-3.05-4.48-7.23l.98-4.19c.2-.85.44-1.59.74-2.2 1.17-2.42 3.16-3.07 6.5-2.28l1.67.39c4.19.98 5.47 3.05 4.49 7.23Z" fill="#c9d1d9"></path>
+  <path d="M15.06 19.39c-.62.42-1.4.77-2.35 1.08l-1.58.52c-3.97 1.28-6.06.21-7.35-3.76L2.5 13.28c-1.28-3.97-.22-6.07 3.75-7.35l1.58-.52c.41-.13.8-.24 1.17-.31-.3.61-.54 1.35-.74 2.2l-.98 4.19c-.98 4.18.31 6.24 4.48 7.23l1.68.4c.58.14 1.12.23 1.62.27Zm2.43-8.88c-.06 0-.12-.01-.19-.02l-4.85-1.23a.75.75 0 0 1 .37-1.45l4.85 1.23a.748.748 0 0 1-.18 1.47Z" fill="#228e6c"></path>
+  <path d="M14.56 13.89c-.06 0-.12-.01-.19-.02l-2.91-.74a.75.75 0 0 1 .37-1.45l2.91.74c.4.1.64.51.54.91-.08.34-.38.56-.72.56Z" fill="#228e6c"></path>
+</svg>
+<span class="title">Quick Reference</span></a><div class="menu"><a href="javascript:void(0);" class="searchbtn" id="searchbtn"><svg xmlns="http://www.w3.org/2000/svg" height="1em" width="1em" viewBox="0 0 18 18">
+  <path fill="currentColor" d="M17.71,16.29 L14.31,12.9 C15.4069846,11.5024547 16.0022094,9.77665502 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 C9.77665502,16.0022094 11.5024547,15.4069846 12.9,14.31 L16.29,17.71 C16.4777666,17.8993127 16.7333625,18.0057983 17,18.0057983 C17.2666375,18.0057983 17.5222334,17.8993127 17.71,17.71 C17.8993127,17.5222334 18.0057983,17.2666375 18.0057983,17 C18.0057983,16.7333625 17.8993127,16.4777666 17.71,16.29 Z M2,8 C2,4.6862915 4.6862915,2 8,2 C11.3137085,2 14,4.6862915 14,8 C14,11.3137085 11.3137085,14 8,14 C4.6862915,14 2,11.3137085 2,8 Z"></path>
+</svg><span>搜索</span><span>⌘K</span></a><a href="https://github.com/jaywcjlove/reference/blob/main/docs/sdkman.md" class="" target="__blank"><svg viewBox="0 0 36 36" fill="currentColor" height="1em" width="1em"><path d="m33 6.4-3.7-3.7a1.71 1.71 0 0 0-2.36 0L23.65 6H6a2 2 0 0 0-2 2v22a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V11.76l3-3a1.67 1.67 0 0 0 0-2.36ZM18.83 20.13l-4.19.93 1-4.15 9.55-9.57 3.23 3.23ZM29.5 9.43 26.27 6.2l1.85-1.85 3.23 3.23Z"></path><path fill="none" d="M0 0h36v36H0z"></path></svg><span>编辑</span></a><button id="darkMode" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="light" height="1em" width="1em">
+  <path d="M6.995 12c0 2.761 2.246 5.007 5.007 5.007s5.007-2.246 5.007-5.007-2.246-5.007-5.007-5.007S6.995 9.239 6.995 12zM11 19h2v3h-2zm0-17h2v3h-2zm-9 9h3v2H2zm17 0h3v2h-3zM5.637 19.778l-1.414-1.414 2.121-2.121 1.414 1.414zM16.242 6.344l2.122-2.122 1.414 1.414-2.122 2.122zM6.344 7.759 4.223 5.637l1.415-1.414 2.12 2.122zm13.434 10.605-1.414 1.414-2.122-2.122 1.414-1.414z"></path>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="dark" height="1em" width="1em">
+  <path d="M12 11.807A9.002 9.002 0 0 1 10.049 2a9.942 9.942 0 0 0-5.12 2.735c-3.905 3.905-3.905 10.237 0 14.142 3.906 3.906 10.237 3.905 14.143 0a9.946 9.946 0 0 0 2.735-5.119A9.003 9.003 0 0 1 12 11.807z"></path>
+</svg>
+</button><script src="../js/dark.js?v=1.8.1"></script><a href="https://github.com/jaywcjlove/reference" class="" target="__blank"><svg viewBox="0 0 16 16" fill="currentColor" height="1em" width="1em"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></nav><div class="wrap h1body-exist max-container"><header class="wrap-header h1wrap"><h1 id="sdkman-备忘清单"><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="1em" width="1em">
+  <path d="M107.946667 838.4l57.173333 23.893333v-385.28l-103.68 250.026667c-17.493333 43.52 3.413333 93.44 46.506667 111.36z m832-157.866667L728.32 169.813333a85.888 85.888 0 0 0-77.226667-52.48c-11.093333 0-22.613333 1.706667-33.706666 6.4L302.933333 253.866667a85.290667 85.290667 0 0 0-46.08 110.933333l211.626667 510.72a85.248 85.248 0 0 0 110.933333 46.08l314.026667-130.133333a85.077333 85.077333 0 0 0 46.506667-110.933334zM336.213333 373.333333c-23.466667 0-42.666667-19.2-42.666666-42.666666s19.2-42.666667 42.666666-42.666667 42.666667 19.2 42.666667 42.666667-19.2 42.666667-42.666667 42.666666z m-85.333333 469.333334c0 46.933333 38.4 85.333333 85.333333 85.333333h61.866667l-147.2-355.84v270.506667z"></path>
+</svg><a aria-hidden="true" tabindex="-1" href="#sdkman-备忘清单"><span class="icon icon-link"></span></a>SDKMAN 备忘清单</h1><div class="wrap-body">
+<p><a href="http://sdkman.io">SDKMAN</a> 是一款管理 java 体系中的各类 SDK 版本的工具，可以用于大多数基于 Uinx 的系统</p>
+</div></header><div class="menu-tocs"><div class="menu-btn"><svg aria-hidden="true" fill="currentColor" height="1em" width="1em" viewBox="0 0 16 16" version="1.1" data-view-component="true">
+  <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+</svg></div><div class="menu-modal"><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#入门">入门</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#安装">安装</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#获取帮助">获取帮助</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#查看">查看</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#安装卸载">安装卸载</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#更新">更新</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#帮助">帮助</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#安装本地版本">安装本地版本</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#使用版本">使用版本</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#查看当前使用的版本">查看当前使用的版本</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#配置-env">配置 ENV</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#升级版本">升级版本</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#sdkman-版本">SDKMAN 版本</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#自动更新">自动更新</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#home">Home</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#flush">Flush</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#离线模式">离线模式</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#更新-1">更新</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#配置">配置</a></div></div><div class="h1wrap-body"><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="入门"><a aria-hidden="true" tabindex="-1" href="#入门"><span class="icon icon-link"></span></a>入门</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="安装"><a aria-hidden="true" tabindex="-1" href="#安装"><span class="icon icon-link"></span></a>安装</h3><div class="wrap-body">
+<p>macOS/Linux</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line"><span class="token function">curl</span> <span class="token parameter variable">-s</span> <span class="token string">"https://get.sdkman.io"</span> <span class="token punctuation">\</span><span class="token operator">|</span> <span class="token function">bash</span>
+</span></code></pre>
+<p>Windows 需要 (WSL Approach) 或者 (Git Bash Approach)</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line"><span class="token function">curl</span> <span class="token parameter variable">-s</span> <span class="token string">"https://get.sdkman.io"</span> <span class="token punctuation">\</span><span class="token operator">|</span> <span class="token function">bash</span>
+</span></code></pre>
+<p>初始化 SDKMAN</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line"><span class="token builtin class-name">source</span> <span class="token string">"<span class="token environment constant">$HOME</span>/.sdkman/bin/sdkman-init.sh"</span>
+</span></code></pre>
+<p>查看 sdkman 是否安装成功</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk version
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="获取帮助"><a aria-hidden="true" tabindex="-1" href="#获取帮助"><span class="icon icon-link"></span></a>获取帮助</h3><div class="wrap-body">
+<p>您可以通过运行以下命令获得基本帮助：</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk <span class="token builtin class-name">help</span>
+</span></code></pre>
+<p>这将提供一个有用的顶级帮助页面。您可以向该命令添加限定符以获得有关特定子命令的帮助</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk <span class="token builtin class-name">help</span> <span class="token function">install</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="查看"><a aria-hidden="true" tabindex="-1" href="#查看"><span class="icon icon-link"></span></a>查看</h3><div class="wrap-body">
+<p>列出所有可用的 SDKs</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">sdk list
+</span></code></pre>
+<p>查看当前使用的 SDK</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk current
+</span></code></pre>
+<p>查看特定 SDK 的版本列表（例如，Java）</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk list <span class="token function">java</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist row-span-2"><div class="wrap-header h3wrap"><h3 id="安装卸载"><a aria-hidden="true" tabindex="-1" href="#安装卸载"><span class="icon icon-link"></span></a>安装卸载</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-2-->
+<p>安装特定版本的 SDK（例如，Java）</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk <span class="token function">install</span> <span class="token function">java</span> <span class="token operator">&#x3C;</span>version<span class="token operator">></span>
+</span></code></pre>
+<p>使用已安装的 SDK（例如，Java）</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk use <span class="token function">java</span> <span class="token operator">&#x3C;</span>version<span class="token operator">></span>
+</span></code></pre>
+<p>使用已安装的 SDK（例如，Java）</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk use <span class="token function">java</span> <span class="token operator">&#x3C;</span>version<span class="token operator">></span>
+</span></code></pre>
+<p>卸载 SDK（例如，Java）</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk uninstall <span class="token function">java</span> <span class="token operator">&#x3C;</span>version<span class="token operator">></span>
+</span></code></pre>
+<p>列出所有已安装的 SDKs</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk list installed
+</span></code></pre>
+<p>删除一个指定版本</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk uninstall scala <span class="token number">3.4</span>.1
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="更新"><a aria-hidden="true" tabindex="-1" href="#更新"><span class="icon icon-link"></span></a>更新</h3><div class="wrap-body">
+<p>更新 SDKMAN 自身</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk selfupdate
+</span></code></pre>
+<p>更新已安装的 SDKs</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk update
+</span></code></pre>
+<p>设置默认的 SDK 版本（例如，Java）</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk default <span class="token function">java</span> <span class="token operator">&#x3C;</span>version<span class="token operator">></span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="帮助"><a aria-hidden="true" tabindex="-1" href="#帮助"><span class="icon icon-link"></span></a>帮助</h3><div class="wrap-body">
+<p>查看 SDKMAN 所有可用的命令</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk <span class="token builtin class-name">help</span>
+</span></code></pre>
+<p>这些命令可以帮助你安装、管理和使用不同版本的 SDK，如 Java、Groovy、Gradle、Maven 等。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="安装本地版本"><a aria-hidden="true" tabindex="-1" href="#安装本地版本"><span class="icon icon-link"></span></a>安装本地版本</h3><div class="wrap-body">
+<p>使用快照版本？已经在本地安装了吗？通过指定本地安装的路径来安装本地版本：</p>
+<pre class="wrap-text"><code class="language-bash code-highlight"><span class="code-line">$ sdk <span class="token function">install</span> groovy <span class="token number">3.0</span>.0-SNAPSHOT /path/to/groovy-3.0.0-SNAPSHOT
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<pre class="wrap-text"><code class="language-bash code-highlight"><span class="code-line">$ sdk <span class="token function">install</span> <span class="token function">java</span> <span class="token number">17</span>-zulu /Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="使用版本"><a aria-hidden="true" tabindex="-1" href="#使用版本"><span class="icon icon-link"></span></a>使用版本</h3><div class="wrap-body">
+<p>查看已安装的 SDKs**：</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk list installed
+</span></code></pre>
+<p>切换使用特定版本的 SDK（例如，Java）：</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk use <span class="token function">java</span> <span class="token operator">&#x3C;</span>version<span class="token operator">></span>
+</span><span class="code-line">$ sdk use scala <span class="token number">3.4</span>.1
+</span></code></pre>
+<p>设置默认使用的 SDK 版本（例如，Java）：</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk default <span class="token function">java</span> <span class="token operator">&#x3C;</span>version<span class="token operator">></span>
+</span><span class="code-line">$ sdk default scala <span class="token number">3.4</span>.1
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="查看当前使用的版本"><a aria-hidden="true" tabindex="-1" href="#查看当前使用的版本"><span class="icon icon-link"></span></a>查看当前使用的版本</h3><div class="wrap-body">
+<p>要查 sdk 当前使用的版本：</p>
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ sdk current <span class="token function">java</span>
+</span><span class="code-line">Using <span class="token function">java</span> version <span class="token number">21.0</span>.2-tem
+</span></code></pre>
+<p>要查看所有 sdk 当前使用的版本：</p>
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ sdk current
+</span><span class="code-line">Using:
+</span><span class="code-line">groovy: <span class="token number">4.0</span>.20
+</span><span class="code-line">java: <span class="token number">21.0</span>.2-tem
+</span><span class="code-line">scala: <span class="token number">3.4</span>.1
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist row-span-3"><div class="wrap-header h3wrap"><h3 id="配置-env"><a aria-hidden="true" tabindex="-1" href="#配置-env"><span class="icon icon-link"></span></a>配置 ENV</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-3-->
+<p>切换到特定的 JDK 或 SDK，通过项目基本目录中的 <code>.sdkmanrc</code> 文件来实现。执行下面命令自动生配置文件：</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk <span class="token function">env</span> init
+</span></code></pre>
+<p>现在已经在当前目录中创建了一个包含以下内容的配置文件：</p>
+<pre class="wrap-text"><code class="language-shell code-highlight"><span class="code-line"><span class="token comment"># Enable auto-env through the sdkman_auto_env config</span>
+</span><span class="code-line"><span class="token comment"># Add key=value pairs of SDKs to use below</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token assign-left variable">java</span><span class="token operator">=</span><span class="token number">21.0</span>.2-tem
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>切换到 <code>.sdkmanrc</code>文件中的配置，只需发出以下命令：</p>
+<pre class="wrap-text"><code class="language-bash code-highlight"><span class="code-line">$ sdk <span class="token function">env</span>
+</span><span class="code-line"><span class="token comment"># 您应该看到如下输出：</span>
+</span><span class="code-line"><span class="token comment"># Using java version 21.0.2-tem in this shell.</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>通过下面命令，将 SDK 重置为默认版本</p>
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ sdk <span class="token function">env</span> <span class="token function">clear</span>
+</span></code></pre>
+<p>安装 <code>.sdkmanrc</code> 配置文件中指定丢失的 SDK</p>
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ sdk <span class="token function">env</span> <span class="token function">install</span>
+</span></code></pre>
+<p>在 cd 到目录中时自动切换 SDK 版本，可以通过在 sdkman 配置中设置 <code>sdkman_auto_env=true</code> 来实现。请注意，这也会在离开目录时将任何特定于项目的SDK重置为默认版本。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="升级版本"><a aria-hidden="true" tabindex="-1" href="#升级版本"><span class="icon icon-link"></span></a>升级版本</h3><div class="wrap-body">
+<p>升级特定 SDK 到最新版本</p>
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ sdk upgrade springboot
+</span></code></pre>
+<p>要查看所有 SDK 的过时内容：</p>
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ sdk upgrade
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="sdkman-版本"><a aria-hidden="true" tabindex="-1" href="#sdkman-版本"><span class="icon icon-link"></span></a>SDKMAN 版本</h3><div class="wrap-body">
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ sdk version
+</span><span class="code-line">
+</span><span class="code-line">SDKMAN<span class="token operator">!</span>
+</span><span class="code-line">script: <span class="token number">5.7</span>.0
+</span><span class="code-line">native: <span class="token number">0.1</span>.3
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="自动更新"><a aria-hidden="true" tabindex="-1" href="#自动更新"><span class="icon icon-link"></span></a>自动更新</h3><div class="wrap-body">
+<p>安装新版本的 <code>SDKMAN</code> 如果可用</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk selfupdate
+</span></code></pre>
+<p>通过将 force 参数传递给命令强制重新安装：</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk selfupdate force
+</span></code></pre>
+<p>自动每日检查新版本的SDKMAN！也将代表用户执行。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="home"><a aria-hidden="true" tabindex="-1" href="#home"><span class="icon icon-link"></span></a>Home</h3><div class="wrap-body">
+<p>获取 SDK 所在位置的绝对路径</p>
+<pre class="wrap-text"><code class="language-shell code-highlight"><span class="code-line">$ sdk home <span class="token function">java</span> <span class="token number">21.0</span>.2-tem
+</span><span class="code-line">
+</span><span class="code-line"><span class="token comment"># /home/myuser/.sdkman/candidates/java/21.0.2-tem</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="flush"><a aria-hidden="true" tabindex="-1" href="#flush"><span class="icon icon-link"></span></a>Flush</h3><div class="wrap-body">
+<p>应该很少需要刷新 <code>SDKMAN</code> 。flush 命令有助于实现这一点，因此您不需要删除任何目录。</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ sdk flush
+</span></code></pre>
+<p>手动删除像 <code>.sdkman/tmp</code> 目录这样的目录会破坏 sdkman！请始终使用 flush 命令！</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="离线模式"><a aria-hidden="true" tabindex="-1" href="#离线模式"><span class="icon icon-link"></span></a>离线模式</h3><div class="wrap-body">
+<p>启用强制脱机模式</p>
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ sdk offline <span class="token builtin class-name">enable</span>
+</span></code></pre>
+<p>重新启用联机模式</p>
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ sdk offline disable
+</span></code></pre>
+<p>离线模式下显示当前安装的和活动的版本：</p>
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ sdk list groovy
+</span><span class="code-line"><span class="token comment"># ---------------------------</span>
+</span><span class="code-line"><span class="token comment"># </span>
+</span><span class="code-line"><span class="token comment"># 离线模式：仅显示已安装的groovy版本</span>
+</span><span class="code-line"><span class="token comment"># --------------------------</span>
+</span><span class="code-line"><span class="token comment"># ></span>
+</span><span class="code-line"><span class="token comment"># > 2.4.4</span>
+</span><span class="code-line"><span class="token comment"># </span>
+</span><span class="code-line"><span class="token comment"># - 2.4.3</span>
+</span><span class="code-line"><span class="token comment"># </span>
+</span><span class="code-line"><span class="token comment"># --------------------------</span>
+</span><span class="code-line"><span class="token comment"># </span>
+</span><span class="code-line"><span class="token comment"># - - installed</span>
+</span><span class="code-line"><span class="token comment"># ></span>
+</span><span class="code-line"><span class="token comment"># > - currently in use</span>
+</span><span class="code-line"><span class="token comment"># ></span>
+</span><span class="code-line"><span class="token comment"># ---------------------------</span>
+</span></code></pre>
+<p>当互联网可用/不可用时，离线模式也将自动禁用/启用。当然，需要互联网连接的命令不会起作用，但会发出警告。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="更新-1"><a aria-hidden="true" tabindex="-1" href="#更新-1"><span class="icon icon-link"></span></a>更新</h3><div class="wrap-body">
+<p>当 SDK 元数据可能变得过时时，会显示一条警告，并说明如何更新。</p>
+<pre class="wrap-text"><code class="language-shell code-highlight"><span class="code-line">WARNING: SDKMAN is out-of-date and requires an update.
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>只需运行以下命令，就可以刷新 SDK 缓存，并且可以安装新的 SDK 缓存：</p>
+<pre class="wrap-text"><code class="language-shell code-highlight"><span class="code-line">$ sdk update
+</span><span class="code-line"><span class="token comment"># Adding new candidates(s): kotlin</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>定期更新 <code>SDKMAN</code> 需要更新以了解新的（或已删除的）SDK。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="配置"><a aria-hidden="true" tabindex="-1" href="#配置"><span class="icon icon-link"></span></a>配置</h3><div class="wrap-body">
+<p>可以在 <code>~/.sdkman/etc/config</code> 文件中找到配置。要编辑配置，可以发出 <code>sdk-config</code> 命令在系统编辑器中编辑此文件。以下配置可用：</p>
+<pre class="wrap-text"><code class="language-ini code-highlight"><span class="code-line"><span class="token comment"># 使 sdkman 成为非交互式的，适用于 CI 环境</span>
+</span><span class="code-line"><span class="token key attr-name">sdkman_auto_answer</span><span class="token punctuation">=</span><span class="token value attr-value">true|false</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token comment"># 检查更新版本并提示更新</span>
+</span><span class="code-line"><span class="token key attr-name">sdkman_selfupdate_feature</span><span class="token punctuation">=</span><span class="token value attr-value">true|false</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token comment"># 禁用 SSL 证书验证</span>
+</span><span class="code-line"><span class="token comment"># https://github.com/sdkman/sdkman-cli/issues/327</span>
+</span><span class="code-line"><span class="token comment"># HERE BE DRAGONS....</span>
+</span><span class="code-line"><span class="token key attr-name">sdkman_insecure_ssl</span><span class="token punctuation">=</span><span class="token value attr-value">true|false</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token comment"># 配置 curl 超时</span>
+</span><span class="code-line"><span class="token key attr-name">sdkman_curl_connect_timeout</span><span class="token punctuation">=</span><span class="token value attr-value">5</span>
+</span><span class="code-line"><span class="token key attr-name">sdkman_curl_continue</span><span class="token punctuation">=</span><span class="token value attr-value">true</span>
+</span><span class="code-line"><span class="token key attr-name">sdkman_curl_max_time</span><span class="token punctuation">=</span><span class="token value attr-value">10</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token comment"># 订阅测试版频道</span>
+</span><span class="code-line"><span class="token key attr-name">sdkman_beta_channel</span><span class="token punctuation">=</span><span class="token value attr-value">true|false</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token comment"># 启用详细调试</span>
+</span><span class="code-line"><span class="token key attr-name">sdkman_debug_mode</span><span class="token punctuation">=</span><span class="token value attr-value">true|false</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token comment"># 启用色彩模式</span>
+</span><span class="code-line"><span class="token key attr-name">sdkman_colour_enable</span><span class="token punctuation">=</span><span class="token value attr-value">true|false</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token comment"># 启用自动环境</span>
+</span><span class="code-line"><span class="token key attr-name">sdkman_auto_env</span><span class="token punctuation">=</span><span class="token value attr-value">true|false</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token comment"># 启用 bash 或 zsh 自动完成功能</span>
+</span><span class="code-line"><span class="token key attr-name">sdkman_auto_complete</span><span class="token punctuation">=</span><span class="token value attr-value">true|false</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+</div></div></div></div></div></div><script src="https://giscus.app/client.js" data-repo="jaywcjlove/reference" data-repo-id="R_kgDOID2-Mw" data-category="Q&#x26;A" data-category-id="DIC_kwDOID2-M84CS5wo" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="dark" data-lang="zh-CN" crossorigin="anonymous" async></script><div class="giscus"></div></div><footer class="footer-wrap"><footer class="max-container">© 2022 <a href="https://wangchujiang.com/#/app" target="_blank">Kenny Wang</a>.</footer></footer><script src="../data.js?v=1.8.1" defer></script><script src="../js/fuse.min.js?v=1.8.1" defer></script><script src="../js/main.js?v=1.8.1" defer></script><div id="mysearch"><div class="mysearch-box"><div class="mysearch-input"><div><svg xmlns="http://www.w3.org/2000/svg" height="1em" width="1em" viewBox="0 0 18 18">
+  <path fill="currentColor" d="M17.71,16.29 L14.31,12.9 C15.4069846,11.5024547 16.0022094,9.77665502 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 C9.77665502,16.0022094 11.5024547,15.4069846 12.9,14.31 L16.29,17.71 C16.4777666,17.8993127 16.7333625,18.0057983 17,18.0057983 C17.2666375,18.0057983 17.5222334,17.8993127 17.71,17.71 C17.8993127,17.5222334 18.0057983,17.2666375 18.0057983,17 C18.0057983,16.7333625 17.8993127,16.4777666 17.71,16.29 Z M2,8 C2,4.6862915 4.6862915,2 8,2 C11.3137085,2 14,4.6862915 14,8 C14,11.3137085 11.3137085,14 8,14 C4.6862915,14 2,11.3137085 2,8 Z"></path>
+</svg><input id="mysearch-input" type="search" placeholder="搜索" autocomplete="off"><div class="mysearch-clear"></div></div><button id="mysearch-close" type="button">搜索</button></div><div class="mysearch-result"><div id="mysearch-menu"></div><div id="mysearch-content"></div></div></div></div></body>
+</html>

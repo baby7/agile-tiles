@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en" data-color-mode="dark">
+<head>
+<meta charset="utf-8">
+<title>Dockerfile 备忘清单
+ &#x26;  dockerfile cheatsheet &#x26;  Quick Reference</title>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta description="这是 Dockerfile 的快速参考备忘单。包含用户可以在命令行上调用以组装镜像的所有命令。
+
+参考，为开发人员分享快速参考备忘单。">
+<meta keywords="dockerfile,reference,Quick,Reference,cheatsheet,cheat,sheet">
+<meta name="author" content="jaywcjlove">
+<meta name="license" content="MIT">
+<meta name="funding" content="https://jaywcjlove.github.io/#/sponsor">
+<meta rel="apple-touch-icon" href="../icons/touch-icon-iphone.png">
+<meta rel="apple-touch-icon" sizes="152x152" href="../icons/touch-icon-ipad.png">
+<meta rel="apple-touch-icon" sizes="180x180" href="../icons/touch-icon-iphone.png">
+<meta rel="apple-touch-icon" sizes="167x167" href="../icons/touch-icon-ipad-retina.png">
+<meta rel="apple-touch-icon" sizes="120x120" href="../icons/touch-icon-iphone-retina.png">
+<link rel="icon" href="../icons/favicon.svg" type="image/svg+xml">
+<link href="../style/style.css" rel="stylesheet">
+<link href="../style/katex.css" rel="stylesheet">
+</head>
+<body><nav class="header-nav"><div class="max-container"><a href="../index.html" class="logo"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" height="1em" width="1em">
+  <path d="m21.66 10.44-.98 4.18c-.84 3.61-2.5 5.07-5.62 4.77-.5-.04-1.04-.13-1.62-.27l-1.68-.4c-4.17-.99-5.46-3.05-4.48-7.23l.98-4.19c.2-.85.44-1.59.74-2.2 1.17-2.42 3.16-3.07 6.5-2.28l1.67.39c4.19.98 5.47 3.05 4.49 7.23Z" fill="#c9d1d9"></path>
+  <path d="M15.06 19.39c-.62.42-1.4.77-2.35 1.08l-1.58.52c-3.97 1.28-6.06.21-7.35-3.76L2.5 13.28c-1.28-3.97-.22-6.07 3.75-7.35l1.58-.52c.41-.13.8-.24 1.17-.31-.3.61-.54 1.35-.74 2.2l-.98 4.19c-.98 4.18.31 6.24 4.48 7.23l1.68.4c.58.14 1.12.23 1.62.27Zm2.43-8.88c-.06 0-.12-.01-.19-.02l-4.85-1.23a.75.75 0 0 1 .37-1.45l4.85 1.23a.748.748 0 0 1-.18 1.47Z" fill="#228e6c"></path>
+  <path d="M14.56 13.89c-.06 0-.12-.01-.19-.02l-2.91-.74a.75.75 0 0 1 .37-1.45l2.91.74c.4.1.64.51.54.91-.08.34-.38.56-.72.56Z" fill="#228e6c"></path>
+</svg>
+<span class="title">Quick Reference</span></a><div class="menu"><a href="javascript:void(0);" class="searchbtn" id="searchbtn"><svg xmlns="http://www.w3.org/2000/svg" height="1em" width="1em" viewBox="0 0 18 18">
+  <path fill="currentColor" d="M17.71,16.29 L14.31,12.9 C15.4069846,11.5024547 16.0022094,9.77665502 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 C9.77665502,16.0022094 11.5024547,15.4069846 12.9,14.31 L16.29,17.71 C16.4777666,17.8993127 16.7333625,18.0057983 17,18.0057983 C17.2666375,18.0057983 17.5222334,17.8993127 17.71,17.71 C17.8993127,17.5222334 18.0057983,17.2666375 18.0057983,17 C18.0057983,16.7333625 17.8993127,16.4777666 17.71,16.29 Z M2,8 C2,4.6862915 4.6862915,2 8,2 C11.3137085,2 14,4.6862915 14,8 C14,11.3137085 11.3137085,14 8,14 C4.6862915,14 2,11.3137085 2,8 Z"></path>
+</svg><span>搜索</span><span>⌘K</span></a><a href="https://github.com/jaywcjlove/reference/blob/main/docs/dockerfile.md" class="" target="__blank"><svg viewBox="0 0 36 36" fill="currentColor" height="1em" width="1em"><path d="m33 6.4-3.7-3.7a1.71 1.71 0 0 0-2.36 0L23.65 6H6a2 2 0 0 0-2 2v22a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V11.76l3-3a1.67 1.67 0 0 0 0-2.36ZM18.83 20.13l-4.19.93 1-4.15 9.55-9.57 3.23 3.23ZM29.5 9.43 26.27 6.2l1.85-1.85 3.23 3.23Z"></path><path fill="none" d="M0 0h36v36H0z"></path></svg><span>编辑</span></a><button id="darkMode" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="light" height="1em" width="1em">
+  <path d="M6.995 12c0 2.761 2.246 5.007 5.007 5.007s5.007-2.246 5.007-5.007-2.246-5.007-5.007-5.007S6.995 9.239 6.995 12zM11 19h2v3h-2zm0-17h2v3h-2zm-9 9h3v2H2zm17 0h3v2h-3zM5.637 19.778l-1.414-1.414 2.121-2.121 1.414 1.414zM16.242 6.344l2.122-2.122 1.414 1.414-2.122 2.122zM6.344 7.759 4.223 5.637l1.415-1.414 2.12 2.122zm13.434 10.605-1.414 1.414-2.122-2.122 1.414-1.414z"></path>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="dark" height="1em" width="1em">
+  <path d="M12 11.807A9.002 9.002 0 0 1 10.049 2a9.942 9.942 0 0 0-5.12 2.735c-3.905 3.905-3.905 10.237 0 14.142 3.906 3.906 10.237 3.905 14.143 0a9.946 9.946 0 0 0 2.735-5.119A9.003 9.003 0 0 1 12 11.807z"></path>
+</svg>
+</button><script src="../js/dark.js?v=1.8.1"></script><a href="https://github.com/jaywcjlove/reference" class="" target="__blank"><svg viewBox="0 0 16 16" fill="currentColor" height="1em" width="1em"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></nav><div class="wrap h1body-exist max-container"><header class="wrap-header h1wrap"><h1 id="dockerfile-备忘清单"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 50 50" height="1em" width="1em">
+  <path style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Sans" d="M20 9v5H10v5H5v5H1.125a1 1 0 0 0-.969.813S0 25.666 0 26.75c0 .687.07 1.433.188 2.188C.13 28.95.051 28.986 0 29h.188a15.52 15.52 0 0 0 2.062 5.563c.005.007-.005.023 0 .03a1 1 0 0 0 .031.063 1 1 0 0 0 .375.594 1 1 0 0 0 .063.031c.307.445.633.89 1 1.313C6.396 39.679 10.737 42 17 42c10.221 0 18.869-4.354 23.75-13h9.094c-1.086-.275-3.42-.64-3.032-2.063-1.292 1.496-3.755 1.684-5.656 1.344.362-.688.717-1.385 1.032-2.125 2.891-.073 4.964-1.004 6.124-2.125 1.268-1.225 1.657-2.593 1.657-2.593a1 1 0 0 0-.344-1.032s-2.527-1.842-6.313-1.218c-1.08-3.537-3.874-5.25-3.874-5.25a1 1 0 0 0-.688-.126 1 1 0 0 0-.438.22s-.668.57-1.218 1.593c-.55 1.024-1.057 2.582-.875 4.594.085.941.382 1.837.812 2.687-.242.148-.383.273-.781.438-.828.342-2.034.656-3.75.656H32v-5h-5V9h-7zm2 2h3v3h-3v-3zm-10 5h3v3h-3v-3zm5 0h3v3h-3v-3zm5 0h3v3h-3v-3zm17.094.219c.742.549 2.085 1.701 2.562 4.218a1 1 0 0 0 1.25.782c2.55-.7 3.93-.125 4.688.312-.145.315-.12.514-.688 1.063-.91.88-2.452 1.766-5.343 1.656a1 1 0 0 0-.97.625 27.36 27.36 0 0 1-1.343 2.813 2.11 2.11 0 0 1-.375-.282c-1.338 1.94-9.113 1.2-9.656-.312-1.677 1.968-6.885 1.968-8.563 0-.543 1.512-8.35 2.252-9.687.312-1.201 1.126-5.932 1.816-7.906-.468.187.688-.297 1.133-.938 1.437A11.462 11.462 0 0 1 2 26.75c0-.431.033-.47.063-.75H32.5c1.969 0 3.446-.377 4.5-.813 1.054-.435 1.803-.969 1.906-1.03a1 1 0 0 0 .25-1.47c-.554-.724-.844-1.627-.937-2.656-.146-1.612.234-2.74.625-3.468.133-.248.139-.195.25-.344zM7 21h3v3H7v-3zm5 0h3v3h-3v-3zm5 0h3v3h-3v-3zm5 0h3v3h-3v-3zm5 0h3v3h-3v-3zM2.25 29H38.5C33.912 36.414 26.29 40 17 40c-5.47 0-9.016-1.854-11.344-4.313 4.438.211 7.875-.968 7.875-.968a1.008 1.008 0 0 0-.25-2 1.005 1.005 0 0 0-.156.031 1 1 0 0 0-.25.063S8.785 34.208 4 33.53A13.95 13.95 0 0 1 2.25 29zM16 31a1 1 0 1 0 1 1 .949.949 0 0 0-.063-.375.443.443 0 0 1-.375.219c-.225 0-.406-.213-.406-.438 0-.15.097-.273.219-.343A1.055 1.055 0 0 0 16 31z"></path>
+</svg>
+<a aria-hidden="true" tabindex="-1" href="#dockerfile-备忘清单"><span class="icon icon-link"></span></a>Dockerfile 备忘清单</h1><div class="wrap-body">
+<p>这是 <a href="https://docs.docker.com/engine/reference/builder/">Dockerfile</a> 的快速参考备忘单。包含用户可以在命令行上调用以组装镜像的所有命令。</p>
+</div></header><div class="menu-tocs"><div class="menu-btn"><svg aria-hidden="true" fill="currentColor" height="1em" width="1em" viewBox="0 0 16 16" version="1.1" data-view-component="true">
+  <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+</svg></div><div class="menu-modal"><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#参考">参考</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#继承">继承</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#继承-1">继承</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#变量-env">变量 ENV</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#初始化">初始化</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#onbuild">Onbuild</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#在严格的-shell-中运行命令">在严格的 shell 中运行命令</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#命令-cmd">命令 CMD</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#入口点-entrypoint">入口点 ENTRYPOINT</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#元数据-label">元数据 LABEL</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#arg">ARG</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#dockerignore-文件">.dockerignore 文件</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#主要命令">主要命令</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#dockerfile-示例">Dockerfile 示例</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#服务静态网站的最小-docker-镜像">服务静态网站的最小 Docker 镜像</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#docker-镜像多阶段构建">Docker 镜像多阶段构建</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#也可以看看">也可以看看</a></div></div><div class="h1wrap-body"><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="参考"><a aria-hidden="true" tabindex="-1" href="#参考"><span class="icon icon-link"></span></a>参考</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="继承"><a aria-hidden="true" tabindex="-1" href="#继承"><span class="icon icon-link"></span></a>继承</h3><div class="wrap-body">
+<p>默认 <code>Dockerfile</code> 位于上下文的根目录中。</p>
+<ul>
+<li><a href="./docker.html">Docker 备忘清单</a> <em>(github.io)</em></li>
+</ul>
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line"><span class="token function">docker</span> build <span class="token parameter variable">-f</span> /path/to/a/Dockerfile <span class="token builtin class-name">.</span>
+</span></code></pre>
+<p>使用 <code>-f</code> 指向文件系统中任何位置的 <code>Dockerfile</code>。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="继承-1"><a aria-hidden="true" tabindex="-1" href="#继承-1"><span class="icon icon-link"></span></a>继承</h3><div class="wrap-body">
+<pre class="wrap-text "><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">FROM</span> [--platform=&#x3C;platform>] &#x3C;image> [AS &#x3C;name>]</span>
+</span></code></pre>
+<!--rehype:className=wrap-text -->
+<p>示例</p>
+<pre class="language-dockerfile"><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">FROM</span> ruby:3.3.0</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">FROM</span> golang:1.20-alpine3.16 <span class="token keyword">AS</span> build-env</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="变量-env"><a aria-hidden="true" tabindex="-1" href="#变量-env"><span class="icon icon-link"></span></a>变量 ENV</h3><div class="wrap-body">
+<pre class="language-dockerfile"><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">ENV</span> &#x3C;key>=&#x3C;value> ...</span>
+</span></code></pre>
+<pre class="language-dockerfile"><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">ENV</span> APP_HOME /myapp</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">RUN</span> mkdir <span class="token variable">$APP_HOME</span></span>
+</span></code></pre>
+<pre class="language-dockerfile"><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">ENV</span> MY_NAME=<span class="token string">"John Doe"</span> MY_DOG=Rex\ The\ Dog <span class="token operator">\</span>
+</span></span><span class="code-line"><span class="token instruction">    MY_CAT=fluffy</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist row-span-2"><div class="wrap-header h3wrap"><h3 id="初始化"><a aria-hidden="true" tabindex="-1" href="#初始化"><span class="icon icon-link"></span></a>初始化</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-2 -->
+<pre class="language-dockerfile"><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">RUN</span> bundle install</span>
+</span></code></pre>
+<p><code>WORKDIR</code> 指令为任何 <code>RUN</code>、<code>CMD</code>、<code>ENTRYPOINT</code>、<code>COPY</code> 和 <code>ADD</code> 指令设置工作目录。</p>
+<pre class="language-dockerfile"><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">WORKDIR</span> /myapp</span>
+</span></code></pre>
+<p><code>VOLUME</code> 指令创建一个具有指定名称的挂载点，并将其标记为保存来自本机主机或其他容器的外部挂载卷。</p>
+<pre class="language-dockerfile"><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">VOLUME</span> [<span class="token string">"/data"</span>]</span>
+</span><span class="code-line"><span class="token comment"># 安装点规范</span>
+</span></code></pre>
+<pre class="wrap-text "><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">ADD</span> file.xyz /file.xyz</span>
+</span><span class="code-line"><span class="token comment"># 复制</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">COPY</span> <span class="token options"><span class="token property">--chown</span><span class="token punctuation">=</span><span class="token string">user:group</span></span> host_file.xyz /path/container_file.xyz</span>
+</span></code></pre>
+<!--rehype:className=wrap-text -->
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="onbuild"><a aria-hidden="true" tabindex="-1" href="#onbuild"><span class="icon icon-link"></span></a>Onbuild</h3><div class="wrap-body">
+<pre class="wrap-text "><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">ONBUILD</span> <span class="token keyword">RUN</span> bundle install</span>
+</span><span class="code-line"><span class="token comment"># 与另一个文件一起使用时</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">ONBUILD</span> <span class="token keyword">ADD</span> . /app/src</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">ONBUILD</span> <span class="token keyword">RUN</span> /usr/local/bin/python-build --dir /app/src</span>
+</span></code></pre>
+<!--rehype:className=wrap-text -->
+<p>指令将触发指令添加到镜像中，以便稍后执行，此时镜像用作另一个构建的基础。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="在严格的-shell-中运行命令"><a aria-hidden="true" tabindex="-1" href="#在严格的-shell-中运行命令"><span class="icon icon-link"></span></a>在严格的 shell 中运行命令</h3><div class="wrap-body">
+<pre class="wrap-text "><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">ENV</span> my_var</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">SHELL</span> [<span class="token string">"/bin/bash"</span>, <span class="token string">"-euo"</span>, <span class="token string">"pipefail"</span>, <span class="token string">"-c"</span>]</span>
+</span><span class="code-line"><span class="token comment"># 使用严格模式：</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">RUN</span> false         # ails 像使用 &#x26;&#x26; 一样构建</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">RUN</span> echo <span class="token string">"$myvar"</span> # 由于拼写错误会抛出错误</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">RUN</span> true | false  # 将脱离管道</span>
+</span></code></pre>
+<!--rehype:className=wrap-text -->
+<p>使用 <code>shell</code> 将为 shell 命令打开严格模式。</p>
+</div></div></div><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="命令-cmd"><a aria-hidden="true" tabindex="-1" href="#命令-cmd"><span class="icon icon-link"></span></a>命令 CMD</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="auto-wrap"><thead><tr><th align="left">:-</th><th>-</th></tr></thead><tbody><tr><td align="left"><code>CMD ["executable","param1","param2"]</code></td><td>(exec 形式，这是首选形式)</td></tr><tr><td align="left"><code>CMD ["param1","param2"]</code></td><td>(作为 ENTRYPOINT 的默认参数)</td></tr><tr><td align="left"><code>CMD command param1 param2</code></td><td>(shell形式)</td></tr></tbody></table>
+<!--rehype:class=auto-wrap-->
+<pre class="language-dockerfile"><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">EXPOSE</span> 5900</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">CMD</span> [<span class="token string">"bundle"</span>, <span class="token string">"exec"</span>, <span class="token string">"rails"</span>, <span class="token string">"server"</span>]</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="入口点-entrypoint"><a aria-hidden="true" tabindex="-1" href="#入口点-entrypoint"><span class="icon icon-link"></span></a>入口点 ENTRYPOINT</h3><div class="wrap-body">
+<pre class="wrap-text "><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">ENTRYPOINT</span> [<span class="token string">"executable"</span>, <span class="token string">"param1"</span>, <span class="token string">"param2"</span>]</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">ENTRYPOINT</span> command param1 param2</span>
+</span></code></pre>
+<!--rehype:className=wrap-text -->
+<p>配置将作为可执行文件运行的容器。</p>
+<pre class="language-dockerfile"><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">ENTRYPOINT</span> exec top -b</span>
+</span></code></pre>
+<p>这将使用 shell 处理来替换 shell 变量，并将忽略任何 <code>CMD</code> 或 <code>docker run</code> 命令行参数。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="元数据-label"><a aria-hidden="true" tabindex="-1" href="#元数据-label"><span class="icon icon-link"></span></a>元数据 LABEL</h3><div class="wrap-body">
+<pre class="language-dockerfile"><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">LABEL</span> version=<span class="token string">"1.0"</span></span>
+</span></code></pre>
+<pre class="wrap-text "><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">LABEL</span> <span class="token string">"com.example.vendor"</span>=<span class="token string">"ACME Incorporated"</span></span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">LABEL</span> com.example.label-with-value=<span class="token string">"foo"</span></span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">LABEL</span> version=<span class="token string">"1.0"</span></span>
+</span></code></pre>
+<!--rehype:className=wrap-text -->
+<pre class="language-dockerfile"><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">LABEL</span> description=<span class="token string">"本文说明\
+</span></span></span><span class="code-line"><span class="token instruction"><span class="token string">标签值可以跨越多行。"</span></span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">LABEL</span> multi.label1=<span class="token string">"value1"</span> <span class="token operator">\</span>
+</span></span><span class="code-line"><span class="token instruction">      multi.label2=<span class="token string">"value2"</span> <span class="token operator">\</span>
+</span></span><span class="code-line"><span class="token instruction">      other=<span class="token string">"value3"</span></span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="arg"><a aria-hidden="true" tabindex="-1" href="#arg"><span class="icon icon-link"></span></a>ARG</h3><div class="wrap-body">
+<pre class="language-dockerfile"><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">ARG</span> &#x3C;name>[=&#x3C;default value>]</span>
+</span></code></pre>
+<p>指令定义了一个变量，在构建时通过 <code>docker build</code> 命令使用 --build-arg <code>&#x3C;varname>=&#x3C;value></code> 标志将其传递给构建器。</p>
+<pre class="language-dockerfile"><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">FROM</span> busybox</span>
+</span><span class="code-line"><span class="token comment"># user1 默认值为 someuser</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">ARG</span> user1=someuser</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">ARG</span> buildno=1</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="dockerignore-文件"><a aria-hidden="true" tabindex="-1" href="#dockerignore-文件"><span class="icon icon-link"></span></a>.dockerignore 文件</h3><div class="wrap-body">
+<pre class="language-ignore"><code class="language-ignore code-highlight"><span class="code-line"><span class="token comment"># 注释说明</span>
+</span><span class="code-line"><span class="token entry string"><span class="token operator">*</span><span class="token punctuation">/</span>temp<span class="token operator">*</span></span>
+</span><span class="code-line"><span class="token entry string"><span class="token operator">*</span><span class="token punctuation">/</span><span class="token operator">*</span><span class="token punctuation">/</span>temp<span class="token operator">*</span></span>
+</span><span class="code-line"><span class="token entry string">temp<span class="token operator">?</span></span>
+</span></code></pre>
+<hr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="auto-wrap"><thead><tr><th align="left">:-</th><th>-</th></tr></thead><tbody><tr><td align="left"><code># comment</code></td><td>忽略</td></tr><tr><td align="left"><code>*/temp*</code></td><td>在根的任何直接子目录中<br>排除名称以 <code>temp</code> 开头的文件和目录</td></tr><tr><td align="left"><code>*/*/temp*</code></td><td>从根以下两级的任何子目录中<br>排除以 <code>temp</code> 开头的文件和目录</td></tr><tr><td align="left"><code>temp?</code></td><td>排除根目录中名称为<br> <code>temp</code> 的单字符扩展名的文件和目录</td></tr></tbody></table>
+<!--rehype:class=auto-wrap-->
+<p>如果此文件存在，排除与其中的模式匹配的文件和目录，有利于避免 <code>ADD</code> 或 <code>COPY</code> 将敏感文件添加到镜像中。匹配是使用 Go 的 <a href="https://golang.org/pkg/path/filepath#Match">filepath.Match</a> 规则完成的。</p>
+</div></div></div><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="主要命令"><a aria-hidden="true" tabindex="-1" href="#主要命令"><span class="icon icon-link"></span></a>主要命令</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2 -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="auto-wrap"><thead><tr><th align="left">命令</th><th>说明</th></tr></thead><tbody><tr><td align="left"><code>FROM image</code></td><td>构建的基础镜像</td></tr><tr><td align="left"><del><code>MAINTAINER email</code></del></td><td>(已弃用)维护者的名字</td></tr><tr><td align="left"><code>COPY [--chown=&#x3C;user>:&#x3C;group>] &#x3C;src>... &#x3C;dest></code></td><td>将上下文中的路径复制到位置 <code>dest</code> 的容器中</td></tr><tr><td align="left"><code>ADD [--chown=&#x3C;user>:&#x3C;group>] &#x3C;src>... &#x3C;dest></code></td><td>与 <code>COPY</code> 相同，但解压缩存档并接受 http url。</td></tr><tr><td align="left"><code>RUN &#x3C;command></code></td><td>在容器内运行任意命令。</td></tr><tr><td align="left"><code>USER &#x3C;user>[:&#x3C;group>]</code></td><td>设置默认用户名。</td></tr><tr><td align="left"><code>WORKDIR /path/to/workdir</code></td><td>设置默认工作目录。</td></tr><tr><td align="left"><code>CMD command param1 param2</code></td><td>设置默认命令</td></tr><tr><td align="left"><code>ENV &#x3C;key>=&#x3C;value> ...</code></td><td>设置环境变量</td></tr><tr><td align="left"><code>EXPOSE &#x3C;port> [&#x3C;port>/&#x3C;protocol>...]</code></td><td>运行时侦听指定的网络端口</td></tr></tbody></table>
+<!--rehype:class=auto-wrap-->
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="dockerfile-示例"><a aria-hidden="true" tabindex="-1" href="#dockerfile-示例"><span class="icon icon-link"></span></a>Dockerfile 示例</h2><div class="wrap-body">
+<!--rehype:body-class=cols-2-->
+</div></div><div class="h2wrap-body cols-2"><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="服务静态网站的最小-docker-镜像"><a aria-hidden="true" tabindex="-1" href="#服务静态网站的最小-docker-镜像"><span class="icon icon-link"></span></a>服务静态网站的最小 Docker 镜像</h3><div class="wrap-body">
+<pre class="language-dockerfile"><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">FROM</span> wcjiang/docker-static-website:latest</span>
+</span><span class="code-line"><span class="token comment"># 使用 .dockerignore 文件来控制镜像中的内容！</span>
+</span><span class="code-line"><span class="token comment"># 复制当前目录内容，到容器中</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">COPY</span> ./ .</span>
+</span></code></pre>
+<p>这会产生一个 <strong><code>154KB +</code></strong> 的单层镜像。 如果您需要以不同的方式配置 <code>httpd</code>，您可以覆盖 CMD 行：</p>
+<pre class="language-dockerfile"><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">FROM</span> wcjiang/docker-static-website:latest</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">COPY</span> . .</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">CMD</span> [<span class="token string">"/busybox"</span>,<span class="token string">"httpd"</span>,<span class="token string">"-f"</span>,<span class="token string">"-v"</span>,<span class="token string">"-p"</span>,<span class="token string">"3000"</span>,<span class="token string">"-c"</span>,<span class="token string">"httpd.conf"</span>]</span>
+</span></code></pre>
+<p>缩小镜像过程<a href="https://lipanski.com/posts/smallest-docker-image-static-website">查看原文</a>，镜像 <a href="https://github.com/forksss/docker-static-website">Dockerfile 源码</a>。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="docker-镜像多阶段构建"><a aria-hidden="true" tabindex="-1" href="#docker-镜像多阶段构建"><span class="icon icon-link"></span></a>Docker 镜像多阶段构建</h3><div class="wrap-body">
+<pre class="wrap-text "><code class="language-dockerfile code-highlight"><span class="code-line"><span class="token instruction"><span class="token keyword">FROM</span> golang:alpine <span class="token keyword">as</span> builder</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">RUN</span> apk --no-cache add git</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">WORKDIR</span> /go/src/github.com/go/helloworld/</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">RUN</span> go get -d -v github.com/go-sql-driver/mysql</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">COPY</span> app.go .</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">RUN</span> CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">FROM</span> alpine:latest <span class="token keyword">as</span> prod</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">RUN</span> apk --no-cache add ca-certificates</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">WORKDIR</span> /root/</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">COPY</span> <span class="token options"><span class="token property">--from</span><span class="token punctuation">=</span><span class="token string">builder</span></span> /go/src/github.com/go/helloworld/app .</span>
+</span><span class="code-line"><span class="token instruction"><span class="token keyword">CMD</span> [<span class="token string">"./app"</span>]</span>
+</span></code></pre>
+<!--rehype:className=wrap-text -->
+<p>使用多阶段构建能将构建依赖留在 builder 镜像中，只将编译完成后的二进制文件拷贝到运行环境中，大大减少镜像体积。</p>
+</div></div></div></div></div><div class="wrap h2body-not-exist"><div class="wrap-header h2wrap"><h2 id="也可以看看"><a aria-hidden="true" tabindex="-1" href="#也可以看看"><span class="icon icon-link"></span></a>也可以看看</h2><div class="wrap-body">
+<ul>
+<li><a href="https://docs.docker.com/engine/reference/builder/">Dockerfile reference</a> <em>(docker.com)</em></li>
+<li><a href="./docker.html">Docker 备忘清单</a> <em>(github.io)</em></li>
+<li><a href="https://jaywcjlove.github.io/docker-tutorial">Docker入门学习笔记</a> <em>(github.io)</em></li>
+</ul>
+</div></div><div class="h2wrap-body"></div></div></div><script src="https://giscus.app/client.js" data-repo="jaywcjlove/reference" data-repo-id="R_kgDOID2-Mw" data-category="Q&#x26;A" data-category-id="DIC_kwDOID2-M84CS5wo" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="dark" data-lang="zh-CN" crossorigin="anonymous" async></script><div class="giscus"></div></div><footer class="footer-wrap"><footer class="max-container">© 2022 <a href="https://wangchujiang.com/#/app" target="_blank">Kenny Wang</a>.</footer></footer><script src="../data.js?v=1.8.1" defer></script><script src="../js/fuse.min.js?v=1.8.1" defer></script><script src="../js/main.js?v=1.8.1" defer></script><div id="mysearch"><div class="mysearch-box"><div class="mysearch-input"><div><svg xmlns="http://www.w3.org/2000/svg" height="1em" width="1em" viewBox="0 0 18 18">
+  <path fill="currentColor" d="M17.71,16.29 L14.31,12.9 C15.4069846,11.5024547 16.0022094,9.77665502 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 C9.77665502,16.0022094 11.5024547,15.4069846 12.9,14.31 L16.29,17.71 C16.4777666,17.8993127 16.7333625,18.0057983 17,18.0057983 C17.2666375,18.0057983 17.5222334,17.8993127 17.71,17.71 C17.8993127,17.5222334 18.0057983,17.2666375 18.0057983,17 C18.0057983,16.7333625 17.8993127,16.4777666 17.71,16.29 Z M2,8 C2,4.6862915 4.6862915,2 8,2 C11.3137085,2 14,4.6862915 14,8 C14,11.3137085 11.3137085,14 8,14 C4.6862915,14 2,11.3137085 2,8 Z"></path>
+</svg><input id="mysearch-input" type="search" placeholder="搜索" autocomplete="off"><div class="mysearch-clear"></div></div><button id="mysearch-close" type="button">搜索</button></div><div class="mysearch-result"><div id="mysearch-menu"></div><div id="mysearch-content"></div></div></div></div></body>
+</html>

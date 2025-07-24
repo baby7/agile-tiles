@@ -1,0 +1,425 @@
+html {
+    overflow-y: auto;
+}
+
+span, div {
+    -moz-user-select: initial;
+    -khtml-user-select: initial;
+    -webkit-user-select: initial;
+    -ms-user-select: initial;
+    user-select: initial;
+    cursor: default;
+}
+
+.main {
+    overflow-y: initial;
+}
+
+#sideContent.sticky {
+    height: 95vh;
+
+    li.gap {
+        margin-top:1rem;
+    }
+}
+
+.wiki {
+    display: flex;
+    margin: 0 1rem;
+    padding-top: 1rem;
+
+    .mainMenu {
+        margin-left: .5rem;
+        width: 10rem;
+
+        .sticky {
+            height: ~"calc(100vh - 1rem)";
+        }
+
+        .menu-list {
+            li {
+                cursor: pointer;
+                span {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .mainContent {
+        margin-left: 1rem;
+        flex: 1;
+
+        .b-tabs:not(:last-child){
+            margin-bottom: 0;
+        }
+    }
+
+    .paragraph {
+        margin: 0 1rem 1rem 0;
+    }
+
+    .header {
+        margin: 0.25rem 0 1rem;
+    }
+    .achievements.header {
+        margin: 1rem 0 0.25rem;
+    }
+
+    .menu-label {
+        font-size: 1rem;
+    }
+
+    .infoBox {
+        max-width: 50rem;
+        margin-bottom: .5rem;
+        margin-right: .5rem;
+        padding: .25rem .5rem;
+        border: .0625rem solid;
+
+        span[role=button] {
+            cursor: pointer;
+        }
+
+        span.row {
+            display: block;
+        }
+
+        &.wide {
+            max-width: 100%;
+            margin-right: 0;
+        }
+
+        h2 {
+            margin-bottom: .25rem;
+            border-bottom: .0625rem solid;
+        }
+
+        div {
+            margin-bottom: .5rem;
+            clear: both;
+        }
+
+        li {
+            list-style-position: inside;
+        }
+
+        .type {
+            display: flex;
+            justify-content: space-between;
+            > span:nth-child(1) {
+                display: block;
+                text-align: left;
+            }
+            > span:nth-child(2) {
+                display: block;
+                text-align: right;
+                > span:nth-child(2) {
+                    margin-left: .5rem;
+                    margin-right: .5rem;
+                }
+            }
+        }
+
+        .itemlist {
+            span {
+                display: inline-block;
+                margin-right: 1rem;
+            }
+        }
+
+        .propList {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            > div {
+                margin-right: 1rem;
+            }
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            border-top: .0625rem solid;
+            margin-top: .5rem;
+            padding-top: .5rem;
+
+            .effect {
+                width: 70%;
+            }
+
+            .cost {
+                width: 30%;
+            }
+
+            .right {
+                margin-left: .5rem;
+                padding-left: .5rem;
+                border-left: .0625rem solid;
+            }
+        }
+
+        .reqs {
+            span:not(:first-child):not(.subreqs) {
+                margin-left: 0.5rem;
+            }
+        }
+
+        .extra {
+            border-top: .0625rem solid;
+            margin-top: .5rem;
+            padding-top: .5rem;
+
+            .calcButton button {
+                height: 1.5rem;
+            }
+        }
+
+        div.aTable {
+            columns: 2;
+            span {
+                display: flex;
+            }
+        }
+
+        .para {
+            > span {
+                margin-right: .25rem;
+            }
+        }
+
+        .infoSummary {
+            display: inline-grid;
+            text-align: left;
+            max-width: 18rem;
+            border-radius: .25rem;
+            line-height: 1.3125rem;
+            margin-right: 1rem;
+        }
+
+        &.col2 {
+            display: flex;
+            flex-wrap: wrap;
+            align-content: space-between;
+            > h2,
+            > h3,
+            > h4 {
+                width: 100%;
+            }
+            > div {
+                width: 50%;
+            }
+        }
+
+        &.sk1 {
+            div:first-of-type {
+                width: 100%;
+            }
+        }
+    }
+
+    .question {
+        h2 {
+            margin-bottom: .25rem;
+            text-decoration: underline;
+        }
+        margin-bottom: .75rem;
+    }
+
+    .achieveList {
+        display: flex;
+        flex-wrap: wrap;
+        .achievement {
+            display: inline-flex;
+            justify-content: space-between;
+            width: 23rem;
+            margin-right: 1rem;
+            :first-child {
+                width: initial;
+            }
+            span.achieve {
+                display: block;
+            }
+            span.icons {
+                display: block;
+                text-align: right;
+            }
+            p.flair {
+                display: inline;
+                position: initial;
+                line-height: 1rem;
+            }
+        }
+    }
+
+    .duelList {
+        display: flex;
+        flex-flow: wrap;
+        
+        .itemlist {
+            display: flex;
+        }
+
+        .listSide {
+            min-width: 30rem;
+            width: 50%;
+            border: .0625rem solid;
+            text-align: center;
+
+            .infoBox {
+                list-style: none;
+                text-align: left;
+                margin: 0.5rem;
+            }
+
+            @media only screen and (max-width: 74.5rem){
+                width: 100%;
+                .infoBox {
+                    max-width: 100%;
+                }
+            }
+        }
+    }
+
+    .flexed {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        > span {
+            text-align: left;
+            width: 4rem;
+            display: block;
+            margin: 0 .5rem;
+            padding: 0 .5rem;
+        }
+        .wide {
+            width: 6.9375rem;
+        }
+        .wide10 {
+            width: 10rem;
+        }
+        .swide {
+            width: 12rem;
+        }
+        &.wide {
+            width: 40rem;
+        }
+    }
+
+    .flex {
+        display: flex;
+    }
+
+    .flexInfo {
+        display: flex;
+        justify-content: space-between;
+        > :nth-child(2){
+            margin: .25rem 1rem 0;
+        }
+    }
+
+    ul.disc {
+        list-style: disc;
+        margin-left: 1.25rem;
+    }
+
+    .tbl {
+        display: table;
+        .trow {
+            display: table-row;
+            .tcell {
+                display: table-cell;
+                padding-right: 0.75rem;
+                min-width: 5rem;
+            }
+            .tcell:last-child {
+                padding-right: 0;
+            }
+            .eggsol,
+            .totsol {
+                cursor: pointer;
+                padding-bottom: .5rem;
+            }
+        }
+    }
+    
+    .reveal {
+        cursor: pointer;
+        margin-bottom: .5rem;
+    }
+    .calcInput {
+        width: 7.5rem;
+        display: inline-block;
+        height: 1.25rem;
+        margin-bottom: .5rem;
+        text-align: center;
+
+        input {
+            height: 1.25rem;
+            line-height: 1.25rem;
+            text-align: center;
+        }
+
+        .dropdown button {
+            height: 1.25rem;
+            padding: 0 .75rem;
+        }
+        
+        .calcInputButton {
+            height: 1.25rem;
+            padding: 0 .25rem;
+            margin: 0;
+        }
+    }
+    .calcButton{
+        margin-bottom: 1rem;
+    }
+}
+
+.main>div.popper.wide.w25,
+body .modal>div.popper.wide.w25 {
+    max-width: 25rem;
+}
+
+html.dark,
+html.night,
+html.redgreen,
+html.darkNight,
+html.gruvboxDark,
+html.orangeSoda,
+html.dracula {
+    .menu-label {
+        color: #ffa500 !important;
+    }
+    .iclr2 {
+        color: #fff;
+    }
+    .iclr3 {
+        color: #cd7f32;
+    }
+    .iclr4 {
+        color: #c0c0c0;
+    }
+    .iclr5 {
+        color: #d4af37;
+    }
+}
+
+html.light,
+html.gruvboxLight {
+    .menu-label {
+        color: #966100 !important;
+    }
+    .iclr2 {
+        color: #000;
+    }
+    .iclr3 {
+        color: #cd7f32;
+    }
+    .iclr4 {
+        color: #c0c0c0;
+    }
+    .iclr5 {
+        color: #d4af37;
+    }
+}

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>域名WHOIS查询工具</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            color: #2d3748;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .result {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            display: none;
+        }
+
+        .result-item {
+            margin-bottom: 1rem;
+        }
+
+        .result-label {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .result-value {
+            color: #2d3748;
+            font-weight: 500;
+            word-break: break-all;
+        }
+
+        .error {
+            color: #e53e3e;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>域名WHOIS查询</h1>
+        
+        <div class="search-box">
+            <input type="text" id="domain" placeholder="输入要查询的域名（例如：example.com）">
+            <button onclick="searchDomain()">立即查询</button>
+        </div>
+
+        <div class="error" id="error-msg"></div>
+
+        <div class="result" id="result">
+            <div class="result-item">
+                <div class="result-label">域名信息</div>
+                <div class="result-value" id="domain-info">example.com</div>
+            </div>
+            <div class="result-item">
+                <div class="result-label">注册商</div>
+                <div class="result-value" id="registrar">Example Registrar LLC</div>
+            </div>
+            <div class="result-item">
+                <div class="result-label">注册人</div>
+                <div class="result-value" id="registrant">REDACTED FOR PRIVACY</div>
+            </div>
+            <div class="result-item">
+                <div class="result-label">注册日期</div>
+                <div class="result-value" id="creation-date">2020-01-01</div>
+            </div>
+            <div class="result-item">
+                <div class="result-label">过期日期</div>
+                <div class="result-value" id="expiry-date">2025-01-01</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function searchDomain() {
+            const domain = document.getElementById('domain').value.trim();
+            const errorMsg = document.getElementById('error-msg');
+            const result = document.getElementById('result');
+
+            errorMsg.style.display = 'none';
+            result.style.display = 'none';
+
+            if (!domain) {
+                errorMsg.textContent = '请输入要查询的域名';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // 这里应该调用WHOIS查询API
+            // 以下是模拟数据
+            document.getElementById('domain-info').textContent = domain;
+            document.getElementById('registrar').textContent = "模拟注册商数据";
+            document.getElementById('registrant').textContent = "模拟注册人信息";
+            document.getElementById('creation-date').textContent = new Date().toISOString().split('T')[0];
+            document.getElementById('expiry-date').textContent = new Date(Date.now() + 365*24*60*60*1000).toISOString().split('T')[0];
+            
+            result.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

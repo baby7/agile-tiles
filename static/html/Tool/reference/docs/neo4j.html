@@ -1,0 +1,1269 @@
+<!doctype html>
+<html lang="en" data-color-mode="dark">
+<head>
+<meta charset="utf-8">
+<title>Neo4j 备忘清单
+ &#x26;  neo4j cheatsheet &#x26;  Quick Reference</title>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta description="Neo4这个 neo4j 快速参考备忘单显示了它的常用命令
+
+入门，为开发人员分享快速参考备忘单。">
+<meta keywords="neo4j,reference,Quick,Reference,cheatsheet,cheat,sheet">
+<meta name="author" content="jaywcjlove">
+<meta name="license" content="MIT">
+<meta name="funding" content="https://jaywcjlove.github.io/#/sponsor">
+<meta rel="apple-touch-icon" href="../icons/touch-icon-iphone.png">
+<meta rel="apple-touch-icon" sizes="152x152" href="../icons/touch-icon-ipad.png">
+<meta rel="apple-touch-icon" sizes="180x180" href="../icons/touch-icon-iphone.png">
+<meta rel="apple-touch-icon" sizes="167x167" href="../icons/touch-icon-ipad-retina.png">
+<meta rel="apple-touch-icon" sizes="120x120" href="../icons/touch-icon-iphone-retina.png">
+<link rel="icon" href="../icons/favicon.svg" type="image/svg+xml">
+<link href="../style/style.css" rel="stylesheet">
+<link href="../style/katex.css" rel="stylesheet">
+</head>
+<body><nav class="header-nav"><div class="max-container"><a href="../index.html" class="logo"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" height="1em" width="1em">
+  <path d="m21.66 10.44-.98 4.18c-.84 3.61-2.5 5.07-5.62 4.77-.5-.04-1.04-.13-1.62-.27l-1.68-.4c-4.17-.99-5.46-3.05-4.48-7.23l.98-4.19c.2-.85.44-1.59.74-2.2 1.17-2.42 3.16-3.07 6.5-2.28l1.67.39c4.19.98 5.47 3.05 4.49 7.23Z" fill="#c9d1d9"></path>
+  <path d="M15.06 19.39c-.62.42-1.4.77-2.35 1.08l-1.58.52c-3.97 1.28-6.06.21-7.35-3.76L2.5 13.28c-1.28-3.97-.22-6.07 3.75-7.35l1.58-.52c.41-.13.8-.24 1.17-.31-.3.61-.54 1.35-.74 2.2l-.98 4.19c-.98 4.18.31 6.24 4.48 7.23l1.68.4c.58.14 1.12.23 1.62.27Zm2.43-8.88c-.06 0-.12-.01-.19-.02l-4.85-1.23a.75.75 0 0 1 .37-1.45l4.85 1.23a.748.748 0 0 1-.18 1.47Z" fill="#228e6c"></path>
+  <path d="M14.56 13.89c-.06 0-.12-.01-.19-.02l-2.91-.74a.75.75 0 0 1 .37-1.45l2.91.74c.4.1.64.51.54.91-.08.34-.38.56-.72.56Z" fill="#228e6c"></path>
+</svg>
+<span class="title">Quick Reference</span></a><div class="menu"><a href="javascript:void(0);" class="searchbtn" id="searchbtn"><svg xmlns="http://www.w3.org/2000/svg" height="1em" width="1em" viewBox="0 0 18 18">
+  <path fill="currentColor" d="M17.71,16.29 L14.31,12.9 C15.4069846,11.5024547 16.0022094,9.77665502 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 C9.77665502,16.0022094 11.5024547,15.4069846 12.9,14.31 L16.29,17.71 C16.4777666,17.8993127 16.7333625,18.0057983 17,18.0057983 C17.2666375,18.0057983 17.5222334,17.8993127 17.71,17.71 C17.8993127,17.5222334 18.0057983,17.2666375 18.0057983,17 C18.0057983,16.7333625 17.8993127,16.4777666 17.71,16.29 Z M2,8 C2,4.6862915 4.6862915,2 8,2 C11.3137085,2 14,4.6862915 14,8 C14,11.3137085 11.3137085,14 8,14 C4.6862915,14 2,11.3137085 2,8 Z"></path>
+</svg><span>搜索</span><span>⌘K</span></a><a href="https://github.com/jaywcjlove/reference/blob/main/docs/neo4j.md" class="" target="__blank"><svg viewBox="0 0 36 36" fill="currentColor" height="1em" width="1em"><path d="m33 6.4-3.7-3.7a1.71 1.71 0 0 0-2.36 0L23.65 6H6a2 2 0 0 0-2 2v22a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V11.76l3-3a1.67 1.67 0 0 0 0-2.36ZM18.83 20.13l-4.19.93 1-4.15 9.55-9.57 3.23 3.23ZM29.5 9.43 26.27 6.2l1.85-1.85 3.23 3.23Z"></path><path fill="none" d="M0 0h36v36H0z"></path></svg><span>编辑</span></a><button id="darkMode" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="light" height="1em" width="1em">
+  <path d="M6.995 12c0 2.761 2.246 5.007 5.007 5.007s5.007-2.246 5.007-5.007-2.246-5.007-5.007-5.007S6.995 9.239 6.995 12zM11 19h2v3h-2zm0-17h2v3h-2zm-9 9h3v2H2zm17 0h3v2h-3zM5.637 19.778l-1.414-1.414 2.121-2.121 1.414 1.414zM16.242 6.344l2.122-2.122 1.414 1.414-2.122 2.122zM6.344 7.759 4.223 5.637l1.415-1.414 2.12 2.122zm13.434 10.605-1.414 1.414-2.122-2.122 1.414-1.414z"></path>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="dark" height="1em" width="1em">
+  <path d="M12 11.807A9.002 9.002 0 0 1 10.049 2a9.942 9.942 0 0 0-5.12 2.735c-3.905 3.905-3.905 10.237 0 14.142 3.906 3.906 10.237 3.905 14.143 0a9.946 9.946 0 0 0 2.735-5.119A9.003 9.003 0 0 1 12 11.807z"></path>
+</svg>
+</button><script src="../js/dark.js?v=1.8.1"></script><a href="https://github.com/jaywcjlove/reference" class="" target="__blank"><svg viewBox="0 0 16 16" fill="currentColor" height="1em" width="1em"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></nav><div class="wrap h1body-exist max-container"><header class="wrap-header h1wrap"><h1 id="neo4j-备忘清单"><svg xmlns="http://www.w3.org/2000/svg" height="1em" width="1em" fill="#4581C3" role="img" viewBox="0 0 24 24"><title>Neo4j</title><path d="M9.629 13.227c-.593 0-1.139.2-1.58.533l-2.892-1.976a2.61 2.61 0 0 0 .101-.711 2.633 2.633 0 0 0-2.629-2.629A2.632 2.632 0 0 0 0 11.073a2.632 2.632 0 0 0 2.629 2.629c.593 0 1.139-.2 1.579-.533L7.1 15.145c-.063.226-.1.465-.1.711 0 .247.037.484.1.711l-2.892 1.976a2.608 2.608 0 0 0-1.579-.533A2.632 2.632 0 0 0 0 20.639a2.632 2.632 0 0 0 2.629 2.629 2.632 2.632 0 0 0 2.629-2.629c0-.247-.037-.485-.101-.711l2.892-1.976c.441.333.987.533 1.58.533a2.633 2.633 0 0 0 2.629-2.629c0-1.45-1.18-2.629-2.629-2.629ZM16.112.732c-4.72 0-7.888 2.748-7.888 8.082v3.802a3.525 3.525 0 0 1 3.071.008v-3.81c0-3.459 1.907-5.237 4.817-5.237s4.817 1.778 4.817 5.237v8.309H24V8.814C24 3.448 20.832.732 16.112.732Z"></path></svg><a aria-hidden="true" tabindex="-1" href="#neo4j-备忘清单"><span class="icon icon-link"></span></a>Neo4j 备忘清单</h1><div class="wrap-body">
+<p>这个 <a href="https://neo4j.com/docs/">neo4j</a> 快速参考备忘单显示了它的常用命令</p>
+</div></header><div class="menu-tocs"><div class="menu-btn"><svg aria-hidden="true" fill="currentColor" height="1em" width="1em" viewBox="0 0 16 16" version="1.1" data-view-component="true">
+  <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+</svg></div><div class="menu-modal"><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#入门">入门</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#neo4j">Neo4J</a><a aria-hidden="true" class="leve4 tocs-link" data-num="4" href="#运行">运行</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#neo4j-使用">Neo4J 使用</a><a aria-hidden="true" class="leve4 tocs-link" data-num="4" href="#进入管理页面">进入管理页面</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#图数据库概念">图数据库概念</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#neo4j-语法">Neo4j 语法</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#读取查询结构">读取查询结构</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#仅写入查询结构">仅写入查询结构</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#读取-写入查询结构">读取-写入查询结构</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#neo4j-读取数据">Neo4j 读取数据</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#match">MATCH</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#where">WHERE</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#return">RETURN</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#with">WITH</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#union">UNION</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#neo4j-写入数据">Neo4j 写入数据</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#create">CREATE</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#set">SET</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#merge">MERGE</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#delete">DELETE</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#remove">REMOVE</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#foreach">FOREACH</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#调用子查询">调用子查询</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#调用存储过程">调用存储过程</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#导入">导入</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#运算符">运算符</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#null">null</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#patterns">Patterns</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#use">USE</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#show-functions-和-procedures">SHOW FUNCTIONS 和 PROCEDURES</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#标签">标签</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#lists">Lists</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#maps">Maps</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#case">CASE</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#predicates-谓词">Predicates 谓词</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#列表谓词">列表谓词</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#列表表达式">列表表达式</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#函数">函数</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#路径函数">路径函数</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#空间函数">空间函数</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#neo4j-函数">Neo4j 函数</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#时间函数">时间函数</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#时长函数">时长函数</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#数学函数">数学函数</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#关系函数">关系函数</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#字符串函数">字符串函数</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#聚合函数">聚合函数</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#neo4j-模式操作">Neo4j 模式操作</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#索引">索引</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#约束">约束</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#性能">性能</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#neo4j-多数据库管理">Neo4j 多数据库管理</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#neo4j安全性">Neo4j安全性</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#用户管理">用户管理</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#-图读取权限">(★) 图读取权限</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#-角色管理">(★) 角色管理</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#-图写入权限">(★) 图写入权限</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#-显示权限">(★) 显示权限</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#-数据库权限">(★) 数据库权限</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#-角色管理权限">(★) 角色管理权限</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#-用户管理权限">(★) 用户管理权限</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#-数据库管理权限">(★) 数据库管理权限</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#-权限管理权限">(★) 权限管理权限</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#-dbms权限">(★) DBMS权限</a></div></div><div class="h1wrap-body"><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="入门"><a aria-hidden="true" tabindex="-1" href="#入门"><span class="icon icon-link"></span></a>入门</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-exist"><div class="wrap-header h3wrap"><h3 id="neo4j"><a aria-hidden="true" tabindex="-1" href="#neo4j"><span class="icon icon-link"></span></a>Neo4J</h3><div class="wrap-body">
+<p>Neo4j是一个图形数据库，由节点通过关系连接在一起。如果您有一个高度相互连接的数据集或者有很多连接的查询，您可能会考虑使用图数据库。</p>
+<ul>
+<li><a href="https://neo4j.com/download">下载 Neo4j Desktop</a> <em>下载 Neo4j 桌面版或服务器版</em></li>
+<li><a href="https://sandbox.neo4j.com">Neo4j 沙盒</a> <em>选择一个数据集 - 无需安装</em></li>
+<li><a href="https://neo4j.com/aura">Neo4j Aura</a> <em>在云端获得免费的 Neo4j 实例</em></li>
+<li><a href="https://neo4j.com/graphacademy">Neo4j 图形学院</a> <em>免费、自主学习、实践性的在线培训</em></li>
+<li><a href="https://neo4j.com/graphgists">GraphGists</a> <em>使用案例和行业特定的示例图</em></li>
+</ul>
+<h4 id="运行"><a aria-hidden="true" tabindex="-1" href="#运行"><span class="icon icon-link"></span></a>运行</h4>
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ bin/neo4j start
+</span></code></pre>
+<p>在 Mac 或者 Linux 中，安装好 JDK 后，直接解压下载好的 Neo4j 包，然后运行上面命令即可。</p>
+</div></div></div><div class="wrap h3body-exist"><div class="wrap-header h3wrap"><h3 id="neo4j-使用"><a aria-hidden="true" tabindex="-1" href="#neo4j-使用"><span class="icon icon-link"></span></a>Neo4J 使用</h3><div class="wrap-body">
+<p>Neo4J 提供了一个用户友好的 web 界面，可以进行各项配置、写入、查询等操作，并且提供了可视化功能。类似ElasticSearch 一样，我个人非常喜欢这种开箱即用的设计。</p>
+<h4 id="进入管理页面"><a aria-hidden="true" tabindex="-1" href="#进入管理页面"><span class="icon icon-link"></span></a>进入管理页面</h4>
+<p>打开浏览器，输入下面网址，可以进入管理页面</p>
+<pre class="language-url"><code class="language-url code-highlight"><span class="code-line"><span class="token scheme">http<span class="token scheme-delimiter">:</span></span><span class="token authority"><span class="token authority-delimiter">//</span><span class="token host"><span class="token ipv4-address">127.0.0.1</span></span><span class="token port-segment"><span class="token port-delimiter">:</span><span class="token port">7474</span></span></span><span class="token path"><span class="token path-separator">/</span>browser<span class="token path-separator">/</span></span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="图数据库概念"><a aria-hidden="true" tabindex="-1" href="#图数据库概念"><span class="icon icon-link"></span></a>图数据库概念</h3><div class="wrap-body">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="style-list-arrow"><thead><tr><th></th><th></th></tr></thead><tbody><tr><td><code>节点</code></td><td>节点通常用于表示数据中的 <em>实体</em> 或 <em>事物</em>。例如，一个 <strong>Person（人）</strong> 或 <strong>Movie（电影）</strong>。</td></tr><tr><td><code>关系</code></td><td>关系用于将两个节点连接在一起，并将数据组织成结构。例如，一个人 <strong>acted in（出演）</strong> 一部电影。关系有一个 <em>类型</em> 和 <em>方向</em>，尽管在查询时可以忽略方向。</td></tr><tr><td><code>标签</code></td><td>标签用于将节点分组到不同的类别中。例如，一个人可以有 <code>Person(人)</code> 和 <code>Actor(演员)</code> 标签。</td></tr><tr><td><code>关系类型</code></td><td>每个关系都有一个类型。关系允许您在图中探索较小的部分。</td></tr><tr><td><code>属性</code></td><td>节点和关系都可以设置属性。属性是 <a href="https://neo4j.com/docs/cypher-manual/4.3/syntax/values/#cypher-values">名称-值对</a>。</td></tr></tbody></table>
+<!--rehype:className=style-list-arrow-->
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="neo4j-语法"><a aria-hidden="true" tabindex="-1" href="#neo4j-语法"><span class="icon icon-link"></span></a>Neo4j 语法</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="读取查询结构"><a aria-hidden="true" tabindex="-1" href="#读取查询结构"><span class="icon icon-link"></span></a>读取查询结构</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">[</span>USE<span class="token punctuation">]</span> <span class="token comment">// (使用)</span>
+</span><span class="code-line"><span class="token punctuation">[</span><span class="token keyword">MATCH</span> <span class="token keyword">WHERE</span><span class="token punctuation">]</span> <span class="token comment">//  (匹配条件)</span>
+</span><span class="code-line"><span class="token punctuation">[</span><span class="token keyword">OPTIONAL</span> <span class="token keyword">MATCH</span> <span class="token keyword">WHERE</span><span class="token punctuation">]</span> <span class="token comment">//  (可选匹配条件)</span>
+</span><span class="code-line"><span class="token comment">//  (传递结果并进行排序、跳过或限制)</span>
+</span><span class="code-line"><span class="token punctuation">[</span><span class="token keyword">WITH</span> <span class="token punctuation">[</span><span class="token keyword">ORDER</span> <span class="token keyword">BY</span><span class="token punctuation">]</span> <span class="token punctuation">[</span><span class="token keyword">SKIP</span><span class="token punctuation">]</span> <span class="token punctuation">[</span><span class="token keyword">LIMIT</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+</span><span class="code-line"><span class="token comment">// (返回结果并进行排序、跳过或限制)</span>
+</span><span class="code-line"><span class="token keyword">RETURN</span> <span class="token punctuation">[</span><span class="token keyword">ORDER</span> <span class="token keyword">BY</span><span class="token punctuation">]</span> <span class="token punctuation">[</span><span class="token keyword">SKIP</span><span class="token punctuation">]</span> <span class="token punctuation">[</span><span class="token keyword">LIMIT</span><span class="token punctuation">]</span> 
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="仅写入查询结构"><a aria-hidden="true" tabindex="-1" href="#仅写入查询结构"><span class="icon icon-link"></span></a>仅写入查询结构</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">[</span>USE<span class="token punctuation">]</span> <span class="token comment">// (使用)</span>
+</span><span class="code-line"><span class="token punctuation">(</span><span class="token keyword">CREATE</span> <span class="token operator">|</span> <span class="token keyword">MERGE</span><span class="token punctuation">)</span><span class="token operator">*</span> <span class="token comment">// (创建或合并节点和关系)</span>
+</span><span class="code-line"><span class="token comment">// (设置、删除、移除或循环操作)</span>
+</span><span class="code-line"><span class="token punctuation">[</span><span class="token keyword">SET</span><span class="token operator">|</span><span class="token keyword">DELETE</span><span class="token operator">|</span><span class="token keyword">REMOVE</span><span class="token operator">|</span><span class="token keyword">FOREACH</span><span class="token punctuation">]</span><span class="token operator">*</span> 
+</span><span class="code-line"><span class="token comment">// (返回结果并进行排序、跳过或限制)</span>
+</span><span class="code-line"><span class="token punctuation">[</span><span class="token keyword">RETURN</span> <span class="token punctuation">[</span><span class="token keyword">ORDER</span> <span class="token keyword">BY</span><span class="token punctuation">]</span> <span class="token punctuation">[</span><span class="token keyword">SKIP</span><span class="token punctuation">]</span> <span class="token punctuation">[</span><span class="token keyword">LIMIT</span><span class="token punctuation">]</span> 
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="读取-写入查询结构"><a aria-hidden="true" tabindex="-1" href="#读取-写入查询结构"><span class="icon icon-link"></span></a>读取-写入查询结构</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">[</span>USE<span class="token punctuation">]</span>       <span class="token comment">// (使用)</span>
+</span><span class="code-line"><span class="token punctuation">[</span><span class="token keyword">MATCH</span> <span class="token keyword">WHERE</span><span class="token punctuation">]</span>          <span class="token comment">//  (匹配条件)</span>
+</span><span class="code-line"><span class="token punctuation">[</span><span class="token keyword">OPTIONAL</span> <span class="token keyword">MATCH</span> <span class="token keyword">WHERE</span><span class="token punctuation">]</span> <span class="token comment">// (可选匹配条件)</span>
+</span><span class="code-line"><span class="token comment">// (传递结果并进行排序、跳过或限制)</span>
+</span><span class="code-line"><span class="token punctuation">[</span><span class="token keyword">WITH</span> <span class="token punctuation">[</span><span class="token keyword">ORDER</span> <span class="token keyword">BY</span><span class="token punctuation">]</span> <span class="token punctuation">[</span><span class="token keyword">SKIP</span><span class="token punctuation">]</span> <span class="token punctuation">[</span><span class="token keyword">LIMIT</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+</span><span class="code-line"><span class="token punctuation">(</span><span class="token keyword">CREATE</span> <span class="token operator">|</span> <span class="token keyword">MERGE</span><span class="token punctuation">)</span><span class="token operator">*</span> <span class="token comment">// (创建或合并节点和关系)</span>
+</span><span class="code-line"><span class="token comment">// (设置、删除、移除或循环操作)</span>
+</span><span class="code-line"><span class="token punctuation">[</span><span class="token keyword">SET</span><span class="token operator">|</span><span class="token keyword">DELETE</span><span class="token operator">|</span><span class="token keyword">REMOVE</span><span class="token operator">|</span><span class="token keyword">FOREACH</span><span class="token punctuation">]</span><span class="token operator">*</span> 
+</span><span class="code-line"><span class="token comment">// (返回结果并进行排序、跳过或限制)</span>
+</span><span class="code-line"><span class="token punctuation">[</span><span class="token keyword">RETURN</span> <span class="token punctuation">[</span><span class="token keyword">ORDER</span> <span class="token keyword">BY</span><span class="token punctuation">]</span> <span class="token punctuation">[</span><span class="token keyword">SKIP</span><span class="token punctuation">]</span> <span class="token punctuation">[</span><span class="token keyword">LIMIT</span><span class="token punctuation">]</span> 
+</span></code></pre>
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="neo4j-读取数据"><a aria-hidden="true" tabindex="-1" href="#neo4j-读取数据"><span class="icon icon-link"></span></a>Neo4j 读取数据</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="match"><a aria-hidden="true" tabindex="-1" href="#match"><span class="icon icon-link"></span></a>MATCH</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>n<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token relationship property">KNOWS</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>m<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">WHERE</span> n<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">'Alice'</span>
+</span></code></pre>
+<p>节点模式可以包含标签和属性</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token operator">--></span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+</span></code></pre>
+<p>在 MATCH 中可以使用任何模式</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>n <span class="token punctuation">{</span>name<span class="token operator">:</span> <span class="token string">'Alice'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token operator">--></span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+</span></code></pre>
+<p>带有节点属性的模式</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> p <span class="token operator">=</span> <span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token operator">--></span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+</span></code></pre>
+<p>将路径分配给 p</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">OPTIONAL</span> <span class="token keyword">MATCH</span> <span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>r<span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+</span></code></pre>
+<p>可选模式：缺失部分将使用空值</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="where"><a aria-hidden="true" tabindex="-1" href="#where"><span class="icon icon-link"></span></a>WHERE</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">WHERE</span> n<span class="token punctuation">.</span>property <span class="token operator">&#x3C;></span> <span class="token variable">$value</span>
+</span></code></pre>
+<p>使用谓词进行过滤。请注意，WHERE 总是作为 MATCH、OPTIONAL MATCH 或 WITH 子句的一部分。在查询中的其他子句之后放置它将改变它的作用</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">WHERE</span> <span class="token keyword">EXISTS</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">MATCH</span> <span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token operator">--></span><span class="token punctuation">(</span>m<span class="token punctuation">)</span> <span class="token keyword">WHERE</span> n<span class="token punctuation">.</span>age <span class="token operator">=</span> m<span class="token punctuation">.</span>age
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span></code></pre>
+<p>使用存在性子查询进行过滤。</p>
+</div></div></div><div class="wrap h3body-not-exist row-span-2"><div class="wrap-header h3wrap"><h3 id="return"><a aria-hidden="true" tabindex="-1" href="#return"><span class="icon icon-link"></span></a>RETURN</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-2-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">RETURN</span> <span class="token operator">*</span>
+</span></code></pre>
+<p>返回所有变量的值</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">RETURN</span> n <span class="token keyword">AS</span> columnName
+</span></code></pre>
+<p>为结果列名使用别名</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">RETURN</span> <span class="token keyword">DISTINCT</span> n
+</span></code></pre>
+<p>返回唯一的行</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">ORDER</span> <span class="token keyword">BY</span> n<span class="token punctuation">.</span>property
+</span></code></pre>
+<p>对结果进行排序</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">ORDER</span> <span class="token keyword">BY</span> n<span class="token punctuation">.</span>property <span class="token keyword">DESC</span>
+</span></code></pre>
+<p>按降序对结果进行排序</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">SKIP</span> <span class="token variable">$skipNumber</span>
+</span></code></pre>
+<p>跳过一定数量的结果</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">LIMIT</span> <span class="token variable">$limitNumber</span>
+</span></code></pre>
+<p>限制结果的数量</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">SKIP</span> <span class="token variable">$skipNumber</span> <span class="token keyword">LIMIT</span> <span class="token variable">$limitNumber</span>
+</span></code></pre>
+<p>跳过顶部的结果并限制结果的数量</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">RETURN</span> <span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>匹配行的数量。参见聚合函数了解更多</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="with"><a aria-hidden="true" tabindex="-1" href="#with"><span class="icon icon-link"></span></a>WITH</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token relationship property">FRIEND</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span>friend<span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">WHERE</span> user<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token variable">$name</span>
+</span><span class="code-line"><span class="token keyword">WITH</span> user<span class="token punctuation">,</span> <span class="token function">count</span><span class="token punctuation">(</span>friend<span class="token punctuation">)</span> <span class="token keyword">AS</span> friends
+</span><span class="code-line"><span class="token keyword">WHERE</span> friends <span class="token operator">></span> <span class="token number">10</span>
+</span><span class="code-line"><span class="token keyword">RETURN</span> user
+</span></code></pre>
+<p>WITH 语法类似于 RETURN。它明确地分隔查询部分，允许您声明要传递到下一部分的变量</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token relationship property">FRIEND</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span>friend<span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">WITH</span> user<span class="token punctuation">,</span> <span class="token function">count</span><span class="token punctuation">(</span>friend<span class="token punctuation">)</span> <span class="token keyword">AS</span> friends
+</span><span class="code-line"><span class="token keyword">ORDER</span> <span class="token keyword">BY</span> friends <span class="token keyword">DESC</span>
+</span><span class="code-line">  <span class="token keyword">SKIP</span> <span class="token number">1</span>
+</span><span class="code-line">  <span class="token keyword">LIMIT</span> <span class="token number">3</span>
+</span><span class="code-line"><span class="token keyword">RETURN</span> user
+</span></code></pre>
+<p>ORDER BY、SKIP 和 LIMIT 也可以与 WITH 一起使用</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="union"><a aria-hidden="true" tabindex="-1" href="#union"><span class="icon icon-link"></span></a>UNION</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token relationship property">KNOWS</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">RETURN</span> b<span class="token punctuation">.</span>name
+</span><span class="code-line"><span class="token keyword">UNION</span>
+</span><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token relationship property">LOVES</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">RETURN</span> b<span class="token punctuation">.</span>name
+</span></code></pre>
+<p>返回所有查询结果的唯一并集。结果列的类型和名称必须匹配</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token relationship property">KNOWS</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">RETURN</span> b<span class="token punctuation">.</span>name
+</span><span class="code-line"><span class="token keyword">UNION</span> <span class="token keyword">ALL</span>
+</span><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token relationship property">LOVES</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">RETURN</span> b<span class="token punctuation">.</span>name
+</span></code></pre>
+<p>返回所有查询结果的并集，包括重复行</p>
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="neo4j-写入数据"><a aria-hidden="true" tabindex="-1" href="#neo4j-写入数据"><span class="icon icon-link"></span></a>Neo4j 写入数据</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="create"><a aria-hidden="true" tabindex="-1" href="#create"><span class="icon icon-link"></span></a>CREATE</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token punctuation">(</span>n <span class="token punctuation">{</span>name<span class="token operator">:</span> <span class="token variable">$value</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>创建具有指定属性的节点</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token punctuation">(</span>n <span class="token variable">$map</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>创建具有指定属性的节点</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">UNWIND</span> <span class="token variable">$listOfMaps</span> <span class="token keyword">AS</span> properties
+</span><span class="code-line"><span class="token keyword">CREATE</span> <span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token keyword">SET</span> n <span class="token operator">=</span> properties
+</span></code></pre>
+<p>创建具有指定属性的节点</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>r<span class="token operator">:</span><span class="token relationship property">KNOWS</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+</span></code></pre>
+<p>创建具有指定类型和方向的关系；将变量绑定到它</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token class-name">LOVES</span> <span class="token punctuation">{</span>since<span class="token operator">:</span> <span class="token variable">$value</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+</span></code></pre>
+<p>创建具有指定类型、方向和属性的关系</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="set"><a aria-hidden="true" tabindex="-1" href="#set"><span class="icon icon-link"></span></a>SET</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">SET</span> n<span class="token punctuation">.</span>property1 <span class="token operator">=</span> <span class="token variable">$value1</span><span class="token punctuation">,</span>
+</span><span class="code-line">    n<span class="token punctuation">.</span>property2 <span class="token operator">=</span> <span class="token variable">$value2</span>
+</span></code></pre>
+<p>更新或创建属性</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">SET</span> n <span class="token operator">=</span> <span class="token variable">$map</span>
+</span></code></pre>
+<p>设置所有属性。这将删除任何现有属性</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">SET</span> n <span class="token operator">+</span><span class="token operator">=</span> <span class="token variable">$map</span>
+</span></code></pre>
+<p>添加和更新属性，同时保留现有属性</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">SET</span> n<span class="token operator">:</span>Person
+</span></code></pre>
+<p>向节点添加一个标签 Person</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="merge"><a aria-hidden="true" tabindex="-1" href="#merge"><span class="icon icon-link"></span></a>MERGE</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MERGE</span> <span class="token punctuation">(</span>n<span class="token operator">:</span><span class="token class-name">Person</span> <span class="token punctuation">{</span>name<span class="token operator">:</span> <span class="token variable">$value</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span><span class="code-line">  <span class="token keyword">ON</span> <span class="token keyword">CREATE</span> <span class="token keyword">SET</span> n<span class="token punctuation">.</span>created <span class="token operator">=</span> <span class="token function">timestamp</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span><span class="code-line">  <span class="token keyword">ON</span> <span class="token keyword">MATCH</span> <span class="token keyword">SET</span>
+</span><span class="code-line">    n<span class="token punctuation">.</span>counter <span class="token operator">=</span> <span class="token function">coalesce</span><span class="token punctuation">(</span>n<span class="token punctuation">.</span>counter<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span>
+</span><span class="code-line">    n<span class="token punctuation">.</span>accessTime <span class="token operator">=</span> <span class="token function">timestamp</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>匹配模式或在不存在时创建它。使用 ON CREATE 和 ON MATCH 进行条件更新</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>a<span class="token operator">:</span><span class="token class-name">Person</span> <span class="token punctuation">{</span>name<span class="token operator">:</span> <span class="token variable">$value1</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+</span><span class="code-line">      <span class="token punctuation">(</span>b<span class="token operator">:</span><span class="token class-name">Person</span> <span class="token punctuation">{</span>name<span class="token operator">:</span> <span class="token variable">$value2</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">MERGE</span> <span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>r<span class="token operator">:</span><span class="token relationship property">LOVES</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span>
+</span></code></pre>
+<p>MERGE 查找或创建节点之间的关系</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>a<span class="token operator">:</span><span class="token class-name">Person</span> <span class="token punctuation">{</span>name<span class="token operator">:</span> <span class="token variable">$value1</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">MERGE</span>
+</span><span class="code-line">  <span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>r<span class="token operator">:</span><span class="token relationship property">KNOWS</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>b<span class="token operator">:</span><span class="token class-name">Person</span> <span class="token punctuation">{</span>name<span class="token operator">:</span> <span class="token variable">$value3</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>MERGE 查找或创建与节点关联的路径</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="delete"><a aria-hidden="true" tabindex="-1" href="#delete"><span class="icon icon-link"></span></a>DELETE</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">DELETE</span> n<span class="token punctuation">,</span> r
+</span></code></pre>
+<p>删除一个节点和一个关系</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">DETACH</span> <span class="token keyword">DELETE</span> n
+</span></code></pre>
+<p>删除一个节点以及与其连接的所有关系</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>n<span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">DETACH</span> <span class="token keyword">DELETE</span> n
+</span></code></pre>
+<p>从数据库中删除所有节点和关系</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="remove"><a aria-hidden="true" tabindex="-1" href="#remove"><span class="icon icon-link"></span></a>REMOVE</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">REMOVE</span> n<span class="token operator">:</span>Person
+</span></code></pre>
+<p>从 n 中移除一个标签</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">REMOVE</span> n<span class="token punctuation">.</span>property
+</span></code></pre>
+<p>移除一个属性</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="foreach"><a aria-hidden="true" tabindex="-1" href="#foreach"><span class="icon icon-link"></span></a>FOREACH</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">FOREACH</span> <span class="token punctuation">(</span>r <span class="token keyword">IN</span> <span class="token function">relationships</span><span class="token punctuation">(</span>path<span class="token punctuation">)</span> <span class="token operator">|</span>
+</span><span class="code-line">  <span class="token keyword">SET</span> r<span class="token punctuation">.</span>marked <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>对路径中的每个关系执行一个变异操作。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">FOREACH</span> <span class="token punctuation">(</span>value <span class="token keyword">IN</span> coll <span class="token operator">|</span>
+</span><span class="code-line"> <span class="token keyword">CREATE</span> <span class="token punctuation">(</span><span class="token operator">:</span><span class="token class-name">Person</span> <span class="token punctuation">{</span>name<span class="token operator">:</span> value<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>对列表中的每个元素执行一个变异操作。</p>
+</div></div></div><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="调用子查询"><a aria-hidden="true" tabindex="-1" href="#调用子查询"><span class="icon icon-link"></span></a>调用子查询</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CALL</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">MATCH</span> <span class="token punctuation">(</span>p<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token relationship property">FRIEND_OF</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>other<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span> <span class="token keyword">RETURN</span> p<span class="token punctuation">,</span> other
+</span><span class="code-line">  <span class="token keyword">UNION</span>
+</span><span class="code-line">  <span class="token keyword">MATCH</span> <span class="token punctuation">(</span>p<span class="token operator">:</span><span class="token class-name">Child</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token relationship property">CHILD_OF</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>other<span class="token operator">:</span><span class="token class-name">Parent</span><span class="token punctuation">)</span> <span class="token keyword">RETURN</span> p<span class="token punctuation">,</span> other
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span></code></pre>
+<p>这调用了一个具有两个联合部分的子查询。子查询的结果之后可以进行后处理。</p>
+</div></div></div><div class="wrap h3body-not-exist row-span-2"><div class="wrap-header h3wrap"><h3 id="调用存储过程"><a aria-hidden="true" tabindex="-1" href="#调用存储过程"><span class="icon icon-link"></span></a>调用存储过程</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-2-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CALL</span> db<span class="token punctuation">.</span><span class="token function">labels</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">YIELD</span> label
+</span></code></pre>
+<p>这显示了对内置过程 db.labels 的独立调用，以列出数据库中使用的所有标签。请注意，所需的过程参数在过程名称后的括号中明确给出。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CALL</span> db<span class="token punctuation">.</span><span class="token function">labels</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">YIELD</span> <span class="token operator">*</span>
+</span></code></pre>
+<p>独立调用可以使用 YIELD * 返回所有列。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CALL</span> java<span class="token punctuation">.</span>stored<span class="token punctuation">.</span>procedureWithArgs
+</span></code></pre>
+<p>独立调用可以省略 YIELD，并且也可以通过语句参数隐式提供参数，例如，一个需要一个参数输入的独立调用可以通过传递参数映射 {input: 'foo'} 来运行。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CALL</span> db<span class="token punctuation">.</span><span class="token function">labels</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">YIELD</span> label
+</span><span class="code-line"><span class="token keyword">RETURN</span> <span class="token function">count</span><span class="token punctuation">(</span>label<span class="token punctuation">)</span> <span class="token keyword">AS</span> count
+</span></code></pre>
+<p>在更大的查询中调用内置过程 db.labels 来计算数据库中使用的所有标签。在更大的查询中进行调用时，总是需要显式传递参数和使用 YIELD 明确命名结果。</p>
+</div></div></div><div class="wrap h3body-not-exist col-span-2 row-span-3"><div class="wrap-header h3wrap"><h3 id="导入"><a aria-hidden="true" tabindex="-1" href="#导入"><span class="icon icon-link"></span></a>导入</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2 row-span-3-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">LOAD</span> <span class="token keyword">CSV</span> FROM
+</span><span class="code-line"><span class="token string">'https://neo4j.com/docs/cypher-refcard/4.3/csv/artists.csv'</span> <span class="token keyword">AS</span> line
+</span><span class="code-line"><span class="token keyword">CREATE</span> <span class="token punctuation">(</span><span class="token operator">:</span><span class="token class-name">Artist</span> <span class="token punctuation">{</span>name<span class="token operator">:</span> line<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> year<span class="token operator">:</span> <span class="token function">toInteger</span><span class="token punctuation">(</span>line<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>从 CSV 文件加载数据并创建节点。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">LOAD</span> <span class="token keyword">CSV</span> <span class="token keyword">WITH</span> HEADERS FROM
+</span><span class="code-line"><span class="token string">'https://neo4j.com/docs/cypher-refcard/4.3/csv/artists-with-headers.csv'</span> <span class="token keyword">AS</span> line
+</span><span class="code-line"><span class="token keyword">CREATE</span> <span class="token punctuation">(</span><span class="token operator">:</span><span class="token class-name">Artist</span> <span class="token punctuation">{</span>name<span class="token operator">:</span> line<span class="token punctuation">.</span>Name<span class="token punctuation">,</span> year<span class="token operator">:</span> <span class="token function">toInteger</span><span class="token punctuation">(</span>line<span class="token punctuation">.</span>Year<span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>加载包含标题的 CSV 数据。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">USING</span> <span class="token keyword">PERIODIC</span> <span class="token keyword">COMMIT</span> <span class="token number">500</span>
+</span><span class="code-line"><span class="token keyword">LOAD</span> <span class="token keyword">CSV</span> <span class="token keyword">WITH</span> HEADERS FROM
+</span><span class="code-line"><span class="token string">'https://neo4j.com/docs/cypher-refcard/4.3/csv/artists-with-headers.csv'</span> <span class="token keyword">AS</span> line
+</span><span class="code-line"><span class="token keyword">CREATE</span> <span class="token punctuation">(</span><span class="token operator">:</span><span class="token class-name">Artist</span> <span class="token punctuation">{</span>name<span class="token operator">:</span> line<span class="token punctuation">.</span>Name<span class="token punctuation">,</span> year<span class="token operator">:</span> <span class="token function">toInteger</span><span class="token punctuation">(</span>line<span class="token punctuation">.</span>Year<span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>在导入大量数据时，每处理500行后提交当前事务。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">LOAD</span> <span class="token keyword">CSV</span> FROM
+</span><span class="code-line"><span class="token string">'https://neo4j.com/docs/cypher-refcard/4.3/csv/artists-fieldterminator.csv'</span>
+</span><span class="code-line"><span class="token keyword">AS</span> line FIELDTERMINATOR <span class="token string">';'</span>
+</span><span class="code-line"><span class="token keyword">CREATE</span> <span class="token punctuation">(</span><span class="token operator">:</span><span class="token class-name">Artist</span> <span class="token punctuation">{</span>name<span class="token operator">:</span> line<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> year<span class="token operator">:</span> <span class="token function">toInteger</span><span class="token punctuation">(</span>line<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>使用不同的字段分隔符，而不是默认的逗号（周围没有空白）。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">LOAD</span> <span class="token keyword">CSV</span> FROM
+</span><span class="code-line"><span class="token string">'https://neo4j.com/docs/cypher-refcard/4.3/csv/artists.csv'</span> <span class="token keyword">AS</span> line
+</span><span class="code-line"><span class="token keyword">RETURN</span> <span class="token keyword">DISTINCT</span> <span class="token function">file</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回 LOAD CSV 处理的文件的绝对路径，如果在 LOAD CSV 上下文之外调用则返回 null。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">LOAD</span> <span class="token keyword">CSV</span> FROM
+</span><span class="code-line"><span class="token string">'https://neo4j.com/docs/cypher-refcard/4.3/csv/artists.csv'</span> <span class="token keyword">AS</span> line
+</span><span class="code-line"><span class="token keyword">RETURN</span> <span class="token function">linenumber</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回 LOAD CSV 当前正在处理的行号，如果在 LOAD CSV 上下文之外调用则返回 null。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="运算符"><a aria-hidden="true" tabindex="-1" href="#运算符"><span class="icon icon-link"></span></a>运算符</h3><div class="wrap-body">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="left-align"><thead><tr><th></th><th></th></tr></thead><tbody><tr><td><strong>通用</strong></td><td>DISTINCT, ., []</td></tr><tr><td><strong>数学</strong></td><td>+, -, *, /, %, ^</td></tr><tr><td><strong>比较</strong></td><td>=, &#x3C;>, &#x3C;, >, &#x3C;=, >=, IS NULL, IS NOT NULL</td></tr><tr><td><strong>布尔</strong></td><td>AND, OR, XOR, NOT</td></tr><tr><td><strong>字符串</strong></td><td>+</td></tr><tr><td><strong>列表</strong></td><td>+, IN, [x], [x .. y]</td></tr><tr><td><strong>正则表达式</strong></td><td>=~</td></tr><tr><td><strong>字符串匹配</strong></td><td>STARTS WITH, ENDS WITH, CONTAINS</td></tr></tbody></table>
+<!--rehype:className=left-align-->
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="null"><a aria-hidden="true" tabindex="-1" href="#null"><span class="icon icon-link"></span></a>null</h3><div class="wrap-body">
+<ul>
+<li><code>null</code> 用于表示缺失/未定义的值。</li>
+<li><code>null</code> 不等于 <code>null</code>。不知道两个值是否相等并不意味着它们是相同的值。因此，表达式 <code>null = null</code> 得到的是 <code>null</code> 而不是 <code>true</code>。要检查表达式是否为 <code>null</code>，请使用 <code>IS NULL</code>。</li>
+<li>算术表达式、比较和函数调用（除了 <code>coalesce</code>）将返回 <code>null</code> 如果任何参数为 <code>null</code>。</li>
+<li>尝试访问列表中缺失的元素或不存在的属性将得到 <code>null</code>。</li>
+<li>在 <code>OPTIONAL MATCH</code> 子句中，缺失部分的模式将使用 <code>null</code>。</li>
+</ul>
+</div></div></div><div class="wrap h3body-not-exist row-span-4"><div class="wrap-header h3wrap"><h3 id="patterns"><a aria-hidden="true" tabindex="-1" href="#patterns"><span class="icon icon-link"></span></a>Patterns</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-4-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">(</span>n<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>具有 Person 标签的节点</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">(</span>n<span class="token operator">:</span><span class="token class-name">Person</span><span class="token operator">:</span><span class="token class-name">Swedish</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>具有 Person 和 Swedish 标签的节点</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">(</span>n<span class="token operator">:</span><span class="token class-name">Person</span> <span class="token punctuation">{</span>name<span class="token operator">:</span> <span class="token variable">$value</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>具有声明的属性的节点</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>r <span class="token punctuation">{</span>name<span class="token operator">:</span> <span class="token variable">$value</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>匹配具有声明的属性的关系</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token operator">--></span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+</span></code></pre>
+<p>从 n 到 m 的关系</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token operator">--</span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+</span></code></pre>
+<p>在 n 和 m 之间的任意方向上的关系</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">(</span>n<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span><span class="token operator">--></span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+</span></code></pre>
+<p>带有指向 m 的关系的标记为 Person 的节点</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">(</span>m<span class="token punctuation">)</span><span class="token operator">&#x3C;-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token relationship property">KNOWS</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span>
+</span></code></pre>
+<p>从 n 到 m 的类型为 KNOWS 的关系</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token relationship property">KNOWS</span><span class="token operator">|</span><span class="token operator">:</span><span class="token relationship property">LOVES</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+</span></code></pre>
+<p>从 n 到 m 的类型为 KNOWS 或类型为 LOVES 的关系</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>r<span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+</span></code></pre>
+<p>将关系绑定到变量 r</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">*</span><span class="token number">1</span><span class="token operator">..</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+</span></code></pre>
+<p>从 n 到 m 之间的 1 到 5 个关系的变长路径</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">*</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+</span></code></pre>
+<p>从 n 到 m 之间的任意数量的关系的变长路径。（请参阅性能部分）</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token relationship property">KNOWS</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>m <span class="token punctuation">{</span>property<span class="token operator">:</span> <span class="token variable">$value</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>从节点 n 到节点 m，类型为 KNOWS 的关系，具有声明的属性</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">shortestPath</span><span class="token punctuation">(</span><span class="token punctuation">(</span>n1<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">*</span><span class="token operator">..</span><span class="token number">6</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span>n2<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>查找单一最短路径</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">allShortestPaths</span><span class="token punctuation">(</span><span class="token punctuation">(</span>n1<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">*</span><span class="token operator">..</span><span class="token number">6</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>n2<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>查找所有最短路径</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token operator">--></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">--></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>计算与模式匹配的路径数量</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="use"><a aria-hidden="true" tabindex="-1" href="#use"><span class="icon icon-link"></span></a>USE</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">USE myDatabase
+</span></code></pre>
+<p>选择 myDatabase 来执行查询，或针对其执行查询的部分</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">USE neo4j
+</span><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>n<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token relationship property">KNOWS</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>m<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">WHERE</span> n<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">'Alice'</span>
+</span></code></pre>
+<p>针对 Neo4j 数据库执行的 MATCH 查询</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="show-functions-和-procedures"><a aria-hidden="true" tabindex="-1" href="#show-functions-和-procedures"><span class="icon icon-link"></span></a>SHOW FUNCTIONS 和 PROCEDURES</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW FUNCTIONS
+</span></code></pre>
+<p>列出所有可用函数</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW PROCEDURES EXECUTABLE <span class="token keyword">YIELD</span> name
+</span></code></pre>
+<p>列出当前用户可以执行的所有过程，并仅返回过程的名称</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="标签"><a aria-hidden="true" tabindex="-1" href="#标签"><span class="icon icon-link"></span></a>标签</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token punctuation">(</span>n<span class="token operator">:</span><span class="token class-name">Person</span> <span class="token punctuation">{</span>name<span class="token operator">:</span> <span class="token variable">$value</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>创建一个带有标签和属性的节点</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MERGE</span> <span class="token punctuation">(</span>n<span class="token operator">:</span><span class="token class-name">Person</span> <span class="token punctuation">{</span>name<span class="token operator">:</span> <span class="token variable">$value</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>匹配或创建具有该标签和属性的唯一节点</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">SET</span> n<span class="token operator">:</span><span class="token class-name">Spouse</span><span class="token operator">:</span><span class="token class-name">Parent</span><span class="token operator">:</span>Employee
+</span></code></pre>
+<p>向节点添加标签</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>n<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>匹配标记为“Person”的节点</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>n<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">WHERE</span> n<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token variable">$value</span>
+</span><span class="code-line">
+</span></code></pre>
+<p>匹配具有给定名称的标记为“Person”的节点</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">WHERE</span> <span class="token punctuation">(</span>n<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>检查节点上标签的存在</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">labels</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span>
+</span></code></pre>
+<p>节点的标签</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">REMOVE</span> n<span class="token operator">:</span>Person
+</span></code></pre>
+<p>从节点中移除标签</p>
+</div></div></div><div class="wrap h3body-not-exist row-span-2"><div class="wrap-header h3wrap"><h3 id="lists"><a aria-hidden="true" tabindex="-1" href="#lists"><span class="icon icon-link"></span></a>Lists</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-2-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">[</span><span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">,</span> <span class="token string">'c'</span><span class="token punctuation">]</span> <span class="token keyword">AS</span> list
+</span></code></pre>
+<p>文字列表用方括号声明</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">size</span><span class="token punctuation">(</span><span class="token variable">$list</span><span class="token punctuation">)</span> <span class="token keyword">AS</span> len<span class="token punctuation">,</span> <span class="token variable">$list</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token keyword">AS</span> value
+</span></code></pre>
+<p>列表可以作为参数传递</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">range</span><span class="token punctuation">(</span><span class="token variable">$firstNum</span><span class="token punctuation">,</span> <span class="token variable">$lastNum</span><span class="token punctuation">,</span> <span class="token variable">$step</span><span class="token punctuation">)</span> <span class="token keyword">AS</span> list
+</span></code></pre>
+<p>range() 创建一个数字列表（step是可选的），其他返回列表的函数有：labels()、nodes()、relationships()</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> p <span class="token operator">=</span> <span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token relationship property">KNOWS</span><span class="token operator">*</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">RETURN</span> <span class="token function">relationships</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span> <span class="token keyword">AS</span> r
+</span></code></pre>
+<p>可以使用命名路径和 relationships() 返回变长路径的关系列表</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">RETURN</span> matchedNode<span class="token punctuation">.</span>list<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token keyword">AS</span> value<span class="token punctuation">,</span>
+</span><span class="code-line">       <span class="token function">size</span><span class="token punctuation">(</span>matchedNode<span class="token punctuation">.</span>list<span class="token punctuation">)</span> <span class="token keyword">AS</span> len
+</span></code></pre>
+<p>属性可以是字符串、数字或布尔值的列表。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">list<span class="token punctuation">[</span><span class="token variable">$idx</span><span class="token punctuation">]</span> <span class="token keyword">AS</span> value<span class="token punctuation">,</span>
+</span><span class="code-line">list<span class="token punctuation">[</span><span class="token variable">$startIdx</span><span class="token operator">..</span><span class="token variable">$endIdx</span><span class="token punctuation">]</span> <span class="token keyword">AS</span> slice
+</span></code></pre>
+<p>可以使用方括号中的 idx 下标来访问列表元素。无效的索引返回 null。可以使用起始索引到结束索引的间隔来检索片段，每个索引都可以省略或为负数。超出范围的元素将被忽略</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">UNWIND</span> <span class="token variable">$names</span> <span class="token keyword">AS</span> name
+</span><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>n <span class="token punctuation">{</span>name<span class="token operator">:</span> name<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">RETURN</span> <span class="token function">avg</span><span class="token punctuation">(</span>n<span class="token punctuation">.</span>age<span class="token punctuation">)</span>
+</span></code></pre>
+<p>使用 UNWIND，任何列表都可以转换回单独的行。该示例匹配一个名字列表中的所有名字</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">RETURN</span> <span class="token punctuation">[</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">--></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span> <span class="token keyword">WHERE</span> b<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">'Bob'</span> <span class="token operator">|</span> b<span class="token punctuation">.</span>age<span class="token punctuation">]</span>
+</span></code></pre>
+<p>可以使用模式推导直接从匹配中进行自定义投影</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>person<span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">RETURN</span> person <span class="token punctuation">{</span> <span class="token punctuation">.</span>name<span class="token punctuation">,</span> <span class="token punctuation">.</span>age<span class="token punctuation">}</span>
+</span></code></pre>
+<p>映射投影可以很容易地从节点、关系和其他映射值构造出来</p>
+</div></div></div><div class="wrap h3body-not-exist row-span-2"><div class="wrap-header h3wrap"><h3 id="maps"><a aria-hidden="true" tabindex="-1" href="#maps"><span class="icon icon-link"></span></a>Maps</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-2-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">{</span>name<span class="token operator">:</span> <span class="token string">'Alice'</span><span class="token punctuation">,</span> age<span class="token operator">:</span> <span class="token number">38</span><span class="token punctuation">,</span> address<span class="token operator">:</span> <span class="token punctuation">{</span>
+</span><span class="code-line">      city<span class="token operator">:</span> <span class="token string">'London'</span><span class="token punctuation">,</span>residential<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">}</span>
+</span></code></pre>
+<p>文字映射使用大括号声明，就像属性映射一样。支持列表</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">WITH</span> <span class="token punctuation">{</span>person<span class="token operator">:</span> <span class="token punctuation">{</span>name<span class="token operator">:</span> <span class="token string">'Anne'</span><span class="token punctuation">,</span> age<span class="token operator">:</span> <span class="token number">25</span><span class="token punctuation">}</span><span class="token punctuation">}</span> <span class="token keyword">AS</span> p
+</span><span class="code-line"><span class="token keyword">RETURN</span> p<span class="token punctuation">.</span>person<span class="token punctuation">.</span>name
+</span></code></pre>
+<p>访问嵌套映射的属性</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MERGE</span> <span class="token punctuation">(</span>p<span class="token operator">:</span><span class="token class-name">Person</span> <span class="token punctuation">{</span>name<span class="token operator">:</span> <span class="token variable">$map</span><span class="token punctuation">.</span>name<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span><span class="code-line">  <span class="token keyword">ON</span> <span class="token keyword">CREATE</span> <span class="token keyword">SET</span> p <span class="token operator">=</span> <span class="token variable">$map</span>
+</span></code></pre>
+<p>映射可以作为参数传递，并且可以作为映射或通过访问键来使用</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>matchedNode<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">RETURN</span> matchedNode
+</span></code></pre>
+<p>节点和关系被返回为它们数据的映射</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">map<span class="token punctuation">.</span>name<span class="token punctuation">,</span> map<span class="token punctuation">.</span>age<span class="token punctuation">,</span> map<span class="token punctuation">.</span>children<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+</span></code></pre>
+<p>可以通过它们的键访问映射条目。无效的键会导致错误</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="case"><a aria-hidden="true" tabindex="-1" href="#case"><span class="icon icon-link"></span></a>CASE</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CASE</span> n<span class="token punctuation">.</span>eyes
+</span><span class="code-line">  <span class="token keyword">WHEN</span> <span class="token string">'blue'</span> <span class="token keyword">THEN</span> <span class="token number">1</span>
+</span><span class="code-line">  <span class="token keyword">WHEN</span> <span class="token string">'brown'</span> <span class="token keyword">THEN</span> <span class="token number">2</span>
+</span><span class="code-line">  <span class="token keyword">ELSE</span> <span class="token number">3</span>
+</span><span class="code-line"><span class="token keyword">END</span>
+</span></code></pre>
+<p>从匹配的 WHEN 值返回 THEN 值。ELSE 值是可选的，如果缺失，则替换为 null</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CASE</span>
+</span><span class="code-line">  <span class="token keyword">WHEN</span> n<span class="token punctuation">.</span>eyes <span class="token operator">=</span> <span class="token string">'blue'</span> <span class="token keyword">THEN</span> <span class="token number">1</span>
+</span><span class="code-line">  <span class="token keyword">WHEN</span> n<span class="token punctuation">.</span>age <span class="token operator">&#x3C;</span> <span class="token number">40</span> <span class="token keyword">THEN</span> <span class="token number">2</span>
+</span><span class="code-line">  <span class="token keyword">ELSE</span> <span class="token number">3</span>
+</span><span class="code-line"><span class="token keyword">END</span>
+</span></code></pre>
+<p>从第一个评估为 true 的 WHEN 谓词返回 THEN 值。谓词按顺序进行评估</p>
+</div></div></div><div class="wrap h3body-not-exist row-span-2"><div class="wrap-header h3wrap"><h3 id="predicates-谓词"><a aria-hidden="true" tabindex="-1" href="#predicates-谓词"><span class="icon icon-link"></span></a>Predicates 谓词</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-2-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">n<span class="token punctuation">.</span>property <span class="token operator">&#x3C;></span> <span class="token variable">$value</span>
+</span></code></pre>
+<p>使用比较运算符</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">toString</span><span class="token punctuation">(</span>n<span class="token punctuation">.</span>property<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token variable">$value</span>
+</span></code></pre>
+<p>使用函数</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">n<span class="token punctuation">.</span>number <span class="token operator">>=</span> <span class="token number">1</span> <span class="token keyword">AND</span> n<span class="token punctuation">.</span>number <span class="token operator">&#x3C;=</span> <span class="token number">10</span>
+</span></code></pre>
+<p>使用布尔运算符来组合谓词</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token number">1</span> <span class="token operator">&#x3C;=</span> n<span class="token punctuation">.</span>number <span class="token operator">&#x3C;=</span> <span class="token number">10</span>
+</span></code></pre>
+<p>使用链接运算符来组合谓词</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">n<span class="token operator">:</span>Person
+</span></code></pre>
+<p>检查节点标签</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">variable <span class="token keyword">IS</span> <span class="token keyword">NOT</span> <span class="token boolean">NULL</span>
+</span></code></pre>
+<p>检查某物是否不为 null，例如某个属性是否存在</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">n<span class="token punctuation">.</span>property <span class="token keyword">IS</span> <span class="token boolean">NULL</span> <span class="token keyword">OR</span> n<span class="token punctuation">.</span>property <span class="token operator">=</span> <span class="token variable">$value</span>
+</span></code></pre>
+<p>要么属性不存在，要么谓词为 true</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">n<span class="token punctuation">.</span>property <span class="token operator">=</span> <span class="token variable">$value</span>
+</span></code></pre>
+<p>不存在的属性返回 null，它与任何值都不相等</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">n<span class="token punctuation">[</span><span class="token string">"property"</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token variable">$value</span>
+</span></code></pre>
+<p>也可以使用动态计算的属性名称来访问属性</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">n<span class="token punctuation">.</span>property <span class="token keyword">STARTS</span> <span class="token keyword">WITH</span> <span class="token string">'Tim'</span> <span class="token keyword">OR</span>
+</span><span class="code-line">n<span class="token punctuation">.</span>property <span class="token keyword">ENDS</span> <span class="token keyword">WITH</span> <span class="token string">'n'</span> <span class="token keyword">OR</span>
+</span><span class="code-line">n<span class="token punctuation">.</span>property <span class="token keyword">CONTAINS</span> <span class="token string">'goodie'</span>
+</span></code></pre>
+<p>字符串匹配</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">n<span class="token punctuation">.</span>property <span class="token operator">=~</span> <span class="token string">'Tim.*'</span>
+</span></code></pre>
+<p>字符串正则表达式匹配</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token relationship property">KNOWS</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+</span></code></pre>
+<p>确保模式至少有一个匹配项</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">NOT</span> <span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token relationship property">KNOWS</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+</span></code></pre>
+<p>从结果中排除对 (n)-[:KNOWS]->(m) 的匹配</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">n<span class="token punctuation">.</span>property <span class="token keyword">IN</span> <span class="token punctuation">[</span><span class="token variable">$value1</span><span class="token punctuation">,</span> <span class="token variable">$value2</span><span class="token punctuation">]</span>
+</span></code></pre>
+<p>检查一个元素是否存在于列表中</p>
+</div></div></div><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="列表谓词"><a aria-hidden="true" tabindex="-1" href="#列表谓词"><span class="icon icon-link"></span></a>列表谓词</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">all</span><span class="token punctuation">(</span>x <span class="token keyword">IN</span> coll <span class="token keyword">WHERE</span> x<span class="token punctuation">.</span>property <span class="token keyword">IS</span> <span class="token keyword">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>如果列表中所有元素都满足谓词，则返回 true。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">any</span><span class="token punctuation">(</span>x <span class="token keyword">IN</span> coll <span class="token keyword">WHERE</span> x<span class="token punctuation">.</span>property <span class="token keyword">IS</span> <span class="token keyword">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>如果列表中至少有一个元素满足谓词，则返回 true。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">none</span><span class="token punctuation">(</span>x <span class="token keyword">IN</span> coll <span class="token keyword">WHERE</span> x<span class="token punctuation">.</span>property <span class="token keyword">IS</span> <span class="token keyword">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>如果列表中所有元素都不满足谓词，则返回 true。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">single</span><span class="token punctuation">(</span>x <span class="token keyword">IN</span> coll <span class="token keyword">WHERE</span> x<span class="token punctuation">.</span>property <span class="token keyword">IS</span> <span class="token keyword">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>如果列表中恰好有一个元素满足谓词，则返回 true。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="列表表达式"><a aria-hidden="true" tabindex="-1" href="#列表表达式"><span class="icon icon-link"></span></a>列表表达式</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">size</span><span class="token punctuation">(</span><span class="token variable">$list</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>列表中的元素数量</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">reverse</span><span class="token punctuation">(</span><span class="token variable">$list</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>反转列表中元素的顺序</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">head</span><span class="token punctuation">(</span><span class="token variable">$list</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">last</span><span class="token punctuation">(</span><span class="token variable">$list</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">tail</span><span class="token punctuation">(</span><span class="token variable">$list</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>head() 返回列表的第一个元素，last() 返回列表的最后一个元素。tail() 返回除第一个元素外的所有元素。对于空列表，所有函数返回 null</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">[</span>x <span class="token keyword">IN</span> list <span class="token operator">|</span> x<span class="token punctuation">.</span>prop<span class="token punctuation">]</span>
+</span></code></pre>
+<p>对原始列表中每个元素的表达式值组成的列表</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">[</span>x <span class="token keyword">IN</span> list <span class="token keyword">WHERE</span> x<span class="token punctuation">.</span>prop <span class="token operator">&#x3C;></span> <span class="token variable">$value</span><span class="token punctuation">]</span>
+</span></code></pre>
+<p>过滤出谓词为 true 的元素组成的列表</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">[</span>x <span class="token keyword">IN</span> list <span class="token keyword">WHERE</span> x<span class="token punctuation">.</span>prop <span class="token operator">&#x3C;></span> <span class="token variable">$value</span> <span class="token operator">|</span> x<span class="token punctuation">.</span>prop<span class="token punctuation">]</span>
+</span></code></pre>
+<p>对列表进行过滤，并从每个符合条件的元素中提取表达式的值</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">reduce</span><span class="token punctuation">(</span>s <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">,</span> x <span class="token keyword">IN</span> list <span class="token operator">|</span> s <span class="token operator">+</span> x<span class="token punctuation">.</span>prop<span class="token punctuation">)</span>
+</span></code></pre>
+<p>对列表中的每个元素求值，并累积结果</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="函数"><a aria-hidden="true" tabindex="-1" href="#函数"><span class="icon icon-link"></span></a>函数</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">coalesce</span><span class="token punctuation">(</span>n<span class="token punctuation">.</span>property<span class="token punctuation">,</span> <span class="token variable">$defaultValue</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回第一个非空表达式</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">timestamp</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>自1970年1月1日UTC午夜以来的毫秒数</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">id</span><span class="token punctuation">(</span>nodeOrRelationship<span class="token punctuation">)</span>
+</span></code></pre>
+<p>关系或节点的内部ID</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">toInteger</span><span class="token punctuation">(</span><span class="token variable">$expr</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>将给定的输入转换为整数（如果可能），否则返回 null</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">toFloat</span><span class="token punctuation">(</span><span class="token variable">$expr</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>将给定的输入转换为浮点数（如果可能），否则返回 null</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">toBoolean</span><span class="token punctuation">(</span><span class="token variable">$expr</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>将给定的输入转换为布尔值（如果可能），否则返回 null</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">keys</span><span class="token punctuation">(</span><span class="token variable">$expr</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回节点、关系或映射的属性名称的字符串表示形式列表</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">properties</span><span class="token punctuation">(</span><span class="token variable">$expr</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回包含节点或关系的所有属性的映射</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="路径函数"><a aria-hidden="true" tabindex="-1" href="#路径函数"><span class="icon icon-link"></span></a>路径函数</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">length</span><span class="token punctuation">(</span>path<span class="token punctuation">)</span>
+</span></code></pre>
+<p>路径中的关系数量。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">nodes</span><span class="token punctuation">(</span>path<span class="token punctuation">)</span>
+</span></code></pre>
+<p>路径中的节点列表。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">relationships</span><span class="token punctuation">(</span>path<span class="token punctuation">)</span>
+</span></code></pre>
+<p>路径中的关系列表。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token punctuation">[</span>x <span class="token keyword">IN</span> <span class="token function">nodes</span><span class="token punctuation">(</span>path<span class="token punctuation">)</span> <span class="token operator">|</span> x<span class="token punctuation">.</span>prop<span class="token punctuation">]</span>
+</span></code></pre>
+<p>从路径中的节点中提取属性。</p>
+</div></div></div><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="空间函数"><a aria-hidden="true" tabindex="-1" href="#空间函数"><span class="icon icon-link"></span></a>空间函数</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">point</span><span class="token punctuation">(</span><span class="token punctuation">{</span>x<span class="token operator">:</span> <span class="token variable">$x</span><span class="token punctuation">,</span> y<span class="token operator">:</span> <span class="token variable">$y</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回一个二维笛卡尔坐标系中的点。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">point</span><span class="token punctuation">(</span><span class="token punctuation">{</span>latitude<span class="token operator">:</span> <span class="token variable">$y</span><span class="token punctuation">,</span> longitude<span class="token operator">:</span> <span class="token variable">$x</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回一个二维地理坐标系中的点，坐标以十进制度数指定。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">point</span><span class="token punctuation">(</span><span class="token punctuation">{</span>x<span class="token operator">:</span> <span class="token variable">$x</span><span class="token punctuation">,</span> y<span class="token operator">:</span> <span class="token variable">$y</span><span class="token punctuation">,</span> z<span class="token operator">:</span> <span class="token variable">$z</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回一个三维笛卡尔坐标系中的点。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">point</span><span class="token punctuation">(</span><span class="token punctuation">{</span>latitude<span class="token operator">:</span> <span class="token variable">$y</span><span class="token punctuation">,</span> longitude<span class="token operator">:</span> <span class="token variable">$x</span><span class="token punctuation">,</span> height<span class="token operator">:</span> <span class="token variable">$z</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回一个三维地理坐标系中的点，纬度和经度以十进制度数表示，高度以米为单位。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">distance</span><span class="token punctuation">(</span><span class="token function">point</span><span class="token punctuation">(</span><span class="token punctuation">{</span>x<span class="token operator">:</span> <span class="token variable">$x1</span><span class="token punctuation">,</span> y<span class="token operator">:</span> <span class="token variable">$y1</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">point</span><span class="token punctuation">(</span><span class="token punctuation">{</span>x<span class="token operator">:</span> <span class="token variable">$x2</span><span class="token punctuation">,</span> y<span class="token operator">:</span> <span class="token variable">$y2</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回一个浮点数，表示两点之间的线性距离。返回的单位将与点坐标的单位相同，它适用于二维和三维笛卡尔点。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">distance</span><span class="token punctuation">(</span><span class="token function">point</span><span class="token punctuation">(</span><span class="token punctuation">{</span>latitude<span class="token operator">:</span> <span class="token variable">$y1</span><span class="token punctuation">,</span> longitude<span class="token operator">:</span> <span class="token variable">$x1</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">point</span><span class="token punctuation">(</span><span class="token punctuation">{</span>latitude<span class="token operator">:</span> <span class="token variable">$y2</span><span class="token punctuation">,</span> longitude<span class="token operator">:</span> <span class="token variable">$x2</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回两点之间的大地距离，单位为米。它也可以用于三维地理点。</p>
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="neo4j-函数"><a aria-hidden="true" tabindex="-1" href="#neo4j-函数"><span class="icon icon-link"></span></a>Neo4j 函数</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist row-span-2"><div class="wrap-header h3wrap"><h3 id="时间函数"><a aria-hidden="true" tabindex="-1" href="#时间函数"><span class="icon icon-link"></span></a>时间函数</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-2-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">date</span><span class="token punctuation">(</span><span class="token string">"2018-04-05"</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>从字符串解析并返回日期。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">localtime</span><span class="token punctuation">(</span><span class="token string">"12:45:30.25"</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回一个没有时区的时间。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">time</span><span class="token punctuation">(</span><span class="token string">"12:45:30.25+01:00"</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回指定时区的时间。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">localdatetime</span><span class="token punctuation">(</span><span class="token string">"2018-04-05T12:34:00"</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回一个没有时区的日期时间。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">datetime</span><span class="token punctuation">(</span><span class="token string">"2018-04-05T12:34:00[Europe/Berlin]"</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回指定时区的日期时间。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">datetime</span><span class="token punctuation">(</span><span class="token punctuation">{</span>epochMillis<span class="token operator">:</span> <span class="token number">3360000</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>将 3360000 作为 UNIX Epoch 时间转换为普通日期时间。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">{</span>year<span class="token operator">:</span> <span class="token variable">$year</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token variable">$month</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token variable">$day</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>所有的时间函数也可以接受命名组件的映射。这个例子从年、月和日组件返回一个日期。每个函数支持不同的可能组件集。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">datetime</span><span class="token punctuation">(</span><span class="token punctuation">{</span>date<span class="token operator">:</span> <span class="token variable">$date</span><span class="token punctuation">,</span> time<span class="token operator">:</span> <span class="token variable">$time</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>可以通过组合其他类型来创建时间类型。这个例子从日期和时间创建一个日期时间。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">{</span>date<span class="token operator">:</span> <span class="token variable">$datetime</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>可以通过选择更复杂的类型来创建时间类型，也可以覆盖单个组件。这个例子从日期时间中选择，同时覆盖了天组件，创建了一个日期。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">WITH</span> <span class="token function">date</span><span class="token punctuation">(</span><span class="token string">"2018-04-05"</span><span class="token punctuation">)</span> <span class="token keyword">AS</span> d
+</span><span class="code-line"><span class="token keyword">RETURN</span> d<span class="token punctuation">.</span>year<span class="token punctuation">,</span> d<span class="token punctuation">.</span>month<span class="token punctuation">,</span> d<span class="token punctuation">.</span>day<span class="token punctuation">,</span> d<span class="token punctuation">.</span>week<span class="token punctuation">,</span> d<span class="token punctuation">.</span>dayOfWeek
+</span></code></pre>
+<p>访问器允许提取时间类型的组件。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="时长函数"><a aria-hidden="true" tabindex="-1" href="#时长函数"><span class="icon icon-link"></span></a>时长函数</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">duration</span><span class="token punctuation">(</span><span class="token string">"P1Y2M10DT12H45M30.25S"</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回 1 年、2 个月、10 天、12 小时、45 分钟和 30.25 秒的持续时间。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">duration<span class="token punctuation">.</span><span class="token function">between</span><span class="token punctuation">(</span><span class="token variable">$date1</span><span class="token punctuation">,</span><span class="token variable">$date2</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回两个时间实例之间的持续时间。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">WITH</span> <span class="token function">duration</span><span class="token punctuation">(</span><span class="token string">"P1Y2M10DT12H45M"</span><span class="token punctuation">)</span> <span class="token keyword">AS</span> d
+</span><span class="code-line"><span class="token keyword">RETURN</span> d<span class="token punctuation">.</span>years<span class="token punctuation">,</span> d<span class="token punctuation">.</span>months<span class="token punctuation">,</span> d<span class="token punctuation">.</span>days<span class="token punctuation">,</span> d<span class="token punctuation">.</span>hours<span class="token punctuation">,</span> d<span class="token punctuation">.</span>minutes
+</span></code></pre>
+<p>返回 1 年、14 个月、10 天、12 小时和 765 分钟。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">WITH</span> <span class="token function">duration</span><span class="token punctuation">(</span><span class="token string">"P1Y2M10DT12H45M"</span><span class="token punctuation">)</span> <span class="token keyword">AS</span> d
+</span><span class="code-line"><span class="token keyword">RETURN</span> d<span class="token punctuation">.</span>years<span class="token punctuation">,</span> d<span class="token punctuation">.</span>monthsOfYear<span class="token punctuation">,</span> d<span class="token punctuation">.</span>days<span class="token punctuation">,</span> d<span class="token punctuation">.</span>hours<span class="token punctuation">,</span> d<span class="token punctuation">.</span>minutesOfHour
+</span></code></pre>
+<p>返回 1 年、2 个月、10 天、12 小时和 45 分钟。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">date</span><span class="token punctuation">(</span><span class="token string">"2015-01-01"</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token function">duration</span><span class="token punctuation">(</span><span class="token string">"P1Y1M1D"</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回 2016-02-02 的日期。也可以从时间实例中减去持续时间。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">duration</span><span class="token punctuation">(</span><span class="token string">"PT30S"</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">10</span>
+</span></code></pre>
+<p>返回 5 分钟的持续时间。也可以将持续时间除以一个数字。</p>
+</div></div></div><div class="wrap h3body-not-exist row-span-2"><div class="wrap-header h3wrap"><h3 id="数学函数"><a aria-hidden="true" tabindex="-1" href="#数学函数"><span class="icon icon-link"></span></a>数学函数</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-2-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">abs</span><span class="token punctuation">(</span><span class="token variable">$expr</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>绝对值。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">rand</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>返回范围从 0（包含）到 1（不包含）的随机数，[0,1)。每次调用都会返回一个新值。也可用于选择子集或随机排序。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">round</span><span class="token punctuation">(</span><span class="token variable">$expr</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>四舍五入到最近的整数；ceil() 和 floor() 分别向上或向下找到下一个整数。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">sqrt</span><span class="token punctuation">(</span><span class="token variable">$expr</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>平方根。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">sign</span><span class="token punctuation">(</span><span class="token variable">$expr</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>如果为零，则为 0；如果为负，则为 -1；如果为正，则为 1。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">sin</span><span class="token punctuation">(</span><span class="token variable">$expr</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>三角函数还包括 cos()、tan()、cot()、asin()、acos()、atan()、atan2() 和 haversin()。如果没有另外指定，三角函数的所有参数都应该以弧度为单位。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">degrees</span><span class="token punctuation">(</span><span class="token variable">$expr</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">radians</span><span class="token punctuation">(</span><span class="token variable">$expr</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">pi</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>将弧度转换为度；使用 radians() 进行反向转换，使用 pi() 表示 π。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">log10</span><span class="token punctuation">(</span><span class="token variable">$expr</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">log</span><span class="token punctuation">(</span><span class="token variable">$expr</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">exp</span><span class="token punctuation">(</span><span class="token variable">$expr</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">e</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>以 10 为底的对数、自然对数、e 的参数次幂，以及 e 的值。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="关系函数"><a aria-hidden="true" tabindex="-1" href="#关系函数"><span class="icon icon-link"></span></a>关系函数</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">type</span><span class="token punctuation">(</span>a_relationship<span class="token punctuation">)</span>
+</span></code></pre>
+<p>关系类型的字符串表示。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">startNode</span><span class="token punctuation">(</span>a_relationship<span class="token punctuation">)</span>
+</span></code></pre>
+<p>关系的起始节点。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">endNode</span><span class="token punctuation">(</span>a_relationship<span class="token punctuation">)</span>
+</span></code></pre>
+<p>关系的结束节点。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">id</span><span class="token punctuation">(</span>a_relationship<span class="token punctuation">)</span>
+</span></code></pre>
+<p>关系的内部ID</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="字符串函数"><a aria-hidden="true" tabindex="-1" href="#字符串函数"><span class="icon icon-link"></span></a>字符串函数</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">toString</span><span class="token punctuation">(</span><span class="token variable">$expression</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>表达式的字符串表示。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">replace</span><span class="token punctuation">(</span><span class="token variable">$original</span><span class="token punctuation">,</span> <span class="token variable">$search</span><span class="token punctuation">,</span> <span class="token variable">$replacement</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>用 replacement 替换所有出现的 search。所有参数都必须是表达式。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">substring</span><span class="token punctuation">(</span><span class="token variable">$original</span><span class="token punctuation">,</span> <span class="token variable">$begin</span><span class="token punctuation">,</span> <span class="token variable">$subLength</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>获取字符串的部分。subLength 参数是可选的。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">left</span><span class="token punctuation">(</span><span class="token variable">$original</span><span class="token punctuation">,</span> <span class="token variable">$subLength</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token function">right</span><span class="token punctuation">(</span><span class="token variable">$original</span><span class="token punctuation">,</span> <span class="token variable">$subLength</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>字符串的前部分。字符串的后部分。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">trim</span><span class="token punctuation">(</span><span class="token variable">$original</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">lTrim</span><span class="token punctuation">(</span><span class="token variable">$original</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token function">rTrim</span><span class="token punctuation">(</span><span class="token variable">$original</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>修剪所有空格，或在左侧或右侧。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">toUpper</span><span class="token punctuation">(</span><span class="token variable">$original</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">toLower</span><span class="token punctuation">(</span><span class="token variable">$original</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>大写和小写。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">split</span><span class="token punctuation">(</span><span class="token variable">$original</span><span class="token punctuation">,</span> <span class="token variable">$delimiter</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>将字符串拆分为字符串列表。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">reverse</span><span class="token punctuation">(</span><span class="token variable">$original</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>反转字符串。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">size</span><span class="token punctuation">(</span><span class="token variable">$string</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>计算字符串中的字符数。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="聚合函数"><a aria-hidden="true" tabindex="-1" href="#聚合函数"><span class="icon icon-link"></span></a>聚合函数</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>匹配行的数量。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">count</span><span class="token punctuation">(</span>variable<span class="token punctuation">)</span>
+</span></code></pre>
+<p>非空值的数量。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">DISTINCT</span> variable<span class="token punctuation">)</span>
+</span></code></pre>
+<p>所有聚合函数也接受 DISTINCT 运算符，它从值中去除重复项。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">collect</span><span class="token punctuation">(</span>n<span class="token punctuation">.</span>property<span class="token punctuation">)</span>
+</span></code></pre>
+<p>从值中创建列表，忽略 null 值。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">sum</span><span class="token punctuation">(</span>n<span class="token punctuation">.</span>property<span class="token punctuation">)</span>
+</span></code></pre>
+<p>求数值的总和。类似的函数有 avg()、min()、max()。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">percentileDisc</span><span class="token punctuation">(</span>n<span class="token punctuation">.</span>property<span class="token punctuation">,</span> <span class="token variable">$percentile</span><span class="token punctuation">)</span>
+</span></code></pre>
+<p>离散百分位数。连续百分位数是 percentileCont()。百分位数参数范围从 0.0 到 1.0。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token function">stDev</span><span class="token punctuation">(</span>n<span class="token punctuation">.</span>property<span class="token punctuation">)</span>
+</span></code></pre>
+<p>样本标准差。对于整个总体，请使用 stDevP()。</p>
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="neo4j-模式操作"><a aria-hidden="true" tabindex="-1" href="#neo4j-模式操作"><span class="icon icon-link"></span></a>Neo4j 模式操作</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist col-span-3"><div class="wrap-header h3wrap"><h3 id="索引"><a aria-hidden="true" tabindex="-1" href="#索引"><span class="icon icon-link"></span></a>索引</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-3-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">INDEX</span> <span class="token keyword">FOR</span> <span class="token punctuation">(</span>p<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span> <span class="token keyword">ON</span> <span class="token punctuation">(</span>p<span class="token punctuation">.</span>name<span class="token punctuation">)</span>
+</span></code></pre>
+<p>在具有标签 Person 和属性 name 的节点上创建索引。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">INDEX</span> index_name <span class="token keyword">FOR</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>k<span class="token operator">:</span><span class="token relationship property">KNOWS</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">ON</span> <span class="token punctuation">(</span>k<span class="token punctuation">.</span>since<span class="token punctuation">)</span>
+</span></code></pre>
+<p>在具有类型 KNOWS 和属性 since 的关系上创建索引，并命名为 index_name。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">INDEX</span> <span class="token keyword">FOR</span> <span class="token punctuation">(</span>p<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span> <span class="token keyword">ON</span> <span class="token punctuation">(</span>p<span class="token punctuation">.</span>surname<span class="token punctuation">)</span>
+</span><span class="code-line">OPTIONS <span class="token punctuation">{</span>indexProvider<span class="token operator">:</span> <span class="token string">'native-btree-1.0'</span><span class="token punctuation">,</span> indexConfig<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token identifier">`spatial.cartesian.min`</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">100.0</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">100.0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token identifier">`spatial.cartesian.max`</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">100.0</span><span class="token punctuation">,</span> <span class="token number">100.0</span><span class="token punctuation">]</span><span class="token punctuation">}</span><span class="token punctuation">}</span>
+</span></code></pre>
+<p>在具有标签 Person 和属性 surname 的节点上创建索引，使用本地 btree 索引提供程序，以及给定的空间笛卡尔设置。其他索引设置将使用它们的默认值。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">INDEX</span> <span class="token keyword">FOR</span> <span class="token punctuation">(</span>p<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span> <span class="token keyword">ON</span> <span class="token punctuation">(</span>p<span class="token punctuation">.</span>name<span class="token punctuation">,</span> p<span class="token punctuation">.</span>age<span class="token punctuation">)</span>
+</span></code></pre>
+<p>在具有标签 Person 和属性 name 和 age 的节点上创建复合索引，如果索引已存在则抛出错误。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">INDEX</span> IF <span class="token keyword">NOT</span> <span class="token keyword">EXISTS</span> <span class="token keyword">FOR</span> <span class="token punctuation">(</span>p<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span> <span class="token keyword">ON</span> <span class="token punctuation">(</span>p<span class="token punctuation">.</span>name<span class="token punctuation">,</span> p<span class="token punctuation">.</span>age<span class="token punctuation">)</span>
+</span></code></pre>
+<p>在具有标签 Person 和属性 name 和 age 的节点上创建复合索引，如果尚不存在则创建，如果已存在则不执行任何操作。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> LOOKUP <span class="token keyword">INDEX</span> lookup_index_name <span class="token keyword">FOR</span> <span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token keyword">ON</span> EACH <span class="token function">labels</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span>
+</span></code></pre>
+<p>在具有任何标签的节点上创建一个名为 lookup_index_name 的令牌查找索引。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> LOOKUP <span class="token keyword">INDEX</span> <span class="token keyword">FOR</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>r<span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">ON</span> EACH <span class="token function">type</span><span class="token punctuation">(</span>r<span class="token punctuation">)</span>
+</span></code></pre>
+<p>在具有任何关系类型的关系上创建一个令牌查找索引。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> FULLTEXT <span class="token keyword">INDEX</span> node_fulltext_index_name <span class="token keyword">FOR</span> <span class="token punctuation">(</span>n<span class="token operator">:</span><span class="token class-name">Friend</span><span class="token punctuation">)</span> <span class="token keyword">ON</span> EACH <span class="token punctuation">[</span>n<span class="token punctuation">.</span>name<span class="token punctuation">]</span>
+</span><span class="code-line">OPTIONS <span class="token punctuation">{</span>indexConfig<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token identifier">`fulltext.analyzer`</span><span class="token operator">:</span> <span class="token string">'swedish'</span><span class="token punctuation">}</span><span class="token punctuation">}</span>
+</span></code></pre>
+<p>在具有名称 node_fulltext_index_name 和分析器为 swedish 的节点上创建全文索引。节点上的全文索引只能由存储过程 db.index.fulltext.queryNodes 使用。其他索引设置将使用它们的默认值。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> FULLTEXT <span class="token keyword">INDEX</span> rel_fulltext_index_name <span class="token keyword">FOR</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>r<span class="token operator">:</span><span class="token relationship property">HAS_PET</span><span class="token operator">|</span>BROUGHT_PET<span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">ON</span> EACH <span class="token punctuation">[</span>r<span class="token punctuation">.</span>since<span class="token punctuation">,</span> r<span class="token punctuation">.</span>price<span class="token punctuation">]</span>
+</span></code></pre>
+<p>在具有名称 rel_fulltext_index_name 的关系上创建全文索引。关系上的全文索引只能由存储过程 db.index.fulltext.queryRelationships 使用。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW INDEXES
+</span></code></pre>
+<p>列出所有索引。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>n<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span> <span class="token keyword">WHERE</span> n<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token variable">$value</span>
+</span></code></pre>
+<p>索引可以自动用于相等比较。请注意，例如 toLower(n.name) = $value 将不会使用索引。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>n<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">WHERE</span> n<span class="token punctuation">.</span>name <span class="token keyword">IN</span> <span class="token punctuation">[</span><span class="token variable">$value</span><span class="token punctuation">]</span>
+</span></code></pre>
+<p>索引可以自动用于 IN 列表检查。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>n<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">WHERE</span> n<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token variable">$value</span> <span class="token keyword">and</span> n<span class="token punctuation">.</span>age <span class="token operator">=</span> <span class="token variable">$value2</span>
+</span></code></pre>
+<p>复合索引可以自动用于两个属性的相等比较。请注意，必须对复合索引的所有属性进行谓词处理才能使用该索引。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">MATCH</span> <span class="token punctuation">(</span>n<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">USING</span> <span class="token keyword">INDEX</span> n<span class="token operator">:</span><span class="token function">Person</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span>
+</span><span class="code-line"><span class="token keyword">WHERE</span> n<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token variable">$value</span>
+</span></code></pre>
+<p>在 Cypher 使用了次优索引或应该使用多个索引时，可以强制使用索引。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">DROP</span> <span class="token keyword">INDEX</span> index_name
+</span></code></pre>
+<p>删除名为 index_name 的索引，如果索引不存在则抛出错误。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">DROP</span> <span class="token keyword">INDEX</span> index_name IF <span class="token keyword">EXISTS</span>
+</span></code></pre>
+<p>如果存在则删除名为 index_name 的索引，如果不存在则不执行任何操作。</p>
+</div></div></div><div class="wrap h3body-not-exist col-span-2 row-span-2"><div class="wrap-header h3wrap"><h3 id="约束"><a aria-hidden="true" tabindex="-1" href="#约束"><span class="icon icon-link"></span></a>约束</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2 row-span-2-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">CONSTRAINT</span> <span class="token keyword">ON</span> <span class="token punctuation">(</span>p<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span><span class="code-line">       <span class="token keyword">ASSERT</span> p<span class="token punctuation">.</span>name <span class="token keyword">IS</span> <span class="token keyword">UNIQUE</span>
+</span></code></pre>
+<p>在标签为 Person 且属性为 name 的节点上创建唯一属性约束。如果更新或创建具有相同名称的该标签的任何其他节点，则写入操作将失败。此约束将创建一个相应的索引。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">CONSTRAINT</span> uniqueness <span class="token keyword">ON</span> <span class="token punctuation">(</span>p<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span><span class="code-line">       <span class="token keyword">ASSERT</span> p<span class="token punctuation">.</span>age <span class="token keyword">IS</span> <span class="token keyword">UNIQUE</span>
+</span></code></pre>
+<p>在标签为 Person 且属性为 age 的节点上创建唯一属性约束，命名为 uniqueness。如果更新或创建具有相同年龄的该标签的任何其他节点，则写入操作将失败。此约束将创建一个相应的索引。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">CONSTRAINT</span> <span class="token keyword">ON</span> <span class="token punctuation">(</span>p<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span><span class="code-line">       <span class="token keyword">ASSERT</span> p<span class="token punctuation">.</span>surname <span class="token keyword">IS</span> <span class="token keyword">UNIQUE</span>
+</span><span class="code-line">       OPTIONS <span class="token punctuation">{</span>indexProvider<span class="token operator">:</span> <span class="token string">'native-btree-1.0'</span><span class="token punctuation">}</span>
+</span></code></pre>
+<p>在标签为 Person 且属性为 surname 的节点上创建唯一属性约束，并使用 indexProvider native-btree-1.0 创建相应的索引。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">CONSTRAINT</span> <span class="token keyword">ON</span> <span class="token punctuation">(</span>p<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span><span class="code-line">       <span class="token keyword">ASSERT</span> p<span class="token punctuation">.</span>name <span class="token keyword">IS</span> <span class="token keyword">NOT</span> <span class="token boolean">NULL</span>
+</span></code></pre>
+<p>(★) 在标签为 Person 且属性为 name 的节点上创建节点属性存在约束。如果该约束已存在，则抛出错误。如果创建具有该标签但没有 name 的节点，或者从具有 Person 标签的现有节点中删除 name 属性，则写入操作将失败。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">CONSTRAINT</span> node_exists IF <span class="token keyword">NOT</span> <span class="token keyword">EXISTS</span> <span class="token keyword">ON</span> <span class="token punctuation">(</span>p<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span><span class="code-line">       <span class="token keyword">ASSERT</span> p<span class="token punctuation">.</span>name <span class="token keyword">IS</span> <span class="token keyword">NOT</span> <span class="token boolean">NULL</span>
+</span></code></pre>
+<p>(★) 如果标签为 Person 且属性为 name 的节点存在节点属性存在约束，或者名为 node_exists 的约束已存在，则不执行任何操作。如果不存在此类约束，则将创建该约束。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">CONSTRAINT</span> <span class="token keyword">ON</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>l<span class="token operator">:</span><span class="token relationship property">LIKED</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span><span class="code-line">       <span class="token keyword">ASSERT</span> l<span class="token punctuation">.</span><span class="token keyword">when</span> <span class="token keyword">IS</span> <span class="token keyword">NOT</span> <span class="token boolean">NULL</span>
+</span></code></pre>
+<p>(★) 在关系类型为 LIKED 且属性为 when 的关系上创建关系属性存在约束。如果创建具有此类型但没有 when 的关系，或者从具有 LIKED 类型的现有关系中删除 when 属性，则写入操作将失败。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">CONSTRAINT</span> relationship_exists <span class="token keyword">ON</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span>l<span class="token operator">:</span><span class="token relationship property">LIKED</span><span class="token punctuation">]</span><span class="token operator">-</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span><span class="code-line">       <span class="token keyword">ASSERT</span> l<span class="token punctuation">.</span>since <span class="token keyword">IS</span> <span class="token keyword">NOT</span> <span class="token boolean">NULL</span>
+</span></code></pre>
+<p>(★) 在关系类型为 LIKED 且属性为 since 的关系上创建关系属性存在约束，并命名为 relationship_exists。如果创建具有此类型但没有 since 的关系，或者从具有 LIKED 类型的现有关系中删除 since 属性，则写入操作将失败。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW <span class="token keyword">UNIQUE</span> CONSTRAINTS <span class="token keyword">YIELD</span> <span class="token operator">*</span>
+</span></code></pre>
+<p>列出所有唯一约束。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">CONSTRAINT</span> <span class="token keyword">ON</span> <span class="token punctuation">(</span>p<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span><span class="code-line">      <span class="token keyword">ASSERT</span> <span class="token punctuation">(</span>p<span class="token punctuation">.</span>firstname<span class="token punctuation">,</span> p<span class="token punctuation">.</span>surname<span class="token punctuation">)</span> <span class="token keyword">IS</span> <span class="token keyword">NODE</span> <span class="token keyword">KEY</span>
+</span></code></pre>
+<p>(★) 在标签为 Person 且属性为 firstname 和 surname 的节点上创建节点键约束。如果创建具有此标签但没有 firstname 和 surname 的节点，或者如果两者的组合不是唯一的，或者如果修改具有 Person 标签的现有节点上的 firstname 和/或 surname 属性以违反这些约束，则写入操作将失败。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">CONSTRAINT</span> node_key <span class="token keyword">ON</span> <span class="token punctuation">(</span>p<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span><span class="code-line">      <span class="token keyword">ASSERT</span> <span class="token punctuation">(</span>p<span class="token punctuation">.</span>name<span class="token punctuation">,</span> p<span class="token punctuation">.</span>surname<span class="token punctuation">)</span> <span class="token keyword">IS</span> <span class="token keyword">NODE</span> <span class="token keyword">KEY</span>
+</span></code></pre>
+<p>(★) 在标签为 Person 且属性为 name 和 surname 的节点上创建节点键约束，并命名为 node_key。如果创建具有此标签但没有 name 和 surname 的节点，或者如果两者的组合不是唯一的，或者如果修改具有 Person 标签的现有节点上的 name 和/或 surname 属性以违反这些约束，则写入操作将失败。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">CONSTRAINT</span> node_key_with_config <span class="token keyword">ON</span> <span class="token punctuation">(</span>p<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span>
+</span><span class="code-line">      <span class="token keyword">ASSERT</span> <span class="token punctuation">(</span>p<span class="token punctuation">.</span>name<span class="token punctuation">,</span> p<span class="token punctuation">.</span>age<span class="token punctuation">)</span> <span class="token keyword">IS</span> <span class="token keyword">NODE</span> <span class="token keyword">KEY</span>
+</span><span class="code-line">      OPTIONS <span class="token punctuation">{</span>indexConfig<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token identifier">`spatial.wgs-84.min`</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">100.0</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">100.0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token identifier">`spatial.wgs-84.max`</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">100.0</span><span class="token punctuation">,</span> <span class="token number">100.0</span><span class="token punctuation">]</span><span class="token punctuation">}</span><span class="token punctuation">}</span>
+</span></code></pre>
+<p>(★) 在标签为 Person 且属性为 name 和 age 的节点上创建节点键约束，并命名为 node_key_with_config，以及给定的 spatial.wgs-84 设置以创建相应的索引。其他索引设置将使用它们的默认值。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">DROP</span> <span class="token keyword">CONSTRAINT</span> uniqueness
+</span></code></pre>
+<p>删除名为 uniqueness 的约束，如果约束不存在则抛出错误。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">DROP</span> <span class="token keyword">CONSTRAINT</span> uniqueness IF <span class="token keyword">EXISTS</span>
+</span></code></pre>
+<p>如果名为 uniqueness 的约束存在，则删除它，如果不存在则不执行任何操作。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="性能"><a aria-hidden="true" tabindex="-1" href="#性能"><span class="icon icon-link"></span></a>性能</h3><div class="wrap-body">
+<ul>
+<li>尽可能使用参数而不是文字常量。这样可以让 Cypher 重用你的查询，而不必解析和构建新的执行计划。</li>
+<li>始终为你的变长模式设置一个上限。有可能一个查询会因为错误而无限制地访问图中的所有节点。</li>
+<li>只返回你需要的数据。避免返回整个节点和关系，而是选择你需要的数据并只返回那部分。</li>
+<li>使用 <code>PROFILE</code> / <code>EXPLAIN</code> 来分析你的查询性能。查看<a href="https://neo4j.com/docs/cypher-manual/4.3/query-tuning">查询调优</a>了解更多关于这些以及其他主题的信息。</li>
+</ul>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="neo4j-多数据库管理"><a aria-hidden="true" tabindex="-1" href="#neo4j-多数据库管理"><span class="icon icon-link"></span></a>Neo4j 多数据库管理</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> <span class="token keyword">OR</span> REPLACE DATABASE myDatabase
+</span></code></pre>
+<p>(★) 创建一个名为 myDatabase 的数据库。如果已存在同名数据库，则删除现有数据库并创建一个新的。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">STOP DATABASE myDatabase
+</span></code></pre>
+<p>(★) 停止名为 myDatabase 的数据库。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">START</span> DATABASE myDatabase
+</span></code></pre>
+<p>(★) 启动名为 myDatabase 的数据库。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW DATABASES
+</span></code></pre>
+<p>列出系统中所有数据库及其相关信息。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW DATABASES
+</span><span class="code-line"><span class="token keyword">YIELD</span> name<span class="token punctuation">,</span> currentStatus
+</span><span class="code-line"><span class="token keyword">WHERE</span> name <span class="token keyword">CONTAINS</span> <span class="token string">'my'</span> <span class="token keyword">AND</span> currentStatus <span class="token operator">=</span> <span class="token string">'online'</span>
+</span></code></pre>
+<p>列出数据库的信息，根据名称和在线状态进行筛选，并进一步根据这些条件进行细分。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW DATABASE myDatabase
+</span></code></pre>
+<p>显示有关数据库 myDatabase 的信息。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW DEFAULT DATABASE
+</span></code></pre>
+<p>显示默认数据库的信息。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW HOME DATABASE
+</span></code></pre>
+<p>显示当前用户的主数据库的信息。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">DROP</span> DATABASE myDatabase IF <span class="token keyword">EXISTS</span>
+</span></code></pre>
+<p>(★) 删除数据库 myDatabase，如果存在的话。</p>
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="neo4j安全性"><a aria-hidden="true" tabindex="-1" href="#neo4j安全性"><span class="icon icon-link"></span></a>Neo4j安全性</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist row-span-2"><div class="wrap-header h3wrap"><h3 id="用户管理"><a aria-hidden="true" tabindex="-1" href="#用户管理"><span class="icon icon-link"></span></a>用户管理</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-2-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> USER alice <span class="token keyword">SET</span> PASSWORD <span class="token variable">$password</span>
+</span></code></pre>
+<p>创建一个新用户和密码。这个密码在第一次登录时必须更改。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">ALTER USER alice <span class="token keyword">SET</span> PASSWORD <span class="token variable">$password</span> CHANGE <span class="token keyword">NOT</span> REQUIRED
+</span></code></pre>
+<p>为用户设置一个新密码。该用户将不需要在下次登录时更改密码。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">ALTER USER alice IF <span class="token keyword">EXISTS</span> <span class="token keyword">SET</span> PASSWORD CHANGE REQUIRED
+</span></code></pre>
+<p>如果指定的用户存在，则强制该用户在下次登录时更改其密码。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">ALTER USER alice <span class="token keyword">SET</span> STATUS SUSPENDED
+</span></code></pre>
+<p>(★) 将用户状态更改为已暂停。使用 SET STATUS ACTIVE 来重新激活用户。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">ALTER USER alice <span class="token keyword">SET</span> HOME DATABASE otherDb
+</span></code></pre>
+<p>(★) 将用户的主数据库更改为 otherDb。使用 REMOVE HOME DATABASE 来取消用户的主数据库设置，并回退到默认数据库。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">ALTER CURRENT USER <span class="token keyword">SET</span> PASSWORD FROM <span class="token variable">$old</span> TO <span class="token variable">$new</span>
+</span></code></pre>
+<p>更改当前登录用户的密码。用户不需要在下次登录时更改此密码。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW CURRENT USER
+</span></code></pre>
+<p>列出当前登录用户、他们的状态、角色以及是否需要更改他们的密码。
+(★) 状态和角色仅适用于企业版。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW USERS
+</span></code></pre>
+<p>列出系统中的所有用户、他们的状态、角色以及是否需要更改他们的密码。
+(★) 状态和角色仅适用于企业版。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW USERS
+</span><span class="code-line"><span class="token keyword">YIELD</span> user<span class="token punctuation">,</span> suspended
+</span><span class="code-line"><span class="token keyword">WHERE</span> suspended <span class="token operator">=</span> <span class="token boolean">true</span>
+</span></code></pre>
+<p>列出系统中的用户，根据他们的名称和状态进行过滤，并进一步根据他们是否被暂停进行筛选。
+(★) 状态仅适用于企业版。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">RENAME USER alice TO alice_delete
+</span></code></pre>
+<p>将用户 alice 重命名为 alice_delete。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">DROP</span> USER alice_delete
+</span></code></pre>
+<p>删除用户</p>
+</div></div></div><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="-图读取权限"><a aria-hidden="true" tabindex="-1" href="#-图读取权限"><span class="icon icon-link"></span></a>(★) 图读取权限</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT TRAVERSE <span class="token keyword">ON</span> GRAPH <span class="token operator">*</span> NODES <span class="token operator">*</span> TO my_role
+</span></code></pre>
+<p>将遍历权限授予角色对所有节点和所有图。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">DENY READ <span class="token punctuation">{</span>prop<span class="token punctuation">}</span> <span class="token keyword">ON</span> GRAPH foo RELATIONSHIP Type TO my_role
+</span></code></pre>
+<p>拒绝角色对指定图中具有指定类型的所有关系的特定属性的读取权限。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT <span class="token keyword">MATCH</span> <span class="token punctuation">{</span><span class="token operator">*</span><span class="token punctuation">}</span> <span class="token keyword">ON</span> HOME GRAPH ELEMENTS Label TO my_role
+</span></code></pre>
+<p>将读取权限和遍历权限授予角色对主图中具有指定标签的所有节点和关系。这里，两种权限都适用于图中具有指定标签/类型的所有节点和关系。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="-角色管理"><a aria-hidden="true" tabindex="-1" href="#-角色管理"><span class="icon icon-link"></span></a>(★) 角色管理</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> ROLE my_role
+</span></code></pre>
+<p>创建一个角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">CREATE</span> ROLE my_second_role IF <span class="token keyword">NOT</span> <span class="token keyword">EXISTS</span> <span class="token keyword">AS</span> COPY <span class="token keyword">OF</span> my_role
+</span></code></pre>
+<p>创建一个名为 my_second_role 的角色，除非它已经存在，作为现有 my_role 的副本。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">RENAME ROLE my_second_role TO my_other_role
+</span></code></pre>
+<p>将名为 my_second_role 的角色重命名为 my_other_role。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT ROLE my_role<span class="token punctuation">,</span> my_other_role TO alice
+</span></code></pre>
+<p>将角色分配给用户。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">REVOKE ROLE my_other_role FROM alice
+</span></code></pre>
+<p>从用户中删除指定的角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW ROLES
+</span></code></pre>
+<p>列出系统中的所有角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW ROLES
+</span><span class="code-line"><span class="token keyword">YIELD</span> role
+</span><span class="code-line"><span class="token keyword">WHERE</span> role <span class="token keyword">CONTAINS</span> <span class="token string">'my'</span>
+</span></code></pre>
+<p>列出角色，根据角色名称进行过滤，并进一步根据名称是否包含 'my' 进行筛选。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW POPULATED ROLES <span class="token keyword">WITH</span> USERS
+</span></code></pre>
+<p>列出系统中至少分配给一个用户的所有角色，以及分配给这些角色的用户。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line"><span class="token keyword">DROP</span> ROLE my_role
+</span></code></pre>
+<p>删除一个角色。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="-图写入权限"><a aria-hidden="true" tabindex="-1" href="#-图写入权限"><span class="icon icon-link"></span></a>(★) 图写入权限</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT <span class="token keyword">CREATE</span> <span class="token keyword">ON</span> GRAPH <span class="token operator">*</span> NODES Label TO my_role
+</span></code></pre>
+<p>将创建权限授予角色对所有图中具有指定标签的所有节点。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">DENY <span class="token keyword">DELETE</span> <span class="token keyword">ON</span> GRAPH neo4j TO my_role
+</span></code></pre>
+<p>拒绝角色对指定图中的所有节点和关系的删除权限。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">REVOKE <span class="token keyword">SET</span> LABEL Label <span class="token keyword">ON</span> GRAPH <span class="token operator">*</span> FROM my_role
+</span></code></pre>
+<p>撤销对角色在所有图中设置指定标签的权限。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT <span class="token keyword">REMOVE</span> LABEL <span class="token operator">*</span> <span class="token keyword">ON</span> GRAPH foo TO my_role
+</span></code></pre>
+<p>将删除标签权限授予角色对指定图中的所有标签。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">DENY <span class="token keyword">SET</span> PROPERTY <span class="token punctuation">{</span>prop<span class="token punctuation">}</span> <span class="token keyword">ON</span> GRAPH foo RELATIONSHIPS Type TO my_role
+</span></code></pre>
+<p>拒绝角色对指定图中具有指定类型的所有关系的特定属性的设置权限。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT <span class="token keyword">MERGE</span> <span class="token punctuation">{</span><span class="token operator">*</span><span class="token punctuation">}</span> <span class="token keyword">ON</span> GRAPH <span class="token operator">*</span> NODES Label TO my_role
+</span></code></pre>
+<p>将合并权限授予角色对所有图中具有指定标签的所有节点的所有属性。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">REVOKE WRITE <span class="token keyword">ON</span> GRAPH <span class="token operator">*</span> FROM my_role
+</span></code></pre>
+<p>撤销对角色在所有图中的写入权限。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">DENY <span class="token keyword">ALL</span> GRAPH PRIVILEGES <span class="token keyword">ON</span> GRAPH foo TO my_role
+</span></code></pre>
+<p>拒绝角色对指定图的所有图权限。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="-显示权限"><a aria-hidden="true" tabindex="-1" href="#-显示权限"><span class="icon icon-link"></span></a>(★) 显示权限</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW PRIVILEGES <span class="token keyword">AS</span> COMMANDS
+</span></code></pre>
+<p>以Cypher命令的形式列出系统中的所有权限。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW PRIVILEGES
+</span></code></pre>
+<p>列出系统中的所有权限，以及它们所分配的角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW PRIVILEGES
+</span><span class="code-line"><span class="token keyword">YIELD</span> role<span class="token punctuation">,</span> action<span class="token punctuation">,</span> access
+</span><span class="code-line"><span class="token keyword">WHERE</span> role <span class="token operator">=</span> <span class="token string">'my_role'</span>
+</span></code></pre>
+<p>列出关于权限的信息，根据角色、操作和访问进行筛选，并进一步根据角色名称进行细化。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW ROLE my_role PRIVILEGES <span class="token keyword">AS</span> COMMANDS
+</span></code></pre>
+<p>以Cypher命令的形式列出分配给角色的所有权限。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW ROLE my_role<span class="token punctuation">,</span> my_second_role PRIVILEGES <span class="token keyword">AS</span> COMMANDS
+</span></code></pre>
+<p>以Cypher命令的形式列出分配给多个角色的所有权限。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW USER alice PRIVILEGES <span class="token keyword">AS</span> COMMANDS
+</span></code></pre>
+<p>以Cypher命令的形式列出用户的所有权限，以及他们所分配的角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">SHOW USER PRIVILEGES <span class="token keyword">AS</span> COMMANDS
+</span></code></pre>
+<p>以Cypher命令的形式列出当前登录用户的所有权限，以及他们所分配的角色。</p>
+</div></div></div><div class="wrap h3body-not-exist col-span-2 row-span-2"><div class="wrap-header h3wrap"><h3 id="-数据库权限"><a aria-hidden="true" tabindex="-1" href="#-数据库权限"><span class="icon icon-link"></span></a>(★) 数据库权限</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2 row-span-2-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT ACCESS <span class="token keyword">ON</span> DATABASE <span class="token operator">*</span> TO my_role
+</span></code></pre>
+<p>将访问权限授予角色，以便对所有数据库进行访问和运行查询。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT <span class="token keyword">START</span> <span class="token keyword">ON</span> DATABASE <span class="token operator">*</span> TO my_role
+</span></code></pre>
+<p>将启动权限授予角色，以便启动所有数据库。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT STOP <span class="token keyword">ON</span> DATABASE <span class="token operator">*</span> TO my_role
+</span></code></pre>
+<p>将停止权限授予角色，以便停止所有数据库。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT <span class="token keyword">CREATE</span> <span class="token keyword">INDEX</span> <span class="token keyword">ON</span> DATABASE foo TO my_role
+</span></code></pre>
+<p>将在指定数据库上创建索引的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT <span class="token keyword">DROP</span> <span class="token keyword">INDEX</span> <span class="token keyword">ON</span> DATABASE foo TO my_role
+</span></code></pre>
+<p>将在指定数据库上删除索引的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT SHOW <span class="token keyword">INDEX</span> <span class="token keyword">ON</span> DATABASE <span class="token operator">*</span> TO my_role
+</span></code></pre>
+<p>将显示所有数据库上的索引的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">DENY <span class="token keyword">INDEX</span> MANAGEMENT <span class="token keyword">ON</span> DATABASE bar TO my_role
+</span></code></pre>
+<p>拒绝在指定数据库上创建和删除索引的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT <span class="token keyword">CREATE</span> <span class="token keyword">CONSTRAINT</span> <span class="token keyword">ON</span> DATABASE <span class="token operator">*</span> TO my_role
+</span></code></pre>
+<p>将在所有数据库上创建约束的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">DENY <span class="token keyword">DROP</span> <span class="token keyword">CONSTRAINT</span> <span class="token keyword">ON</span> DATABASE <span class="token operator">*</span> TO my_role
+</span></code></pre>
+<p>拒绝在所有数据库上删除约束的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">DENY SHOW <span class="token keyword">CONSTRAINT</span> <span class="token keyword">ON</span> DATABASE foo TO my_role
+</span></code></pre>
+<p>拒绝在指定数据库上显示约束的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">REVOKE <span class="token keyword">CONSTRAINT</span> <span class="token keyword">ON</span> DATABASE <span class="token operator">*</span> FROM my_role
+</span></code></pre>
+<p>撤销授予和拒绝在所有数据库上创建和删除约束的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT <span class="token keyword">CREATE</span> NEW LABELS <span class="token keyword">ON</span> DATABASE <span class="token operator">*</span> TO my_role
+</span></code></pre>
+<p>将在所有数据库上创建新标签的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">DENY <span class="token keyword">CREATE</span> NEW TYPES <span class="token keyword">ON</span> DATABASE foo TO my_role
+</span></code></pre>
+<p>拒绝在指定数据库上创建新关系类型的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">REVOKE GRANT <span class="token keyword">CREATE</span> NEW PROPERTY NAMES <span class="token keyword">ON</span> DATABASE bar FROM my_role
+</span></code></pre>
+<p>从角色撤销在指定数据库上创建新属性名称的权限。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT NAME MANAGEMENT <span class="token keyword">ON</span> HOME DATABASE TO my_role
+</span></code></pre>
+<p>将在主数据库上创建标签、关系类型和属性名称的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT <span class="token keyword">ALL</span> <span class="token keyword">ON</span> DATABASE baz TO my_role
+</span></code></pre>
+<p>将对指定数据库的访问、创建和删除索引和约束、创建新标签、类型和属性名称的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT SHOW <span class="token function">TRANSACTION</span> <span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">ON</span> DATABASE foo TO my_role
+</span></code></pre>
+<p>将列出在指定数据库上所有用户的事务和查询的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">DENY TERMINATE <span class="token function">TRANSACTION</span> <span class="token punctuation">(</span>user1<span class="token punctuation">,</span> user2<span class="token punctuation">)</span> <span class="token keyword">ON</span> DATABASES <span class="token operator">*</span> TO my_role
+</span></code></pre>
+<p>拒绝在所有数据库上终止来自用户1和用户2的事务和查询的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">REVOKE GRANT TRANSACTION MANAGEMENT <span class="token keyword">ON</span> HOME DATABASE FROM my_role
+</span></code></pre>
+<p>从角色撤销在主数据库上列出和终止所有用户的事务和查询的权限授予</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="-角色管理权限"><a aria-hidden="true" tabindex="-1" href="#-角色管理权限"><span class="icon icon-link"></span></a>(★) 角色管理权限</h3><div class="wrap-body">
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT <span class="token keyword">CREATE</span> ROLE <span class="token keyword">ON</span> DBMS TO my_role
+</span></code></pre>
+<p>将创建角色的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT RENAME ROLE <span class="token keyword">ON</span> DBMS TO my_role
+</span></code></pre>
+<p>将重命名角色的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT <span class="token keyword">DROP</span> ROLE <span class="token keyword">ON</span> DBMS TO my_role
+</span></code></pre>
+<p>将删除角色的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">DENY ASSIGN ROLE <span class="token keyword">ON</span> DBMS TO my_role
+</span></code></pre>
+<p>拒绝将角色分配给用户的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">DENY <span class="token keyword">REMOVE</span> ROLE <span class="token keyword">ON</span> DBMS TO my_role
+</span></code></pre>
+<p>拒绝从用户中删除角色的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">REVOKE DENY SHOW ROLE <span class="token keyword">ON</span> DBMS FROM my_role
+</span></code></pre>
+<p>从角色撤销对显示角色的权限的拒绝。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT ROLE MANAGEMENT <span class="token keyword">ON</span> DBMS TO my_role
+</span></code></pre>
+<p>将管理角色的所有权限授予角色。</p>
+</div></div></div><div class="wrap h3body-not-exist row-span-3"><div class="wrap-header h3wrap"><h3 id="-用户管理权限"><a aria-hidden="true" tabindex="-1" href="#-用户管理权限"><span class="icon icon-link"></span></a>(★) 用户管理权限</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-3-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT <span class="token keyword">CREATE</span> USER <span class="token keyword">ON</span> DBMS TO my_role
+</span></code></pre>
+<p>将创建用户的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT RENAME USER <span class="token keyword">ON</span> DBMS TO my_role
+</span></code></pre>
+<p>将重命名用户的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">DENY ALTER USER <span class="token keyword">ON</span> DBMS TO my_role
+</span></code></pre>
+<p>拒绝更改用户的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">REVOKE <span class="token keyword">SET</span> PASSWORDS <span class="token keyword">ON</span> DBMS FROM my_role
+</span></code></pre>
+<p>从角色撤销对更改用户密码的授权和拒绝。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">REVOKE GRANT <span class="token keyword">SET</span> USER STATUS <span class="token keyword">ON</span> DBMS FROM my_role
+</span></code></pre>
+<p>从角色撤销对更改用户帐户状态的授权。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT <span class="token keyword">SET</span> USER HOME DATABASE <span class="token keyword">ON</span> DBMS TO my_role
+</span></code></pre>
+<p>将更改用户主数据库的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT <span class="token keyword">DROP</span> USER <span class="token keyword">ON</span> DBMS TO my_role
+</span></code></pre>
+<p>将删除用户的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">REVOKE DENY SHOW USER <span class="token keyword">ON</span> DBMS FROM my_role
+</span></code></pre>
+<p>从角色撤销对显示用户的权限的拒绝。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT USER MANAGEMENT <span class="token keyword">ON</span> DBMS TO my_role
+</span></code></pre>
+<p>将管理用户的所有权限授予角色。</p>
+</div></div></div><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="-数据库管理权限"><a aria-hidden="true" tabindex="-1" href="#-数据库管理权限"><span class="icon icon-link"></span></a>(★) 数据库管理权限</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT <span class="token keyword">CREATE</span> DATABASE <span class="token keyword">ON</span> DBMS TO my_role
+</span></code></pre>
+<p>将创建数据库的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">REVOKE DENY <span class="token keyword">DROP</span> DATABASE <span class="token keyword">ON</span> DBMS FROM my_role
+</span></code></pre>
+<p>从角色撤销对删除数据库的拒绝权限。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">DENY DATABASE MANAGEMENT <span class="token keyword">ON</span> DBMS TO my_role
+</span></code></pre>
+<p>拒绝所有管理数据库的权限授予角色。</p>
+</div></div></div><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="-权限管理权限"><a aria-hidden="true" tabindex="-1" href="#-权限管理权限"><span class="icon icon-link"></span></a>(★) 权限管理权限</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT SHOW PRIVILEGE <span class="token keyword">ON</span> DBMS TO my_role
+</span></code></pre>
+<p>将显示权限的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">DENY ASSIGN PRIVILEGE <span class="token keyword">ON</span> DBMS TO my_role
+</span></code></pre>
+<p>拒绝将权限分配给角色的权限授予角色。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">REVOKE GRANT <span class="token keyword">REMOVE</span> PRIVILEGE <span class="token keyword">ON</span> DBMS FROM my_role
+</span></code></pre>
+<p>从角色撤销对从角色中删除权限的授权权限。</p>
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">REVOKE PRIVILEGE MANAGEMENT <span class="token keyword">ON</span> DBMS FROM my_role
+</span></code></pre>
+<p>从角色撤销管理权限的所有授予和拒绝。</p>
+</div></div></div><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="-dbms权限"><a aria-hidden="true" tabindex="-1" href="#-dbms权限"><span class="icon icon-link"></span></a>(★) DBMS权限</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+<pre class="language-cypher"><code class="language-cypher code-highlight"><span class="code-line">GRANT <span class="token keyword">ALL</span> <span class="token keyword">ON</span> DBMS TO my_role
+</span></code></pre>
+<p>将执行所有角色管理、用户管理、数据库管理和权限管理的权限授予角色。</p>
+</div></div></div></div></div></div><script src="https://giscus.app/client.js" data-repo="jaywcjlove/reference" data-repo-id="R_kgDOID2-Mw" data-category="Q&#x26;A" data-category-id="DIC_kwDOID2-M84CS5wo" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="dark" data-lang="zh-CN" crossorigin="anonymous" async></script><div class="giscus"></div></div><footer class="footer-wrap"><footer class="max-container">© 2022 <a href="https://wangchujiang.com/#/app" target="_blank">Kenny Wang</a>.</footer></footer><script src="../data.js?v=1.8.1" defer></script><script src="../js/fuse.min.js?v=1.8.1" defer></script><script src="../js/main.js?v=1.8.1" defer></script><div id="mysearch"><div class="mysearch-box"><div class="mysearch-input"><div><svg xmlns="http://www.w3.org/2000/svg" height="1em" width="1em" viewBox="0 0 18 18">
+  <path fill="currentColor" d="M17.71,16.29 L14.31,12.9 C15.4069846,11.5024547 16.0022094,9.77665502 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 C9.77665502,16.0022094 11.5024547,15.4069846 12.9,14.31 L16.29,17.71 C16.4777666,17.8993127 16.7333625,18.0057983 17,18.0057983 C17.2666375,18.0057983 17.5222334,17.8993127 17.71,17.71 C17.8993127,17.5222334 18.0057983,17.2666375 18.0057983,17 C18.0057983,16.7333625 17.8993127,16.4777666 17.71,16.29 Z M2,8 C2,4.6862915 4.6862915,2 8,2 C11.3137085,2 14,4.6862915 14,8 C14,11.3137085 11.3137085,14 8,14 C4.6862915,14 2,11.3137085 2,8 Z"></path>
+</svg><input id="mysearch-input" type="search" placeholder="搜索" autocomplete="off"><div class="mysearch-clear"></div></div><button id="mysearch-close" type="button">搜索</button></div><div class="mysearch-result"><div id="mysearch-menu"></div><div id="mysearch-content"></div></div></div></div></body>
+</html>

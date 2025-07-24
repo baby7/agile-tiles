@@ -1,0 +1,111 @@
+<html oncontextmenu="javascript:event.preventDefault();">
+<head>
+    <meta name="viewport" content="width=device-width,height=device-height;initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui">
+    <meta http-equiv="Cache-Control" content="max-age:259200">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <!-- uc强制竖屏 <meta name="screen-orientation" content="portrait"> -->
+    <!--UC强制全屏--> <meta name="full-screen" content="yes"> 
+    <!-- QQ强制竖屏 <meta name="x5-orientation" content="portrait"> -->
+    <!-- QQ强制全屏--> <meta name="x5-fullscreen" content="true"> 
+    <title>TinyWaste debug</title>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" >
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<script type="text/javascript" src="./bootstrap/js/jquery.js"></script>
+<script type="text/javascript" src="./bootstrap/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="./bootstrap/js/jquery.md5.js"></script>
+<script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./bootstrap/js/fastclick.js"></script>
+
+<link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="./data/main_test.css">
+<link rel="stylesheet" href="./data/pocket_test.css">
+</head>
+<body>
+    <div id="overlay" style="display:none;"></div>
+    <div class="container-fluid">
+        <div id="background"></div>
+        <div id="pauseDiv" style="display:none;"></div>
+    </div>
+</body>
+<script type="text/javascript" src="./data/item.js"></script>
+<script type="text/javascript" src="./data/status.js"></script>
+<script type="text/javascript" src="./data/work.js"></script>
+<script type="text/javascript" src="./data/map.js"></script>
+<script type="text/javascript" src="./data/creep.js"></script>
+<script type="text/javascript" src="./data/lib.js"></script>
+<script type="text/javascript" src="./data/action.js"></script>
+<!--
+作者：海带酒
+微博：@薄葬子-拷问作者的良心
+e-mail:janusk@qq.com
+技术协助：@ilay
+图标提供：竹刀鱼
+-->
+<script type="text/javascript">
+    startGame();
+    updateSysClock(2, 0, false);
+    pauseGame();
+    resumeGame();
+    $("body").on("click touchend", function(e) {
+        var target = $(e.target);
+        if(target.hasClass("item")){
+            target.siblings().popover("destroy");
+        }
+        else if(!target.hasClass("popover") && target.parent(".popoverButton").length === 0){
+            $(".item").popover("destroy");
+        }
+    });
+
+    TOOL_LEVEL.work = 3;
+    updateStatus("charm", 1);
+    //updateStatus("perception", 8);
+    updateStatus("tech", 175);
+    //updateStatus("agility", 7);
+    updateStatus("endurance", 9);
+    KETTLE_VOLUME = 40;
+    KETTLE_AMOUNT = 3;
+    BAG_CAP = 50;
+    FARM_CAP = 4;
+    eval(TOOL_DATA.cook_1.upgrade);
+    eval(TOOL_DATA.farm.upgrade);
+    EXPLORE_LASTTIME = new Date(sysTime.getTime() - 10*24*60*60*1000);
+    MAP_DATA.outside.place.village.quest.shift();
+    MAP_DATA.outside.place.village.show = true;
+    MAP_DATA.outside.place.desert.show = true;
+    MAP_DATA.desert.place.stationTown_2.show = true;
+    EXPLORE_FLAG = true;
+    EXPLORE_TIME = 120;
+    EXPLORE_RATE = 80;
+    getBuff("slow_1");
+    //setTimeout(function(){removeBuff("san_1");}, 5000);
+    //alert($.md5("19821000"+"k"+"19821000", "19821000"))
+    sysTime = new Date(sysTime.getTime() + 8*1000*60*60*24);
+    MAP_DATA.outside.place.lizard_4 = {
+        name:'巨型蜥蜴妖',
+        enemy:true,
+        show:true
+    }
+    //BATTLE_OBJ.setEnemy("lizard_4");
+    getItem({dagger_2:60, armor_6:1, bow_5:1000, battery:100, alloyArrow:400, greens:400, manure:200, patato:900, water:120, wood:120, unlocker:900, cyberEye_2:100, gasCan:10, gas:50, gunpowder:100, cure:20, bandage:80, lizardLeather_s:100, lizardLeather_quest:1, metal:500, radClear:10, stone:200, alloy:200, energyDrug:10, shoe_4:1, armor_lizard:1,ticket:1, log_vault7:1, timefly:100});
+    toLoading(0.1, "outside");
+
+    
+</script>
+</html>
+<!--
+
+.开放C2实验场内容
+.加入新药剂咖啡因√
+.背包最大可扩展至32，箱子可扩展至120√
+.各类物品开始存在不同堆叠上限，超出上限的同类物品会分组存放
+.（待定）昼夜交替会在界面上表现，若有照明措施则不受影响
+.加入成就系统
+.加入技能系统
+.增加新的探索内容
+.新玩法：虚拟竞技场
+
+
+.部分地图在杀敌时有可能触发特殊事件
