@@ -183,33 +183,24 @@ class InformationCard(AggregationCard):
         super().refresh_ui_end(date_time_str)
 
     def push_button_reading_history_click(self):
-        now = datetime.datetime.now()
-        date_str = str(now.strftime("%m%d"))
-        date_year = str(now.strftime("%Y"))
-        url = QUrl('https://api.qqsuu.cn/api/dm-lishi?date=' + date_str)
+        url = QUrl(common.BASE_URL + '/historyToday/today')
         request = QNetworkRequest(url)
+        request.setRawHeader(b"Authorization", self.main_object.token.encode())
         # 设置请求属性（可选）
-        # request.setRawHeader(b"User-Agent", b"MyApp/1.0")
         reply = self.network_manager.get(request)
         # 存储上下文信息
-        reply.setProperty("type", "history")
-        reply.setProperty("date_year", date_year)
         reply.setProperty("callback", self.process_history_data)
 
     # 历史数据处理函数
     def process_history_data(self, data, reply):
         try:
             result = json.loads(data)
-            history_list = result["data"]["list"]
+            history_list = result["data"]
             history_str = ""
-            date_year = reply.property("date_year")
 
             for i in range(len(history_list)):
                 history = history_list[len(history_list) - i - 1]
-                history_date = history['lsdate']
-                gap_year = int(date_year) - int(history_date[0:4])
-                history_str += ("【" + history['lsdate'] + "  距今" + str(gap_year) + "年】" +
-                                str(history["title"]).replace("&nbsp;", " ") + "\r\n")
+                history_str += ("【" + history['date'] + "】" + str(history["title"]).replace("&nbsp;", " ") + "\r\n")
 
             self.toolkit.text_box_util.show_text_dialog(
                 self.main_object, "历史上的今天",
