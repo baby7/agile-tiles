@@ -1,9 +1,12 @@
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont, QPalette, QColor, QIcon
+from PySide6.QtGui import QFont, QPalette, QColor
 from PySide6.QtWidgets import QComboBox, QPushButton, QCheckBox, QLineEdit, QSpinBox, QTextEdit, QRadioButton, \
-    QFontComboBox, QFrame, QBoxLayout, QWidget, QGraphicsDropShadowEffect, QToolTip, QDateEdit, QTabWidget
+    QFontComboBox, QFrame, QBoxLayout, QWidget, QToolTip, QDateEdit, QTabWidget
 from qframelesswindow import TitleBar
 from qframelesswindow.titlebar import MinimizeButton, MaximizeButton, CloseButton
+
+from src.card.main_card.ChatCard.component.EnterTextEdit.EnterTextEdit import EnterTextEdit
+
 '''
 **********************************通用 · 开始***************************************
 ↓                                                                                 ↓
@@ -18,9 +21,10 @@ QScrollBar:vertical {
     border: none;
     width: 10px;
     border-radius: 5px;
+    background-color: transparent;
 }
 QScrollBar::handle:vertical {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0 #b3b3b3, stop: 0.5 #b3b3b3, stop:1 #b3b3b3);
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0 rgba(179, 179, 179, 125), stop: 0.5 rgba(179, 179, 179, 125), stop:1 rgba(179, 179, 179, 125));
     min-height: 20px;
     max-height: 20px;
     margin: 0px 0px 0px 0px;
@@ -55,9 +59,10 @@ QScrollBar:horizontal {
     border: none;
     height: 10px;
     border-radius: 5px;
+    background-color: transparent;
 }
 QScrollBar::handle:horizontal {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0 #b3b3b3, stop: 0.5 #b3b3b3, stop:1 #b3b3b3);
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0 rgba(179, 179, 179, 125), stop: 0.5 rgba(179, 179, 179, 125), stop:1 rgba(179, 179, 179, 125));
     min-width: 20px;
     max-width: 20px;
     margin: 0px 0px 0px 0px;
@@ -511,9 +516,9 @@ def set_line_edit_style(line_edit, is_dark=False):
 
 def set_text_edit_style(text_edit, is_dark=False):
     if is_dark:
-        text_edit.setStyleSheet(text_edit_dark_style)
+        text_edit.setStyleSheet(text_edit_dark_style + scroll_bar_style)
     else:
-        text_edit.setStyleSheet(text_edit_style)
+        text_edit.setStyleSheet(text_edit_style + scroll_bar_style)
 
 def set_spin_box_style(spin_box, is_dark=False):
     if is_dark:
@@ -868,7 +873,7 @@ def set_dialog_control_style(widget, is_dark=False):
         elif isinstance(widget, QLineEdit):
             set_line_edit_style(widget, is_dark)
             continue
-        elif isinstance(widget, QTextEdit):
+        elif isinstance(widget, QTextEdit) or isinstance(widget, EnterTextEdit):
             set_text_edit_style(widget, is_dark)
             continue
         elif isinstance(widget, QFrame) and "frame" in widget.objectName():

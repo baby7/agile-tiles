@@ -84,7 +84,7 @@ def push_button_area_user_vip_power_2_click(main_object):
 
 def push_button_area_user_vip_power_3_click(main_object):
     try:
-        content = "非会员用户可以每天使用三次AI大模型对话，会员用户可以无限制使用。未来会开放更多智能体。\n用户可以在菜单->智能对话处进行对话哦~"
+        content = "非会员用户可以每天使用3次AI大模型对话，会员用户可以无限制使用。未来会开放更多智能体。\n用户可以在菜单->智能对话处进行对话哦~"
         main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-AI大模型对话", {"content": content, "size": [300, 200]})
     except Exception as e:
         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
@@ -92,24 +92,24 @@ def push_button_area_user_vip_power_3_click(main_object):
 
 def push_button_area_user_vip_power_4_click(main_object):
     try:
-        content = "会员用户可在有问题或意见时，使用设置->会员工单处进行工单提交。我们会在第一时间处理工单。\n会员可以在菜单->设置->会员工单处提交工单哦~"
-        main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-专属工单系统", {"content": content, "size": [300, 200]})
+        content = "非会员用户可以每天使用10次翻译功能，会员用户可以无限制使用。\n用户可以在菜单->翻译处进行翻译哦~"
+        main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-翻译", {"content": content, "size": [300, 200]})
     except Exception as e:
         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
         message_box_util.box_information(main_object, "错误信息", "查看会员权益失败")
 
 def push_button_area_user_vip_power_5_click(main_object):
     try:
-        content = "用户可在多处中看到专属会员头像哦~"
-        main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-会员尊享标识", {"content": content, "size": [300, 200]})
+        content = "会员用户可在有问题或意见时，使用设置->会员工单处进行工单提交。我们会在第一时间处理工单。\n会员可以在菜单->设置->会员工单处提交工单哦~"
+        main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-专属工单系统", {"content": content, "size": [300, 200]})
     except Exception as e:
         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
         message_box_util.box_information(main_object, "错误信息", "查看会员权益失败")
 
 def push_button_area_user_vip_power_6_click(main_object):
     try:
-        content = "用户可以自定义主题，未来将会添加更多自定义主题和功能。\n用户可在菜单->设置->主题设置中自定义主题哦~"
-        main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-自定义主题", {"content": content, "size": [300, 200]})
+        content = "用户可在多处中看到专属会员头像哦~"
+        main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-会员尊享标识", {"content": content, "size": [300, 200]})
     except Exception as e:
         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
         message_box_util.box_information(main_object, "错误信息", "查看会员权益失败")
@@ -308,9 +308,9 @@ def refresh_theme(main_object):
         [ main_object.push_button_area_user_vip_power_1, "Connect/link-cloud-sucess"],
         [ main_object.push_button_area_user_vip_power_2, "Arrows/transfer-data"],
         [ main_object.push_button_area_user_vip_power_3, "Abstract/smart-optimization"],
-        [ main_object.push_button_area_user_vip_power_4, "Money/transaction"],
-        [ main_object.push_button_area_user_vip_power_5, "Character/vip"],
-        [ main_object.push_button_area_user_vip_power_6, "Clothes/theme"],
+        [ main_object.push_button_area_user_vip_power_4, "Base/translate"],
+        [ main_object.push_button_area_user_vip_power_5, "Money/transaction"],
+        [ main_object.push_button_area_user_vip_power_6, "Character/vip"],
     ]
     # button_linear_gradient = "border: 0px solid white; border-radius: 20px;" + vip_linear_gradient
     for push_button_area_user_vip_power in push_button_area_user_vip_power_list:

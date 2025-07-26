@@ -1,6 +1,6 @@
 import os
 
-from PySide6 import QtGui
+from PySide6 import QtCore
 from PySide6.QtCore import QUrl, QDir
 from PySide6.QtWebEngineCore import QWebEngineSettings, QWebEngineProfile, QWebEnginePage
 from PySide6.QtWidgets import QVBoxLayout, QApplication, QHBoxLayout
@@ -17,6 +17,20 @@ def get_custom_profile():
     profile.setHttpCacheType(QWebEngineProfile.HttpCacheType.DiskHttpCache)
     profile.setPersistentCookiesPolicy(QWebEngineProfile.PersistentCookiesPolicy.ForcePersistentCookies)
     return profile
+
+
+# 自定义WebEnginePage以捕获控制台日志
+class ConsoleLogWebEnginePage(QWebEnginePage):
+    def javaScriptConsoleMessage(self, level, message, lineNumber, sourceID):
+        """重写控制台消息处理，将日志输出到Python控制台"""
+        log_levels = {
+            QWebEnginePage.JavaScriptConsoleMessageLevel.InfoMessageLevel: "INFO",
+            QWebEnginePage.JavaScriptConsoleMessageLevel.WarningMessageLevel: "WARNING",
+            QWebEnginePage.JavaScriptConsoleMessageLevel.ErrorMessageLevel: "ERROR"
+        }
+        level_str = log_levels.get(level, "UNKNOWN")
+        print(f"[Browser Console] [{level_str}] Line {lineNumber}: {message}")
+        super().javaScriptConsoleMessage(level, message, lineNumber, sourceID)
 
 
 class BrowserPopup(AgileTilesAcrylicWindow):
@@ -38,8 +52,8 @@ class BrowserPopup(AgileTilesAcrylicWindow):
         else:
             self.center_on_screen()
         self.init_ui()
-        url = content['url']
-        self.load_html(url)
+        self.url = content['url']
+        self.load_html(self.url)
 
     def init_ui(self):
         # 内容布局
@@ -47,11 +61,12 @@ class BrowserPopup(AgileTilesAcrylicWindow):
         # self.remove_window_effect()
         # 初始化浏览器
         self.default_profile = get_custom_profile()
-        self.web_page = QWebEnginePage(self.default_profile)
+        # 使用自定义的ConsoleLogWebEnginePage
+        self.web_page = ConsoleLogWebEnginePage(self.default_profile)
         self.my_browser = AgileTilesFramelessWebEngineView(self)
         self.my_browser.setPage(self.web_page)
         self.my_browser.settings().setAttribute(QWebEngineSettings.WebAttribute.ShowScrollBars, False)
-        self.my_browser.setStyleSheet("background-color:transparent;background:transparent;padding:0px;margin:0px;")
+        self.my_browser.setStyleSheet("background:transparent;padding:0px;margin:0px;")
         # 确保页面完全加载
         self.my_browser.loadFinished.connect(lambda ok: print("加载完成，等待缓存写入..."))
         # 设置浏览器不打开链接
@@ -73,7 +88,157 @@ class BrowserPopup(AgileTilesAcrylicWindow):
         if not url.startswith("http"):
             url = "file:///" + str(os.getcwd()).replace("\\", "/") + url
         self.my_browser.load(QUrl(url))
-        self.my_browser.page().setBackgroundColor(QtGui.QColorConstants.Transparent)
+        # self.my_browser.page().setBackgroundColor(QtGui.QColorConstants.Transparent)
+
+        # 在页面加载完成后强制设置深色主题
+        def on_load_finished(ok):
+            if not ok:
+                return
+            if self.url == "/static/html/Game/XiuXianGame/index.html":
+                QtCore.QTimer.singleShot(1000, self.apply_theme)
+                return
+            # 使用定时器延迟执行
+            QtCore.QTimer.singleShot(100, self.apply_theme)
+            QtCore.QTimer.singleShot(200, self.apply_theme)
+            QtCore.QTimer.singleShot(400, self.apply_theme)
+            QtCore.QTimer.singleShot(600, self.apply_theme)
+            QtCore.QTimer.singleShot(800, self.apply_theme)
+            QtCore.QTimer.singleShot(1000, self.apply_theme)
+            QtCore.QTimer.singleShot(1200, self.apply_theme)
+            QtCore.QTimer.singleShot(1400, self.apply_theme)
+            QtCore.QTimer.singleShot(1600, self.apply_theme)
+
+        # 单次连接确保只执行一次
+        self.my_browser.loadFinished.connect(
+            on_load_finished,
+            QtCore.Qt.ConnectionType.SingleShotConnection
+        )
+
+    def apply_theme(self):
+        """应用主题的JS代码"""
+        theme = 'dark' if self.is_dark else 'light'
+        js_code = None
+        # *********************************** 工具箱模块 ***********************************
+        # 程序员工具箱
+        if self.url == "/static/html/Tool/ctool_web/index.html":
+            js_code = f'document.documentElement.dataset.theme="{theme}";'
+        # 程序员速查表
+        elif self.url == "/static/html/Tool/reference/index.html":
+            js_code = f'document.documentElement.dataset.colorMode = "{theme}";'
+        # API调试工具
+        elif self.url == "https://hoppscotch.io/":
+            js_code = f'document.documentElement.className="{theme}";'
+        # 手绘风格的绘图工具
+        elif self.url == "https://excalidraw.com/":
+            theme = 'excalidraw excalidraw-container theme--dark' if self.is_dark else 'excalidraw excalidraw-container'
+            js_code = f'document.querySelector("#root > div > div").className="{theme}";'
+        # 经典作图工具
+        elif self.url == "https://app.diagrams.net/index.html":
+            js_code = f'document.querySelector("body").style.setProperty("color-scheme", "{theme}");'
+        # 像素绘图工具
+        elif self.url == "https://www.piskelapp.com/p/create/sprite":
+            # 暂无切换主题功能
+            pass
+        # Svg编辑工具
+        elif self.url == "https://yqnn.github.io/svg-path-editor/":
+            # 暂无切换主题功能
+            pass
+        # Ascii作图工具
+        elif self.url == "/static/html/Tool/asciiflow/index.html":
+            if self.is_dark:
+                js_code = f"""
+                    document.querySelector("#root > div > div > div > img").src = "public/logo_full.svg";
+                    if (!document.querySelector("#root > div").className.includes(" dark")) {{
+                        document.querySelector("#root > div > div > ul > li:nth-child(10) > div.MuiListItemSecondaryAction-root > button:nth-child(2)").click()
+                    }};"""
+            else:
+                js_code = f"""
+                    document.querySelector("#root > div > div > div > img").src = "public/logo_full.svg";
+                    if (document.querySelector("#root > div").className.includes(" dark")) {{
+                        document.querySelector("#root > div > div > ul > li:nth-child(10) > div.MuiListItemSecondaryAction-root > button:nth-child(2)").click()
+                    }};"""
+        # 中国家庭称谓计算器
+        elif self.url == "https://passer-by.com/relationship/vue/#/":
+            # 暂无切换主题功能
+            pass
+        # 制霸生成器
+        elif self.url == "https://lab.magiconch.com/china-ex/" or self.url == "https://lab.magiconch.com/world-ex/":
+            # 暂无切换主题功能
+            pass
+        # 科学计算器
+        elif self.url == "https://calcium.js.org/":
+            js_code = f'document.querySelector("body").setAttribute("theme", "{theme}");'
+        # 命令行计算器
+        elif self.url == "https://clcalc.net/":
+            js_code = f'document.querySelector("body").className="{theme}";'
+        # *********************************** 游戏模块 ***********************************
+        # 小黑屋
+        elif self.url == "/static/html/Game/adarkroom/index.html":
+            if self.is_dark:
+                js_code = f"""
+                    if (document.querySelector("body > div.menu > span.lightsOff.menuBtn").textContent == "夜间模式"
+                    || document.querySelector("body > div.menu > span.lightsOff.menuBtn").includes("off")) {{
+                        document.querySelector("body > div.menu > span.lightsOff.menuBtn").click()
+                    }};"""
+            else:
+                js_code = f"""
+                    if (document.querySelector("body > div.menu > span.lightsOff.menuBtn").textContent == "开灯"
+                    || document.querySelector("body > div.menu > span.lightsOff.menuBtn").includes("on")) {{
+                        document.querySelector("body > div.menu > span.lightsOff.menuBtn").click()
+                    }};"""
+        # 我的文字修仙全靠刷
+        elif self.url == "/static/html/Game/XiuXianGame/index.html":
+            if self.is_dark:
+                js_code = f"""
+                    if (document.documentElement.className!="dark") {{
+                        document.querySelector("#app > div > div.game-container > div.footer > div > span").click()
+                    }};"""
+            else:
+                js_code = f"""
+                    if (document.documentElement.className="dark") {{
+                        document.querySelector("#app > div > div.game-container > div.footer > div > span").click()
+                    }};"""
+        # 人生重开模拟器
+        elif self.url == "https://passer-by.com/relationship/vue/#/":
+            # Canvas绘制，暂时没找到切换主题的JS代码
+            pass
+        # 太空公司
+        elif self.url == "/static/html/Game/SpaceCompany/index.html":
+            theme = 'styles/darkly-bootstrap.min.css' if self.is_dark else 'lib/bootstrap.min.css'
+            js_code = f'document.querySelector("#theme_css").href"{theme}";'
+        # 信任的进化
+        elif self.url == "/static/html/Game/trust/index.html":
+            # 暂无切换主题功能
+            pass
+        # 超苦逼冒险者
+        elif self.url == "/static/html/Game/KuBiTionAdvanture/index.html":
+            # 暂无切换主题功能
+            pass
+        # 挂机放置类小游戏
+        elif self.url == "http://couy.xyz/#/":
+            # 暂无切换主题功能
+            pass
+        # 2048
+        elif self.url == "/static/html/Game/2048/index.html":
+            # 暂无切换主题功能
+            pass
+        # 圈小猫
+        elif self.url == "/static/html/Game/CorralCat/index.html":
+            # 暂无切换主题功能
+            pass
+        # 数独
+        elif self.url == "/static/html/Game/Sudoku/index.html":
+            # 暂无切换主题功能
+            pass
+        # 俄罗斯方块
+        elif self.url == "/static/html/Game/Tetris/index.html":
+            # 暂无切换主题功能
+            pass
+        else:
+            return
+        if js_code is None:
+            return
+        self.my_browser.page().runJavaScript(js_code)
 
     def closeEvent(self, e):
         print(f"关闭的是 BrowserPopup (对象ID:{id(self)})，不是主窗口")

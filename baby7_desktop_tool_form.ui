@@ -1195,7 +1195,7 @@ background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,stop:0 rgb(205, 232, 25
                          <item>
                           <widget class="QLabel" name="label_32">
                            <property name="text">
-                            <string>专属工单系统</string>
+                            <string>多语言翻译功能</string>
                            </property>
                            <property name="alignment">
                             <set>Qt::AlignCenter</set>
@@ -1253,7 +1253,7 @@ background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,stop:0 rgb(205, 232, 25
                          <item>
                           <widget class="QLabel" name="label_33">
                            <property name="text">
-                            <string>会员尊享标识</string>
+                            <string>专属工单系统</string>
                            </property>
                            <property name="alignment">
                             <set>Qt::AlignCenter</set>
@@ -1311,7 +1311,7 @@ background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,stop:0 rgb(205, 232, 25
                          <item>
                           <widget class="QLabel" name="label_31">
                            <property name="text">
-                            <string>自定义主题</string>
+                            <string>会员尊享标识</string>
                            </property>
                            <property name="alignment">
                             <set>Qt::AlignCenter</set>

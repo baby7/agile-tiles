@@ -1,7 +1,7 @@
 # coding:utf-8
 import json
 
-from PySide6.QtCore import Signal, Qt, QUrl
+from PySide6.QtCore import Signal, Qt, QUrl, QEasingCurve, QPropertyAnimation
 from PySide6.QtGui import QPixmap, QIcon
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QApplication, \
@@ -43,6 +43,8 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.setWindowTitle("灵卡面板 - 智能对话")
         self.titleBar.minBtn.close()
         self.titleBar.maxBtn.close()
+        # 添加滚动动画控制器
+        self.scroll_anim = None
         # 模型对照表
         self.mode_map = {
             "DeepSeek-V3": { "provider": "deepseek", "model": "deepseek-chat" },
@@ -59,7 +61,8 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
             "豆包-Seed-1.6": { "provider": "doubao", "model": "doubao-seed-1-6-250615" },
             "豆包-Seed-1.6-Thinking": { "provider": "doubao", "model": "doubao-seed-1-6-thinking-250615" },
 
-            "混元-Pro": { "provider": "hunyuan", "model": "hunyuan-pro" },
+            "混元-T1": { "provider": "hunyuan", "model": "hunyuan-T1" },
+            "混元-TurboS": { "provider": "hunyuan", "model": "hunyuan-TurboS" },
             "混元-Standard": { "provider": "hunyuan", "model": "hunyuan-standard" },
 
             "讯飞星火4.0-Ultra": { "provider": "spark", "model": "4.0Ultra" },
@@ -83,8 +86,6 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
         }
 
     def init_ui(self, ai_title):
-        # 首先请求并更新对话次数信息
-        self.update_call_count()
         # 聊天区域
         self.chat_scroll = QScrollArea()
         self.chat_scroll.setWidgetResizable(True)
@@ -181,6 +182,11 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
         # 设置输入焦点
         self.input_field.setFocus()
 
+        # 填充部分信息
+        self.set_info_bar(0)
+        # 请求并更新对话次数信息
+        self.update_call_count()
+
     def update_call_count(self):
         """请求并更新对话次数信息"""
         url = QUrl(common.BASE_URL + "/chat/todayCalls")
@@ -198,28 +204,7 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
                 today_calls = json_data.get("data", 0)
 
                 # 根据会员状态显示不同信息
-                if self.use_parent.is_vip:
-                    text = f"会员用户无对话次数限制，今天已使用{today_calls}次"
-                    color = "rgba(4, 115, 247, 0.8)"
-                else:
-                    text = f"非会员每天限制三次对话，今天已使用{today_calls}次"
-                    color = "rgba(243, 207, 19, 0.8)"
-
-                # 根据主题设置背景
-                if self.is_dark:
-                    bg_color = "rgba(255, 255, 255, 0.1)"
-                else:
-                    bg_color = "rgb(255, 255, 255)"
-
-                # 设置信息条样式和内容
-                self.info_bar.setText(text)
-                self.info_bar.setStyleSheet(
-                    f"background-color: {bg_color}; "
-                    f"border-radius: 5px; "
-                    f"color: {color}; "
-                    f"font-weight: bold; "
-                    f"font-size: 12px;"
-                )
+                self.set_info_bar(today_calls)
             else:
                 error = reply.errorString()
                 print(f"获取调用次数失败: {error}")
@@ -236,18 +221,86 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
 
         reply.finished.connect(handle_reply)
 
+    def set_info_bar(self, today_calls):
+        # 根据会员状态显示不同信息
+        if self.use_parent.is_vip:
+            text = f"会员用户无对话次数限制，今天已使用{today_calls}次"
+            color = "rgba(4, 115, 247, 0.8)"
+        else:
+            text = f"非会员每天限制3次对话，今天已使用{today_calls}次"
+            color = "rgba(243, 207, 19, 0.8)"
+
+        # 根据主题设置背景
+        if self.is_dark:
+            bg_color = "rgba(255, 255, 255, 0.1)"
+        else:
+            bg_color = "rgb(255, 255, 255)"
+
+        # 设置信息条样式和内容
+        self.info_bar.setText(text)
+        self.info_bar.setStyleSheet(
+            f"background-color: {bg_color}; "
+            f"border-radius: 5px; "
+            f"color: {color}; "
+            f"font-weight: bold; "
+            f"font-size: 12px;"
+        )
+
+    def smooth_scroll_to(self, target_value, duration=500):
+        """平滑滚动到指定位置"""
+        scrollbar = self.chat_scroll.verticalScrollBar()
+        current_value = scrollbar.value()
+
+        # 如果已经在目标位置，直接返回
+        if current_value == target_value:
+            return
+
+        # 取消正在进行的动画
+        if self.scroll_anim and self.scroll_anim.state() == QPropertyAnimation.Running:
+            self.scroll_anim.stop()
+
+        # 创建新动画
+        self.scroll_anim = QPropertyAnimation(scrollbar, b"value")
+        self.scroll_anim.setDuration(duration)
+        self.scroll_anim.setStartValue(current_value)
+        self.scroll_anim.setEndValue(target_value)
+        self.scroll_anim.setEasingCurve(QEasingCurve.OutQuad)  # 使用平滑的缓动曲线
+        self.scroll_anim.start()
+
+    def scroll_to_bottom(self, must_scroll=False):
+        """平滑滚动到底部"""
+        scrollbar = self.chat_scroll.verticalScrollBar()
+
+        # 如果滚动条距离底部太远就不滚动
+        if not must_scroll and (scrollbar.maximum() - scrollbar.value()) > 50:
+            return
+
+        # 使用平滑滚动动画
+        self.smooth_scroll_to(scrollbar.maximum())
+
     def resizeEvent(self, event):
         super().resizeEvent(event)
-        self.update_bubble_widths()
 
-    def update_bubble_widths(self):
+        # 使用动画更新气泡宽度
+        self.update_bubble_widths_with_animation()
+
+    def update_bubble_widths_with_animation(self, duration=500):
+        """使用动画更新气泡宽度"""
         for i in range(self.chat_layout.count()):
             widget = self.chat_layout.itemAt(i).widget()
             if widget:
                 for child in widget.findChildren(ChatBubble):
                     if child.parent() and child.parent().parent():
                         max_width = int(child.parent().parent().width() * 0.95)
-                        child.setMaximumWidth(max_width)
+
+                        # 使用动画平滑过渡
+                        if child.maximumWidth() != max_width:
+                            anim = QPropertyAnimation(child, b"maximumWidth")
+                            anim.setDuration(duration)
+                            anim.setStartValue(child.maximumWidth())
+                            anim.setEndValue(max_width)
+                            anim.setEasingCurve(QEasingCurve.OutQuad)
+                            anim.start()
 
     def create_avatar(self, is_user=False, is_vip=False, provider="deepseek"):
         if is_user:
@@ -367,7 +420,7 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
 
             # 添加到底部布局
             self.chat_layout.addWidget(bottom_container)
-            self.scroll_to_bottom()
+            self.scroll_to_bottom(must_scroll=True)
 
             # 返回气泡容器用于后续添加气泡
             return bubble_container, parent_container
@@ -445,13 +498,8 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
             else:
                 bubble_container.addWidget(bubble)
 
-            self.scroll_to_bottom()
+            self.scroll_to_bottom(must_scroll=True)
             return bubble, parent_container
-
-    def scroll_to_bottom(self):
-        scrollbar = self.chat_scroll.verticalScrollBar()
-        scrollbar.setValue(scrollbar.maximum())
-        QApplication.processEvents()
 
     def send_message(self):
         text = self.input_field.toPlainText().strip()
@@ -806,4 +854,8 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
             self.input_field.setPlaceholderText("AI正在思考中...")
 
     def closeEvent(self, event):
+        # 清理动画
+        if self.scroll_anim:
+            self.scroll_anim.stop()
+            self.scroll_anim.deleteLater()
         super().closeEvent(event)

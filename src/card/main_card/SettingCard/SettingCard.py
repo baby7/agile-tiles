@@ -279,14 +279,6 @@ class SettingCard(MainCard):
                 self.main_object.ticket_vip_sign.show()
         except Exception as e:
             print(f"设置界面:{e}")
-        try:
-            if self.main_object.theme_vip_sign is None:
-                self.main_object.theme_vip_sign = add_vip_sign_in_button(self.main_object.push_button_setting_theme, self.main_object.is_dark)
-                self.main_object.theme_vip_sign.move(button_width * 4 + button_interval * 3 - red_dot_padding - 10, red_dot_padding)
-            else:
-                self.main_object.theme_vip_sign.show()
-        except Exception as e:
-            print(f"设置界面:{e}")
 
     def push_button_setting_service_agreement_click(self):
         self.toolkit.resolution_util.out_animation(self.main_object)

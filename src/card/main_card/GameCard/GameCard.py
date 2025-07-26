@@ -153,6 +153,7 @@ class GameCard(AggregationCard):
                     "url": "/static/html/Game/2048/index.html",
                     "size": [400, 600]
                 },
+                "link": "https://github.com/gabrielecirulli/2048",
                 "call_back_func": None
             },
             {

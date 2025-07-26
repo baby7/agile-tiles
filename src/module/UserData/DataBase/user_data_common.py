@@ -117,7 +117,8 @@ DEFAULT_DATA_MODEL = {
     "bigCard": [],
     "data": {}
 }
-big_card_name_list = ["GameCard", "BookCard", "ToolCard", "TodoCard", "ChatCard", "MusicCard", "SettingCard", "TopSearchCard", "InformationCard"]
+big_card_name_list = ["GameCard", "BookCard", "ToolCard", "TodoCard", "ChatCard", "MusicCard", "SettingCard",
+                      "TopSearchCard", "InformationCard", "TranslateCard"]
 
 def get_data(hardware_id):
     data = copy.deepcopy(DEFAULT_DATA_MODEL)

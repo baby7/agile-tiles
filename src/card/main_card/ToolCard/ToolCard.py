@@ -36,85 +36,6 @@ class ToolCard(AggregationCard):
     def init_ui(self):
         super().init_ui()
         self.aggregation_module_list = [
-            # 翻译
-            {
-                "category": self.module_category_browser,
-                "type": "翻译",
-                "title": "有道翻译",
-                "des": "网易家的翻译工具",
-                "icon": "Base/translate.svg",
-                "content":{
-                    "url": "https://fanyi.youdao.com/#/TextTranslate",
-                    "size": [1500, 800]
-                },
-                "link": "https://fanyi.youdao.com/#/TextTranslate",
-                "call_back_func": None
-            },
-            {
-                "category": self.module_category_browser,
-                "type": "翻译",
-                "title": "百度翻译",
-                "des": "百度家的翻译工具",
-                "icon": "Base/translate.svg",
-                "content":{
-                    "url": "https://fanyi.baidu.com/mtpe-individual/multimodal?aldtype=16047&ext_channel=Aldtype#/auto/zh",
-                    "size": [1500, 800]
-                },
-                "link": "https://fanyi.baidu.com/mtpe-individual/multimodal?aldtype=16047&ext_channel=Aldtype#/auto/zh",
-                "call_back_func": None
-            },
-            {
-                "category": self.module_category_browser,
-                "type": "翻译",
-                "title": "谷歌翻译",
-                "des": "谷歌家的翻译工具",
-                "icon": "Brand/google.svg",
-                "content":{
-                    "url": "https://translate.google.com/?hl=zh-cn&sl=auto&tl=zh-CN&op=translate",
-                    "size": [1500, 800]
-                },
-                "link": "https://translate.google.com/?hl=zh-cn&sl=auto&tl=zh-CN&op=translate",
-                "call_back_func": None
-            },
-            {
-                "category": self.module_category_browser,
-                "type": "翻译",
-                "title": "必应翻译",
-                "des": "微软家的翻译工具",
-                "icon": "Brand/windows.svg",
-                "content":{
-                    "url": "https://www.bing.com/translator/",
-                    "size": [1500, 800]
-                },
-                "link": "https://www.bing.com/translator/",
-                "call_back_func": None
-            },
-            {
-                "category": self.module_category_browser,
-                "type": "翻译",
-                "title": "讯飞翻译",
-                "des": "科大讯飞的翻译工具",
-                "icon": "Base/translate.svg",
-                "content":{
-                    "url": "https://fanyi.xfyun.cn/console/trans/text",
-                    "size": [1500, 800]
-                },
-                "link": "https://fanyi.xfyun.cn/console/trans/text",
-                "call_back_func": None
-            },
-            {
-                "category": self.module_category_browser,
-                "type": "翻译",
-                "title": "DeepL翻译",
-                "des": "DeepL 的翻译工具",
-                "icon": "Base/translate.svg",
-                "content":{
-                    "url": "https://www.deepl.com/zh/translator",
-                    "size": [1500, 800]
-                },
-                "link": "https://www.deepl.com/zh/translator",
-                "call_back_func": None
-            },
             # 程序员
             {
                 "category": self.module_category_browser,
@@ -205,6 +126,7 @@ class ToolCard(AggregationCard):
                     "url": "https://yqnn.github.io/svg-path-editor/",
                     "size": [1000, 800]
                 },
+                "link": "https://github.com/Yqnn/svg-path-editor",
                 "call_back_func": None
             },
             {
@@ -217,7 +139,7 @@ class ToolCard(AggregationCard):
                     "url": "/static/html/Tool/asciiflow/index.html",
                     "size": [1200, 950]
                 },
-                "link": "https://github.com/Yqnn/svg-path-editor",
+                "link": "https://github.com/lewish/asciiflow",
                 "call_back_func": None
             },
             # 生活

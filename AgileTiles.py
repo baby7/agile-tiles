@@ -148,7 +148,6 @@ class MyForm(MainAcrylicWindow, Ui_Form):
     update_red_dot = None   # 更新提示红点
     # VIP相关
     ticket_vip_sign = None
-    theme_vip_sign = None
     # 其他
     theme_switch_button = None
     silent_updater = None

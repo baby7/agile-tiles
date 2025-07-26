@@ -60,7 +60,10 @@ class ChatBubble(QTextBrowser):
             QTextBrowser {{
                 border: none;
                 border-radius: 10px;
-                padding: 10px;
+                padding-left: 10px;
+                padding-right: 10px;
+                padding-top: 10px;
+                padding-bottom: 20px;
                 background-color: {bg_color};
                 color: {text_color};
                 margin: 0;
@@ -90,7 +93,7 @@ class ChatBubble(QTextBrowser):
 
     def adjustSize(self):
         # 动态调整高度
-        height = int(self.document().size().height() + 20)
+        height = int(self.document().size().height() + 40)
         self.setFixedHeight(height)
 
         # 动态调整宽度（最大不超过父容器的95%）

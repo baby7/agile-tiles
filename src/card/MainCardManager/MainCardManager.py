@@ -16,10 +16,12 @@ from src.card.main_card.GameCard.GameCard import GameCard
 from src.card.main_card.MusicCard.MusicCard import MusicCard
 from src.card.main_card.SettingCard.SettingCard import SettingCard
 from src.card.main_card.TopSearchCard.TopSearchCard import TopSearchCard
+from src.card.main_card.TranslateCard.TranslateCard import TranslateCard
 from src.card.main_card.InformationCard.InformationCard import InformationCard
 from src.client import common
 from src.constant import card_constant, data_save_constant
 from src.module.Theme import theme_module
+from src.module.UserData.DataBase import user_data_common
 from src.util import browser_util
 from src.ui import style_util
 
@@ -78,11 +80,12 @@ class MainCardManager(QObject):
             # 隐藏区域
             area_list = [
                 self.main_object.top_area,
+                self.main_object.translate_area,
+                self.main_object.chat_area,
                 self.main_object.looking_area,
                 self.main_object.tool_area,
                 self.main_object.todo_area,
                 self.main_object.book_area,
-                self.main_object.chat_area,
                 self.main_object.game_area,
                 self.main_object.music_area,
                 self.main_object.user_area,
@@ -145,6 +148,7 @@ class MainCardManager(QObject):
         # 设置菜单样式
         self.menu_button_map = {
             "trending": [self.main_object.push_button_weibo_info, "Energy/fire", self.main_object.top_area, "热搜"],
+            "translate": [self.main_object.push_button_translate, "Base/translate", self.main_object.translate_area, "翻译"],
             "chat": [self.main_object.push_button_chat, "Abstract/smart-optimization", self.main_object.chat_area, "智能助手"],
             "looking": [self.main_object.push_button_looking, "Base/preview-open", self.main_object.looking_area, "信息聚合"],
             "tool": [self.main_object.push_button_tool, "Others/toolkit", self.main_object.tool_area, "工具箱"],
@@ -170,21 +174,23 @@ class MainCardManager(QObject):
     def init_area(self):
         if not hasattr(self.main_object, "top_area"):
             self.main_object.top_area = QScrollArea(self.main_object.widget_base)
+            self.main_object.translate_area = QScrollArea(self.main_object.widget_base)
+            self.main_object.chat_area = QScrollArea(self.main_object.widget_base)
             self.main_object.looking_area = QScrollArea(self.main_object.widget_base)
             self.main_object.tool_area = QScrollArea(self.main_object.widget_base)
             self.main_object.todo_area = QScrollArea(self.main_object.widget_base)
             self.main_object.book_area = QScrollArea(self.main_object.widget_base)
-            self.main_object.chat_area = QScrollArea(self.main_object.widget_base)
             self.main_object.game_area = QScrollArea(self.main_object.widget_base)
             self.main_object.music_area = QScrollArea(self.main_object.widget_base)
             # 初始化主卡片区域
             area_list = [
                 self.main_object.top_area,
+                self.main_object.translate_area,
+                self.main_object.chat_area,
                 self.main_object.looking_area,
                 self.main_object.tool_area,
                 self.main_object.todo_area,
                 self.main_object.book_area,
-                self.main_object.chat_area,
                 self.main_object.game_area,
                 self.main_object.music_area
             ]
@@ -207,11 +213,12 @@ class MainCardManager(QObject):
         # 修改区域父节点
         self.area_list = [
             self.main_object.top_area,
+            self.main_object.translate_area,
+            self.main_object.chat_area,
             self.main_object.looking_area,
             self.main_object.tool_area,
             self.main_object.todo_area,
             self.main_object.book_area,
-            self.main_object.chat_area,
             self.main_object.game_area,
             self.main_object.music_area,
             self.main_object.user_area,
@@ -228,6 +235,8 @@ class MainCardManager(QObject):
         if not self.main_object.is_first:
             return
         self.main_object.push_button_weibo_info.clicked.connect(self.push_button_weibo_click)
+        self.main_object.push_button_translate.clicked.connect(self.push_button_translate_click)
+        self.main_object.push_button_chat.clicked.connect(self.push_button_chat_click)
         self.main_object.push_button_looking.clicked.connect(self.push_button_looking_click)
         self.main_object.push_button_tool.clicked.connect(self.push_button_tool_click)
         self.main_object.push_button_todo.clicked.connect(self.push_button_todo_click)
@@ -236,7 +245,6 @@ class MainCardManager(QObject):
         self.main_object.push_button_game.clicked.connect(self.push_button_game_click)
         self.main_object.push_button_music.clicked.connect(self.push_button_music_click)
         self.main_object.push_button_user.clicked.connect(self.push_button_user_click)
-        self.main_object.push_button_chat.clicked.connect(self.push_button_chat_click)
         self.main_object.push_button_exit.clicked.connect(partial(self.main_object.quit_before,  False))
 
     def init_main_card(self):
@@ -252,6 +260,24 @@ class MainCardManager(QObject):
         # 初始化卡片
         theme = "Dark" if self.main_object.is_dark else "Light"
         self.main_object.main_card_list = []
+        # 判断卡片数据是否完整
+        big_card_name_list = user_data_common.big_card_name_list
+        for big_card_name in big_card_name_list:
+            has_this_card = False
+            for card_data_index in range(len(self.main_object.main_data["bigCard"])):
+                card_data = self.main_object.main_data["bigCard"][card_data_index]
+                card_data_name = card_data["name"]
+                if big_card_name == card_data_name:
+                    has_this_card = True
+                    break
+            if not has_this_card:
+                self.main_object.main_data["bigCard"].append({
+                    "name": big_card_name,
+                    "size": "Big",
+                    "data": {}
+                })
+                break
+        # 获取卡片数据
         for card_data_index in range(len(self.main_object.main_data["bigCard"])):
             card_data = self.main_object.main_data["bigCard"][card_data_index]
             card_area = None
@@ -308,6 +334,12 @@ class MainCardManager(QObject):
             elif card_data["name"] == "MusicCard":
                 card_area = self.main_object.music_area
                 card = MusicCard(main_object=self.main_object, parent=self.main_object, theme=theme, card=card_area,
+                                cache=in_card_cache, data=in_card_data,
+                                toolkit=self.main_object.toolkit, logger=self.main_object.info_logger,
+                                save_data_func=self.save_card_data_func)
+            elif card_data["name"] == "TranslateCard":
+                card_area = self.main_object.translate_area
+                card = TranslateCard(main_object=self.main_object, parent=self.main_object, theme=theme, card=card_area,
                                 cache=in_card_cache, data=in_card_data,
                                 toolkit=self.main_object.toolkit, logger=self.main_object.info_logger,
                                 save_data_func=self.save_card_data_func)
@@ -480,6 +512,16 @@ class MainCardManager(QObject):
         except Exception as e:
             self.main_object.info_logger.card_error("主程序", "切换音乐失败,错误信息:{}".format(e))
             self.main_object.toolkit.message_box_util.box_information(self.main_object, "错误信息", "切换音乐失败,请稍后重试")
+
+    def push_button_translate_click(self):
+        print("点击Translate按钮")
+        try:
+            self.main_object.info_logger.card_info("主程序", "切换翻译完成")
+            self.see_card = "translate"
+            self.show_change()
+        except Exception as e:
+            self.main_object.info_logger.card_error("主程序", "切换翻译失败,错误信息:{}".format(e))
+            self.main_object.toolkit.message_box_util.box_information(self.main_object, "错误信息", "切换翻译失败,请稍后重试")
 
     def push_button_game_click(self):
         print("点击Game按钮")
@@ -711,7 +753,7 @@ class MainCardManager(QObject):
         font.setBold(True)
         font.setKerning(True)
         button_names = [
-            'weibo_info', 'chat', 'looking', 'tool',
+            'weibo_info', 'translate', 'chat', 'looking', 'tool',
             'game', 'todo', 'book', 'music', 'user',
             'setting', 'exit'
         ]
