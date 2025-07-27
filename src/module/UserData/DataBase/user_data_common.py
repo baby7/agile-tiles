@@ -10,7 +10,7 @@ setting_config = {
     "wakeUpByKeyboardType": "Alt+1",    # 唤醒快捷键
 
     "screenName": None,                 # 屏幕名称
-    "windowPosition": "Right",          # 窗口位置
+    "windowPosition": "Left",           # 窗口位置
     "formAnimationType": "Elastic",     # 窗口动画类型
     "formAnimationTime": 200,           # 窗口动画时间
     "wakeUpByMouse": True,              # 是否启用鼠标唤醒

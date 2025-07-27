@@ -1,4 +1,4 @@
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QPixmap
 from PySide6.QtCore import QCoreApplication, QRect, QSize
 from PySide6.QtWidgets import QTabWidget, QWidget, QPushButton, QVBoxLayout, QLabel, QHBoxLayout
 # 获取信息
@@ -140,7 +140,7 @@ class AggregationCard(MainCard):
                                     "border: 0px solid black;\n"
                                     "border-color: rgb(0, 0, 0);\n"
                                     "background: " + self.toolkit.color.get_rgba_color(index, 100) + ";\n"
-                                    "padding: 8px;")
+                                    "padding: 5px;")
         image_path = "static/img/IconPark/svg/" + aggregation_module["icon"]
         try:
             label_image.setPixmap(self.toolkit.image_util.load_light_svg(image_path))
@@ -239,7 +239,6 @@ class AggregationCard(MainCard):
             label_title = aggregation_module["label_title"]
             label_title.setStyleSheet("background: transparent; color: {};".format(self.get_prospect_color(rgb=True)))
             label_des = aggregation_module["label_des"]
-            image_path = "static/img/IconPark/svg/" + aggregation_module["icon"]
             button_style = """
                 QPushButton {
                     border-style: solid;
@@ -255,12 +254,20 @@ class AggregationCard(MainCard):
                 button.setStyleSheet(button_style
                 .replace("{background-color}", self.toolkit.color.get_rgba_color(button_index, 50))
                 .replace("{hover-background-color}", self.toolkit.color.get_rgba_color(button_index, 20)))
-                image_label.setPixmap(self.toolkit.image_util.load_light_svg(image_path))
                 label_des.setStyleSheet("background: transparent; color: rgba(239, 240, 241, 150);")
             else:
                 button.setStyleSheet(button_style
                 .replace("{background-color}", self.toolkit.color.get_rgba_color(button_index, 50))
                 .replace("{hover-background-color}", self.toolkit.color.get_rgba_color(button_index, 20)))
-                image_label.setPixmap(self.toolkit.image_util.load_dark_svg(image_path))
                 label_des.setStyleSheet("background: transparent; color: rgba(24, 24, 24, 150);")
             style_util.set_tab_widget_style(self.aggregation_tab_widget, self.is_dark())
+            # 图标
+            if "png:" in aggregation_module["icon"]:
+                image_end_path = aggregation_module["icon"].replace("png:", "")
+                image_label.setPixmap(QPixmap("static/img/IconPark/png/" + image_end_path))
+            else:
+                image_path = "static/img/IconPark/svg/" + aggregation_module["icon"]
+                if self.is_dark():
+                    image_label.setPixmap(self.toolkit.image_util.load_light_svg(image_path))
+                else:
+                    image_label.setPixmap(self.toolkit.image_util.load_dark_svg(image_path))

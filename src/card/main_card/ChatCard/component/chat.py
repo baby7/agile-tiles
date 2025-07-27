@@ -21,26 +21,32 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
     setting_signal = Signal(str)
     mode_list = None
 
-    def __init__(self, parent=None, use_parent=None, ai_title=None):
+    def __init__(self, parent=None, use_parent=None, ai_title=None, ai_actor=None, content=None, icon=None):
         super(ChatWindow, self).__init__(is_dark=use_parent.is_dark, form_theme_mode=use_parent.form_theme_mode,
                                          form_theme_transparency=use_parent.form_theme_transparency)
         self.setupUi(self)
         # 初始化
         self.use_parent = use_parent
+        self.ai_title = ai_title
+        self.ai_actor = ai_actor        # 角色名称
+        self.content = content          # 包含人设和开场白
+        self.icon = icon                # 图标
         # 布局初始化
         self.verticalLayout = QVBoxLayout()
         self.widget_base.setLayout(self.verticalLayout)
         self.verticalLayout.setContentsMargins(10, 10, 10, 10)
-        # ++++ 新增：顶部信息条 ++++
+        # 顶部信息条
         self.info_bar = QLabel()
         self.info_bar.setAlignment(Qt.AlignCenter)
         self.info_bar.setFixedHeight(30)
         self.info_bar.setContentsMargins(5, 0, 5, 0)
         self.info_bar.setStyleSheet("font-weight: bold; font-size: 12px;")
         self.verticalLayout.addWidget(self.info_bar)
-        # ++++ 新增结束 ++++
         # 设置标题栏
-        self.setWindowTitle("灵卡面板 - 智能对话")
+        if ai_actor:
+            self.setWindowTitle(f"灵卡面板 - {ai_actor}角色扮演")
+        else:
+            self.setWindowTitle("灵卡面板 - 智能对话")
         self.titleBar.minBtn.close()
         self.titleBar.maxBtn.close()
         # 添加滚动动画控制器
@@ -84,6 +90,10 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
             "content_filter": "内容被过滤",
             "insufficient_system_resource": "资源不足，请求中断"
         }
+        # 初始化角色
+        self.init_actor(ai_actor, content)
+        if ai_actor is not None:
+            self.model_selector.hide()
 
     def init_ui(self, ai_title):
         # 聊天区域
@@ -122,16 +132,14 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
         right_layout.setSpacing(5)
 
         self.model_selector = QComboBox()
-        self.model_selector.addItems(self.mode_list)
         self.model_selector.setMinimumHeight(40)
-        self.model_selector.setMaximumHeight(40)
+        self.model_selector.addItems(self.mode_list)
         right_layout.addWidget(self.model_selector)
 
         self.send_btn = QPushButton("发送")
         self.send_btn.setMinimumHeight(40)
-        self.send_btn.setMaximumHeight(40)
         self.send_btn.clicked.connect(self.send_message)
-        right_layout.addWidget(self.send_btn, 0, Qt.AlignBottom)
+        right_layout.addWidget(self.send_btn)
 
         main_input_layout.addWidget(right_container, 1)
         self.verticalLayout.addWidget(input_widget)
@@ -177,7 +185,7 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
         elif ai_title == "豆包":
             self.model_selector.setCurrentText("豆包-Seed-1.6-Thinking")
         else:
-            self.model_selector.setCurrentText("Deepseek-R1")
+            self.model_selector.setCurrentText("Deepseek-V3")
 
         # 设置输入焦点
         self.input_field.setFocus()
@@ -186,6 +194,28 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.set_info_bar(0)
         # 请求并更新对话次数信息
         self.update_call_count()
+
+    def init_actor(self, ai_actor, content):
+        # 角色设定，添加开场白
+        if ai_actor and content:
+            # 获取当前选中的模型对应的provider
+            model_title = self.model_selector.currentText()
+            provider = self.mode_map[model_title]["provider"]
+
+            # 添加系统消息（角色设定）
+            self.history.append({
+                "role": "system",
+                "content": content["persona"]
+            })
+
+            # 添加开场白并显示
+            self.add_message(content["prologue"], is_user=False, provider=provider, is_actor=True)
+
+            # 将开场白添加到历史记录
+            self.history.append({
+                "role": "assistant",
+                "content": content["prologue"]
+            })
 
     def update_call_count(self):
         """请求并更新对话次数信息"""
@@ -309,8 +339,15 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
             else:
                 return QPixmap("./static/img/user/head_normal.png")
         else:
+            # 判断是否有自定义图标
+            if self.icon is not None and "png:" in self.icon:
+                image_end_path = self.icon.replace("png:", "")
+                return QPixmap("static/img/IconPark/png/" + image_end_path)
             image_path = "./static/img/IconPark/svg/Custom/" + provider + ".svg"
-            return QPixmap(self.use_parent.toolkit.image_util.load_light_svg(image_path))
+            if self.is_dark:
+                return self.use_parent.toolkit.image_util.load_light_svg(image_path)
+            else:
+                return self.use_parent.toolkit.image_util.load_dark_svg(image_path)
 
     def create_transparent_avatar(self):
         """创建透明占位头像"""
@@ -318,7 +355,7 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
         pixmap.fill(Qt.transparent)
         return pixmap
 
-    def add_message(self, text, is_user, is_reasoning=False, parent_container=None, provider="deepseek"):
+    def add_message(self, text, is_user, is_reasoning=False, parent_container=None, provider="deepseek", is_actor=False):
         """
         添加消息气泡
         :param text: 消息文本
@@ -326,6 +363,7 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
         :param is_reasoning: 是否是思考气泡
         :param parent_container: 父容器（用于AI消息的思考和回复气泡共享同一容器）
         :param provider: ai厂商
+        :param is_actor: 是否是角色，角色需要开场白
         :return: 气泡控件
         """
         # 如果是AI消息且没有指定父容器，创建新的消息容器
@@ -355,6 +393,16 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
             bubble_layout.setContentsMargins(0, 0, 0, 0)
             bubble_layout.setSpacing(2)  # 减小气泡间距
 
+            # 创建角色的开场白气泡
+            if is_actor:
+                bubble = ChatBubble(
+                    text=text,
+                    is_user=is_user,
+                    is_dark=self.is_dark,
+                    is_reasoning=is_reasoning
+                )
+                bubble_layout.addWidget(bubble)
+
             # 设置对齐方式
             container_layout.addWidget(avatar_label, 1, alignment=Qt.AlignTop)
             container_layout.addWidget(bubble_container, 3)
@@ -363,6 +411,10 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
             # 添加到聊天区域
             self.chat_layout.addWidget(parent_container)
             self.current_ai_message_container = parent_container
+
+            if is_actor:
+                # 返回气泡容器用于后续添加气泡
+                return bubble_container, parent_container
 
             # 新增：创建底部布局（包含停止按钮和结束提示标签）
             bottom_container = QWidget()
@@ -390,7 +442,7 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
             """)
             bottom_layout.addWidget(self.finish_reason_label, 1)
 
-            # ++++ 新增：结束对话按钮 ++++
+            # 结束对话按钮
             self.stop_button = QPushButton()
             self.stop_button.setIcon(QIcon("./static/img/IconPark/red/Character/close-one.png"))
             self.stop_button.setText("结束对话")
@@ -548,13 +600,14 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
         request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")
 
         # 创建请求数据
-        data = json.dumps({
+        request_data = {
             "messages": self.history,
             "provider": provider,
             "model": model
-        })
+        }
+        data = json.dumps(request_data)
         data_str = data.encode('utf-8')
-        print("请求数据:", data)
+        print("请求数据:", request_data)
 
         # 发送POST请求
         self.sse_reply = self.network_manager.post(request, data_str)
@@ -724,6 +777,9 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
                 self.current_reasoning = ""
                 self.current_reply = ""
 
+                # 设置输入焦点
+                self.input_field.setFocus()
+
                 # 清理资源
                 self.sse_reply.deleteLater()
                 self.sse_reply = None
@@ -794,6 +850,9 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
                 # 终止SSE请求
                 self.sse_reply.abort()
 
+                # 获取当前内容
+                current_content = ""
+
                 # 更新气泡显示已停止（不显示错误信息）
                 if self.current_reply_bubble:
                     # 移除光标并添加停止提示
@@ -831,6 +890,9 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
                 # 隐藏停止按钮
                 if self.stop_button:
                     self.stop_button.setVisible(False)
+
+                # 设置输入焦点
+                self.input_field.setFocus()
 
                 # 更新对话次数信息
                 self.update_call_count()

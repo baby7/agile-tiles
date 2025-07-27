@@ -83,6 +83,8 @@ class MainAcrylicWindow(WindowsFramelessWindow):
                 print(f"{windows_type}:setFrameless:深色")
                 # if self.has_set_acrylic_effect:
                 #     return
+                self.windowEffect.enableBlurBehindWindow(self.winId())
+                self.windowEffect.addWindowAnimation(self.winId())
                 if win_utils.isGreaterEqualWin11():
                     self.windowEffect.addShadowEffect(self.winId())
                 self.windowEffect.removeBackgroundEffect(self.winId())

@@ -7,7 +7,7 @@ class ChatBubble(QTextBrowser):
     def __init__(self, parent=None, text="", is_user=True, is_dark=False, is_reasoning=False):
         super().__init__(parent)
 
-        # self.setOpenLinks(False)
+        # 设置内容
         self.setMarkdown(text)
 
         # 尺寸策略
@@ -90,6 +90,11 @@ class ChatBubble(QTextBrowser):
         """
 
         self.setStyleSheet(style)
+
+    def setMarkdown(self, markdown):
+        # 对内容进行处理
+        markdown = markdown.replace("~", " &tilde; ")
+        super().setMarkdown(markdown)
 
     def adjustSize(self):
         # 动态调整高度

@@ -490,6 +490,8 @@ class TranslateCard(MainCard):
             }""" + style_util.scroll_bar_style
         self.source_text.setStyleSheet(text_edit_style)
         self.target_text.setStyleSheet(text_edit_style)
+        # 提示信息
+        self.info_bar.setStyleSheet("background: rgba(125, 125, 125, 60); font-weight: bold; font-size: 12px;")
 
 
 # 语言代码映射

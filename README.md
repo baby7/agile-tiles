@@ -1,9 +1,9 @@
- 七仔的桌面工具（自家用）
+灵卡面板
  
 """
 生成exe的命令：
-pyinstaller -F -w -i img/icon/icon.ico -n 七仔的桌面工具V4.0.0 main.py
-pyinstaller -F -i img/icon/icon.ico -n 七仔的桌面工具V4.0.0 main.py
+pyinstaller -F -w -i img/icon/icon.ico -n 灵卡面板V4.0.0 main.py
+pyinstaller -F -i img/icon/icon.ico -n 灵卡面板V4.0.0 main.py
 nuitka --mingw64 --standalone --enable-plugin=pyside6 --disable-plugin=pyqt5,pyqt6 --include-qt-plugins=mediaservice,multimedia --windows-console-mode=disable --windows-icon-from-ico=static/img/icon/light/icon.ico --onefile --output-dir=out --lto=yes --jobs=14 AgileTiles.py
 """
 
