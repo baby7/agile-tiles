@@ -141,12 +141,13 @@ class AggregationCard(MainCard):
                                     "border-color: rgb(0, 0, 0);\n"
                                     "background: " + self.toolkit.color.get_rgba_color(index, 100) + ";\n"
                                     "padding: 5px;")
-        image_path = "static/img/IconPark/svg/" + aggregation_module["icon"]
-        try:
-            label_image.setPixmap(self.toolkit.image_util.load_light_svg(image_path))
-        except Exception as e:
-            print("加载svg报错:{}".format(e))
-            pass
+        if ".svg" in aggregation_module["icon"]:
+            image_path = "static/img/IconPark/svg/" + aggregation_module["icon"]
+            try:
+                label_image.setPixmap(self.toolkit.image_util.load_light_svg(image_path))
+            except Exception as e:
+                print("加载svg报错:{}".format(e))
+                pass
         label_image.setScaledContents(True)
         button_layout.addWidget(label_image)
         # 布局的右边是一个布局，上面是标题，下面是描述

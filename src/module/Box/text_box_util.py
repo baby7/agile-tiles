@@ -104,7 +104,7 @@ class TextPopup(AgileTilesAcrylicWindow):
                 raise ValueError("无效的URL地址")
 
             request = QNetworkRequest(url)
-            request.setRawHeader(b"Authorization", bytes(self.use_parent.token, "utf-8"))
+            request.setRawHeader(b"Authorization", bytes(self.use_parent.access_token, "utf-8"))
             reply = self.network_manager.get(request)  # 获取reply对象
             reply.finished.connect(lambda: self._handle_response(reply))  # 显式传递参数
         except Exception as e:

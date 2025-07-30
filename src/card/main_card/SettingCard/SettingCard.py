@@ -323,7 +323,7 @@ class SettingCard(MainCard):
         """检查更新"""
         # 创建更新器实例
         self.updater = Updater(
-            api_url=common.BASE_URL + "/version/current?type=Windows",
+            api_url=common.BASE_URL + "/version/public/current?type=Windows",
             app_version=self.main_object.app_version  # 假设 main_object 有 app_version 属性
         )
 
@@ -408,7 +408,7 @@ class SettingCard(MainCard):
 
         # 重新配置更新器（用于下载）
         self.updater = Updater(
-            api_url=common.BASE_URL + "/version/current?type=Windows",
+            api_url=common.BASE_URL + "/version/public/current?type=Windows",
             app_version=self.main_object.app_version
         )
 

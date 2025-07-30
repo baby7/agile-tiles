@@ -19,10 +19,10 @@ class HolidayManager(QObject):
     def get_holiday(self, date_list_str):
         """使用QNetworkRequest获取节假日"""
         # 创建请求
-        url = QUrl(f"{common.BASE_URL}/holiday?d=" + date_list_str + "&type=Y")
+        url = QUrl(f"{common.BASE_URL}/holiday/normal?d=" + date_list_str + "&type=Y")
         print("获取节假日地址:", url)
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", self.use_parent.token.encode())
+        request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
         # 发送请求
         self.current_get = self.holiday_manager.get(request)
         # 连接完成信号

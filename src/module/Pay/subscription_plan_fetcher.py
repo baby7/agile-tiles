@@ -19,9 +19,9 @@ class SubscriptionPlanFetcher(QObject):
 
     def fetch(self):
         """发起获取订阅计划的请求"""
-        url = common.BASE_URL + "/subscriptionPlan"
+        url = common.BASE_URL + "/subscriptionPlan/normal"
         request = QNetworkRequest(QUrl(url))
-        request.setRawHeader(b"Authorization", self.use_parent.token.encode())
+        request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
 
         self.manager.get(request)
 

@@ -219,9 +219,9 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
 
     def update_call_count(self):
         """请求并更新对话次数信息"""
-        url = QUrl(common.BASE_URL + "/chat/todayCalls")
+        url = QUrl(common.BASE_URL + "/chat/normal/todayCalls")
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", bytes(self.use_parent.token, "utf-8"))
+        request.setRawHeader(b"Authorization", bytes(self.use_parent.access_token, "utf-8"))
 
         # 使用临时网络管理器获取调用次数
         temp_manager = QNetworkAccessManager(self)
@@ -594,9 +594,9 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
             self.sse_reply.deleteLater()
 
         # 准备SSE请求
-        url = QUrl(common.BASE_URL + "/chat/stream")
+        url = QUrl(common.BASE_URL + "/chat/normal/stream")
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", bytes(self.use_parent.token, "utf-8"))
+        request.setRawHeader(b"Authorization", bytes(self.use_parent.access_token, "utf-8"))
         request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")
 
         # 创建请求数据

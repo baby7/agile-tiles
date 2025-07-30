@@ -348,9 +348,9 @@ class FeedbackPopup(AgileTilesAcrylicWindow):
         multi_part.append(file_part)
 
         # 创建请求
-        url = QUrl(f"{common.BASE_URL}/file/feedback/save")
+        url = QUrl(f"{common.BASE_URL}/file/normal/feedback/save")
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", self.use_parent.token.encode())
+        request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
 
         # 发送请求
         self.current_upload = self.upload_manager.post(request, multi_part)
@@ -469,10 +469,10 @@ class FeedbackPopup(AgileTilesAcrylicWindow):
         }
 
         # 使用 QNetworkRequest 提交反馈
-        url = QUrl(common.BASE_URL + "/feedback")
+        url = QUrl(common.BASE_URL + "/feedback/normal")
         request = QNetworkRequest(url)
         request.setRawHeader(b"Content-Type", b"application/json")
-        request.setRawHeader(b"Authorization", self.use_parent.token.encode())
+        request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
 
         # 将 JSON 数据转换为 QByteArray
         json_data = QByteArray(json.dumps(feedback_data).encode('utf-8'))

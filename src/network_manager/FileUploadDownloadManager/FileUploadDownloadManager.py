@@ -43,10 +43,10 @@ class FileUploadDownloadManager(QObject):
         file.setParent(multi_part)  # 确保文件在multi_part销毁时关闭
         multi_part.append(file_part)
         # 创建请求
-        url = QUrl(f"{common.BASE_URL}/file/{file_source}/save")
+        url = QUrl(f"{common.BASE_URL}/file/normal/{file_source}/save")
         print("上传文件地址:", url)
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", self.use_parent.token.encode())
+        request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
         # 发送请求
         self.current_upload = self.upload_manager.post(request, multi_part)
         multi_part.setParent(self.current_upload)  # 确保multi_part在请求完成后被删除

@@ -8,36 +8,36 @@ from src.client import common
 class TicketSystem:
     """工单系统管理类"""
 
-    def __init__(self, parent, token):
+    def __init__(self, parent, access_token):
         self.parent = parent
-        self.token = token
+        self.access_token = access_token
         self.network_manager = QNetworkAccessManager(parent)
         self.tickets = []  # 存储工单列表
 
     def fetch_tickets(self, callback):
         """获取用户工单列表"""
-        url = QUrl(f"{common.BASE_URL}/tickets")
+        url = QUrl(f"{common.BASE_URL}/tickets/normal")
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", self.token.encode())
+        request.setRawHeader(b"Authorization", self.access_token.encode())
 
         reply = self.network_manager.get(request)
         reply.finished.connect(lambda: self._handle_ticket_response(reply, callback))
 
     def fetch_ticket_details(self, ticket_id, callback):
         """获取工单详情"""
-        url = QUrl(f"{common.BASE_URL}/tickets/{ticket_id}")
+        url = QUrl(f"{common.BASE_URL}/tickets/normal/{ticket_id}")
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", self.token.encode())
+        request.setRawHeader(b"Authorization", self.access_token.encode())
 
         reply = self.network_manager.get(request)
         reply.finished.connect(lambda: self._handle_ticket_details_response(reply, callback))
 
     def add_response(self, ticket_id, content, images, callback):
         """添加工单回复"""
-        url = QUrl(f"{common.BASE_URL}/tickets/{ticket_id}/responses")
+        url = QUrl(f"{common.BASE_URL}/tickets/normal/{ticket_id}/responses")
         request = QNetworkRequest(url)
         request.setRawHeader(b"Content-Type", b"application/json")
-        request.setRawHeader(b"Authorization", self.token.encode())
+        request.setRawHeader(b"Authorization", self.access_token.encode())
 
         data = {
             "content": content,
@@ -50,9 +50,9 @@ class TicketSystem:
 
     def close_ticket(self, ticket_id, callback):
         """关闭工单"""
-        url = QUrl(f"{common.BASE_URL}/tickets/{ticket_id}/close")
+        url = QUrl(f"{common.BASE_URL}/tickets/normal/{ticket_id}/close")
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", self.token.encode())
+        request.setRawHeader(b"Authorization", self.access_token.encode())
 
         reply = self.network_manager.post(request, QByteArray())
         reply.finished.connect(lambda: self._handle_close_ticket(reply, callback))

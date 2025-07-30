@@ -6,7 +6,7 @@ from PySide6.QtWidgets import QLabel, QPushButton, QTabWidget, QTextBrowser, QWi
 from PySide6 import QtNetwork
 # 获取信息
 from src.card.MainCardManager.MainCard import MainCard
-from src.client.common import BASE_URL
+from src.client import common
 from src.get_info import get_tophub_blog_info, get_micro_blog_info
 from src.util import browser_util
 from src.ui import style_util
@@ -208,10 +208,10 @@ class TopSearchCard(MainCard):
         current_tab_title = self.tab_widget_toggle.tabText(self.tab_widget_toggle.currentIndex())
         current_tab_name = self.tab_map[current_tab_title]
 
-        url = QUrl(BASE_URL + "/trending/last")
+        url = QUrl(common.BASE_URL + "/trending/normal/last")
         request = QtNetwork.QNetworkRequest(url)
         # 存储token
-        request.setRawHeader(b"Authorization", bytes(self.main_object.token, "utf-8"))
+        request.setRawHeader(b"Authorization", bytes(self.main_object.access_token, "utf-8"))
         # 存储请求上下文
         request.setAttribute(QtNetwork.QNetworkRequest.Attribute.User, current_tab_name)
 

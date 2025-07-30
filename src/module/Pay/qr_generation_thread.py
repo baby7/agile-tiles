@@ -24,10 +24,10 @@ class QRGenerationManager(QObject):
 
         # 准备请求
         user_id = self.use_parent.current_user["id"]
-        url = f'{common.BASE_URL}/api/prePayment/qrCode?subscriptionPlanType={subscription_plan_code}&userId=' + str(user_id)
+        url = f'{common.BASE_URL}/prePayment/normal/qrCode?subscriptionPlanType={subscription_plan_code}&userId=' + str(user_id)
         request = QNetworkRequest(QUrl(url))
         request.setRawHeader(b"Content-Type", b"application/json")
-        request.setRawHeader(b"Authorization", self.use_parent.token.encode())
+        request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
 
         # 发送请求
         self.current_reply = self.manager.post(request, b"")

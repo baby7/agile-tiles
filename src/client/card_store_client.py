@@ -20,9 +20,9 @@ class CardStoreClient(QObject):
 
     def fetch_card_store_list(self):
         """异步获取卡片商店列表"""
-        url = common.BASE_URL + "/cardStore"
+        url = common.BASE_URL + "/cardStore/normal"
         request = QNetworkRequest(QUrl(url))
-        request.setRawHeader(b"Authorization", bytes(self.main_object.token, "utf-8"))
+        request.setRawHeader(b"Authorization", bytes(self.main_object.access_token, "utf-8"))
         request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")
 
         reply = self.network_manager.get(request)
@@ -47,9 +47,9 @@ class CardStoreClient(QObject):
 
     def fetch_store_version_image(self, card_name, card_size):
         """异步获取卡片版本图片"""
-        url = common.BASE_URL + "/cardStore/versionImage"
+        url = common.BASE_URL + "/cardStore/normal/versionImage"
         request = QNetworkRequest(QUrl(url))
-        request.setRawHeader(b"Authorization", bytes(self.main_object.token, "utf-8"))
+        request.setRawHeader(b"Authorization", bytes(self.main_object.access_token, "utf-8"))
         request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")
 
         # 构造POST数据

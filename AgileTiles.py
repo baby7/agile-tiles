@@ -85,7 +85,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
     app_version = None                      # 应用版本
     tray_icon = None                        # 图标
     info_logger = None                      # 日志
-    # 主机id
+    # 设备id
     hardware_id = None
     # 线程列表
     main_thread_object = None               # 主线程
@@ -135,12 +135,14 @@ class MyForm(MainAcrylicWindow, Ui_Form):
     hotkey_listening = False
     # 用户
     current_user = None
+    login_restart_data = None       # 用于登录时刷新失效重新登录的数据
     database_manager = None
     user_data_status = None
     is_login = False
     main_data = {}
     is_vip = False
-    token = None
+    access_token = None
+    refresh_token = None
     # 启动状态
     is_first = True
     # 更新相关
@@ -253,6 +255,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             if self.current_user is None:
                 # 如果首次启动，则启动登录窗口
                 self.show_start_login_window()
+                print("关闭启动登录窗口")
             else:
                 # 获取本地用户数据
                 main_data_str = self.database_manager.get_current_data(self.current_user["username"])
@@ -264,19 +267,22 @@ class MyForm(MainAcrylicWindow, Ui_Form):
 
         except Exception as e:
             traceback.print_exc()
+            print("启动失败")
             exit()
         # 判断用户是否登录，未登录则退出程序
         if self.current_user is None:
             self.quit_before(is_hide_dialog=True)
+            print("用户未登录")
             exit()
         # 执行登录后的操作
+        print("准备执行登录后的操作")
         self.do_login()
 
     def do_login(self):
         # 获取本地用户后，准备获取云端数据
         try:
             # 先获取本地数据
-            print(f"self.current_user:{self.current_user}")
+            print(f"先获取本地数据, self.current_user:{self.current_user}")
             main_data_str = self.database_manager.get_current_data(self.current_user["username"])
             if main_data_str is None:
                 # 如果数据为空，则保存默认数据
@@ -284,8 +290,8 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             else:
                 self.main_data = json.loads(main_data_str)
             username = self.current_user["username"]
-            password = self.current_user["password"]
-            if username is None or password is None:
+            refresh_token = self.current_user["refreshToken"]
+            if username is None or refresh_token is None:
                 self.user_data_status = "not_login"
                 print("用户未存储登录信息")
                 self.init()
@@ -293,56 +299,67 @@ class MyForm(MainAcrylicWindow, Ui_Form):
 
             # 初始化用户请求
             self.start_user_info_client = UserClient()
-            self.start_user_info_client.loginFinished.connect(self.handle_do_login)
+            self.start_user_info_client.refreshFinished.connect(self.handle_do_refresh)
 
-            # 进行登录
-            self.start_user_info_client.login(username, password)
+            # 进行登录(其实是刷新令牌获取accessToken)
+            print("进行登录(其实是刷新令牌获取accessToken)")
+            self.start_user_info_client.refresh(username, refresh_token, self.hardware_id)
         except Exception as e:
-            print(f"load_data error: {str(e)}")
+            print(f"do_login error: {str(e)}")
 
-    def handle_do_login(self, result):
+    def handle_do_refresh(self, result):
         json_str = json.dumps(result)  # 转换为 JSON 字符串
+        print(f"登录刷新令牌结果:{json_str}")
         # 使用 QMetaObject 确保在主线程执行
         QMetaObject.invokeMethod(
             self,
-            "_safe_do_login",
+            "_safe_do_refresh",
             Qt.ConnectionType.QueuedConnection,
             Q_ARG(str, json_str)
         )
 
     @Slot(str)
-    def _safe_do_login(self, result_str):
+    def _safe_do_refresh(self, result_str):
         result = json.loads(result_str)  # 解析 JSON
         # 获取本地用户后，准备获取云端数据
         try:
             if result['code'] == 1:
                 self.user_data_status = "login_fail"
                 self.is_login = False
+                print(result)
                 print(f"登录失败，原因：{result['msg']}")
-                self.toolkit.message_box_util.box_information(self, "错误信息", "登录失败，用户不存在")
+                self.toolkit.message_box_util.box_information(self, "错误信息", "登录失败，请重新登录")
                 # 注销登录
                 self.database_manager.logout_user()
-                self.init()
-                return
+                self.current_user = None
+                # 打开登录窗口手动登录
+                self.show_start_login_window()
+                # 判断用户是否登录，未登录则退出程序
+                if self.current_user is None or self.login_restart_data is None:
+                    self.quit_before(is_hide_dialog=True)
+                    print("用户未登录")
+                    exit()
+                result = self.login_restart_data
+                self.user_data_status = "login_restart"
 
             # 登录成功
             print("登录成功，存储用户状态")
             result_data = result["data"]
             self.user_data_status = "login_success"
             self.is_login = True
-            self.token = result_data['token']
+            self.access_token = "Bearer " + result_data['accessToken']
+            self.refresh_token = result_data['refreshToken']
             self.is_vip = result_data['isVip']
             self.current_user = {
                 "id": result_data["id"],
                 "nickName": result_data["nickName"],
                 "username": self.current_user["username"],
-                "password": self.current_user["password"],
-                "token": self.token,
+                "accessToken": self.access_token,
+                "refreshToken": self.refresh_token,
                 "isVip": self.is_vip,
                 "vipExpireTime": result_data['vipExpireTime'],
                 "inviteCode": result_data["inviteCode"],
             }
-            username = self.current_user["username"]
 
             # 设置主题到QSetting
             settings = QSettings(self.app_name, "Theme")
@@ -354,9 +371,10 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             self.start_user_data_client.pullFinished.connect(self.handle_start_pull_result)
 
             # 如果登录成功，则拉取数据
-            self.start_user_data_client.pull_data(username, self.token)
+            self.start_user_data_client.pull_data(self.current_user["username"], self.access_token)
         except Exception as e:
-            print(f"load_data error: {str(e)}")
+            print(f"_safe_do_refresh error: {str(e)}")
+        self.login_restart_data = None
 
     def show_start_login_window(self):
         if not self.is_first:
@@ -368,21 +386,24 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         self.user_server_recover_win.refresh_geometry(self.toolkit.resolution_util.get_screen(self))
         self.user_server_recover_win.exec()
 
-    def save_user(self, username, password):
-        self.database_manager.register_user(username, password)
-        self.database_manager.authenticate_user(username, password)
+    def save_user(self, username, refresh_token):
+        register_success = self.database_manager.register_user(username, refresh_token)
+        if not register_success:
+            self.database_manager.update_user_refresh_token(username, refresh_token)
+        self.database_manager.update_last_login(username)
 
     def get_current_user(self):
         return self.database_manager.get_current_user()
+
+    def set_current_user(self, user):
+        print(f"设置当前用户:{user}")
+        self.current_user = user
 
     def save_default_data(self, username):
         return self.database_manager.save_default_data(username, self.hardware_id)
 
     def get_local_user_data(self, username):
         return self.database_manager.get_current_data(username)
-
-    def get_hash_password(self, password):
-        return self.database_manager._hash_password(password)
 
     def handle_start_pull_result(self, result):
         json_str = json.dumps(result)  # 转换为 JSON 字符串
@@ -408,7 +429,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         if result["data"] is None or result["data"]["data"] is None:
             print("云端数据为空，将本地数据同步到云端")
             self.user_data_status = "server_data_none"
-            self.start_user_data_client.push_data(self.current_user["username"], self.token, self.main_data)
+            self.start_user_data_client.push_data(self.current_user["username"], self.access_token, self.main_data)
             self.init()
             return
 
@@ -426,7 +447,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         # 云端数据比本地数据旧
         if server_main_data["timestamp"] < self.main_data["timestamp"]:
             print("本地数据比云端数据新，将本地数据同步到云端")
-            self.start_user_data_client.push_data(self.current_user["username"], self.token, self.main_data)
+            self.start_user_data_client.push_data(self.current_user["username"], self.access_token, self.main_data)
             self.init()
             return
 
@@ -470,6 +491,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         # 初始化用户请求
         self.user_info_client = UserClient()
         self.user_info_client.infoFinished.connect(self.handle_user_detection_result)
+        self.user_info_client.refreshFinished.connect(self.handle_refresh_token_result)
         # 初始化用户数据请求(设置处使用)
         self.user_data_client_by_setting = DataClient()
         self.user_data_client_by_setting.pushFinished.connect(self.handle_push_area_user_data_backup)
@@ -479,7 +501,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         try:
             if self.current_user is None or self.current_user["username"] is None:
                 return
-            self.user_data_client.pull_data(self.current_user["username"], self.token)
+            self.user_data_client.pull_data(self.current_user["username"], self.access_token)
         except Exception:
             traceback.print_exc()
 
@@ -492,7 +514,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
                 print("云端无数据，需要上传到云端")
                 try:
                     if self.current_user is not None and self.current_user["username"] is not None:
-                        self.user_data_client.push_data(self.current_user["username"], self.token, self.main_data)
+                        self.user_data_client.push_data(self.current_user["username"], self.access_token, self.main_data)
                 except Exception as e:
                     traceback.print_exc()
                 return
@@ -508,7 +530,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
                 print("本地数据比云端数据更新，需要上传到云端")
                 try:
                     if self.current_user is not None and self.current_user["username"] is not None:
-                        self.user_data_client.push_data(self.current_user["username"], self.token, self.main_data)
+                        self.user_data_client.push_data(self.current_user["username"], self.access_token, self.main_data)
                 except Exception as e:
                     traceback.print_exc()
                 return
@@ -578,7 +600,8 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             self.is_login = False
             self.is_vip = None
             self.vip_expire_time = None
-            self.token = None
+            self.access_token = None
+            self.refresh_token = None
             self.main_data = None
             self.current_user = None
             # 登出前的操作
@@ -598,9 +621,13 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         self.do_login()
 
     def do_logout(self):
-        # 注销登录
+        # 注销云端登录
+        if self.current_user is not None and "id" in self.current_user:
+            self.user_info_client.logout(self.current_user["id"], self.hardware_id)
+            print("云端注销登录成功")
+        # 注销本地登录
         self.database_manager.logout_user()
-        print("注销登录成功")
+        print("本地注销登录成功")
         # 取消鼠标追踪
         self.setMouseTracking(False)
         self.form_enable_sidebar = False
@@ -847,7 +874,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
                 return
             # 其他情况再进行同步
             if self.current_user is not None and self.current_user["username"] is not None:
-                self.user_data_client.push_data(self.current_user["username"], self.token, self.main_data)
+                self.user_data_client.push_data(self.current_user["username"], self.access_token, self.main_data)
         except Exception as e:
             print(f"保存数据到云端失败: {str(e)}")
 
@@ -897,9 +924,11 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             if self.current_user is None or self.current_user["username"] is None:
                 return
             # 获取用户信息(后续进行vip校验、数据同步等操作)
-            self.user_info_client.get_user_info(self.current_user["username"], self.token)
+            self.user_info_client.get_user_info(self.current_user["username"], self.access_token)
             # 检查更新
             update_module.check_update_normal(self)
+            # 更新令牌
+            self.user_info_client.refresh(self.current_user["username"], self.refresh_token, self.hardware_id)
         except Exception:
             traceback.print_exc()
 
@@ -914,8 +943,8 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             "id": result["data"]["id"],
             "nickName": result["data"]["nickName"],
             "username": self.current_user["username"],
-            "password": self.current_user["password"],
-            "token": self.token,
+            "accessToken": self.access_token,
+            "refreshToken": self.refresh_token,
             "isVip": self.is_vip,
             "vipExpireTime": result["data"]['vipExpireTime'],
             "inviteCode": result["data"]["inviteCode"],
@@ -932,6 +961,22 @@ class MyForm(MainAcrylicWindow, Ui_Form):
 
     def update_user_view(self):
         user_module.update_user_view(self)
+
+    def handle_refresh_token_result(self, result):
+        print("主进程 - handle_refresh_token_result")
+        if result['code'] == 1:
+            self.info_logger.error(f"刷新令牌失败，原因：{result['msg']}")
+            if result["msg"] == "无效刷新令牌" or result["msg"] == "刷新令牌过期" or result["msg"] == "用户不存在":
+                # 重新登录
+                self.logout()
+            return
+        self.info_logger.info(f"刷新令牌成功")
+        print(f"刷新令牌结果:{result}")
+        self.access_token = "Bearer " + result["data"]['accessToken']
+        self.refresh_token = result["data"]['refreshToken']
+        # 更新信息
+        self.current_user["accessToken"] = self.access_token
+        self.current_user["refreshToken"] = self.refresh_token
 
     ''' **********************************卡片管理*************************************** '''
     def init_card(self):

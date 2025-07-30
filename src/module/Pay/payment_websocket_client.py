@@ -28,9 +28,9 @@ class PaymentWebSocketClient(QObject):
         self._close_websocket()
 
         # 构建带订单号的URL
-        url = QUrl(f"{WS_BASE_URL}/payment/result")
+        url = QUrl(f"{WS_BASE_URL}/payment/normal/result")
         query = QUrlQuery()
-        # query.addQueryItem("Authorization", self.use_parent.token)
+        # query.addQueryItem("Authorization", self.use_parent.access_token)
         query.addQueryItem("outTradeNo", self.current_order_no)
         url.setQuery(query)
 
@@ -43,7 +43,7 @@ class PaymentWebSocketClient(QObject):
 
         # 创建带认证头的网络请求
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", self.use_parent.token.encode())
+        request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
 
         # 连接服务器
         print("开始连接")

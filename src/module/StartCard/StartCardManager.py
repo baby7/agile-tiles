@@ -44,9 +44,9 @@ class CardManager(QObject):
         self.get_local_card_list_sync()
 
     def get_cloud_card_list(self):
-        url = common.BASE_URL + "/cardStore/simple"
+        url = common.BASE_URL + "/cardStore/public/simple"
         request = QNetworkRequest(QUrl(url))
-        request.setRawHeader(b"Authorization", self.main_object.token.encode())
+        request.setRawHeader(b"Authorization", self.main_object.access_token.encode())
         reply = self.nam.get(request)
         reply.finished.connect(lambda r=reply: self.handle_cloud_reply(r))
 

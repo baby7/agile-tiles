@@ -18,7 +18,7 @@ class DataClient(QObject):
 
     def push_data(self, username, token, user_data):
         """异步推送数据到服务器"""
-        url = common.BASE_URL + "/userData/push"
+        url = common.BASE_URL + "/userData/normal/push"
         request = QNetworkRequest(QUrl(url))
         request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")
         request.setRawHeader(b"Authorization", token.encode())
@@ -40,7 +40,7 @@ class DataClient(QObject):
 
     def pull_data(self, username, token):
         """异步从服务器拉取数据"""
-        url = common.BASE_URL + "/userData/pull?username=" + username
+        url = common.BASE_URL + "/userData/normal/pull?username=" + username
         request = QNetworkRequest(QUrl(url))
         request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")
         request.setRawHeader(b"Authorization", token.encode())

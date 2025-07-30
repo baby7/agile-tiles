@@ -1,20 +1,25 @@
-# BASE_URL = "http://localhost:6666"
-# BASE_URL = "http://desktop.baby7blog.com:6666"
-BASE_URL = "http://49.232.132.208:6666"
 
-# WS_BASE_URL = "ws://desktop.baby7blog.com:6666"
-WS_BASE_URL = "ws://49.232.132.208:6666"
-# WS_BASE_URL = "ws://localhost:6666"
+# ******************** Http请求路径 ********************
+# BASE_URL = "http://desktop.baby7blog.com:6666"        # 基础路径 - 域名
+BASE_URL = "http://121.4.64.87:6666"                 # 基础路径 - 固定IP
+# BASE_URL = "http://localhost:6666"                    # 基础路径 - 本地调试
 
+# ******************** WebSocket路径 ********************
+# WS_BASE_URL = "ws://desktop.baby7blog.com:6666"       # 基础路径 - 域名
+WS_BASE_URL = "ws://121.4.64.87:6666"                # 基础路径 - 固定IP
+# WS_BASE_URL = "ws://localhost:6666"                   # 基础路径 - 本地调试
+
+
+# 错误返回
 ERROR_RETURN = {"code": 1, "msg": "请求失败", "data": None}
 
 
 # 默认首页
-index_url = "http://www.baby7blog.com:8787/index.html"
+index_url = "https://www.agiletiles.com/index.html"
 # 用户协议页
-user_agreement_url = "http://www.baby7blog.com:8787/agreement.html#%E7%94%A8%E6%88%B7%E5%8D%8F%E8%AE%AE"
+user_agreement_url = "https://www.agiletiles.com/agreement/user-agreement.html"
 # 隐私政策页
-privacy_policy_url = "http://www.baby7blog.com:8787/agreement.html#%E9%9A%90%E7%A7%81%E6%94%BF%E7%AD%96"
+privacy_policy_url = "https://www.agiletiles.com/agreement/privacy-policy.html"
 # 关于我们页
-about_us_url = "http://www.baby7blog.com:8787/about.html"
+about_us_url = "https://www.agiletiles.com/about.html"
 

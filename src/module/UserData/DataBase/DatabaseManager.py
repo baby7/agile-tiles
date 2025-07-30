@@ -48,7 +48,7 @@ class DatabaseManager:
                 CREATE TABLE IF NOT EXISTS users (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     username TEXT UNIQUE NOT NULL,
-                    password_hash TEXT NOT NULL,
+                    refresh_token TEXT NOT NULL,
                     last_login DATETIME
                 )
             """)
@@ -77,14 +77,14 @@ class DatabaseManager:
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "SELECT username, password_hash FROM users WHERE last_login IS NOT NULL ORDER BY last_login DESC LIMIT 1"
+                "SELECT username, refresh_token FROM users WHERE last_login IS NOT NULL ORDER BY last_login DESC LIMIT 1"
             )
             result = cursor.fetchone()
             if not result:
                 return None
             return {
                 "username": result[0],
-                "password": result[1]
+                "refreshToken": result[1]
             }
 
     def logout_user(self):
@@ -96,51 +96,40 @@ class DatabaseManager:
             )
             conn.commit()
 
-    def register_user(self, username, password):
-        """注册新用户 - 使用固定盐值加密"""
-        password_hash = self._hash_password(password)
-
+    def register_user(self, username, refresh_token):
+        """注册新用户"""
+        print(f"开始注册用户:{username},{refresh_token}")
         try:
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
                 cursor.execute(
-                    "INSERT INTO users (username, password_hash) VALUES (?, ?)",
-                    (username, password_hash))
+                    "INSERT INTO users (username, refresh_token) VALUES (?, ?)",
+                    (username, refresh_token))
                 conn.commit()
             return True
         except sqlite3.IntegrityError:
             return False  # 用户名已存在
 
-    def authenticate_user(self, username, password):
-        """验证用户凭据并更新登录时间"""
+    def update_user_refresh_token(self, username, refresh_token):
+        """更新用户刷新令牌"""
+        print(f"更新用户刷新令牌:{username},{refresh_token}")
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "SELECT password_hash FROM users WHERE username = ?",
+                "UPDATE users SET refresh_token = ? WHERE username = ?",
+                (refresh_token, username)
+            )
+            conn.commit()
+
+    def update_last_login(self, username):
+        """更新用户最后登录时间"""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "UPDATE users SET last_login = datetime('now') WHERE username = ?",
                 (username,)
             )
-            result = cursor.fetchone()
-
-            if not result:
-                return False  # 用户不存在
-
-            stored_hash = result[0]
-            input_hash = self._hash_password(password)
-
-            if stored_hash == input_hash:
-                # 更新登录时间
-                cursor.execute(
-                    "UPDATE users SET last_login = datetime('now') WHERE username = ?",
-                    (username,)
-                )
-                conn.commit()
-                return True
-            return False
-
-    def _hash_password(self, password):
-        """使用固定盐值生成密码哈希"""
-        # 使用固定盐值和SHA256加密
-        return hashlib.sha256(self.FIXED_SALT + password.encode('utf-8')).hexdigest()
+            conn.commit()
 
     def save_user_data(self, username, data, source='local', backup_tag=None):
         """保存用户数据并标记为当前版本"""

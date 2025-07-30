@@ -11,7 +11,7 @@ from src.module.Box import message_box_util
 def check_update_on_start(main_object):
     """启动时静默检查更新"""
     main_object.silent_updater = Updater(
-        api_url=common.BASE_URL + "/version/current?type=Windows",
+        api_url=common.BASE_URL + "/version/public/current?type=Windows",
         app_version=main_object.app_version
     )
     main_object.silent_updater.finished.connect(
@@ -98,7 +98,7 @@ def start_update_process(main_object, update_info):
 
     # 创建下载器
     main_object.downloader = Updater(
-        api_url=common.BASE_URL + "/version/current?type=Windows",
+        api_url=common.BASE_URL + "/version/public/current?type=Windows",
         app_version=main_object.silent_updater.app_version
     )
 
@@ -175,7 +175,7 @@ def check_update_normal(main_object):
     """检查更新"""
     try:
         main_object.silent_updater = Updater(
-            api_url=common.BASE_URL + "/version/current?type=Windows",
+            api_url=common.BASE_URL + "/version/public/current?type=Windows",
             app_version=main_object.app_version
         )
         main_object.silent_updater.finished.connect(

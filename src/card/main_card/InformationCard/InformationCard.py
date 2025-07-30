@@ -33,7 +33,7 @@ class InformationCard(AggregationCard):
     need_refresh_ui = False
     # 模块列表
     aggregation_module_list = []
-    base_url = common.BASE_URL + "/textContent/random"
+    base_url = common.BASE_URL + "/textContent/normal/random"
 
 
     def __init__(self, main_object=None, parent=None, theme=None, card=None, cache=None, data=None,
@@ -183,9 +183,9 @@ class InformationCard(AggregationCard):
         super().refresh_ui_end(date_time_str)
 
     def push_button_reading_history_click(self):
-        url = QUrl(common.BASE_URL + '/historyToday/today')
+        url = QUrl(common.BASE_URL + '/historyToday/normal/today')
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", self.main_object.token.encode())
+        request.setRawHeader(b"Authorization", self.main_object.access_token.encode())
         # 设置请求属性（可选）
         reply = self.network_manager.get(request)
         # 存储上下文信息

@@ -30,7 +30,8 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
     is_vip = None
     user_data = None
     main_data = None
-    token = None
+    access_token = None
+    refresh_token = None
 
     def __init__(self, parent=None, use_parent=None):
         super(StartLoginWindow, self).__init__()
@@ -162,7 +163,8 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
         control.setIcon(get_icon_park_path("Base/preview-close-one", self.is_dark))
 
     def end_login_logic(self):
-        self.use_parent.current_user = self.use_parent.get_current_user()
+        current_user = self.use_parent.get_current_user()
+        self.use_parent.set_current_user(current_user)
         # 退出登录界面
         self.close()
 
@@ -215,10 +217,9 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 获取输入信息
             self.username = self.line_edit_user_login_username.text()
             self.password = self.line_edit_user_login_password.text()
-            hash_password = self.use_parent.get_hash_password(self.password)
             # 发起登录请求
-            print(f"发起登录请求,密码:{self.password},编译密码:{hash_password}")
-            self.start_user_login_client.login(self.username, hash_password)
+            print(f"发起登录请求,密码:{self.password}")
+            self.start_user_login_client.login(self.username, self.password, self.use_parent.hardware_id)
             # 显示加载层
             self.show_overlay("登录中...")
         except Exception as e:
@@ -242,19 +243,21 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             self.is_login = True
             self.is_vip = result["data"]['isVip']
             self.user_data = result["data"]
-            self.token = result["data"]["token"]
+            self.access_token = "Bearer " + result["data"]["accessToken"]
+            self.refresh_token = result["data"]["refreshToken"]
             # 存储用户信息
-            self.use_parent.save_user(self.username, self.password)
+            self.use_parent.save_user(self.username, self.refresh_token)
             # 非vip用户直接展示成功
             if not self.is_vip:
                 # 隐藏加载层
                 message_box_util.box_information(self, "提示信息", "登录成功")
                 self.hide_overlay()
+                self.use_parent.login_restart_data = result     # 登录成功后，保存用户数据直接给刷新后无法获取数据的逻辑中使用
                 self.end_login_logic()
             else:
                 self.user_data_status = "load_server_data"
                 # 对于vip用户，需要进行数据同步
-                self.start_user_data_client.pull_data(self.username, self.token)
+                self.start_user_data_client.pull_data(self.username, self.access_token)
                 # 显示加载层
                 self.show_overlay("vip用户数据同步中...")
         except Exception as e:
@@ -288,12 +291,11 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 获取输入信息
             self.username = self.line_edit_user_register_username.text()
             self.password = self.line_edit_user_register_password.text()
-            hash_password = self.use_parent.get_hash_password(self.password)
             nickname = self.line_edit_user_register_nickname.text()
             validator_code = self.line_edit_register_validator_code.text()
             invite_code = self.line_edit_user_register_invite_code.text()
             # 发起注册请求
-            self.start_user_login_client.register(self.username, hash_password, nickname, validator_code, invite_code)
+            self.start_user_login_client.register(self.username, self.password, nickname, validator_code, invite_code)
             # 显示加载层
             self.show_overlay("注册中...")
         except Exception as e:
@@ -442,11 +444,10 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 获取用户输入
             self.username = self.line_edit_user_forget_username.text()
             self.password = self.line_edit_user_forget_password.text()
-            hash_password = self.use_parent.get_hash_password(self.password)
             validator_code = self.line_edit_forget_validator_code.text()
             # 发起忘记密码请求
-            print(f"发起忘记密码请求,密码:{self.password},编译密码:{hash_password}")
-            self.start_user_login_client.forget_password(self.username, hash_password, validator_code)
+            print(f"发起忘记密码请求,密码:{self.password}")
+            self.start_user_login_client.forget_password(self.username, self.password, validator_code, self.use_parent.hardware_id)
             # 显示加载层
             self.show_overlay("重置密码中...")
         except Exception as e:
@@ -523,7 +524,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
         # 云端数据比本地数据旧
         if server_main_data["timestamp"] < self.main_data["timestamp"]:
             print("本地数据比云端数据新，将本地数据同步到云端")
-            self.start_user_data_client.push_data(self.user_data["username"], self.token, self.main_data)
+            self.start_user_data_client.push_data(self.user_data["username"], self.access_token, self.main_data)
             self.end_login_logic()
             return
 

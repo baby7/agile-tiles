@@ -417,7 +417,7 @@ class CardStore(QtWidgets.QWidget):
                     # 发起网络请求
                     print(f"从网络加载图片:{url}")
                     request = QtNetwork.QNetworkRequest(QtCore.QUrl(url))
-                    request.setRawHeader(b"Authorization", self.use_parent.token.encode())
+                    request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
                     reply = self.network_manager.get(request)
                     reply.finished.connect(lambda: self.handle_image_reply(reply, url, img_label))
 
@@ -469,7 +469,7 @@ class CardStore(QtWidgets.QWidget):
         btn.setText("下载中...")
 
         request = QtNetwork.QNetworkRequest(QtCore.QUrl(url))
-        request.setRawHeader(b"Authorization", self.use_parent.token.encode())
+        request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
         reply = self.network_manager.get(request)
 
         def on_download_finished():

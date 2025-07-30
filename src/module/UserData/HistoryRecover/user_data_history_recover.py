@@ -84,18 +84,18 @@ class UserServerRecoverWindow(AgileTilesAcrylicWindow, Ui_Form):
 
     def request_tab_data(self, tab_index):
         """请求指定选项卡的数据"""
-        if self.use_parent.current_user is None or self.use_parent.token is None:
+        if self.use_parent.current_user is None or self.use_parent.access_token is None:
             return
         frequency = self.frequency_mapping[tab_index]
         print(f"请求{frequency}的数据")
-        url = QUrl(common.BASE_URL + "/userData/history")
+        url = QUrl(common.BASE_URL + "/userData/normal/history")
         query = QUrlQuery()
         query.addQueryItem("username", self.use_parent.current_user["username"])  # 应从配置获取实际用户名
         query.addQueryItem("frequency", frequency)
         url.setQuery(query)
 
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", self.use_parent.token.encode('utf-8'))
+        request.setRawHeader(b"Authorization", self.use_parent.access_token.encode('utf-8'))
         reply = self.network_manager.get(request)
         reply.tab_index = tab_index  # 存储选项卡索引
         reply.finished.connect(self.handle_response)
@@ -165,7 +165,7 @@ class UserServerRecoverWindow(AgileTilesAcrylicWindow, Ui_Form):
         print(f"Recovering data: {data['dataHash']}")
 
         # 构造请求参数
-        url = QUrl(common.BASE_URL + "/userData/history/one")
+        url = QUrl(common.BASE_URL + "/userData/normal/history/one")
         query = QUrlQuery()
         query.addQueryItem("username", self.use_parent.current_user["username"])
         query.addQueryItem("frequency", self.frequency_mapping[self.tabWidget.currentIndex()])
@@ -174,7 +174,7 @@ class UserServerRecoverWindow(AgileTilesAcrylicWindow, Ui_Form):
 
         # 发送GET请求
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", self.use_parent.token.encode('utf-8'))
+        request.setRawHeader(b"Authorization", self.use_parent.access_token.encode('utf-8'))
         reply = self.network_manager.get(request)
         reply.finished.connect(lambda: self._handle_recover_response(reply, data))
 
@@ -199,7 +199,7 @@ class UserServerRecoverWindow(AgileTilesAcrylicWindow, Ui_Form):
 
     def _handle_delete(self, data):
         """处理删除操作"""
-        url = QUrl(common.BASE_URL + "/userData/history/one")
+        url = QUrl(common.BASE_URL + "/userData/normal/history/one")
         query = QUrlQuery()
         query.addQueryItem("username", self.use_parent.current_user["username"])
         query.addQueryItem("frequency", self.frequency_mapping[self.tabWidget.currentIndex()])
@@ -208,7 +208,7 @@ class UserServerRecoverWindow(AgileTilesAcrylicWindow, Ui_Form):
 
         # 发送DELETE请求
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", self.use_parent.token.encode('utf-8'))
+        request.setRawHeader(b"Authorization", self.use_parent.access_token.encode('utf-8'))
         reply = self.network_manager.deleteResource(request)  # 使用DELETE方法
         reply.finished.connect(lambda: self._handle_delete_response(reply))
 

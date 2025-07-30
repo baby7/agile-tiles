@@ -20,10 +20,10 @@ class WeatherManager(QObject):
     def get_weather_forecast(self, location_id):
         """使用QNetworkRequest获取天气"""
         # 创建请求
-        url = QUrl(f"{common.BASE_URL}/weather/forecast?locationId=" + str(location_id))
+        url = QUrl(f"{common.BASE_URL}/weather/normal/forecast?locationId=" + str(location_id))
         print("获取天气预报地址:", url)
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", self.use_parent.token.encode())
+        request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
         # 发送请求
         self.current_get = self.weather_manager.get(request)
         # 连接完成信号

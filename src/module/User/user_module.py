@@ -202,7 +202,7 @@ def push_button_area_user_data_synchronization_click(main_object):
             return
 
         # 使用信号连接
-        main_object.user_data_client_by_setting.pull_data(main_object.current_user["username"], main_object.token)
+        main_object.user_data_client_by_setting.pull_data(main_object.current_user["username"], main_object.access_token)
     except Exception as e:
         main_object.info_logger.card_error("主程序", "导入数据失败,错误信息:{}".format(e))
 
@@ -242,7 +242,7 @@ def push_button_area_user_data_backup_click(main_object):
             return
 
         # 使用信号连接
-        main_object.user_data_client_by_setting.push_data(main_object.current_user["username"], main_object.token, main_object.main_data)
+        main_object.user_data_client_by_setting.push_data(main_object.current_user["username"], main_object.access_token, main_object.main_data)
     except Exception as e:
         main_object.info_logger.card_error("主程序", "数据备份失败,错误信息:{}".format(e))
 
@@ -373,5 +373,5 @@ def update_user_view(main_object):
 def push_button_area_user_join_group_click(main_object):
     main_object.toolkit.text_box_util.show_text_dialog(
         main_object, "加入QQ用户交流群",
-        {"content": "956584263", "size": [300, 200]}
+        {"content": "725814322", "size": [300, 200]}
     )

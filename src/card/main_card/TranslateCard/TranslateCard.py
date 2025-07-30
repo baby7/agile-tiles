@@ -255,9 +255,9 @@ class TranslateCard(MainCard):
 
     def update_call_count(self):
         """请求并更新对话次数信息"""
-        url = QUrl(common.BASE_URL + "/translate/todayCalls")
+        url = QUrl(common.BASE_URL + "/translate/normal/todayCalls")
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", bytes(self.main_object.token, "utf-8"))
+        request.setRawHeader(b"Authorization", bytes(self.main_object.access_token, "utf-8"))
 
         # 使用临时网络管理器获取调用次数
         temp_manager = QNetworkAccessManager(self)
@@ -387,9 +387,9 @@ class TranslateCard(MainCard):
         }
 
         # 创建网络请求
-        url = QUrl(common.BASE_URL + "/translate")
+        url = QUrl(common.BASE_URL + "/translate/normal")
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", bytes(self.main_object.token, "utf-8"))
+        request.setRawHeader(b"Authorization", bytes(self.main_object.access_token, "utf-8"))
         request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")
 
         # 发送POST请求

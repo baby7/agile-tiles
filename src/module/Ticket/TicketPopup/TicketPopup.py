@@ -388,11 +388,11 @@ class TicketPopup(AgileTilesAcrylicWindow):
 
         # 创建请求
         if self.mode == "create":
-            url = QUrl(f"{common.BASE_URL}/file/ticket/save")
+            url = QUrl(f"{common.BASE_URL}/file/normal/ticket/save")
         else:
-            url = QUrl(f"{common.BASE_URL}/file/ticketResponse/save")
+            url = QUrl(f"{common.BASE_URL}/file/normal/ticketResponse/save")
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", self.use_parent.token.encode())
+        request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
 
         # 发送请求
         self.current_upload = self.upload_manager.post(request, multi_part)
@@ -511,10 +511,10 @@ class TicketPopup(AgileTilesAcrylicWindow):
         }
 
         # 使用 QNetworkRequest 提交工单
-        url = QUrl(common.BASE_URL + "/tickets")
+        url = QUrl(common.BASE_URL + "/tickets/normal")
         request = QNetworkRequest(url)
         request.setRawHeader(b"Content-Type", b"application/json")
-        request.setRawHeader(b"Authorization", self.use_parent.token.encode())
+        request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
 
         # 将 JSON 数据转换为 QByteArray
         json_data = QByteArray(json.dumps(ticket_data).encode('utf-8'))
@@ -542,10 +542,10 @@ class TicketPopup(AgileTilesAcrylicWindow):
         }
 
         # 使用 QNetworkRequest 提交回复
-        url = QUrl(common.BASE_URL + f"/tickets/{self.ticket_id}/responses")
+        url = QUrl(common.BASE_URL + f"/tickets/normal/{self.ticket_id}/responses")
         request = QNetworkRequest(url)
         request.setRawHeader(b"Content-Type", b"application/json")
-        request.setRawHeader(b"Authorization", self.use_parent.token.encode())
+        request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
 
         # 将 JSON 数据转换为 QByteArray
         json_data = QByteArray(json.dumps(reply_data).encode('utf-8'))

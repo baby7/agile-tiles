@@ -286,9 +286,9 @@ class CardDetailWidget(QWidget):
 
     def fetch_card_data(self):
         """请求卡片数据"""
-        url = f"{common.BASE_URL}/cardStore/{self.card_id}"
+        url = f"{common.BASE_URL}/cardStore/normal/{self.card_id}"
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", self.use_parent.token.encode())
+        request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
         self.network_manager.get(request)
 
     def handle_response(self, reply):
