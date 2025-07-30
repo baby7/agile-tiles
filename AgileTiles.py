@@ -360,6 +360,8 @@ class MyForm(MainAcrylicWindow, Ui_Form):
                 "vipExpireTime": result_data['vipExpireTime'],
                 "inviteCode": result_data["inviteCode"],
             }
+            # 更新刷新令牌到本地
+            self.database_manager.update_user_refresh_token(self.current_user["username"], self.refresh_token)
 
             # 设置主题到QSetting
             settings = QSettings(self.app_name, "Theme")
@@ -949,6 +951,8 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             "vipExpireTime": result["data"]['vipExpireTime'],
             "inviteCode": result["data"]["inviteCode"],
         }
+        # 更新刷新令牌到本地
+        self.database_manager.update_user_refresh_token(self.current_user["username"], self.refresh_token)
         # 判断是否为vip用户
         if not self.current_user['isVip']:
             self.is_vip = False
@@ -977,6 +981,8 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         # 更新信息
         self.current_user["accessToken"] = self.access_token
         self.current_user["refreshToken"] = self.refresh_token
+        # 更新刷新令牌到本地
+        self.database_manager.update_user_refresh_token(self.current_user["username"], self.refresh_token)
 
     ''' **********************************卡片管理*************************************** '''
     def init_card(self):

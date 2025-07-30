@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>377</width>
-    <height>458</height>
+    <width>337</width>
+    <height>394</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -110,6 +110,13 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="push_button_link">
+       <property name="text">
+        <string>https://www.agiletiles.com/index.html</string>
        </property>
       </widget>
      </item>

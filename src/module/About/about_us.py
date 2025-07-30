@@ -1,10 +1,13 @@
 # coding:utf-8
-from PySide6.QtGui import QPixmap
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QPixmap, QCursor
 
+from src.client import common
 from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 import src.ui.style_util as style_util
 from src.constant import version_constant
 from src.module.About.about_us_form import Ui_Form
+from src.util import browser_util
 
 
 class AboutUsWindow(AgileTilesAcrylicWindow, Ui_Form):
@@ -30,6 +33,14 @@ class AboutUsWindow(AgileTilesAcrylicWindow, Ui_Form):
         style_util.set_dialog_control_style(self, self.is_dark)
         # 设置文字
         self.label_title.setText("灵卡面板 " + str(version_constant.get_current_version()))
+        # 设置按钮
+        self.push_button_link.setText(common.index_url)
+        # 按钮点击事件
+        self.push_button_link.clicked.connect(self.push_button_link_click)
+        # 设置按钮样式
+        background = "background-color: transparent; color: rgb(20, 161, 248);"
+        self.push_button_link.setStyleSheet(background)
+        self.push_button_link.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
 
     def _init_ui(self):
         # 设置背景色
@@ -44,3 +55,8 @@ class AboutUsWindow(AgileTilesAcrylicWindow, Ui_Form):
         else:
             self.label_icon.setPixmap(QPixmap("./static/img/icon/light/icon.png"))
         self.label_icon.setScaledContents(True)
+
+    def push_button_link_click(self):
+        # 用户协议
+        browser_util.open_url(common.index_url)
+        self.close()

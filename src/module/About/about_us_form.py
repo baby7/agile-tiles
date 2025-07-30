@@ -16,13 +16,14 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
-    QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
+    QPushButton, QSizePolicy, QSpacerItem, QVBoxLayout,
+    QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(377, 458)
+        Form.resize(337, 394)
         self.gridLayout = QGridLayout(Form)
         self.gridLayout.setObjectName(u"gridLayout")
         self.verticalLayout = QVBoxLayout()
@@ -66,6 +67,11 @@ class Ui_Form(object):
 
         self.verticalLayout.addWidget(self.label_copyright)
 
+        self.push_button_link = QPushButton(Form)
+        self.push_button_link.setObjectName(u"push_button_link")
+
+        self.verticalLayout.addWidget(self.push_button_link)
+
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer)
@@ -91,6 +97,7 @@ class Ui_Form(object):
         self.label_icon.setText(QCoreApplication.translate("Form", u"\u56fe\u6807", None))
         self.label_title.setText(QCoreApplication.translate("Form", u"\u7075\u5361\u9762\u677f v0.1.1", None))
         self.label_copyright.setText(QCoreApplication.translate("Form", u"Copyright \u00a9 2025", None))
+        self.push_button_link.setText(QCoreApplication.translate("Form", u"https://www.agiletiles.com/index.html", None))
         self.label_framework.setText(QCoreApplication.translate("Form", u"\u57fa\u4e8ePySide6\u5f00\u53d1", None))
     # retranslateUi
 
