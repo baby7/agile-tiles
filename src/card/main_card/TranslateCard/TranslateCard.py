@@ -48,6 +48,53 @@ class TranslateCard(MainCard):
         # 网络管理器
         self.network_manager = QNetworkAccessManager(self)
 
+    def clear(self):
+        try:
+            try:
+                self.swap_button.clicked.disconnect()
+            except Exception as e:
+                print(e)
+            try:
+                self.translate_button.clicked.disconnect()
+            except Exception as e:
+                print(e)
+            try:
+                self.clear_button.clicked.disconnect()
+            except Exception as e:
+                print(e)
+            try:
+                self.copy_button.clicked.disconnect()
+            except Exception as e:
+                print(e)
+            try:
+                self.info_bar.hide()
+                self.info_bar.deleteLater()
+                self.engine_combo.hide()
+                self.engine_combo.deleteLater()
+                self.source_lang_combo.hide()
+                self.source_lang_combo.deleteLater()
+                self.swap_button.hide()
+                self.swap_button.deleteLater()
+                self.target_lang_combo.hide()
+                self.target_lang_combo.deleteLater()
+                self.translate_button.hide()
+                self.translate_button.deleteLater()
+                self.source_text.hide()
+                self.source_text.deleteLater()
+                self.target_text.hide()
+                self.target_text.deleteLater()
+                self.status_label.hide()
+                self.status_label.deleteLater()
+                self.clear_button.hide()
+                self.clear_button.deleteLater()
+                self.copy_button.hide()
+                self.copy_button.deleteLater()
+            except Exception as e:
+                print(e)
+            super().clear()
+        except Exception as e:
+            print(e)
+
     def init_ui(self):
         super().init_ui()
         # 创建主控件

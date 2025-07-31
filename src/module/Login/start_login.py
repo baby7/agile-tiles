@@ -247,8 +247,6 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             self.refresh_token = result["data"]["refreshToken"]
             # 存储用户信息
             self.use_parent.save_user(self.username, self.refresh_token)
-            # 更新刷新令牌到本地
-            self.use_parent.database_manager.update_user_refresh_token(self.username, self.refresh_token)
             # 非vip用户直接展示成功
             if not self.is_vip:
                 # 隐藏加载层

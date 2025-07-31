@@ -8,9 +8,8 @@ from src.client import common
 class TicketSystem:
     """工单系统管理类"""
 
-    def __init__(self, parent, access_token):
+    def __init__(self, parent):
         self.parent = parent
-        self.access_token = access_token
         self.network_manager = QNetworkAccessManager(parent)
         self.tickets = []  # 存储工单列表
 
@@ -18,7 +17,7 @@ class TicketSystem:
         """获取用户工单列表"""
         url = QUrl(f"{common.BASE_URL}/tickets/normal")
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", self.access_token.encode())
+        request.setRawHeader(b"Authorization", self.parent.access_token.encode())
 
         reply = self.network_manager.get(request)
         reply.finished.connect(lambda: self._handle_ticket_response(reply, callback))
@@ -27,7 +26,7 @@ class TicketSystem:
         """获取工单详情"""
         url = QUrl(f"{common.BASE_URL}/tickets/normal/{ticket_id}")
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", self.access_token.encode())
+        request.setRawHeader(b"Authorization", self.parent.access_token.encode())
 
         reply = self.network_manager.get(request)
         reply.finished.connect(lambda: self._handle_ticket_details_response(reply, callback))
@@ -37,7 +36,7 @@ class TicketSystem:
         url = QUrl(f"{common.BASE_URL}/tickets/normal/{ticket_id}/responses")
         request = QNetworkRequest(url)
         request.setRawHeader(b"Content-Type", b"application/json")
-        request.setRawHeader(b"Authorization", self.access_token.encode())
+        request.setRawHeader(b"Authorization", self.parent.access_token.encode())
 
         data = {
             "content": content,
@@ -52,7 +51,7 @@ class TicketSystem:
         """关闭工单"""
         url = QUrl(f"{common.BASE_URL}/tickets/normal/{ticket_id}/close")
         request = QNetworkRequest(url)
-        request.setRawHeader(b"Authorization", self.access_token.encode())
+        request.setRawHeader(b"Authorization", self.parent.access_token.encode())
 
         reply = self.network_manager.post(request, QByteArray())
         reply.finished.connect(lambda: self._handle_close_ticket(reply, callback))

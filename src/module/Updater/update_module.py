@@ -40,7 +40,7 @@ def handle_silent_update_result(main_object, success, update_info):
         return
 
     # 获取强制更新标志
-    force_update = update_info.get("update", False)
+    force_update = update_info.get("updateTag", False)
 
     if force_update:
         show_force_update_dialog(main_object, update_info)

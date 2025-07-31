@@ -145,6 +145,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
     refresh_token = None
     # 启动状态
     is_first = True
+    start_login_view = False        # 登录窗口是否展示
     # 更新相关
     agree_update = True
     update_red_dot = None   # 更新提示红点
@@ -264,7 +265,6 @@ class MyForm(MainAcrylicWindow, Ui_Form):
                     self.main_data = self.save_default_data(self.current_user["username"])
                 else:
                     self.main_data = json.loads(main_data_str)
-
         except Exception as e:
             traceback.print_exc()
             print("启动失败")
@@ -379,6 +379,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         self.login_restart_data = None
 
     def show_start_login_window(self):
+        self.start_login_view = True
         if not self.is_first:
             # 设置主题到QSetting
             settings = QSettings(self.app_name, "Theme")
@@ -387,6 +388,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         self.user_server_recover_win = StartLoginWindow(None, self)
         self.user_server_recover_win.refresh_geometry(self.toolkit.resolution_util.get_screen(self))
         self.user_server_recover_win.exec()
+        self.start_login_view = False
 
     def save_user(self, username, refresh_token):
         register_success = self.database_manager.register_user(username, refresh_token)
@@ -501,7 +503,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
 
     def sync_data(self):
         try:
-            if self.current_user is None or self.current_user["username"] is None:
+            if self.current_user is None or self.current_user["username"] is None or self.access_token is None:
                 return
             self.user_data_client.pull_data(self.current_user["username"], self.access_token)
         except Exception:
@@ -515,7 +517,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             if result["data"] is None:
                 print("云端无数据，需要上传到云端")
                 try:
-                    if self.current_user is not None and self.current_user["username"] is not None:
+                    if self.current_user is not None and self.current_user["username"] is not None and self.access_token is not None:
                         self.user_data_client.push_data(self.current_user["username"], self.access_token, self.main_data)
                 except Exception as e:
                     traceback.print_exc()
@@ -642,6 +644,22 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         self.theme_idempotence = True
         # 隐藏背景
         self.label_background.hide()
+        # 删除vip角标
+        if self.ticket_vip_sign is not None:
+            try:
+                self.ticket_vip_sign.hide()
+                self.ticket_vip_sign.deleteLater()
+                self.ticket_vip_sign = None
+            except Exception:
+                pass
+        # 删除更新红点
+        if self.update_red_dot is not None:
+            try:
+                self.update_red_dot.hide()
+                self.update_red_dot.deleteLater()
+                self.update_red_dot = None
+            except Exception:
+                pass
 
     def do_login_again(self):
         # 初始化分辨率参数、位置和大小
@@ -929,6 +947,9 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             self.user_info_client.get_user_info(self.current_user["username"], self.access_token)
             # 检查更新
             update_module.check_update_normal(self)
+            # 如果登录界面正在显示，则不进行令牌刷新避免登录界面的闪退
+            if self.start_login_view:
+                return
             # 更新令牌
             self.user_info_client.refresh(self.current_user["username"], self.refresh_token, self.hardware_id)
         except Exception:
@@ -944,15 +965,13 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         self.current_user = {
             "id": result["data"]["id"],
             "nickName": result["data"]["nickName"],
-            "username": self.current_user["username"],
+            "username": result["data"]["username"],
             "accessToken": self.access_token,
             "refreshToken": self.refresh_token,
-            "isVip": self.is_vip,
+            "isVip": result["data"]["isVip"],
             "vipExpireTime": result["data"]['vipExpireTime'],
             "inviteCode": result["data"]["inviteCode"],
         }
-        # 更新刷新令牌到本地
-        self.database_manager.update_user_refresh_token(self.current_user["username"], self.refresh_token)
         # 判断是否为vip用户
         if not self.current_user['isVip']:
             self.is_vip = False
@@ -1113,6 +1132,9 @@ class MyForm(MainAcrylicWindow, Ui_Form):
 
     def on_hotkey_triggered(self):
         """快捷键进入退出动画"""
+        # 如果登录窗口展示则不处理动画
+        if self.start_login_view:
+            return
         try:
             # 直接使用Qt方法置顶窗口
             self.raise_()
@@ -1154,9 +1176,12 @@ class MyForm(MainAcrylicWindow, Ui_Form):
     ''' **********************************其他*************************************** '''
 
     def show_hide_form(self, click_button):
-        """右键不处理动画"""
+        """显示或隐藏窗口"""
         # 右键不处理动画
         if click_button is not None and click_button == QSystemTrayIcon.ActivationReason.Context:
+            return
+        # 如果登录窗口展示则不处理动画
+        if self.start_login_view:
             return
         # 当前时间戳
         current_time = int(round(time.time() * 1000))

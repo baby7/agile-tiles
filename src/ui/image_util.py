@@ -145,12 +145,6 @@ def screenshot(widget):
         painter.fillRect(widget.rect(), Qt.GlobalColor.transparent)  # 清理原有内容
         painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceOver)
         painter.scale(scale_factor, scale_factor)
-        # 添加界面刷新
-        widget.repaint()
-        # 增加渲染等待时间
-        start_time = time.time()
-        while time.time() - start_time < 1:  # 等待100ms确保渲染完成
-            QApplication.processEvents()
         # 添加必要的参数调用 render 方法
         target_offset = QPoint()  # 目标偏移量
         source_region = QRegion(widget.rect())  # 源区域

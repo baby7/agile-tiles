@@ -299,6 +299,9 @@ def check_hide_window(main_window):
 
 def trigger_show_animation(main_window):
     """ 触发显示动画 """
+    # 如果登录窗口展示则不处理动画
+    if main_window.start_login_view:
+        return
     if not main_window.show_form:
         # print("鼠标触发,显示窗口")
         main_window.toolkit.resolution_util.in_animation(main_window)
@@ -307,6 +310,9 @@ def trigger_show_animation(main_window):
 
 def trigger_hide_animation(main_window):
     """ 触发隐藏动画 """
+    # 如果登录窗口展示则不处理动画
+    if main_window.start_login_view:
+        return
     if main_window.show_form:
         # print("鼠标触发,隐藏窗口")
         main_window.toolkit.resolution_util.out_animation(main_window)

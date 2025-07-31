@@ -5,6 +5,7 @@ from PySide6.QtGui import Qt, QFont, QPixmap
 from PySide6.QtCore import Signal, QTimer
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QLayout, QStackedLayout, QWidget
 
+from src.client import common
 from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 from src.component.LoadAnimation.LoadAnimation import LoadAnimation
 from src.module.Pay.payment_result_page import PaymentResultPage
@@ -210,7 +211,7 @@ class QrPopup(AgileTilesAcrylicWindow):
 
         # 协议提示
         agreement_info = QLabel(
-            '开通前请阅读<a href="http://www.baby7blog.com:8787/agreement.html#%E7%94%A8%E6%88%B7%E5%8D%8F%E8%AE%AE"><span style="color: #4d90fe; text-decoration: underline;">《会员协议》</span></a>')
+            f'开通前请阅读<a href="{common.user_agreement_url}"><span style="color: #4d90fe; text-decoration: underline;">《用户协议》</span></a>')
         agreement_info.setAlignment(Qt.AlignmentFlag.AlignCenter)
         agreement_info.setOpenExternalLinks(True)
         agreement_info_font = QFont()
