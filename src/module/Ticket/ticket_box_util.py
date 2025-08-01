@@ -130,7 +130,7 @@ class TicketListPopup(AgileTilesAcrylicWindow):
         """加载工单列表"""
         # 初始化工单系统
         if not hasattr(self.use_parent, 'ticket_system'):
-            self.use_parent.ticket_system = TicketSystem(self.use_parent, self.use_parent.access_token)
+            self.use_parent.ticket_system = TicketSystem(self.use_parent)
 
         # 获取工单列表
         self.use_parent.ticket_system.fetch_tickets(

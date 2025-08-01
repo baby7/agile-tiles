@@ -265,7 +265,7 @@ class TicketDetailPopup(AgileTilesAcrylicWindow):
         """从服务器加载工单详情"""
         # 使用TicketSystem类获取工单详情
         if not hasattr(self.use_parent, 'ticket_system'):
-            self.use_parent.ticket_system = TicketSystem(self.use_parent, self.use_parent.access_token)
+            self.use_parent.ticket_system = TicketSystem(self.use_parent)
 
         self.use_parent.ticket_system.fetch_ticket_details(
             self.ticket_id,
@@ -468,7 +468,7 @@ class TicketDetailPopup(AgileTilesAcrylicWindow):
 
         # 使用TicketSystem类关闭工单
         if not hasattr(self.use_parent, 'ticket_system'):
-            self.use_parent.ticket_system = TicketSystem(self.use_parent, self.use_parent.access_token)
+            self.use_parent.ticket_system = TicketSystem(self.use_parent)
 
         self.use_parent.ticket_system.close_ticket(
             self.ticket_id,

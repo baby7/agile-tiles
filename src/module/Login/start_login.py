@@ -241,7 +241,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 登录成功
             self.user_data_status = "login_success"
             self.is_login = True
-            self.is_vip = result["data"]['isVip']
+            self.is_vip = result["data"]['vipStatus']
             self.user_data = result["data"]
             self.access_token = "Bearer " + result["data"]["accessToken"]
             self.refresh_token = result["data"]["refreshToken"]

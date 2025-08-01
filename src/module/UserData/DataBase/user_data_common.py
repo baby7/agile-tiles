@@ -7,7 +7,7 @@ setting_config = {
     "themeTransparency": 100,           # 窗口透明度
 
     "wakeUpByKeyboard": True,           # 是否启用快捷唤醒
-    "wakeUpByKeyboardType": "Alt+1",    # 唤醒快捷键
+    "wakeUpByKeyboardType": "Ctrl+1",    # 唤醒快捷键
 
     "screenName": None,                 # 屏幕名称
     "windowPosition": "Left",           # 窗口位置

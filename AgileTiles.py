@@ -349,14 +349,14 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             self.is_login = True
             self.access_token = "Bearer " + result_data['accessToken']
             self.refresh_token = result_data['refreshToken']
-            self.is_vip = result_data['isVip']
+            self.is_vip = result_data['vipStatus']
             self.current_user = {
                 "id": result_data["id"],
                 "nickName": result_data["nickName"],
                 "username": self.current_user["username"],
                 "accessToken": self.access_token,
                 "refreshToken": self.refresh_token,
-                "isVip": self.is_vip,
+                "vipStatus": self.is_vip,
                 "vipExpireTime": result_data['vipExpireTime'],
                 "inviteCode": result_data["inviteCode"],
             }
@@ -968,12 +968,12 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             "username": result["data"]["username"],
             "accessToken": self.access_token,
             "refreshToken": self.refresh_token,
-            "isVip": result["data"]["isVip"],
+            "vipStatus": result["data"]["vipStatus"],
             "vipExpireTime": result["data"]['vipExpireTime'],
             "inviteCode": result["data"]["inviteCode"],
         }
         # 判断是否为vip用户
-        if not self.current_user['isVip']:
+        if not self.current_user['vipStatus']:
             self.is_vip = False
             return
         # vip用户需要做数据同步
