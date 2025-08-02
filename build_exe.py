@@ -21,7 +21,7 @@ if os.path.exists("out/AgileTiles.build"):
     shutil.rmtree("out/AgileTiles.build")
     print("完成删除 out/AgileTiles.build 文件夹")
 
-# 步骤3: 执行 Nuitka 编译命令
+# 步骤3: 执行 Nuitka 2.7.12 编译命令
 print("开始执行 Nuitka 编译命令")
 nuitka_command = [
     "nuitka",
@@ -33,8 +33,11 @@ nuitka_command = [
 
     "--enable-plugin=pyside6",                      # 使用 PySide6 插件
     "--disable-plugin=pyqt5,pyqt6",                 # 禁用 PyQt5 和 PyQt6 插件
-    "--include-qt-plugins=mediaservice,multimedia", # 音乐播放器需要用到mediaservice,multimedia
-    
+    "--include-qt-plugins=multimedia", # 音乐播放器需要用到mediaservice,multimedia
+    "--include-package=wmi",                        # wmi包
+    "--include-package=win32com",                   # pywin32的核心包
+    "--include-package=pywintypes",                 # pywin32的核心包
+
     "--windows-icon-from-ico=static/img/icon/light/icon.ico",    # 图标路径
     "--output-dir=out",                             # 输出目录
 
