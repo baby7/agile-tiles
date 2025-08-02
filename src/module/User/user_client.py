@@ -3,6 +3,7 @@ import json
 from PySide6.QtCore import QObject, Signal, QUrl
 from PySide6.QtNetwork import QNetworkRequest, QNetworkReply
 import src.client.common as common
+from src.constant import version_constant
 from src.network_manager.ExtendedNetworkManager.ExtendedNetworkManager import ExtendedNetworkManager
 
 
@@ -32,7 +33,7 @@ class UserClient(QObject):
         self.network_manager_refresh = ExtendedNetworkManager(self)
         self.network_manager_refresh.finished.connect(self._handle_reply_refresh)
 
-    def login(self, username, password, hardware_id):
+    def login(self, username, password, hardware_id, os_version=None):
         """用户登录"""
         print(f"用户登录...{hardware_id}")
         url = common.BASE_URL + "/user/public/login"
@@ -42,8 +43,11 @@ class UserClient(QObject):
         data = {
             'username': username,
             'password': password,
-            'deviceId': hardware_id
+            'deviceId': hardware_id,
+            'version': str(version_constant.get_current_version())
         }
+        if os_version is not None:
+            data['osVersion'] = os_version
         # 发送异步请求
         self.network_manager_login.post(request, json.dumps(data).encode('utf-8'))
 
@@ -110,7 +114,7 @@ class UserClient(QObject):
         # 发送异步请求
         self.network_manager_info.get(request)
 
-    def refresh(self, username, refresh_token, hardware_id):
+    def refresh(self, username, refresh_token, hardware_id, os_version=None):
         """刷新令牌"""
         print(f"正在刷新令牌...{hardware_id}")
         url = common.BASE_URL + "/user/public/refresh"
@@ -120,8 +124,11 @@ class UserClient(QObject):
         data = {
             'username': username,
             'refreshToken': refresh_token,
-            'deviceId': hardware_id
+            'deviceId': hardware_id,
+            'version': str(version_constant.get_current_version())
         }
+        if os_version is not None:
+            data['osVersion'] = os_version
         # 发送异步请求
         self.network_manager_refresh.post(request, json.dumps(data).encode('utf-8'))
 

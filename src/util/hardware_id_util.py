@@ -2,6 +2,7 @@ import hashlib
 import platform
 import subprocess
 import re
+import wmi
 
 
 def get_hardware_id():
@@ -14,7 +15,6 @@ def get_hardware_id():
 
         # Windows系统
         if os_name == "Windows":
-            import wmi
             c = wmi.WMI()
 
             # 主板信息
@@ -84,7 +84,66 @@ def get_hardware_id():
     return hashlib.sha256(system_info.encode()).hexdigest()
 
 
+def get_os_version():
+    """
+    获取操作系统的详细版本信息。
+    返回值格式示例：Microsoft Windows 11 企业版 10.0.22631 Build 22631
+    """
+    os_name = platform.system()
+    os_version = ""
+
+    try:
+        # Windows 系统
+        if os_name == "Windows":
+            c = wmi.WMI()
+
+            # 获取操作系统信息
+            for os in c.Win32_OperatingSystem():
+                caption = os.Caption.strip() if os.Caption else ""
+                version = os.Version.strip() if os.Version else ""
+                build_number = os.BuildNumber.strip() if os.BuildNumber else ""
+                os_version = f"{caption} {version} Build {build_number}"
+                break
+
+        # Linux 系统
+        elif os_name == "Linux":
+            # 使用 `platform` 模块获取通用信息
+            distro_info = " ".join(platform.linux_distribution())
+            uname_info = platform.uname()
+            os_version = f"{distro_info} {uname_info.release}"
+
+        # macOS 系统
+        elif os_name == "Darwin":
+            result = subprocess.run(
+                ["sw_vers"],
+                capture_output=True,
+                text=True
+            )
+            info = {}
+            for line in result.stdout.splitlines():
+                match = re.match(r"(\w+):\s+(.+)", line)
+                if match:
+                    key, value = match.groups()
+                    info[key] = value.strip()
+
+            os_version = (
+                f"macOS {info.get('ProductVersion', '')} "
+                f"Build {info.get('BuildVersion', '')}"
+            )
+
+        # 其他系统（使用平台默认标识）
+        else:
+            os_version = platform.platform()
+
+    except Exception as e:
+        # 异常时使用平台默认标识
+        os_version = platform.platform()
+
+    return os_version.strip()
+
+
 # 使用示例
 # if __name__ == "__main__":
 #     machine_id = get_hardware_id()
 #     print(f"本机唯一标识: {machine_id}")
+#     print(f"操作系统版本: {get_os_version()}")

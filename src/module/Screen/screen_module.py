@@ -14,6 +14,8 @@ from win32api import GetMonitorInfo, MonitorFromPoint
 from PySide6.QtCore import QSequentialAnimationGroup, QPropertyAnimation, QRect, QEasingCurve
 from PySide6.QtWidgets import QApplication
 
+from src.module.UserData.DataBase import user_data_common
+
 
 def get_windows_width_and_height(main_window):
     desktop = get_screen(main_window)
@@ -81,9 +83,10 @@ def load_data(main_window):
     :param main_window: 主窗口
     """
     if (main_window.main_data is None or main_window.main_data["data"] is None
-            or main_window.main_data["data"]["SettingCard"] is None
-            or main_window.main_data["data"]["SettingCard"][main_window.hardware_id] is None):
+            or main_window.main_data["data"]["SettingCard"] is None):
         return
+    if main_window.hardware_id not in main_window.main_data["data"]["SettingCard"]:
+        main_window.main_data["data"]["SettingCard"][main_window.hardware_id] = user_data_common.setting_config
     setting_data = main_window.main_data["data"]["SettingCard"][main_window.hardware_id]
     # 选择的屏幕
     main_window.form_screen_name = setting_data['screenName']

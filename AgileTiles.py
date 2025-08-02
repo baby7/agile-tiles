@@ -87,6 +87,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
     info_logger = None                      # 日志
     # 设备id
     hardware_id = None
+    os_version = None
     # 线程列表
     main_thread_object = None               # 主线程
     normal_card_thread_object_list = []     # 普通卡片线程列表
@@ -168,8 +169,9 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         # 窗口置顶
         self.setWindowFlag(Qt.WindowType.ToolTip)
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint)
-        # 设置主机id
+        # 设置主机id和系统版本
         self.hardware_id = hardware_id_util.get_hardware_id()
+        self.os_version = hardware_id_util.get_os_version()
         # 工具包
         self.toolkit = Toolkit(self, self)
         # 图片缓存管理器
@@ -308,7 +310,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
 
             # 进行登录(其实是刷新令牌获取accessToken)
             print("进行登录(其实是刷新令牌获取accessToken)")
-            self.start_user_info_client.refresh(username, refresh_token, self.hardware_id)
+            self.start_user_info_client.refresh(username, refresh_token, self.hardware_id, self.os_version)
         except Exception as e:
             print(f"do_login error: {str(e)}")
 
@@ -958,7 +960,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             if self.start_login_view:
                 return
             # 更新令牌
-            self.user_info_client.refresh(self.current_user["username"], self.refresh_token, self.hardware_id)
+            self.user_info_client.refresh(self.current_user["username"], self.refresh_token, self.hardware_id, self.os_version)
         except Exception:
             traceback.print_exc()
 

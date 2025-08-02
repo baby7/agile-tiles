@@ -219,7 +219,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             self.password = self.line_edit_user_login_password.text()
             # 发起登录请求
             print(f"发起登录请求,密码:{self.password}")
-            self.start_user_login_client.login(self.username, self.password, self.use_parent.hardware_id)
+            self.start_user_login_client.login(self.username, self.password, self.use_parent.hardware_id, self.use_parent.os_version)
             # 显示加载层
             self.show_overlay("登录中...")
         except Exception as e:

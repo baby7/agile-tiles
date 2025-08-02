@@ -1,3 +1,5 @@
+from src.module.UserData.DataBase import user_data_common
+
 
 def init_theme(main_window):
     """
@@ -14,9 +16,10 @@ def load_data(main_window):
     :param main_window: 主窗口
     """
     if (main_window.main_data is None or main_window.main_data["data"] is None
-            or main_window.main_data["data"]["SettingCard"] is None
-            or main_window.main_data["data"]["SettingCard"][main_window.hardware_id] is None):
+            or main_window.main_data["data"]["SettingCard"] is None):
         return
+    if main_window.hardware_id not in main_window.main_data["data"]["SettingCard"]:
+        main_window.main_data["data"]["SettingCard"][main_window.hardware_id] = user_data_common.setting_config
     setting_data = main_window.main_data["data"]["SettingCard"][main_window.hardware_id]
     # 主题色
     main_window.form_theme = setting_data["theme"]
@@ -35,9 +38,10 @@ def load_data(main_window):
 
 def change_theme_data(main_window):
     if (main_window.main_data is None or main_window.main_data["data"] is None
-            or main_window.main_data["data"]["SettingCard"] is None
-            or main_window.main_data["data"]["SettingCard"][main_window.hardware_id] is None):
+            or main_window.main_data["data"]["SettingCard"] is None):
         return
+    if main_window.hardware_id not in main_window.main_data["data"]["SettingCard"]:
+        main_window.main_data["data"]["SettingCard"][main_window.hardware_id] = user_data_common.setting_config
     if main_window.is_dark:
         main_window.form_them = "Light"
         main_window.is_dark = False
