@@ -6,10 +6,12 @@ from functools import partial
 from PySide6.QtGui import QPixmap, QIcon
 from PySide6.QtWidgets import QFileDialog
 
+from src.client import common
 from src.constant import data_save_constant
 # 初始化日志
 import src.ui.style_util as style_util
 import src.module.Box.message_box_util as message_box_util
+from src.module.SubscriptionHistory import subscription_history_box_util
 from src.module.UserData.HistoryRecover.user_data_history_recover import UserServerRecoverWindow
 
 
@@ -64,7 +66,8 @@ def init_click_connect(main_object):
     main_object.push_button_area_user_vip_power_4.clicked.connect(partial(push_button_area_user_vip_power_4_click, main_object))
     main_object.push_button_area_user_vip_power_5.clicked.connect(partial(push_button_area_user_vip_power_5_click, main_object))
     main_object.push_button_area_user_vip_power_6.clicked.connect(partial(push_button_area_user_vip_power_6_click, main_object))
-
+    main_object.push_button_area_user_vip_info.clicked.connect(partial(push_button_area_user_vip_info_click, main_object))
+    main_object.push_button_area_user_vip_subscription_history.clicked.connect(partial(push_button_area_user_vip_subscription_history_click, main_object))
 
 def push_button_area_user_vip_power_1_click(main_object):
     try:
@@ -84,7 +87,7 @@ def push_button_area_user_vip_power_2_click(main_object):
 
 def push_button_area_user_vip_power_3_click(main_object):
     try:
-        content = "非会员用户可以每天使用3次AI大模型对话，会员用户可以无限制使用。未来会开放更多智能体。\n用户可以在菜单->智能对话处进行对话哦~"
+        content = "非会员用户可以每天使用5次AI大模型对话，会员用户每天1000次AI大模型对话。未来会开放更多智能体。\n用户可以在菜单->智能对话处进行对话哦~"
         main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-AI大模型对话", {"content": content, "size": [300, 200]})
     except Exception as e:
         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
@@ -92,7 +95,7 @@ def push_button_area_user_vip_power_3_click(main_object):
 
 def push_button_area_user_vip_power_4_click(main_object):
     try:
-        content = "非会员用户可以每天使用10次翻译功能，会员用户可以无限制使用。\n用户可以在菜单->翻译处进行翻译哦~"
+        content = "非会员用户可以每天使用10次翻译功能，会员用户每天1000次翻译功能。\n用户可以在菜单->翻译处进行翻译哦~"
         main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-翻译", {"content": content, "size": [300, 200]})
     except Exception as e:
         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
@@ -114,6 +117,27 @@ def push_button_area_user_vip_power_6_click(main_object):
         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
         message_box_util.box_information(main_object, "错误信息", "查看会员权益失败")
 
+def push_button_area_user_vip_info_click(main_object):
+    try:
+        main_object.toolkit.browser_util.open_url(common.price_url)
+    except Exception as e:
+        main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
+        message_box_util.box_information(main_object, "错误信息", "查看会员权益失败")
+
+def push_button_area_user_vip_subscription_history_click(main_object):
+    try:
+        if not main_object.is_login:
+            message_box_util.box_information(main_object, "提示信息", "请先登录")
+            return
+        # 窗口仅能存在一个
+        if main_object.subscription_history_dialog is not None and main_object.subscription_history_dialog.isVisible():
+            main_object.toolkit.message_box_util.box_information(main_object, "提示", "会员订阅记录窗口仅能存在一个哦~")
+            return
+        subscription_history_box_util.show_subscription_history_dialog(main_object=main_object, current_user=main_object.current_user)
+    except Exception as e:
+        main_object.info_logger.card_error("主程序", "查看会员订阅记录失败,错误信息:{}".format(e))
+        message_box_util.box_information(main_object, "错误信息", "查看会员订阅记录失败")
+
 
 def push_button_area_user_vip_subscription_click(main_object):
     """
@@ -123,7 +147,11 @@ def push_button_area_user_vip_subscription_click(main_object):
         if not main_object.is_login:
             message_box_util.box_information(main_object, "提示信息", "请先登录")
             return
-        main_object.toolkit.qr_code_box_util.show_qr_code_dialog(main_object, "支付宝支付")
+        # 窗口仅能存在一个
+        if main_object.qr_code_dialog is not None and main_object.qr_code_dialog.isVisible():
+            main_object.toolkit.message_box_util.box_information(main_object, "提示", "支付窗口仅能存在一个哦~")
+            return
+        main_object.qr_code_dialog = main_object.toolkit.qr_code_box_util.show_qr_code_dialog(main_object, "支付宝支付")
     except Exception as e:
         main_object.info_logger.card_error("主程序", "续费或开通会员失败,错误信息:{}".format(e))
         message_box_util.box_information(main_object, "错误信息", "续费或开通会员失败")
@@ -140,7 +168,7 @@ def push_button_area_user_invite_code_click(main_object):
         invite_code = main_object.current_user["inviteCode"]
         main_object.toolkit.text_box_util.show_text_dialog(
             main_object, "邀请码",
-            {"content": f"欢迎您体验使用灵卡面板，官网: http://www.baby7blog.com:8787/index.html，下载后，在注册时填写邀请码 {invite_code} 即可获得七天会员权益哦~", "size": [300, 200]}
+            {"content": f"欢迎您体验使用灵卡面板，官网: {common.index_url}，下载后，在注册时填写邀请码 {invite_code} 即可获得七天会员权益哦~", "size": [300, 200]}
         )
     except Exception as e:
         main_object.info_logger.card_error("主程序", "复制邀请码失败,错误信息:{}".format(e))
@@ -218,11 +246,10 @@ def push_button_area_user_data_recover_click(main_object):
             message_box_util.box_information(main_object, "提示信息", "会员专属功能，请开通会员后使用哦")
             return
         main_object.toolkit.resolution_util.out_animation(main_object)
-        # 关闭并销毁旧窗口（新增部分）
-        if hasattr(main_object, 'user_server_recover_win'):
-            main_object.user_server_recover_win.close()
-            main_object.user_server_recover_win.deleteLater()
-            del main_object.user_server_recover_win
+        # 窗口仅能存在一个
+        if main_object.user_server_recover_win is not None and main_object.user_server_recover_win.isVisible():
+            main_object.toolkit.message_box_util.box_information(main_object, "提示", "恢复历史数据窗口仅能存在一个哦~")
+            return
         main_object.user_server_recover_win = UserServerRecoverWindow(None, main_object)
         main_object.user_server_recover_win.refresh_geometry(main_object.toolkit.resolution_util.get_screen(main_object))
         main_object.user_server_recover_win.show()

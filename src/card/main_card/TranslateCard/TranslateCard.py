@@ -337,10 +337,10 @@ class TranslateCard(MainCard):
     def set_info_bar(self, today_calls):
         # 根据会员状态显示不同信息
         if self.main_object.is_vip:
-            text = f"会员用户无对话次数限制，今天已使用{today_calls}次"
+            text = f"会员用户每天限制1000次翻译，今天已使用{today_calls}次"
             color = "rgba(4, 115, 247, 0.8)"
         else:
-            text = f"非会员每天限制10次对话，今天已使用{today_calls}次"
+            text = f"非会员每天限制10次翻译，今天已使用{today_calls}次"
             color = "rgba(243, 207, 19, 0.8)"
 
         # 根据主题设置背景

@@ -151,6 +151,9 @@ class MyForm(MainAcrylicWindow, Ui_Form):
     update_red_dot = None   # 更新提示红点
     # VIP相关
     ticket_vip_sign = None
+    qr_code_dialog = None            # 支付窗口
+    user_server_recover_win = None   # 恢复历史数据窗口
+    subscription_history_dialog = None   # 会员订阅记录窗口
     # 其他
     theme_switch_button = None
     silent_updater = None
@@ -271,9 +274,11 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             exit()
         # 判断用户是否登录，未登录则退出程序
         if self.current_user is None:
-            self.quit_before(is_hide_dialog=True)
-            print("用户未登录")
-            exit()
+            self.current_user = self.database_manager.get_current_user()
+            if self.current_user is None:
+                self.quit_before(is_hide_dialog=True)
+                print("流程1:用户未登录")
+                exit()
         # 执行登录后的操作
         print("准备执行登录后的操作")
         self.do_login()
@@ -335,9 +340,10 @@ class MyForm(MainAcrylicWindow, Ui_Form):
                 # 打开登录窗口手动登录
                 self.show_start_login_window()
                 # 判断用户是否登录，未登录则退出程序
+                self.current_user = self.database_manager.get_current_user()
                 if self.current_user is None or self.login_restart_data is None:
                     self.quit_before(is_hide_dialog=True)
-                    print("用户未登录")
+                    print("流程2:用户未登录")
                     exit()
                 result = self.login_restart_data
                 self.user_data_status = "login_restart"
@@ -393,6 +399,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
     def save_user(self, username, refresh_token):
         register_success = self.database_manager.register_user(username, refresh_token)
         if not register_success:
+            print("保存用户失败，已更新用户信息")
             self.database_manager.update_user_refresh_token(username, refresh_token)
         self.database_manager.update_last_login(username)
 

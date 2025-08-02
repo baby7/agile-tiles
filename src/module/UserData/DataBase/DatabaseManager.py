@@ -81,6 +81,7 @@ class DatabaseManager:
             )
             result = cursor.fetchone()
             if not result:
+                print("没有最近登录的用户")
                 return None
             return {
                 "username": result[0],

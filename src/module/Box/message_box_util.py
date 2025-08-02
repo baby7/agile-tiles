@@ -1,17 +1,18 @@
-from PySide6.QtCore import QSettings
+from PySide6.QtCore import QSettings, QTimer
 from PySide6.QtWidgets import QLineEdit, QPushButton, QWidget, QHBoxLayout, QLabel, QVBoxLayout, QDialog, QProgressBar
 import src.ui.style_util as style_util
 
 from src.component.AgileTilesFramelessDialog.AgileTilesFramelessDialog import AgileTilesFramelessDialog
 
 
-def box_information(widget, title, content, button_ok_text="确定"):
+def box_information(widget, title, content, button_ok_text="确定", close_seconds=None):
     """
     消息通知弹窗
     :param widget: 需要绑定的widget
     :param title: 标题
     :param content: 内容
     :param button_ok_text: 确认按钮文本
+    :param close_seconds: 自动关闭的时间（秒），传入 None 则不自动关闭
     """
     # 获取窗口构建信息
     is_dark = None
@@ -66,6 +67,13 @@ def box_information(widget, title, content, button_ok_text="确定"):
     dialog.resize(360, 160)  # 更紧凑的默认尺寸
     if hasattr(widget, "toolkit"):
         dialog.refresh_geometry(widget.toolkit.resolution_util.get_screen(widget))
+
+    # 如果传入了秒参数，则设置定时器
+    if close_seconds is not None and close_seconds > 0:
+        timer = QTimer(dialog)
+        timer.setSingleShot(True)  # 单次触发
+        timer.timeout.connect(dialog.accept)  # 定时器触发后关闭窗口
+        timer.start(int(close_seconds * 1000))  # 转换为毫秒
 
     dialog.exec()
 

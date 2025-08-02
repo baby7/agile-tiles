@@ -360,7 +360,7 @@ class Ui_Form(object):
 
         self.push_button_area_user_vip_subscription = QPushButton(self.tab_11)
         self.push_button_area_user_vip_subscription.setObjectName(u"push_button_area_user_vip_subscription")
-        self.push_button_area_user_vip_subscription.setMinimumSize(QSize(80, 22))
+        self.push_button_area_user_vip_subscription.setMinimumSize(QSize(85, 22))
         font5 = QFont()
         font5.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
         font5.setPointSize(10)
@@ -376,6 +376,21 @@ class Ui_Form(object):
 "}")
 
         self.verticalLayout_4.addWidget(self.push_button_area_user_vip_subscription)
+
+        self.push_button_area_user_vip_subscription_history = QPushButton(self.tab_11)
+        self.push_button_area_user_vip_subscription_history.setObjectName(u"push_button_area_user_vip_subscription_history")
+        self.push_button_area_user_vip_subscription_history.setMinimumSize(QSize(85, 22))
+        self.push_button_area_user_vip_subscription_history.setFont(font5)
+        self.push_button_area_user_vip_subscription_history.setStyleSheet(u"QPushButton {\n"
+"border-radius:10px;\n"
+"background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 rgb(255, 178, 0), stop:1 rgb(254, 232, 67));\n"
+"color: white;\n"
+"}\n"
+"QPushButton:hover {\n"
+"background-color: qlineargradient(x1:1, y1:0, x2:0, y2:0,stop:0 rgb(255, 178, 0), stop:1 rgb(254, 232, 67));\n"
+"}")
+
+        self.verticalLayout_4.addWidget(self.push_button_area_user_vip_subscription_history)
 
         self.label_area_user_vip_info = QLabel(self.tab_11)
         self.label_area_user_vip_info.setObjectName(u"label_area_user_vip_info")
@@ -476,6 +491,25 @@ class Ui_Form(object):
         self.horizontalSpacer_15 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_19.addItem(self.horizontalSpacer_15)
+
+        self.push_button_area_user_vip_info = QPushButton(self.widget_area_user_vip_power_bg)
+        self.push_button_area_user_vip_info.setObjectName(u"push_button_area_user_vip_info")
+        self.push_button_area_user_vip_info.setMinimumSize(QSize(85, 22))
+        font8 = QFont()
+        font8.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
+        font8.setPointSize(9)
+        font8.setBold(True)
+        self.push_button_area_user_vip_info.setFont(font8)
+        self.push_button_area_user_vip_info.setStyleSheet(u"QPushButton {\n"
+"border-radius:10px;\n"
+"background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 rgb(0, 145, 255), stop:1 rgb(92, 22, 255));\n"
+"color: white;\n"
+"}\n"
+"QPushButton:hover {\n"
+"background-color: qlineargradient(x1:1, y1:0, x2:0, y2:0,stop:0 rgb(0, 145, 255), stop:1 rgb(92, 22, 255));\n"
+"}")
+
+        self.horizontalLayout_19.addWidget(self.push_button_area_user_vip_info)
 
 
         self.verticalLayout_15.addLayout(self.horizontalLayout_19)
@@ -738,12 +772,12 @@ class Ui_Form(object):
 
         self.label_user_login_invite_title = QLabel(self.widget_area_user_invite_bg)
         self.label_user_login_invite_title.setObjectName(u"label_user_login_invite_title")
-        font8 = QFont()
-        font8.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
-        font8.setPointSize(12)
-        font8.setBold(True)
-        font8.setItalic(True)
-        self.label_user_login_invite_title.setFont(font8)
+        font9 = QFont()
+        font9.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
+        font9.setPointSize(12)
+        font9.setBold(True)
+        font9.setItalic(True)
+        self.label_user_login_invite_title.setFont(font9)
         self.label_user_login_invite_title.setStyleSheet(u"border: 0px solid #FF8D16;\n"
 "border-radius: 0px;\n"
 "background-color: rgba(0, 0, 0, 0);\n"
@@ -765,11 +799,7 @@ class Ui_Form(object):
         self.push_button_area_user_invite_code = QPushButton(self.widget_area_user_invite_bg)
         self.push_button_area_user_invite_code.setObjectName(u"push_button_area_user_invite_code")
         self.push_button_area_user_invite_code.setMinimumSize(QSize(80, 22))
-        font9 = QFont()
-        font9.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
-        font9.setPointSize(9)
-        font9.setBold(True)
-        self.push_button_area_user_invite_code.setFont(font9)
+        self.push_button_area_user_invite_code.setFont(font8)
         self.push_button_area_user_invite_code.setStyleSheet(u"QPushButton {\n"
 "border-radius:10px;\n"
 "background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 rgb(0, 145, 255), stop:1 rgb(92, 22, 255));\n"
@@ -1054,9 +1084,11 @@ class Ui_Form(object):
         self.label_area_user_message_nick_name.setText(QCoreApplication.translate("Form", u"\u6635\u79f0", None))
         self.label_area_user_message_username.setText(QCoreApplication.translate("Form", u"\u7528\u6237\u540d", None))
         self.push_button_area_user_vip_subscription.setText(QCoreApplication.translate("Form", u"\u7eed\u8d39", None))
+        self.push_button_area_user_vip_subscription_history.setText(QCoreApplication.translate("Form", u"\u67e5\u770b\u8ba2\u9605\u8bb0\u5f55", None))
         self.label_area_user_vip_info.setText(QCoreApplication.translate("Form", u"\u6709\u6548\u671f:9999-01-01", None))
         self.label_area_user_vip_icon.setText("")
         self.label_user_login_title_14.setText(QCoreApplication.translate("Form", u"\u4f1a\u5458\u6743\u76ca", None))
+        self.push_button_area_user_vip_info.setText(QCoreApplication.translate("Form", u"\u67e5\u770b\u8be6\u7ec6\u6743\u76ca", None))
         self.label_area_user_vip_info_2.setText(QCoreApplication.translate("Form", u"\u5f00\u901a\u4f1a\u5458\u4eab\u53d7\u6570\u636e\u540c\u6b65\u7b49\u591a\u9879\u670d\u52a1", None))
         self.push_button_area_user_vip_power_1.setText("")
         self.label_27.setText(QCoreApplication.translate("Form", u"\u4e91\u7aef\u6570\u636e\u5907\u4efd", None))

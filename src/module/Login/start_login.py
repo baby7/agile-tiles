@@ -247,15 +247,18 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             self.refresh_token = result["data"]["refreshToken"]
             # 存储用户信息
             self.use_parent.save_user(self.username, self.refresh_token)
+            # 登录成功后，保存用户数据直接给刷新后无法获取数据的逻辑中使用
+            self.use_parent.login_restart_data = result
             # 非vip用户直接展示成功
             if not self.is_vip:
                 # 隐藏加载层
-                message_box_util.box_information(self, "提示信息", "登录成功")
+                message_box_util.box_information(self, "提示信息", "登录成功", close_seconds=2)
                 self.hide_overlay()
-                self.use_parent.login_restart_data = result     # 登录成功后，保存用户数据直接给刷新后无法获取数据的逻辑中使用
                 self.end_login_logic()
             else:
                 self.user_data_status = "load_server_data"
+                current_user = self.use_parent.get_current_user()
+                self.use_parent.set_current_user(current_user)
                 # 对于vip用户，需要进行数据同步
                 self.start_user_data_client.pull_data(self.username, self.access_token)
                 # 显示加载层

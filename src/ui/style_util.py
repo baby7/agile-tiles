@@ -1,7 +1,7 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont, QPalette, QColor
 from PySide6.QtWidgets import QComboBox, QPushButton, QCheckBox, QLineEdit, QSpinBox, QTextEdit, QRadioButton, \
-    QFontComboBox, QFrame, QBoxLayout, QWidget, QToolTip, QDateEdit, QTabWidget
+    QFontComboBox, QFrame, QBoxLayout, QWidget, QToolTip, QDateEdit, QTabWidget, QTableWidget
 from qframelesswindow import TitleBar
 from qframelesswindow.titlebar import MinimizeButton, MaximizeButton, CloseButton
 
@@ -823,6 +823,144 @@ def set_progress_bar_style(progress_bar, is_dark):
 '''
 
 '''
+**********************************表格 · 开始***************************************
+↓                                                                                 ↓
+'''
+table_widget_style = """
+/* 表格整体样式 */
+QTableWidget {
+    gridline-color: #E0E0E0;
+    background-color: #FFFFFF;
+    color: #333333;
+    border: 1px solid #E1E1E1;
+    border-radius: 4px;
+}
+
+/* 表头样式 */
+QHeaderView::section {
+    background-color: #F5F5F5;
+    color: #444444;
+    padding: 4px;
+    border: none;
+    border-bottom: 2px solid #0078D7;
+    font-weight: bold;
+}
+
+QHeaderView {
+    background-color: #F0F0F0;
+}
+
+/* 行样式 */
+QTableWidget::item {
+    padding: 6px;
+    border-bottom: 1px solid #EEEEEE;
+}
+
+QTableWidget::item:selected {
+    background-color: #E3F2FD;
+    color: #0066CC;
+}
+
+/* 交替行颜色 */
+QTableWidget::item:nth-child(even) {
+    background-color: #FAFAFA;
+}
+
+QTableWidget::item:nth-child(odd) {
+    background-color: #FFFFFF;
+}
+
+/* 滚动条样式 */
+QScrollBar:vertical {
+    background: #F8F8F8;
+    width: 12px;
+}
+
+QScrollBar::handle:vertical {
+    background: #D0D0D0;
+    min-height: 20px;
+    border-radius: 4px;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    background: none;
+}
+"""
+
+table_widget_dark_style = """
+/* 表格整体样式 */
+QTableWidget {
+    gridline-color: #444;
+    background-color: #2D2D30;
+    color: #E0E0E0;
+    border: 1px solid #3F3F46;
+    border-radius: 4px;
+}
+
+/* 表头样式 */
+QHeaderView::section {
+    background-color: #252526;
+    color: #D4D4D4;
+    padding: 4px;
+    border: none;
+    border-bottom: 2px solid #0078D7;
+    font-weight: bold;
+}
+
+QHeaderView {
+    background-color: #1E1E1E;
+}
+
+/* 行样式 */
+QTableWidget::item {
+    padding: 6px;
+    border-bottom: 1px solid #3F3F46;
+}
+
+QTableWidget::item:selected {
+    background-color: #3E3E40;
+    color: #FFFFFF;
+}
+
+/* 交替行颜色 */
+QTableWidget::item:nth-child(even) {
+    background-color: #2D2D30;
+}
+
+QTableWidget::item:nth-child(odd) {
+    background-color: #252526;
+}
+
+/* 滚动条样式 */
+QScrollBar:vertical {
+    background: #1E1E1E;
+    width: 12px;
+}
+
+QScrollBar::handle:vertical {
+    background: #5A5A5A;
+    min-height: 20px;
+    border-radius: 4px;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    background: none;
+}
+"""
+def set_table_widget_style(table_widget, is_dark=False):
+    if is_dark:
+        table_widget.setStyleSheet(table_widget_dark_style)
+    else:
+        table_widget.setStyleSheet(table_widget_style)
+    # 隐藏列标
+    table_widget.verticalHeader().hide()
+
+'''
+↑                                                                                ↑
+**********************************表格 · 结束***************************************
+'''
+
+'''
 **********************************总体调整 · 开始***************************************
 ↓                                                                                 ↓
 '''
@@ -860,6 +998,9 @@ def set_dialog_control_style(widget, is_dark=False):
             continue
         elif isinstance(widget, QTabWidget):
             set_tab_widget_style(widget, is_dark)
+            continue
+        elif isinstance(widget, QTableWidget):
+            set_table_widget_style(widget, is_dark)
             continue
         elif isinstance(widget, QCheckBox):
             set_check_box_style(widget, is_dark)

@@ -703,7 +703,7 @@ color: rgba(0, 0, 0, 0.5);</string>
               <widget class="QPushButton" name="push_button_area_user_vip_subscription">
                <property name="minimumSize">
                 <size>
-                 <width>80</width>
+                 <width>85</width>
                  <height>22</height>
                 </size>
                </property>
@@ -726,6 +726,36 @@ background-color: qlineargradient(x1:1, y1:0, x2:0, y2:0,stop:0 rgb(255, 178, 0)
                </property>
                <property name="text">
                 <string>续费</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="push_button_area_user_vip_subscription_history">
+               <property name="minimumSize">
+                <size>
+                 <width>85</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>思源黑体</family>
+                 <pointsize>10</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+border-radius:10px;
+background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 rgb(255, 178, 0), stop:1 rgb(254, 232, 67));
+color: white;
+}
+QPushButton:hover {
+background-color: qlineargradient(x1:1, y1:0, x2:0, y2:0,stop:0 rgb(255, 178, 0), stop:1 rgb(254, 232, 67));
+}</string>
+               </property>
+               <property name="text">
+                <string>查看订阅记录</string>
                </property>
               </widget>
              </item>
@@ -922,6 +952,36 @@ color: rgb(254, 232, 67);</string>
                      </size>
                     </property>
                    </spacer>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="push_button_area_user_vip_info">
+                    <property name="minimumSize">
+                     <size>
+                      <width>85</width>
+                      <height>22</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>思源黑体</family>
+                      <pointsize>9</pointsize>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+border-radius:10px;
+background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 rgb(0, 145, 255), stop:1 rgb(92, 22, 255));
+color: white;
+}
+QPushButton:hover {
+background-color: qlineargradient(x1:1, y1:0, x2:0, y2:0,stop:0 rgb(0, 145, 255), stop:1 rgb(92, 22, 255));
+}</string>
+                    </property>
+                    <property name="text">
+                     <string>查看详细权益</string>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>

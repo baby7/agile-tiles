@@ -16,6 +16,8 @@ ERROR_RETURN = {"code": 1, "msg": "请求失败", "data": None}
 
 # 默认首页
 index_url = "https://www.agiletiles.com/index.html"
+# 价格页
+price_url = "https://www.agiletiles.com/price.html"
 # 用户协议页
 user_agreement_url = "https://www.agiletiles.com/agreement/user-agreement.html"
 # 隐私政策页
