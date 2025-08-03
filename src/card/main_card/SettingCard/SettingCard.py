@@ -359,8 +359,8 @@ class SettingCard(MainCard):
             return
 
         # 比较版本号
-        if update_info.get("version") == self.main_object.app_version:
-            # 如果相等就表示当前版本是最新版本，隐藏检查更新右上角更新提示
+        if version_constant.compare_version(self.main_object.app_version, update_info.get("version")) >= 0:
+            # 如果当前版本大于等于更新版本，隐藏检查更新右上角更新提示
             if self.main_object.update_red_dot is not None:
                 self.main_object.update_red_dot.hide()
             # 提示用户当前已是最新版本
