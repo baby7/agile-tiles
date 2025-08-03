@@ -186,6 +186,9 @@ update_map_info = {
     "v0.5.7": [
         "修复部分运行问题",
     ],
+    "v0.5.8": [
+        "修复部分运行问题",
+    ],
 }
 
 update_map_date = {
@@ -254,5 +257,32 @@ def gen_download_history_md():
                 update_info += "- " + item + "\n"
         update_info += "\n"
     return update_info
+
+def compare_version(version_1, version_2):
+    # 版本1的主、次、补丁版本
+    version_1_major = version_1.replace("v", "").split(".")[0]
+    version_1_minor = version_1.replace("v", "").split(".")[1]
+    version_1_patch = version_1.replace("v", "").split(".")[2]
+    # 版本2的主、次、补丁版本
+    version_2_major = version_2.replace("v", "").split(".")[0]
+    version_2_minor = version_2.replace("v", "").split(".")[1]
+    version_2_patch = version_2.replace("v", "").split(".")[2]
+    # 比较版本号
+    if version_1_major == version_2_major:
+        if version_1_minor == version_2_minor:
+            if version_1_patch == version_2_patch:
+                return 0
+            elif int(version_1_patch) > int(version_2_patch):
+                return 1
+            else:
+                return -1
+        elif int(version_1_minor) > int(version_2_minor):
+            return 1
+        else:
+            return -1
+    elif int(version_1_major) > int(version_2_major):
+        return 1
+    else:
+        return -1
 
 # print(gen_download_history_md())

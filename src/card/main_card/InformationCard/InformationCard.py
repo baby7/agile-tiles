@@ -60,6 +60,53 @@ class InformationCard(AggregationCard):
     def init_ui(self):
         super().init_ui()
         self.aggregation_module_list = [
+            # 图片类
+            {
+                "category": self.module_category_image,
+                "type": "瞅瞅图",
+                "title": "摸鱼人日历",
+                "des": "摸鱼摸得好,上班没烦恼",
+                "icon": "Animals/fish-one.svg",
+                "content": "https://api.vvhan.com/api/moyu",
+                "link": "https://moyu.games/",
+                "call_back_func": None
+            },
+            { "category": self.module_category_image,
+                "type": "瞅瞅图",
+                "title": "随机猫咪图片",
+                "des": "猫咪的治愈魔法",
+                "icon": "Animals/cat.svg",
+                "content": None,
+                "link": "https://api.pexels.com",
+                "call_back_func": lambda : self.push_button_random_image_click("cat")
+            },
+            { "category": self.module_category_image,
+                "type": "瞅瞅图",
+                "title": "随机小狗图片",
+                "des": "总有一张能治愈你的心",
+                "icon": "Animals/dog.svg",
+                "content": None,
+                "link": "https://api.pexels.com",
+                "call_back_func": lambda : self.push_button_random_image_click("dog")
+            },
+            { "category": self.module_category_image,
+                "type": "瞅瞅图",
+                "title": "随机风景图片",
+                "des": "来一场说走就走的旅行",
+                "icon": "Travel/landscape.svg",
+                "content": None,
+                "link": "https://api.pexels.com",
+                "call_back_func": lambda : self.push_button_random_image_click("scenery")
+            },
+            { "category": self.module_category_image,
+                "type": "瞅瞅图",
+                "title": "随机美食图片",
+                "des": "深夜食堂最是馋人",
+                "icon": "Foods/knife-fork.svg",
+                "content": None,
+                "link": "https://api.pexels.com",
+                "call_back_func": lambda : self.push_button_random_image_click("delicious")
+            },
             # 文字类
             {
                 "category": self.module_category_text,
@@ -133,45 +180,6 @@ class InformationCard(AggregationCard):
                 "content": None,
                 "call_back_func": self.push_button_reading_cheesy_love_click
             },
-            # 图片类
-            { "category": self.module_category_image,
-                "type": "瞅瞅图",
-                "title": "必应每日一图",
-                "des": "每日一图,带您领略世界",
-                "icon": "Brand/windows.svg",
-                "content": None,
-                "link": "https://www.bing.com/?mkt=zh-CN",
-                "call_back_func": self.push_button_looking_everyday_click
-            },
-            {
-                "category": self.module_category_image,
-                "type": "瞅瞅图",
-                "title": "摸鱼人日历",
-                "des": "摸鱼摸得好,上班没烦恼",
-                "icon": "Animals/fish-one.svg",
-                "content": "https://api.vvhan.com/api/moyu",
-                "link": "https://moyu.games/",
-                "call_back_func": None
-            },
-            # {
-            #     "category": self.module_category_image,
-            #     "type": "瞅瞅图",
-            #     "title": "每天60秒读懂世界",
-            #     "des": "每天60秒读懂世界",
-            #     "icon": "Others/read-book.svg",
-            #     "content": "http://www.baby7blog.com:6666/everyday60s/image/today?border=false",
-            #     "link": "https://www.zhihu.com/people/mt36501/posts",
-            #     "call_back_func": None
-            # },
-            # {
-            #     "category": self.module_category_image,
-            #     "type": "瞅瞅图",
-            #     "title": "星座运势",
-            #     "des": "看看今天运势如何",
-            #     "icon": "Edit/star.svg",
-            #     "content": "https://dayu.qqsuu.cn/xingzuoyunshi/apis.php",
-            #     "call_back_func": None
-            # },
         ]
         self.init_tab_widget()
 
@@ -266,26 +274,24 @@ class InformationCard(AggregationCard):
         except Exception as e:
             self.main_object.toolkit.message_box_util.box_information(self.main_object, "错误信息", "获取{}失败,请稍后重试".format("土味情话"))
 
-    def push_button_looking_everyday_click(self):
-        url = QUrl('https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1')
+    def push_button_random_image_click(self, image_type):
+        url = QUrl(f'{common.BASE_URL}/imageContent/normal/random?type={image_type}')
         request = QNetworkRequest(url)
+        request.setRawHeader(b"Authorization", self.main_object.access_token.encode())
 
         reply = self.network_manager.get(request)
-        reply.setProperty("type", "bing_image")
         reply.setProperty("callback", self.process_bing_image)
 
     # 每日一图处理函数
     def process_bing_image(self, data, reply):
         try:
             result = json.loads(data)
-            image_url = result['images'][0]['url']
-            link = "https://www.bing.com/?mkt=zh-CN"
+            image_url = result['data']['result']
             self.toolkit.image_box_util.show_image_dialog(
-                self.main_object, "必应每日一图",
-                "https://bing.com" + image_url, link
+                self.main_object, "随机图片", image_url, "https://api.pexels.com"
             )
         except Exception as e:
             self.main_object.toolkit.message_box_util.box_information(
                 self.main_object, "错误信息",
-                f"获取必应每日一图失败: {str(e)}"
+                f"获取随机图片失败: {str(e)}"
             )

@@ -71,7 +71,6 @@ class QSelectTimeWidget(QWidget):
         self.labLine.setStyleSheet(qsLineStyle)
         # <button>确定
         font = QtGui.QFont()
-        font.setFamily("思源黑体")
         font.setPointSize(11)
         self.btnOK = QtWidgets.QPushButton(self)
         self.btnOK.setGeometry(120, 255, 80, 30)

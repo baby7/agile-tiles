@@ -976,14 +976,14 @@ def find_all_widgets(widget, widget_list=None):
 def set_dialog_control_style(widget, is_dark=False):
     # 查询所有控件
     all_widgets = find_all_widgets(widget)
-    for widget in all_widgets:
-        if isinstance(widget, QWidget):
-            widget.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)     # 右键禁止
-        if isinstance(widget, QComboBox) or isinstance(widget, QFontComboBox):
-            set_combo_box_style(widget, is_dark)
+    for widget_item in all_widgets:
+        if isinstance(widget_item, QWidget):
+            widget_item.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)     # 右键禁止
+        if isinstance(widget_item, QComboBox) or isinstance(widget_item, QFontComboBox):
+            set_combo_box_style(widget_item, is_dark)
             continue
-        elif isinstance(widget, QPushButton):
-            if widget.objectName() in [
+        elif isinstance(widget_item, QPushButton):
+            if widget_item.objectName() in [
                 "AgileTilesTitleBarTitlePushButton",
                 "push_button_importance_exigency",
                 "push_button_no_importance_exigency",
@@ -991,35 +991,37 @@ def set_dialog_control_style(widget, is_dark=False):
                 "push_button_no_importance_no_exigency",
             ]:
                 continue
-            set_button_style(widget, is_dark)
+            set_button_style(widget_item, is_dark)
             continue
-        elif isinstance(widget, QRadioButton):
-            set_radio_button_style(widget, is_dark)
+        elif isinstance(widget_item, QRadioButton):
+            set_radio_button_style(widget_item, is_dark)
             continue
-        elif isinstance(widget, QTabWidget):
-            set_tab_widget_style(widget, is_dark)
+        elif isinstance(widget_item, QTabWidget):
+            set_tab_widget_style(widget_item, is_dark)
             continue
-        elif isinstance(widget, QTableWidget):
-            set_table_widget_style(widget, is_dark)
+        elif isinstance(widget_item, QTableWidget):
+            set_table_widget_style(widget_item, is_dark)
             continue
-        elif isinstance(widget, QCheckBox):
-            set_check_box_style(widget, is_dark)
+        elif isinstance(widget_item, QCheckBox):
+            set_check_box_style(widget_item, is_dark)
             continue
-        elif isinstance(widget, QSpinBox):
-            set_spin_box_style(widget, is_dark)
+        elif isinstance(widget_item, QSpinBox):
+            set_spin_box_style(widget_item, is_dark)
             continue
-        elif isinstance(widget, QDateEdit):
-            set_date_edit_style(widget, is_dark)
+        elif isinstance(widget_item, QDateEdit):
+            set_date_edit_style(widget_item, is_dark)
             continue
-        elif isinstance(widget, QLineEdit):
-            set_line_edit_style(widget, is_dark)
+        elif isinstance(widget_item, QLineEdit):
+            set_line_edit_style(widget_item, is_dark)
             continue
-        elif isinstance(widget, QTextEdit) or isinstance(widget, EnterTextEdit):
-            set_text_edit_style(widget, is_dark)
+        elif isinstance(widget_item, QTextEdit) or isinstance(widget_item, EnterTextEdit):
+            set_text_edit_style(widget_item, is_dark)
             continue
-        elif isinstance(widget, QFrame) and "frame" in widget.objectName():
-            widget.setStyleSheet(frame_style)
+        elif isinstance(widget_item, QFrame) and "frame" in widget_item.objectName():
+            widget_item.setStyleSheet(frame_style)
             continue
+    # 设置字体
+    set_font_and_right_click_style(widget, widget)
 
 def set_font_and_right_click_style(main_window, widget):
     """
@@ -1045,7 +1047,10 @@ def set_font_and_right_click_style(main_window, widget):
         try:
             widget.setFont(QFont(main_window.form_font_name, widget.font().pointSize()))
         except Exception as e:
-            print(f"set_font_and_right_click_style error: {str(e)}")
+            try:
+                widget.setFont(QFont(main_window.use_parent.form_font_name, widget.font().pointSize()))
+            except Exception as e:
+                print(f"set_font_and_right_click_style error: {str(e)}")
 
 def set_all_theme(main_object):
     tooltip_palette = QToolTip.palette()

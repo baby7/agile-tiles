@@ -232,7 +232,6 @@ class TextPopup(AgileTilesAcrylicWindow):
     def _setup_browser_font(self, browser):
         """设置浏览器字体"""
         font = QFont()
-        font.setFamilies(["思源黑体"])
         font.setPointSize(11)
         browser.setFont(font)
 

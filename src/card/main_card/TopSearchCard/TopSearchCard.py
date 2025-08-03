@@ -93,14 +93,11 @@ class TopSearchCard(MainCard):
         super().init_ui()
         # 字体
         font1 = QFont()
-        font1.setFamilies(["思源黑体"])
         font1.setPointSize(10)
         font1.setBold(False)
         font3 = QFont()
-        font3.setFamilies(["思源黑体"])
         font3.setPointSize(10)
         font4 = QFont()
-        font4.setFamilies(["思源黑体"])
         font4.setPointSize(9)
         font4.setBold(False)
         tab_widget_height = 45

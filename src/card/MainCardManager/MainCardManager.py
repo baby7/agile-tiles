@@ -443,7 +443,6 @@ class MainCardManager(QObject):
         else:
             icon.addFile(u"static/img/IconPark/dark/" + icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         button.setIcon(icon)
-        font.setFamily("思源黑体")
         button.setFont(font)
         button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
@@ -748,7 +747,6 @@ class MainCardManager(QObject):
         }""")
         # 菜单栏按钮列表
         font = QFont()
-        font.setFamilies(["思源黑体"])
         font.setPointSize(11)
         font.setBold(True)
         font.setKerning(True)

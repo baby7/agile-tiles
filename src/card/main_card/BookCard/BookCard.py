@@ -80,19 +80,15 @@ class BookCard(MainCard):
     def init_ui(self):
         super().init_ui()
         font = QFont()
-        font.setFamilies(["思源黑体"])
         font.setBold(True)
         font1 = QFont()
-        font1.setFamilies(["思源黑体"])
         font1.setPointSize(10)
         font1.setBold(False)
         font2 = QFont()
-        font2.setFamilies(["思源黑体"])
         font2.setPointSize(11)
         font2.setBold(True)
         font2.setKerning(True)
         font3 = QFont()
-        font3.setFamilies(["思源黑体"])
         font3.setPointSize(10)
         # 主要区域
         self.book_area = QScrollArea(self.card)
@@ -129,7 +125,6 @@ class BookCard(MainCard):
         self.text_line_select_title.setLineWidth(2)
         self.text_line_select_title.setFrameShape(QFrame.HLine)
         font5 = QFont()
-        font5.setFamilies(["思源黑体"])
         font5.setPointSize(11)
         font5.setBold(False)
         # 书籍选择区域 - 选择按钮
@@ -137,7 +132,6 @@ class BookCard(MainCard):
         self.push_button_book_select.setObjectName(u"push_button_book_select")
         self.push_button_book_select.setGeometry(QRect(self.card.width() / 2 - (130 / 2) - 10, 20, 130, 30))
         font6 = QFont()
-        font6.setFamilies(["思源黑体"])
         font6.setPointSize(11)
         self.push_button_book_select.setFont(font6)
         # 书籍选择区域 - 书籍信息
@@ -326,7 +320,7 @@ class BookCard(MainCard):
         self.text_browser_book.setHtml(QCoreApplication.translate("Form",
                                                                   "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                                                   "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n"
-                                                                  "</style></head><body style=\" font-family:'思源黑体'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+                                                                  "</style></head><body style=\" font-size:10pt; font-weight:400; font-style:normal;\">\n"
                                                                   "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>",
                                                                   None))
         self.book_tab_widget.setTabText(self.book_tab_widget.indexOf(self.tab),
@@ -538,7 +532,6 @@ class BookCard(MainCard):
             return
         # 设置字体
         font = QFont()
-        font.setFamilies(["思源黑体"])
         font.setPointSize(int(self.font_size))
         self.text_browser_book.setFont(font)
         # 将文件内容添加到文本浏览器中

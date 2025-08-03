@@ -44,7 +44,7 @@ class GameCard(AggregationCard):
                 "des": "纯文字的冒险游戏",
                 "icon": "Build/circle-house.svg",
                 "content": {
-                    "url": "/static/html/Game/adarkroom/index.html",
+                    "url": "/static/html/Game/adarkroom/index.html?lang=zh_cn",
                     "size": [1200, 800]
                 },
                 "link": "https://github.com/doublespeakgames/adarkroom",
@@ -109,7 +109,7 @@ class GameCard(AggregationCard):
                 "des": "THE EVOLUTION OF TRUST",
                 "icon": "Baby/boy.svg",
                 "content": {
-                    "url": "/static/html/Game/trust/index.html",
+                    "url": "https://dccxi.com/trust/",
                     "size": [1200, 800]
                 },
                 "link": "https://github.com/ncase/trust",

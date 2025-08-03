@@ -249,6 +249,8 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         self.is_first = False
         # 启动时，先执行一次定时任务
         self.time_task()
+        # 设置字体
+        style_util.set_font_and_right_click_style(self, self)
 
     ''' **********************************数据管理*************************************** '''
     def load_data(self):
@@ -691,6 +693,8 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         self.keyboard_re_init()
         # 切换到热搜卡片
         self.main_card_manager.push_button_weibo_click()
+        # 设置字体
+        style_util.set_font_and_right_click_style(self, self)
 
     ''' ******************************触发的数据修改*********************************** '''
     def server_trigger_data_update(self, old_data=None, new_data=None):
@@ -734,14 +738,16 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             if need_all_restart:
                 # 初始化分辨率参数、位置和大小
                 screen_module.init_resolution(self, is_first=False)
-                # 设置字体
-                style_util.set_font_and_right_click_style(self, self)
                 # 重新初始化卡片
                 self.restart_card()
+                # 设置字体
+                style_util.set_font_and_right_click_style(self, self)
             # 进行卡片整体重载
             elif need_all_card_restart:
                 # 重新初始化卡片
                 self.restart_card()
+                # 设置字体
+                style_util.set_font_and_right_click_style(self, self)
             # 进行部分卡片数据刷新
             elif need_part_card_refresh:
                 # 如果只是部分卡片的缓存数据有改变，则获取有改变的卡片列表
@@ -845,10 +851,10 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         if need_all_restart:
             # 初始化分辨率参数、位置和大小
             screen_module.init_resolution(self, is_first=False)
-            # 设置字体
-            style_util.set_font_and_right_click_style(self, self)
             # 重新初始化卡片
             self.restart_card()
+            # 设置字体
+            style_util.set_font_and_right_click_style(self, self)
         # 进行卡片整体重载
         elif need_all_card_restart:
             # 重新初始化卡片

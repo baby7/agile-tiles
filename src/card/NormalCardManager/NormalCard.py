@@ -130,7 +130,6 @@ class NormalCard(QObject):
             print(f"{self.name}卡片的title_show:{self.card_ui_setting.get_card_title_show()}")
             if self.card_ui_setting.get_card_title_show():
                 font = QtGui.QFont()
-                font.setFamily("思源黑体")
                 font.setPointSize(10)
                 self.card_title_label = QLabel(self.card)
                 self.card_title_label.setText(self.card_plugin.title)

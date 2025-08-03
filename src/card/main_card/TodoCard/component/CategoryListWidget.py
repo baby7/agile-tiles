@@ -96,7 +96,6 @@ class CategoryListWidget(QListWidget):
         }""")
         # 详细按钮
         font = QtGui.QFont()
-        font.setFamily("思源黑体")
         font.setPointSize(11)
         push_button_detail = QPushButton(background_label)  # 自定义控件
         push_button_detail.setFont(font)

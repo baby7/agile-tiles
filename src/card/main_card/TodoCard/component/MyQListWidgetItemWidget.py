@@ -5,9 +5,8 @@ from PySide6.QtWidgets import QWidget, QFrame
 from PySide6.QtCore import Qt
 
 
-def get_font(family, size):
+def get_font(size):
     font = QtGui.QFont()
-    font.setFamily(family)
     font.setPointSize(size)
     return font
 
@@ -49,9 +48,9 @@ class MyQListWidgetItemWidget(QWidget):
 
     def init_ui(self, title, success, degree, warn, time_str):
         # 标题
-        self.label_title = self.create_label(title, "思源黑体", 11, 260, 23)
+        self.label_title = self.create_label(title, 11, 260, 23)
         # 勾选框左边的占位
-        self.blank_left_label = self.create_label("", "", 0, 5, 10)
+        self.blank_left_label = self.create_label("", 0, 5, 10)
         # 勾选框
         self.check_push_button = self.create_check_button(success)
         # 删除按钮
@@ -60,8 +59,8 @@ class MyQListWidgetItemWidget(QWidget):
         self.degree_line = self.create_degree_line(degree, warn)
         # 提醒时间
         if warn:
-            self.blank_label = self.create_label("", "", 0, 1, 10)
-            self.warn_label = self.create_label("🔔 " + time_str, "思源黑体", 9, 160, 18)
+            self.blank_label = self.create_label("", 0, 1, 10)
+            self.warn_label = self.create_label("🔔 " + time_str, 9, 160, 18)
         else:
             self.blank_label = None
             self.warn_label = None
@@ -70,9 +69,9 @@ class MyQListWidgetItemWidget(QWidget):
         # 布局
         self.setup_layout(warn)
 
-    def create_label(self, text, font_family, font_size, width, height):
+    def create_label(self, text, font_size, width, height):
         label = QtWidgets.QLabel(self.parent)
-        label.setFont(get_font(font_family, font_size))
+        label.setFont(get_font(font_size))
         label.setFixedSize(width, height)
         label.setStyleSheet("background-color: rgba(0, 0, 0, 0);")
         label.setText(text)
@@ -82,7 +81,7 @@ class MyQListWidgetItemWidget(QWidget):
         button = QtWidgets.QPushButton(self.parent)
         button.setFixedSize(22, 22)
         button.setIconSize(QtCore.QSize(18, 18))
-        button.setFont(get_font("思源黑体", 9))
+        button.setFont(get_font(9))
         push_button_style = """
         QPushButton {
             border: none;
@@ -168,8 +167,8 @@ class MyQListWidgetItemWidget(QWidget):
         self.degree_line = self.create_degree_line(degree, warn)
         if warn:
             if self.blank_label is None:
-                self.blank_label = self.create_label("", "", 0, 1, 10)
-                self.warn_label = self.create_label("🔔 " + time_str, "思源黑体", 9, 160, 18)
+                self.blank_label = self.create_label("", 0, 1, 10)
+                self.warn_label = self.create_label("🔔 " + time_str, 9, 160, 18)
                 self.check_and_blank_layout.addWidget(self.blank_label)
                 self.title_and_warn_layout.addWidget(self.warn_label)
             else:

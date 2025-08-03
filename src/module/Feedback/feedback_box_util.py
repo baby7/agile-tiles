@@ -13,6 +13,7 @@ from src.client import common
 from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 from src.component.ImagePreviewWidget.ImagePreviewWidget import ImagePreviewWidget
 from src.module.Box import message_box_util
+from src.ui import style_util
 
 
 class FeedbackPopup(AgileTilesAcrylicWindow):
@@ -42,6 +43,8 @@ class FeedbackPopup(AgileTilesAcrylicWindow):
             self.center_on_screen()
             self.setMinimumWidth(700)  # 增加最小宽度以适应新布局
             self.setMinimumHeight(850)
+            # 设置样式
+            style_util.set_dialog_control_style(self, self.is_dark)
             # 初始化界面
             self.init_ui()
         except Exception as e:

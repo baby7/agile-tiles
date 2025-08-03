@@ -4,6 +4,7 @@ import subprocess
 from PySide6.QtWidgets import QApplication, QLabel
 
 from src.client import common
+from src.constant import version_constant
 from src.module.Updater.Updater import Updater
 from src.module.Box import message_box_util
 
@@ -33,8 +34,9 @@ def handle_silent_update_result(main_object, success, update_info):
         main_object.update_ready.emit()
         return
 
-    # 判断是否有新版本
-    if update_info["version"] == main_object.silent_updater.app_version:
+    # 判断当前版本是否小于更新版本
+    if version_constant.compare_version(main_object.silent_updater.app_version, update_info["version"]) >= 0:
+        # 当前版本大于等于更新版本,无需更新
         main_object.agree_update = True
         main_object.update_ready.emit()
         return
@@ -193,13 +195,17 @@ def handle_silent_update_normal_result(main_object, success, update_info):
         if not success or not update_info:
             # 获取更新失败
             return
-        # 判断是否有新版本
+        # 判断版本是否相同
         if update_info["version"] == main_object.silent_updater.app_version:
             # 无更新，判断是否有更新提示，有更新提示就隐藏
             if main_object.update_red_dot is not None:
                 main_object.update_red_dot.hide()
             return
         else:
+            # 判断当前版本是否小于更新版本
+            if version_constant.compare_version(main_object.silent_updater.app_version, update_info["version"]) >= 0:
+                # 当前版本大于等于更新版本,无需更新
+                return
             # 有更新，就在检查更新右上角添加/显示更新提示
             button_width = 70
             button_interval = 10

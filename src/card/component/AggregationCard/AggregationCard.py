@@ -71,7 +71,6 @@ class AggregationCard(MainCard):
     def init_ui(self):
         super().init_ui()
         font1 = QFont()
-        font1.setFamilies(["思源黑体"])
         font1.setPointSize(10)
         font1.setBold(False)
         # 下方切换

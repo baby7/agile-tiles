@@ -10,6 +10,7 @@ from src.module.Ticket.TicketDetailPopup.TicketDetailPopup import TicketDetailPo
 from src.module.Ticket.TicketPopup.TicketPopup import TicketPopup
 from src.module.Ticket.TicketSystem.TicketSystem import TicketSystem
 from src.module.Box import message_box_util
+from src.ui import style_util
 
 
 class TicketListPopup(AgileTilesAcrylicWindow):
@@ -28,6 +29,8 @@ class TicketListPopup(AgileTilesAcrylicWindow):
         self.setMinimumWidth(800)
         self.setMinimumHeight(600)
 
+        # 设置样式
+        style_util.set_dialog_control_style(self, self.is_dark)
         self.init_ui()
         self.load_tickets()
         # 最大化

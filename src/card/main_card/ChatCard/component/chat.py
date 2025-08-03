@@ -401,6 +401,7 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
                     is_dark=self.is_dark,
                     is_reasoning=is_reasoning
                 )
+                bubble.font().setFamily(self.font().family())
                 bubble_layout.addWidget(bubble)
 
             # 设置对齐方式
@@ -511,6 +512,7 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
                 is_dark=self.is_dark,
                 is_reasoning=is_reasoning
             )
+            bubble.font().setFamily(self.font().family())
             bubble_layout.addWidget(bubble)
 
             # 计算最大宽度
@@ -539,6 +541,7 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
                 is_dark=self.is_dark,
                 is_reasoning=is_reasoning
             )
+            bubble.font().setFamily(self.font().family())
 
             # 计算最大宽度
             max_width = int(QApplication.primaryScreen().size().width() * 0.8)

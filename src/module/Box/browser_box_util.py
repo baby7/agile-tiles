@@ -173,7 +173,7 @@ class BrowserPopup(AgileTilesAcrylicWindow):
             js_code = f'document.querySelector("body").className="{theme}";'
         # *********************************** 游戏模块 ***********************************
         # 小黑屋
-        elif self.url == "/static/html/Game/adarkroom/index.html":
+        elif self.url.startswith("/static/html/Game/adarkroom/index.html"):
             if self.is_dark:
                 js_code = f"""
                     if (document.querySelector("body > div.menu > span.lightsOff.menuBtn").textContent == "夜间模式"
@@ -195,7 +195,7 @@ class BrowserPopup(AgileTilesAcrylicWindow):
                     }};"""
             else:
                 js_code = f"""
-                    if (document.documentElement.className="dark") {{
+                    if (document.documentElement.className=="dark") {{
                         document.querySelector("#app > div > div.game-container > div.footer > div > span").click()
                     }};"""
         # 人生重开模拟器
