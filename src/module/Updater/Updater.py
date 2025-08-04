@@ -13,7 +13,7 @@ class Updater(QObject):
 
     def __init__(self, api_url, app_version):
         super().__init__()
-        self.api_url = api_url
+        self.api_url = api_url + "&version=" + str(app_version)
         self.app_version = app_version
         self.downloaded_file_path = None
         self.network_manager = QNetworkAccessManager(self)

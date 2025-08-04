@@ -1047,11 +1047,12 @@ def set_font_and_right_click_style(main_window, widget):
         try:
             widget.setFont(QFont(main_window.form_font_name, widget.font().pointSize()))
         except Exception as e:
+            if not hasattr(main_window.use_parent, 'form_font_name'):
+                continue
             try:
                 widget.setFont(QFont(main_window.use_parent.form_font_name, widget.font().pointSize()))
             except Exception as e:
                 print(f"set_font_and_right_click_style error: {str(e)}")
-
 def set_all_theme(main_object):
     tooltip_palette = QToolTip.palette()
     if main_object.is_dark:

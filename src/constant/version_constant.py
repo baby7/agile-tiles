@@ -195,6 +195,13 @@ update_map_info = {
         "修复部分字体未同步的修改的问题",
         "修复游戏我的文字修仙全靠刷的颜色主题不对的问题",
     ],
+    "v0.5.9": [
+        "登录界面增加更新功能",
+        "卸载时给用户选择是否要卸载用户数据",
+        "日志文件做调整，正式环境不输出日志",
+        "部分窗口提示第三方资源不进行数据同步",
+        "版本更新逻辑调整，从当前版本到最新版本有强制更新就更新",
+    ],
 }
 
 update_map_date = {
@@ -224,6 +231,7 @@ update_map_date = {
     "v0.5.6": "2025-08-02",
     "v0.5.7": "2025-08-02",
     "v0.5.8": "2025-08-02",
+    "v0.5.9": "2025-08-04",
 }
 
 
@@ -264,32 +272,5 @@ def gen_download_history_md():
                 update_info += "- " + item + "\n"
         update_info += "\n"
     return update_info
-
-def compare_version(version_1, version_2):
-    # 版本1的主、次、补丁版本
-    version_1_major = version_1.replace("v", "").split(".")[0]
-    version_1_minor = version_1.replace("v", "").split(".")[1]
-    version_1_patch = version_1.replace("v", "").split(".")[2]
-    # 版本2的主、次、补丁版本
-    version_2_major = version_2.replace("v", "").split(".")[0]
-    version_2_minor = version_2.replace("v", "").split(".")[1]
-    version_2_patch = version_2.replace("v", "").split(".")[2]
-    # 比较版本号
-    if version_1_major == version_2_major:
-        if version_1_minor == version_2_minor:
-            if version_1_patch == version_2_patch:
-                return 0
-            elif int(version_1_patch) > int(version_2_patch):
-                return 1
-            else:
-                return -1
-        elif int(version_1_minor) > int(version_2_minor):
-            return 1
-        else:
-            return -1
-    elif int(version_1_major) > int(version_2_major):
-        return 1
-    else:
-        return -1
 
 # print(gen_download_history_md())

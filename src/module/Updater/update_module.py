@@ -9,22 +9,22 @@ from src.module.Updater.Updater import Updater
 from src.module.Box import message_box_util
 
 
-def check_update_on_start(main_object):
+def check_update_on_start(main_object, must_have_dialog=False):
     """启动时静默检查更新"""
     main_object.silent_updater = Updater(
-        api_url=common.BASE_URL + "/version/public/current?type=Windows",
+        api_url=common.BASE_URL + "/version/public/check?type=Windows",
         app_version=main_object.app_version
     )
     main_object.silent_updater.finished.connect(
-        lambda success, update_info: handle_silent_update_result(main_object, success, update_info)
+        lambda success, update_info: handle_silent_update_result(main_object, success, update_info, must_have_dialog)
     )
     # 直接调用检查更新方法，不再使用线程
     main_object.silent_updater.check_update()
 
 
-def handle_silent_update_result(main_object, success, update_info):
+def handle_silent_update_result(main_object, success, update_info, must_have_dialog):
     """静默更新检查回调"""
-    if not success or not update_info:
+    if not success or update_info is None:
         message_box_util.box_information(
             main_object,
             "更新失败",
@@ -34,22 +34,22 @@ def handle_silent_update_result(main_object, success, update_info):
         main_object.update_ready.emit()
         return
 
-    # 判断当前版本是否小于更新版本
-    if version_constant.compare_version(main_object.silent_updater.app_version, update_info["version"]) >= 0:
+    # 判断是否需要更新
+    if update_info.get("updateTag") is not None and not update_info.get("updateTag"):
         # 当前版本大于等于更新版本,无需更新
         main_object.agree_update = True
         main_object.update_ready.emit()
+        print("无需更新")
+        if must_have_dialog:
+            message_box_util.box_information(
+                main_object,
+                "更新信息",
+                f"无需更新，您已是最新版本，版本: {update_info['version']}"
+            )
         return
 
-    # 获取强制更新标志
-    force_update = update_info.get("updateTag", False)
-
-    if force_update:
-        show_force_update_dialog(main_object, update_info)
-    else:
-        # 非强制更新暂不弹框
-        # show_optional_update_dialog(main_object, update_info)
-        main_object.update_ready.emit()
+    # 强制更新
+    show_force_update_dialog(main_object, update_info)
 
 
 def show_force_update_dialog(main_object, update_info):
@@ -100,7 +100,7 @@ def start_update_process(main_object, update_info):
 
     # 创建下载器
     main_object.downloader = Updater(
-        api_url=common.BASE_URL + "/version/public/current?type=Windows",
+        api_url=common.BASE_URL + "/version/public/check?type=Windows",
         app_version=main_object.silent_updater.app_version
     )
 
@@ -177,7 +177,7 @@ def check_update_normal(main_object):
     """检查更新"""
     try:
         main_object.silent_updater = Updater(
-            api_url=common.BASE_URL + "/version/public/current?type=Windows",
+            api_url=common.BASE_URL + "/version/public/check?type=Windows",
             app_version=main_object.app_version
         )
         main_object.silent_updater.finished.connect(
@@ -202,9 +202,8 @@ def handle_silent_update_normal_result(main_object, success, update_info):
                 main_object.update_red_dot.hide()
             return
         else:
-            # 判断当前版本是否小于更新版本
-            if version_constant.compare_version(main_object.silent_updater.app_version, update_info["version"]) >= 0:
-                # 当前版本大于等于更新版本,无需更新
+            # 判断是否需要更新
+            if update_info.get("updateTag") is not None and not update_info.get("updateTag"):
                 return
             # 有更新，就在检查更新右上角添加/显示更新提示
             button_width = 70

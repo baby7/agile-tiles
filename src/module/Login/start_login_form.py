@@ -23,11 +23,12 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(472, 751)
+        Form.resize(498, 762)
         self.gridLayout_8 = QGridLayout(Form)
-        self.gridLayout_8.setSpacing(0)
         self.gridLayout_8.setObjectName(u"gridLayout_8")
-        self.gridLayout_8.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout = QVBoxLayout()
+        self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setObjectName(u"verticalLayout")
         self.tab_widget_login = QTabWidget(Form)
         self.tab_widget_login.setObjectName(u"tab_widget_login")
         font = QFont()
@@ -200,7 +201,7 @@ class Ui_Form(object):
 
         self.push_button_user_login_forget_password = QPushButton(self.tab_12)
         self.push_button_user_login_forget_password.setObjectName(u"push_button_user_login_forget_password")
-        self.push_button_user_login_forget_password.setMinimumSize(QSize(0, 25))
+        self.push_button_user_login_forget_password.setMinimumSize(QSize(75, 25))
         font3 = QFont()
         font3.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
         font3.setPointSize(10)
@@ -844,7 +845,39 @@ class Ui_Form(object):
 
         self.tab_widget_login.addTab(self.tab, "")
 
-        self.gridLayout_8.addWidget(self.tab_widget_login, 0, 0, 1, 1)
+        self.verticalLayout.addWidget(self.tab_widget_login)
+
+        self.horizontalLayout_13 = QHBoxLayout()
+        self.horizontalLayout_13.setSpacing(0)
+        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_13.addItem(self.horizontalSpacer_3)
+
+        self.label_3 = QLabel(Form)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setMinimumSize(QSize(0, 0))
+        self.label_3.setFont(font5)
+        self.label_3.setStyleSheet(u"border: none; background-color: transparent;")
+        self.label_3.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_13.addWidget(self.label_3)
+
+        self.push_button_update_soft = QPushButton(Form)
+        self.push_button_update_soft.setObjectName(u"push_button_update_soft")
+        self.push_button_update_soft.setStyleSheet(u"border: none; background-color: transparent;color: rgb(20, 161, 248);")
+
+        self.horizontalLayout_13.addWidget(self.push_button_update_soft)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_13.addItem(self.horizontalSpacer_2)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_13)
+
+
+        self.gridLayout_8.addLayout(self.verticalLayout, 0, 0, 1, 1)
 
 
         self.retranslateUi(Form)
@@ -910,5 +943,7 @@ class Ui_Form(object):
         self.label_user_registers_bottom_space_2.setText("")
         self.push_button_user_forget.setText(QCoreApplication.translate("Form", u"\u786e\u8ba4\u4fee\u6539\u5bc6\u7801", None))
         self.tab_widget_login.setTabText(self.tab_widget_login.indexOf(self.tab), QCoreApplication.translate("Form", u"\u5fd8\u8bb0\u5bc6\u7801", None))
+        self.label_3.setText(QCoreApplication.translate("Form", u"\u9047\u5230\u95ee\u9898\uff1f\u60a8\u53ef\u4ee5\u5c1d\u8bd5", None))
+        self.push_button_update_soft.setText(QCoreApplication.translate("Form", u"\u66f4\u65b0\u8f6f\u4ef6", None))
     # retranslateUi
 

@@ -323,7 +323,7 @@ class SettingCard(MainCard):
         """检查更新"""
         # 创建更新器实例
         self.updater = Updater(
-            api_url=common.BASE_URL + "/version/public/current?type=Windows",
+            api_url=common.BASE_URL + "/version/public/check?type=Windows",
             app_version=self.main_object.app_version  # 假设 main_object 有 app_version 属性
         )
 
@@ -358,8 +358,8 @@ class SettingCard(MainCard):
             )
             return
 
-        # 比较版本号
-        if version_constant.compare_version(self.main_object.app_version, update_info.get("version")) >= 0:
+        # 判断是否需要更新
+        if update_info.get("updateTag") is not None and not update_info.get("updateTag"):
             # 如果当前版本大于等于更新版本，隐藏检查更新右上角更新提示
             if self.main_object.update_red_dot is not None:
                 self.main_object.update_red_dot.hide()
@@ -408,7 +408,7 @@ class SettingCard(MainCard):
 
         # 重新配置更新器（用于下载）
         self.updater = Updater(
-            api_url=common.BASE_URL + "/version/public/current?type=Windows",
+            api_url=common.BASE_URL + "/version/public/check?type=Windows",
             app_version=self.main_object.app_version
         )
 

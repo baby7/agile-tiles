@@ -1,8 +1,8 @@
 
 # ******************** Http请求路径 ********************
 # BASE_URL = "https://www.agiletiles.com/api"        # 基础路径 - 域名
-BASE_URL = "http://121.4.64.87:6666"                # 基础路径 - 固定IP
-# BASE_URL = "http://localhost:6666"                    # 基础路径 - 本地调试
+# BASE_URL = "http://121.4.64.87:6666"                # 基础路径 - 固定IP
+BASE_URL = "http://localhost:6666"                    # 基础路径 - 本地调试
 
 # ******************** WebSocket路径 ********************
 # WS_BASE_URL = "wss://www.agiletiles.com/api"       # 基础路径 - 域名

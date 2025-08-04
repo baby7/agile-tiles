@@ -72,7 +72,7 @@ class AgileTilesTitleBar(TitleBar):
                 }""")
             self.questionPushButton.setIcon(QIcon("./static/img/IconPark/dark/Character/help.png"))
         self.questionPushButton.clicked.connect(self.push_button_question_click)
-        self.questionPushButton.setToolTip("这是第三方模块，可以点击左边的标题按钮访问模块主页哦~")
+        self.questionPushButton.setToolTip("这是第三方模块，可以点击左边的标题按钮访问模块主页哦~该模块不进行数据同步)")
         self.questionPushButton.hide()
 
         # # 鼠标手形
@@ -121,4 +121,4 @@ class AgileTilesTitleBar(TitleBar):
 
     def push_button_question_click(self):
         if self.link:
-            self.dialog_parent.message_box_util.box_information(self.dialog_parent, "提示", "这是第三方模块，可以点击左边的标题按钮访问模块主页哦~")
+            self.dialog_parent.message_box_util.box_information(self.dialog_parent, "提示", "这是第三方模块，可以点击左边的标题按钮访问模块主页哦~(该模块不进行数据同步)")

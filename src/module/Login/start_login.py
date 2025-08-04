@@ -4,6 +4,7 @@ import traceback
 
 from PySide6 import QtCore, QtWidgets
 from PySide6.QtCore import Qt, QMetaObject, Q_ARG, Slot
+from PySide6.QtGui import QCursor
 from PySide6.QtWidgets import QLineEdit
 
 from src.client import common
@@ -62,6 +63,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
         # 其他样式初始化
         self.push_button_user_register_privacy_agreement.setStyleSheet("border: none; background-color: transparent;color: rgb(20, 161, 248);")
         self.push_button_user_register_service_agreement.setStyleSheet("border: none; background-color: transparent;color: rgb(20, 161, 248);")
+        self.push_button_update_soft.setStyleSheet("border: none; background-color: transparent;color: rgb(20, 161, 248);")
         # 密码框样式
         self.set_password_edit_style(self.line_edit_user_login_password_widget, self.line_edit_user_login_password,
                                      self.push_button_user_login_password_view_control)
@@ -73,6 +75,16 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
                                      self.push_button_user_forget_password_view_control)
         self.set_password_edit_style(self.line_edit_user_forget_password_check_widget, self.line_edit_user_forget_password_check,
                                      self.push_button_user_forget_password_check_view_control)
+        # 鼠标手型
+        self.push_button_user_register_privacy_agreement.setCursor(QCursor(Qt.PointingHandCursor))
+        self.push_button_user_register_service_agreement.setCursor(QCursor(Qt.PointingHandCursor))
+        self.push_button_update_soft.setCursor(QCursor(Qt.PointingHandCursor))
+        self.push_button_user_login.setCursor(QCursor(Qt.PointingHandCursor))
+        self.push_button_user_register.setCursor(QCursor(Qt.PointingHandCursor))
+        self.push_button_user_forget.setCursor(QCursor(Qt.PointingHandCursor))
+        self.push_button_user_login_forget_password.setCursor(QCursor(Qt.PointingHandCursor))
+        self.push_button_register_validator_code.setCursor(QCursor(Qt.PointingHandCursor))
+        self.push_button_forget_validator_code.setCursor(QCursor(Qt.PointingHandCursor))
         # 登录界面的忘记密码按钮
         self.push_button_user_login_forget_password.setStyleSheet("""
         QPushButton {
@@ -183,6 +195,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
         self.push_button_user_register_service_agreement.clicked.connect(self.push_button_setting_service_agreement_click)
         self.push_button_user_login_forget_password.clicked.connect(self.push_button_user_login_forget_password_click)
         self.push_button_forget_validator_code.clicked.connect(self.push_button_forget_validator_code_click)
+        self.push_button_update_soft.clicked.connect(self.push_button_update_soft_click)
 
     def init_user_client(self):
         """
@@ -223,7 +236,8 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 显示加载层
             self.show_overlay("登录中...")
         except Exception as e:
-            message_box_util.box_information(self, "错误信息", "登录失败")
+            message_box_util.box_information(self, "错误信息", "登录失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
+            self.hide_overlay()
 
     def handle_start_login_result(self, result):
         """
@@ -264,7 +278,8 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
                 # 显示加载层
                 self.show_overlay("vip用户数据同步中...")
         except Exception as e:
-            message_box_util.box_information(self, "错误信息", "登录失败")
+            message_box_util.box_information(self, "错误信息", "登录失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
+            self.hide_overlay()
 
 
     # ************************************************** 注册模块 ***************************************************
@@ -303,7 +318,8 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             self.show_overlay("注册中...")
         except Exception as e:
             traceback.print_exc()
-            message_box_util.box_information(self, "错误信息", "注册失败")
+            message_box_util.box_information(self, "错误信息", "注册失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
+            self.hide_overlay()
 
     def handle_start_register_result(self, result):
         """
@@ -324,7 +340,8 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 切换到登录页面
             self.tab_widget_login.setCurrentIndex(0)
         except Exception as e:
-            message_box_util.box_information(self, "错误信息", "注册失败")
+            message_box_util.box_information(self, "错误信息", "注册失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
+            self.hide_overlay()
 
     def push_button_register_validator_code_click(self):
         """
@@ -340,7 +357,8 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 发送验证码
             self.start_user_login_client.send_validator_code(phone_number)
         except Exception as e:
-            message_box_util.box_information(self, "错误", "验证码发送失败")
+            message_box_util.box_information(self, "错误", "验证码发送失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
+            self.hide_overlay()
 
     def push_button_forget_validator_code_click(self):
         """
@@ -356,7 +374,8 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 发送验证码
             self.start_user_login_client.send_validator_code(phone_number)
         except Exception as e:
-            message_box_util.box_information(self, "错误", "验证码发送失败")
+            message_box_util.box_information(self, "错误", "验证码发送失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
+            self.hide_overlay()
 
     def handle_start_send_code_result(self, result):
         """
@@ -410,7 +429,8 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
 
             message_box_util.box_information(self, "提示", "验证码已发送")
         except Exception as e:
-            message_box_util.box_information(self, "错误", "验证码发送失败")
+            message_box_util.box_information(self, "错误", "验证码发送失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
+            self.hide_overlay()
 
     def push_button_setting_service_agreement_click(self):
         # 隐私政策
@@ -430,7 +450,8 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             if login_name != "":
                 self.line_edit_user_forget_username.setText(self.line_edit_user_login_username.text())
         except Exception as e:
-            message_box_util.box_information(self, "错误信息", "切换到忘记密码界面失败")
+            message_box_util.box_information(self, "错误信息", "切换到忘记密码界面失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
+            self.hide_overlay()
 
     def push_button_user_forget_click(self):
         """
@@ -454,7 +475,8 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 显示加载层
             self.show_overlay("重置密码中...")
         except Exception as e:
-            message_box_util.box_information(self, "错误信息", "密码修改失败")
+            message_box_util.box_information(self, "错误信息", "密码修改失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
+            self.hide_overlay()
 
     def handle_start_forget_password_result(self, result):
         """
@@ -473,8 +495,8 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 切换到登录页面
             self.tab_widget_login.setCurrentIndex(0)
         except Exception as e:
-            message_box_util.box_information(self, "错误信息", "密码修改失败")
-        pass
+            message_box_util.box_information(self, "错误信息", "密码修改失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
+            self.hide_overlay()
 
     # ************************************************** 用户数据 ***************************************************
 
@@ -632,6 +654,11 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
         else:
             line_edit.setEchoMode(QLineEdit.Password)
             push_button.setIcon(get_icon_park_path("Base/preview-close-one", self.is_dark))
+
+    # ************************************************** 软件更新 ***************************************************
+    def push_button_update_soft_click(self):
+        print("点击检查更新")
+        self.use_parent.check_update_run(must_have_dialog=True)
 
     # ************************************************** 信息展示 ***************************************************
 

@@ -12,20 +12,23 @@ def print_message(level, message):
 class Logger:
     base_level = None
     def __init__(self, path, base_level=logging.DEBUG, cmd_level=logging.DEBUG, file_level=logging.DEBUG):
-        self.logger = logging.getLogger(path)
+        self.logger = logging.getLogger(path or "default_logger")
         self.logger.setLevel(base_level)
         self.base_level = base_level
         fmt = logging.Formatter('[%(asctime)s] [%(levelname)s] %(message)s', '%Y-%m-%d %H:%M:%S')
+
         # 设置CMD日志
         sh = logging.StreamHandler()
         sh.setFormatter(fmt)
         sh.setLevel(cmd_level)
-        # 设置文件日志
-        fh = logging.FileHandler(path, encoding='utf-8')
-        fh.setFormatter(fmt)
-        fh.setLevel(file_level)
         self.logger.addHandler(sh)
-        self.logger.addHandler(fh)
+
+        # 如果提供了日志文件路径，则设置文件日志
+        if path:
+            fh = logging.FileHandler(path, encoding='utf-8')
+            fh.setFormatter(fmt)
+            fh.setLevel(file_level)
+            self.logger.addHandler(fh)
 
     def debug(self, message):
         if self.base_level <= logging.DEBUG:

@@ -943,9 +943,9 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         self.tutorial.start()
 
     ''' **********************************更新程序*************************************** '''
-    def check_update_run(self):
+    def check_update_run(self, must_have_dialog=False):
         self.app_version = str(version_constant.get_current_version())
-        update_module.check_update_on_start(self)
+        update_module.check_update_on_start(self, must_have_dialog=must_have_dialog)
 
     ''' **********************************更新卡片*************************************** '''
     def check_card_run(self):

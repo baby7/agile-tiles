@@ -21,7 +21,8 @@ def init_module(main_object):
     main_object.app_version = current_version_info.current_version
     main_object.setWindowTitle(main_object.app_title)
     # 初始化日志
-    config_path = str(os.getcwd()) + r"\log.log"
+    # config_path = str(os.getcwd()) + r"\log.log"
+    config_path = None
     main_object.info_logger = logger.Logger(config_path, logging.INFO, logging.DEBUG, logging.DEBUG)
     main_object.info_logger.info(main_object.app_title + "启动中...")
     # 隐藏标题栏
