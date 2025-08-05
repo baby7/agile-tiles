@@ -1379,7 +1379,11 @@ class MyForm(MainAcrylicWindow, Ui_Form):
 
 
 if __name__ == '__main__':
-    tracemalloc.start(100)  # 跟踪25个最近内存分配
+    # 设置工作目录为应用安装目录来修复开机自启动无法加载图片的问题(sys.frozen用来判断pyinstaller，__compiled__用来判断nuitka)
+    if getattr(sys, 'frozen', False) or '__compiled__' in globals():
+        os.chdir(os.path.dirname(sys.executable))
+    # 跟踪100个最近内存分配
+    tracemalloc.start(100)
     # 开启DPI适应
     QApplication.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
     # 禁用系统代理(不会被Fiddler抓到)
