@@ -66,7 +66,7 @@ class InformationCard(AggregationCard):
                 "type": "瞅瞅图",
                 "title": "摸鱼人日历",
                 "des": "摸鱼摸得好,上班没烦恼",
-                "icon": "Animals/fish-one.svg",
+                "icon": "png:Actor/MoYu.png",
                 "content": "https://api.vvhan.com/api/moyu",
                 "link": "https://moyu.games/",
                 "call_back_func": None
@@ -75,7 +75,7 @@ class InformationCard(AggregationCard):
                 "type": "瞅瞅图",
                 "title": "随机猫咪图片",
                 "des": "猫咪的治愈魔法",
-                "icon": "Animals/cat.svg",
+                "icon": "png:Actor/Cat.png",
                 "content": None,
                 "link": "https://api.pexels.com",
                 "call_back_func": lambda : self.push_button_random_image_click("cat")
@@ -84,7 +84,7 @@ class InformationCard(AggregationCard):
                 "type": "瞅瞅图",
                 "title": "随机小狗图片",
                 "des": "总有一张能治愈你的心",
-                "icon": "Animals/dog.svg",
+                "icon": "png:Actor/Dog.png",
                 "content": None,
                 "link": "https://api.pexels.com",
                 "call_back_func": lambda : self.push_button_random_image_click("dog")
@@ -93,7 +93,7 @@ class InformationCard(AggregationCard):
                 "type": "瞅瞅图",
                 "title": "随机风景图片",
                 "des": "来一场说走就走的旅行",
-                "icon": "Travel/landscape.svg",
+                "icon": "png:Actor/LvYou.png",
                 "content": None,
                 "link": "https://api.pexels.com",
                 "call_back_func": lambda : self.push_button_random_image_click("scenery")
@@ -102,7 +102,7 @@ class InformationCard(AggregationCard):
                 "type": "瞅瞅图",
                 "title": "随机美食图片",
                 "des": "深夜食堂最是馋人",
-                "icon": "Foods/knife-fork.svg",
+                "icon": "png:Actor/Food.png",
                 "content": None,
                 "link": "https://api.pexels.com",
                 "call_back_func": lambda : self.push_button_random_image_click("delicious")

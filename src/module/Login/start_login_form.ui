@@ -370,6 +370,41 @@ background-color: rgba(0, 0, 0, 0);</string>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <property name="spacing">
+              <number>2</number>
+             </property>
+             <item>
+              <widget class="QCheckBox" name="check_box_user_area_auto_start">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>思源黑体</family>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>开机自启动</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
              <item>
               <spacer name="horizontalSpacer_6">
                <property name="orientation">
@@ -1137,6 +1172,9 @@ background-color: rgba(0, 0, 0, 0);</string>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <property name="spacing">
+              <number>2</number>
+             </property>
              <item>
               <widget class="QCheckBox" name="check_box_user_area_agree_protocol">
                <property name="text">

@@ -1,5 +1,6 @@
 # coding:utf-8
 import json
+import sys
 import traceback
 
 from PySide6 import QtCore, QtWidgets
@@ -13,7 +14,7 @@ from src.module.Login.login_common import refresh_theme, get_icon_park_path
 from src.module.Login.start_login_form import Ui_Form
 from src.module.User.user_client import UserClient
 from src.module.UserData.Sync.data_client import DataClient
-from src.util import browser_util
+from src.util import browser_util, winreg_util
 import src.ui.style_util as style_util
 import src.module.Box.message_box_util as message_box_util
 from src.component.AgileTilesFramelessDialog.AgileTilesFramelessDialog import AgileTilesFramelessDialog
@@ -233,6 +234,16 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 发起登录请求
             print(f"发起登录请求,密码:{self.password}")
             self.start_user_login_client.login(self.username, self.password, self.use_parent.hardware_id, self.use_parent.os_version)
+            # 设置开机自启动
+            try:
+                if self.check_box_user_area_auto_start.isChecked():
+                    winreg_util.set_auto_start(True)
+                else:
+                    winreg_util.set_auto_start(False)
+            except Exception as e:
+                traceback.print_exc()
+                print(f"设置开机自启动失败: {e}", file=sys.stderr)
+                message_box_util.box_information(self.use_parent, "错误", "设置开机自启动失败")
             # 显示加载层
             self.show_overlay("登录中...")
         except Exception as e:

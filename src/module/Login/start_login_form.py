@@ -194,7 +194,25 @@ class Ui_Form(object):
         self.verticalLayout_6.addWidget(self.label_user_login_password_prompt)
 
         self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setSpacing(2)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.check_box_user_area_auto_start = QCheckBox(self.tab_12)
+        self.check_box_user_area_auto_start.setObjectName(u"check_box_user_area_auto_start")
+        self.check_box_user_area_auto_start.setChecked(True)
+
+        self.horizontalLayout_5.addWidget(self.check_box_user_area_auto_start)
+
+        self.label_4 = QLabel(self.tab_12)
+        self.label_4.setObjectName(u"label_4")
+        self.label_4.setMinimumSize(QSize(0, 0))
+        font3 = QFont()
+        font3.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
+        font3.setBold(True)
+        self.label_4.setFont(font3)
+        self.label_4.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_5.addWidget(self.label_4)
+
         self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_5.addItem(self.horizontalSpacer_6)
@@ -202,12 +220,12 @@ class Ui_Form(object):
         self.push_button_user_login_forget_password = QPushButton(self.tab_12)
         self.push_button_user_login_forget_password.setObjectName(u"push_button_user_login_forget_password")
         self.push_button_user_login_forget_password.setMinimumSize(QSize(75, 25))
-        font3 = QFont()
-        font3.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
-        font3.setPointSize(10)
-        font3.setBold(False)
-        font3.setKerning(False)
-        self.push_button_user_login_forget_password.setFont(font3)
+        font4 = QFont()
+        font4.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
+        font4.setPointSize(10)
+        font4.setBold(False)
+        font4.setKerning(False)
+        self.push_button_user_login_forget_password.setFont(font4)
         self.push_button_user_login_forget_password.setLayoutDirection(Qt.LeftToRight)
         self.push_button_user_login_forget_password.setStyleSheet(u"border: 0px solid #FF8D16;\n"
 "border-radius: 0px;\n"
@@ -235,11 +253,11 @@ class Ui_Form(object):
         self.push_button_user_login = QPushButton(self.tab_12)
         self.push_button_user_login.setObjectName(u"push_button_user_login")
         self.push_button_user_login.setMinimumSize(QSize(120, 40))
-        font4 = QFont()
-        font4.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
-        font4.setPointSize(11)
-        font4.setBold(True)
-        self.push_button_user_login.setFont(font4)
+        font5 = QFont()
+        font5.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
+        font5.setPointSize(11)
+        font5.setBold(True)
+        self.push_button_user_login.setFont(font5)
         self.push_button_user_login.setStyleSheet(u"")
 
         self.horizontalLayout_6.addWidget(self.push_button_user_login)
@@ -311,7 +329,7 @@ class Ui_Form(object):
         self.line_edit_user_register_nickname = QLineEdit(self.tab_6)
         self.line_edit_user_register_nickname.setObjectName(u"line_edit_user_register_nickname")
         self.line_edit_user_register_nickname.setMinimumSize(QSize(0, 25))
-        self.line_edit_user_register_nickname.setFont(font4)
+        self.line_edit_user_register_nickname.setFont(font5)
         self.line_edit_user_register_nickname.setStyleSheet(u"")
         self.line_edit_user_register_nickname.setMaxLength(20)
 
@@ -339,7 +357,7 @@ class Ui_Form(object):
         self.line_edit_user_register_username = QLineEdit(self.tab_6)
         self.line_edit_user_register_username.setObjectName(u"line_edit_user_register_username")
         self.line_edit_user_register_username.setMinimumSize(QSize(0, 25))
-        self.line_edit_user_register_username.setFont(font4)
+        self.line_edit_user_register_username.setFont(font5)
         self.line_edit_user_register_username.setStyleSheet(u"")
         self.line_edit_user_register_username.setMaxLength(20)
 
@@ -369,7 +387,7 @@ class Ui_Form(object):
         self.line_edit_register_validator_code = QLineEdit(self.tab_6)
         self.line_edit_register_validator_code.setObjectName(u"line_edit_register_validator_code")
         self.line_edit_register_validator_code.setMinimumSize(QSize(0, 25))
-        self.line_edit_register_validator_code.setFont(font4)
+        self.line_edit_register_validator_code.setFont(font5)
         self.line_edit_register_validator_code.setStyleSheet(u"")
         self.line_edit_register_validator_code.setMaxLength(6)
 
@@ -414,7 +432,7 @@ class Ui_Form(object):
         self.line_edit_user_register_password = QLineEdit(self.line_edit_user_register_password_widget)
         self.line_edit_user_register_password.setObjectName(u"line_edit_user_register_password")
         self.line_edit_user_register_password.setMinimumSize(QSize(0, 25))
-        self.line_edit_user_register_password.setFont(font4)
+        self.line_edit_user_register_password.setFont(font5)
         self.line_edit_user_register_password.setStyleSheet(u"")
         self.line_edit_user_register_password.setMaxLength(20)
         self.line_edit_user_register_password.setEchoMode(QLineEdit.Password)
@@ -463,7 +481,7 @@ class Ui_Form(object):
         self.line_edit_user_register_password_check = QLineEdit(self.line_edit_user_register_password_check_widget)
         self.line_edit_user_register_password_check.setObjectName(u"line_edit_user_register_password_check")
         self.line_edit_user_register_password_check.setMinimumSize(QSize(0, 25))
-        self.line_edit_user_register_password_check.setFont(font4)
+        self.line_edit_user_register_password_check.setFont(font5)
         self.line_edit_user_register_password_check.setStyleSheet(u"")
         self.line_edit_user_register_password_check.setMaxLength(20)
         self.line_edit_user_register_password_check.setEchoMode(QLineEdit.Password)
@@ -504,7 +522,7 @@ class Ui_Form(object):
         self.line_edit_user_register_invite_code = QLineEdit(self.tab_6)
         self.line_edit_user_register_invite_code.setObjectName(u"line_edit_user_register_invite_code")
         self.line_edit_user_register_invite_code.setMinimumSize(QSize(0, 25))
-        self.line_edit_user_register_invite_code.setFont(font4)
+        self.line_edit_user_register_invite_code.setFont(font5)
         self.line_edit_user_register_invite_code.setStyleSheet(u"")
         self.line_edit_user_register_invite_code.setMaxLength(20)
 
@@ -520,6 +538,7 @@ class Ui_Form(object):
         self.verticalLayout_4.addWidget(self.label_user_register_invite_code_prompt)
 
         self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setSpacing(2)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.check_box_user_area_agree_protocol = QCheckBox(self.tab_6)
         self.check_box_user_area_agree_protocol.setObjectName(u"check_box_user_area_agree_protocol")
@@ -529,10 +548,7 @@ class Ui_Form(object):
         self.label_2 = QLabel(self.tab_6)
         self.label_2.setObjectName(u"label_2")
         self.label_2.setMinimumSize(QSize(0, 0))
-        font5 = QFont()
-        font5.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
-        font5.setBold(True)
-        self.label_2.setFont(font5)
+        self.label_2.setFont(font3)
         self.label_2.setAlignment(Qt.AlignCenter)
 
         self.horizontalLayout_4.addWidget(self.label_2)
@@ -545,7 +561,7 @@ class Ui_Form(object):
 
         self.label_7 = QLabel(self.tab_6)
         self.label_7.setObjectName(u"label_7")
-        self.label_7.setFont(font5)
+        self.label_7.setFont(font3)
         self.label_7.setAlignment(Qt.AlignCenter)
 
         self.horizontalLayout_4.addWidget(self.label_7)
@@ -558,7 +574,7 @@ class Ui_Form(object):
 
         self.label_10 = QLabel(self.tab_6)
         self.label_10.setObjectName(u"label_10")
-        self.label_10.setFont(font5)
+        self.label_10.setFont(font3)
         self.label_10.setAlignment(Qt.AlignCenter)
 
         self.horizontalLayout_4.addWidget(self.label_10)
@@ -585,7 +601,7 @@ class Ui_Form(object):
         self.push_button_user_register = QPushButton(self.tab_6)
         self.push_button_user_register.setObjectName(u"push_button_user_register")
         self.push_button_user_register.setMinimumSize(QSize(120, 40))
-        self.push_button_user_register.setFont(font4)
+        self.push_button_user_register.setFont(font5)
         self.push_button_user_register.setStyleSheet(u"")
 
         self.horizontalLayout_7.addWidget(self.push_button_user_register)
@@ -657,7 +673,7 @@ class Ui_Form(object):
         self.line_edit_user_forget_username = QLineEdit(self.tab)
         self.line_edit_user_forget_username.setObjectName(u"line_edit_user_forget_username")
         self.line_edit_user_forget_username.setMinimumSize(QSize(0, 25))
-        self.line_edit_user_forget_username.setFont(font4)
+        self.line_edit_user_forget_username.setFont(font5)
         self.line_edit_user_forget_username.setStyleSheet(u"")
         self.line_edit_user_forget_username.setMaxLength(20)
 
@@ -687,7 +703,7 @@ class Ui_Form(object):
         self.line_edit_forget_validator_code = QLineEdit(self.tab)
         self.line_edit_forget_validator_code.setObjectName(u"line_edit_forget_validator_code")
         self.line_edit_forget_validator_code.setMinimumSize(QSize(0, 25))
-        self.line_edit_forget_validator_code.setFont(font4)
+        self.line_edit_forget_validator_code.setFont(font5)
         self.line_edit_forget_validator_code.setStyleSheet(u"")
         self.line_edit_forget_validator_code.setMaxLength(6)
 
@@ -732,7 +748,7 @@ class Ui_Form(object):
         self.line_edit_user_forget_password = QLineEdit(self.line_edit_user_forget_password_widget)
         self.line_edit_user_forget_password.setObjectName(u"line_edit_user_forget_password")
         self.line_edit_user_forget_password.setMinimumSize(QSize(0, 25))
-        self.line_edit_user_forget_password.setFont(font4)
+        self.line_edit_user_forget_password.setFont(font5)
         self.line_edit_user_forget_password.setStyleSheet(u"")
         self.line_edit_user_forget_password.setMaxLength(20)
         self.line_edit_user_forget_password.setEchoMode(QLineEdit.Password)
@@ -781,7 +797,7 @@ class Ui_Form(object):
         self.line_edit_user_forget_password_check = QLineEdit(self.line_edit_user_forget_password_check_widget)
         self.line_edit_user_forget_password_check.setObjectName(u"line_edit_user_forget_password_check")
         self.line_edit_user_forget_password_check.setMinimumSize(QSize(0, 25))
-        self.line_edit_user_forget_password_check.setFont(font4)
+        self.line_edit_user_forget_password_check.setFont(font5)
         self.line_edit_user_forget_password_check.setStyleSheet(u"")
         self.line_edit_user_forget_password_check.setMaxLength(20)
         self.line_edit_user_forget_password_check.setEchoMode(QLineEdit.Password)
@@ -824,7 +840,7 @@ class Ui_Form(object):
         self.push_button_user_forget = QPushButton(self.tab)
         self.push_button_user_forget.setObjectName(u"push_button_user_forget")
         self.push_button_user_forget.setMinimumSize(QSize(120, 40))
-        self.push_button_user_forget.setFont(font4)
+        self.push_button_user_forget.setFont(font5)
         self.push_button_user_forget.setStyleSheet(u"")
 
         self.horizontalLayout_25.addWidget(self.push_button_user_forget)
@@ -857,7 +873,7 @@ class Ui_Form(object):
         self.label_3 = QLabel(Form)
         self.label_3.setObjectName(u"label_3")
         self.label_3.setMinimumSize(QSize(0, 0))
-        self.label_3.setFont(font5)
+        self.label_3.setFont(font3)
         self.label_3.setStyleSheet(u"border: none; background-color: transparent;")
         self.label_3.setAlignment(Qt.AlignCenter)
 
@@ -897,6 +913,8 @@ class Ui_Form(object):
         self.label_user_login_title_3.setText(QCoreApplication.translate("Form", u"\u5bc6\u7801\uff1a", None))
         self.push_button_user_login_password_view_control.setText("")
         self.label_user_login_password_prompt.setText("")
+        self.check_box_user_area_auto_start.setText("")
+        self.label_4.setText(QCoreApplication.translate("Form", u"\u5f00\u673a\u81ea\u542f\u52a8", None))
         self.push_button_user_login_forget_password.setText(QCoreApplication.translate("Form", u"\u5fd8\u8bb0\u5bc6\u7801\uff1f", None))
         self.label_user_login_bottom_space.setText("")
         self.push_button_user_login.setText(QCoreApplication.translate("Form", u"\u767b\u5f55", None))

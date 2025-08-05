@@ -235,7 +235,7 @@ def setting_has_change(old_data, new_data):
     setting_key_list = ["theme", "themeMode", "themeTransparency", "wakeUpByKeyboard", "wakeUpByKeyboardType",
                         "screenName", "windowPosition", "formAnimationType", "formAnimationTime", "wakeUpByMouse",
                         "wakeUpByMouseTime", "wakeUpByMouseHide", "menuPosition", "fontName", "messageNotification",
-                        "powerOn", "autoUpdate", "width", "height", "themeIcon"]
+                        "autoUpdate", "width", "height", "themeIcon"]
     for setting_key in setting_key_list:
         if old_setting.get(setting_key) != new_setting.get(setting_key):
             return True
@@ -266,7 +266,7 @@ def setting_system_has_change(old_data, new_data):
     """
     old_setting = old_data["data"]["SettingCard"]
     new_setting = new_data["data"]["SettingCard"]
-    setting_key_list = ["wakeUpByKeyboard", "wakeUpByKeyboardType", "powerOn"]
+    setting_key_list = ["wakeUpByKeyboard", "wakeUpByKeyboardType"]
     for setting_key in setting_key_list:
         if old_setting.get(setting_key) != new_setting.get(setting_key):
             return True

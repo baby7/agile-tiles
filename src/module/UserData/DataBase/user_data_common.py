@@ -20,7 +20,6 @@ setting_config = {
     "fontName": "微软雅黑",              # 字体名称
 
     "messageNotification": True,        # 消息通知
-    "powerOn": True,                    # 开机自启动
     "autoUpdate": True,                 # 自动更新
 
     "width": 6,                         # 宽度

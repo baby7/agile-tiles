@@ -42,7 +42,7 @@ class ToolCard(AggregationCard):
                 "type": "程序员",
                 "title": "Ctool",
                 "des": "程序员工具箱",
-                "icon": "Base/tool.svg",
+                "icon": "png:Actor/Ctool.png",
                 "content":{
                     "url": "/static/html/Tool/ctool_web/index.html",
                     "size": [1000, 600]
@@ -55,7 +55,7 @@ class ToolCard(AggregationCard):
                 "type": "程序员",
                 "title": "Quick Reference",
                 "des": "程序员速查表",
-                "icon": "Office/doc-search.svg",
+                "icon": "png:Actor/QuickReference.png",
                 "content":{
                     "url": "/static/html/Tool/reference/index.html",
                     "size": [1200, 950]
@@ -68,7 +68,7 @@ class ToolCard(AggregationCard):
                 "type": "程序员",
                 "title": "Hoppscotch",
                 "des": "API调试工具",
-                "icon": "Connect/api.svg",
+                "icon": "png:Actor/Hoppscotch.png",
                 "content":{
                     "url": "https://hoppscotch.io/",
                     "size": [1200, 950]
@@ -82,7 +82,7 @@ class ToolCard(AggregationCard):
                 "type": "作图",
                 "title": "Excalidraw",
                 "des": "手绘风格的绘图工具",
-                "icon": "Components/platte.svg",
+                "icon": "png:Actor/Excalidraw.png",
                 "content":{
                     "url": "https://excalidraw.com/",
                     "size": [1000, 800]
@@ -95,7 +95,7 @@ class ToolCard(AggregationCard):
                 "type": "作图",
                 "title": "Draw.io",
                 "des": "经典作图工具",
-                "icon": "Edit/mind-mapping.svg",
+                "icon": "png:Actor/DrawIO.png",
                 "content":{
                     "url": "https://app.diagrams.net/index.html",
                     "size": [1000, 800]
@@ -108,7 +108,7 @@ class ToolCard(AggregationCard):
                 "type": "作图",
                 "title": "piskel",
                 "des": "像素绘图工具",
-                "icon": "Edit/grid-sixteen.svg",
+                "icon": "png:Actor/Piskel.png",
                 "content":{
                     "url": "https://www.piskelapp.com/p/create/sprite",
                     "size": [1000, 800]
@@ -121,7 +121,7 @@ class ToolCard(AggregationCard):
                 "type": "作图",
                 "title": "SvgPathEditor",
                 "des": "Svg编辑工具",
-                "icon": "Components/platte.svg",
+                "icon": "png:Actor/SvgPathEditor.png",
                 "content":{
                     "url": "https://yqnn.github.io/svg-path-editor/",
                     "size": [1000, 800]
@@ -134,7 +134,7 @@ class ToolCard(AggregationCard):
                 "type": "作图",
                 "title": "ASCIIFlow",
                 "des": "Ascii作图工具",
-                "icon": "Edit/write.svg",
+                "icon": "png:Actor/AsciiFlow.png",
                 "content":{
                     "url": "/static/html/Tool/asciiflow/index.html",
                     "size": [1200, 950]
@@ -148,7 +148,7 @@ class ToolCard(AggregationCard):
                 "type": "生活",
                 "title": "中国家庭称谓计算器",
                 "des": "这下搞懂了",
-                "icon": "Charts/chart-graph.svg",
+                "icon": "png:Actor/RelationShip.png",
                 "content":{
                     "url": "https://passer-by.com/relationship/vue/#/",
                     "size": [600, 800]
@@ -161,7 +161,7 @@ class ToolCard(AggregationCard):
                 "type": "生活",
                 "title": "中国制霸生成器",
                 "des": "看看你都去过哪些省",
-                "icon": "Travel/map-two.svg",
+                "icon": "png:Actor/ChinaWorldEX.png",
                 "content":{
                     "url": "https://lab.magiconch.com/china-ex/",
                     "size": [600, 800]
@@ -174,7 +174,7 @@ class ToolCard(AggregationCard):
                 "type": "生活",
                 "title": "全球制霸生成器",
                 "des": "看看你都去过哪些国家",
-                "icon": "Travel/world.svg",
+                "icon": "png:Actor/ChinaWorldEX.png",
                 "content":{
                     "url": "https://lab.magiconch.com/world-ex/",
                     "size": [600, 800]
@@ -188,7 +188,7 @@ class ToolCard(AggregationCard):
                 "type": "计算器",
                 "title": "Calcium Calculator",
                 "des": "科学计算器",
-                "icon": "Charts/arithmetic-one.svg",
+                "icon": "png:Actor/Calcium.png",
                 "content": {
                     "url": "https://calcium.js.org/",
                     "size": [1000, 600]
@@ -201,7 +201,7 @@ class ToolCard(AggregationCard):
                 "type": "计算器",
                 "title": "CL Calc",
                 "des": "命令行计算器",
-                "icon": "Others/terminal.svg",
+                "icon": "png:Actor/Clcalc.png",
                 "content": {
                     "url": "https://clcalc.net/",
                     "size": [1000, 600]
@@ -214,7 +214,7 @@ class ToolCard(AggregationCard):
                 "type": "计算器",
                 "title": "中国家庭称谓计算器",
                 "des": "这下搞懂了",
-                "icon": "Charts/chart-graph.svg",
+                "icon": "png:Actor/RelationShip.png",
                 "content":{
                     "url": "https://passer-by.com/relationship/vue/#/",
                     "size": [600, 800]

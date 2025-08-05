@@ -107,14 +107,13 @@ class SettingSystemWindow(AgileTilesAcrylicWindow, Ui_Form):
             # 开机自启动
             try:
                 if self.check_box_self_starting.isChecked():
-                    self.setting_config['powerOn'] = True
                     winreg_util.set_auto_start(True)
                 else:
-                    self.setting_config['powerOn'] = False
                     winreg_util.set_auto_start(False)
             except Exception as e:
                 traceback.print_exc()
-                print(f"设置快捷键失败: {e}", file=sys.stderr)
+                print(f"设置开机自启动失败: {e}", file=sys.stderr)
+                message_box_util.box_information(self.use_parent, "错误", "设置开机自启动失败")
             # 键盘唤醒
             if self.check_box_keyboard.isChecked():
                 self.setting_config["wakeUpByKeyboard"] = True

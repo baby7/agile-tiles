@@ -183,7 +183,7 @@ class ChatCard(AggregationCard):
                 "type": "智能体",
                 "title": "好评生成器",
                 "des": "快速生成长好评",
-                "icon": "Hands/good-two.svg",
+                "icon": "png:Actor/Good.png",
                 "content": {
                     "prologue": "您好！我是您的五星好评小帮手。请告诉我您要评价的商品/服务名称，以及它的1-3个最突出的优点（或者我来帮您发掘亮点？）。",
                     "persona": """
@@ -217,7 +217,7 @@ class ChatCard(AggregationCard):
                 "type": "智能体",
                 "title": "模拟Linux终端",
                 "des": "快速学习 Linux",
-                "icon": "Others/terminal.svg",
+                "icon": "png:Actor/Terminal.png",
                 "content": {
                     "prologue": "user@deepseek-terminal:~$",
                     "persona": """
@@ -286,7 +286,7 @@ user@deepseek-terminal:~/Documents$
                 "type": "智能体",
                 "title": "取名字助手",
                 "des": "您好，起名大师为您服务！",
-                "icon": "Edit/add-text-two.svg",
+                "icon": "png:Actor/Name.png",
                 "content": {
                     "prologue": "您好，起名大师为您服务！请问是为（宝宝/公司/品牌/小说角色/宠物...）取名字吗？想要什么风格？（比如：文雅诗意/大气响亮/可爱活泼/独特小众/有特定寓意/符合生辰八字...）",
                     "persona": """
@@ -435,7 +435,7 @@ user@deepseek-terminal:~/Documents$
                 "type": "智能体",
                 "title": "算命先生",
                 "des": "缘主，可是心中有所惑？",
-                "icon": "Peoples/avatar.svg",
+                "icon": "png:Actor/FortuneTeller.png",
                 "content": {
                     "prologue": "(捋须，略带沧桑感) 这位缘主，请留步。可是心中有所惑，欲问前程吉凶、缘分深浅？不妨报上生辰八字（年月日时，注明公历农历），或想测何事？（财运、事业、姻缘...）",
                     "persona": """
@@ -472,7 +472,7 @@ user@deepseek-terminal:~/Documents$
                 "type": "智能体",
                 "title": "角色扮演",
                 "des": "今天想扮演什么角色呢？",
-                "icon": "Peoples/peoples.svg",
+                "icon": "png:Actor/Cosplay.png",
                 "content": {
                     "prologue": "(等待用户设定) 请告诉我您想扮演谁？或者您希望我扮演什么角色？（例如：中世纪骑士、未来科学家、傲娇大小姐、严厉导师...）以及我们互动的场景背景？",
                     "persona": """

@@ -42,7 +42,7 @@ class GameCard(AggregationCard):
                 "type": "文字游戏",
                 "title": "小黑屋",
                 "des": "纯文字的冒险游戏",
-                "icon": "Build/circle-house.svg",
+                "icon": "png:Actor/ADR.png",
                 "content": {
                     "url": "/static/html/Game/adarkroom/index.html?lang=zh_cn",
                     "size": [1200, 800]
@@ -55,7 +55,7 @@ class GameCard(AggregationCard):
                 "type": "文字游戏",
                 "title": "我的文字修仙全靠刷",
                 "des": "刷！刷！刷！",
-                "icon": "Edit/add-text.svg",
+                "icon": "png:Actor/XiuXian.png",
                 "content": {
                     "url": "/static/html/Game/XiuXianGame/index.html",
                     "size": [800, 950]
@@ -68,7 +68,7 @@ class GameCard(AggregationCard):
                 "type": "文字游戏",
                 "title": "人生重开模拟器",
                 "des": "这垃圾人生一秒也不想呆了",
-                "icon": "Arrows/redo.svg",
+                "icon": "png:Actor/LR.png",
                 "content": {
                     "url": "https://liferestart.syaro.io/public/index.html",
                     "size": [600, 800]
@@ -81,7 +81,7 @@ class GameCard(AggregationCard):
                 "type": "文字游戏",
                 "title": "太空公司",
                 "des": "太空公司",
-                "icon": "Build/space-colony.svg",
+                "icon": "png:Actor/SpaceCompany.png",
                 "content": {
                     "url": "/static/html/Game/SpaceCompany/index.html",
                     "size": [1200, 800]
@@ -107,7 +107,7 @@ class GameCard(AggregationCard):
                 "type": "文字游戏",
                 "title": "信任的进化",
                 "des": "THE EVOLUTION OF TRUST",
-                "icon": "Baby/boy.svg",
+                "icon": "png:Actor/Trust.png",
                 "content": {
                     "url": "https://dccxi.com/trust/",
                     "size": [1200, 800]
@@ -120,7 +120,7 @@ class GameCard(AggregationCard):
                 "type": "文字游戏",
                 "title": "超苦逼冒险者",
                 "des": "超苦逼冒险者",
-                "icon": "Emoji/weary-face.svg",
+                "icon": "png:Actor/KuBitionAdvanture.png",
                 "content": {
                     "url": "/static/html/Game/KuBiTionAdvanture/index.html",
                     "size": [1000, 610]
@@ -134,7 +134,7 @@ class GameCard(AggregationCard):
                 "type": "RGB类",
                 "title": "Idle",
                 "des": "挂机放置类小游戏",
-                "icon": "Travel/map-two.svg",
+                "icon": "png:Actor/Idle.png",
                 "content": {
                     "url": "http://couy.xyz/#/",
                     "size": [1200, 700]
@@ -148,7 +148,7 @@ class GameCard(AggregationCard):
                 "type": "经典",
                 "title": "2048",
                 "des": "合并出2048吧！",
-                "icon": "Edit/newlybuild.svg",
+                "icon": "png:Actor/2048.png",
                 "content": {
                     "url": "/static/html/Game/2048/index.html",
                     "size": [400, 600]
@@ -161,7 +161,7 @@ class GameCard(AggregationCard):
                 "type": "经典",
                 "title": "圈小猫",
                 "des": "点击小圆点，圈住小猫猫",
-                "icon": "Animals/cat.svg",
+                "icon": "png:Actor/CorralCat.png",
                 "content": {
                     "url": "/static/html/Game/CorralCat/index.html",
                     "size": [400, 550]
