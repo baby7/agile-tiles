@@ -28,7 +28,7 @@ class PaymentWebSocketClient(QObject):
         self._close_websocket()
 
         # 构建带订单号的URL
-        url = QUrl(f"{WS_BASE_URL}/payment/normal/result")
+        url = QUrl(f"{WS_BASE_URL}/websocket/normal/payment")
         query = QUrlQuery()
         # query.addQueryItem("Authorization", self.use_parent.access_token)
         query.addQueryItem("outTradeNo", self.current_order_no)

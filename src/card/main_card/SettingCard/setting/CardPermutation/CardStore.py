@@ -52,7 +52,7 @@ class CardStore(QtWidgets.QWidget):
             int(self.height() * 0.9)
         ))
         main_widget.setStyleSheet(f"""
-            background-color: {'rgba(34, 34, 34, 255)' if self.is_dark else 'rgba(255, 255, 255, 160)'};
+            background-color: {'rgba(34, 34, 34, 255)' if self.is_dark else 'rgba(244, 245, 246, 240)'};
             border-radius: 15px;
             color: {'rgba(255, 255, 255, 160)' if self.is_dark else 'rgba(34, 34, 34, 255)'};
         """)

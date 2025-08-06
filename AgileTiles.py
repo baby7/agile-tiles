@@ -1303,18 +1303,19 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         if self.app_title is None:
             self.quit_before_do()
             QApplication.instance().quit()
-            return
+            exit()
         if is_hide_dialog:
             # 如果不显示对话框，则直接退出
             self.quit_before_do()
             QApplication.instance().quit()
-            return
+            exit()
         else:
             # 显示对话框来确认
             confirm = self.toolkit.message_box_util.box_acknowledgement(self, "退出", f"确定要退出{self.app_title}吗？")
             if confirm:
                 self.quit_before_do()
                 QApplication.instance().quit()
+                exit()
 
     def quit_before_do(self):
         """退出前置处理"""
@@ -1402,8 +1403,8 @@ if __name__ == '__main__':
     # 创建QApplication对象
     app = QtWidgets.QApplication(sys.argv)
     # 防止事件循环退出
-    timer = QTimer()
-    timer.start(1000)
+    # timer = QTimer()
+    # timer.start(1000)
     # 启动
     my_form = MyForm()
     my_form.show()

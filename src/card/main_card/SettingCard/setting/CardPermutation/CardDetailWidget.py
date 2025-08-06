@@ -3,13 +3,14 @@ import traceback
 
 from PySide6 import QtCore, QtWidgets, QtGui
 from PySide6.QtWidgets import (
-    QWidget, QLabel, QVBoxLayout, QHBoxLayout, QSizePolicy, QFrame, QTextBrowser
+    QWidget, QLabel, QVBoxLayout, QHBoxLayout, QSizePolicy, QFrame, QTextBrowser, QTabWidget
 )
 from PySide6.QtCore import Qt, QSize, Signal
 from PySide6.QtGui import QPixmap, QTextCursor, QCursor, QColor
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
 from src.client import common
+from src.ui import style_util
 
 
 class CardDetailWidget(QWidget):
@@ -34,6 +35,7 @@ class CardDetailWidget(QWidget):
             "id": 0,
             "title": "卡片标题",
             "description": "卡片详情",
+            "introduction": "## 卡片详细介绍\n\n这里是卡片的详细介绍内容，使用Markdown格式编写。\n\n- 功能1\n- 功能2\n- 功能3\n\n```python\nprint('示例代码')\n```",
             "developer": {
                 "nickName": "开发者名称"
             },
@@ -104,12 +106,15 @@ class CardDetailWidget(QWidget):
                 "icon_bg": QColor(60, 60, 60),
                 "icon_border": QColor(100, 100, 100),
                 "title_bar": QColor(50, 50, 50),
+                "tab_bg": QColor(45, 45, 45),
+                "tab_active": QColor(70, 70, 70),
+                "tab_inactive": QColor(55, 55, 55),
             }
         else:
             # 浅色主题
             self.colors = {
-                "main_bg": QColor(255, 255, 255, 240),
-                "card_bg": QColor(248, 249, 250),
+                "main_bg": QColor(244, 245, 246, 240),
+                "card_bg": QColor(234, 235, 236),
                 "history_bg": QColor(255, 255, 255),
                 "history_border": QColor(224, 224, 224),
                 "text_primary": QColor(33, 37, 41),
@@ -121,6 +126,9 @@ class CardDetailWidget(QWidget):
                 "icon_bg": QColor(240, 240, 240),
                 "icon_border": QColor(200, 200, 200),
                 "title_bar": QColor(245, 245, 245),
+                "tab_bg": QColor(248, 249, 250),
+                "tab_active": QColor(255, 255, 255),
+                "tab_inactive": QColor(240, 240, 240),
             }
 
         # 基础样式设置
@@ -234,41 +242,47 @@ class CardDetailWidget(QWidget):
 
         main_layout.addWidget(top_frame)
 
-        # 版本历史区域
-        history_frame = QFrame()
-        history_frame.setStyleSheet(f"""
-            QFrame {{
-                background-color: {self.colors["history_bg"].name()};
-                border-radius: 12px;
-                border: 1px solid {self.colors["history_border"].name()};
+        # 创建选项卡区域
+        tab_widget = QTabWidget()
+        style_util.set_tab_widget_style(tab_widget, self.is_dark)
+
+        # 详情选项卡
+        detail_tab = QWidget()
+        detail_tab.setStyleSheet(f"background: {self.colors['tab_active'].name()}; border-radius: 12px;")
+        detail_layout = QVBoxLayout(detail_tab)
+        detail_layout.setContentsMargins(0, 0, 0, 0)
+
+        # 详情内容 - 使用QTextBrowser显示Markdown
+        self.detail_browser = QTextBrowser()
+        self.detail_browser.setStyleSheet(f"""
+            QTextBrowser {{
+                background: transparent;
+                border: none;
+                padding: 20px;
+                font-size: 14px;
+                color: {self.colors["text_secondary"].name()};
+            }}
+            QTextBrowser a {{
+                color: {self.colors["link"].name()};
             }}
         """)
-        history_layout = QVBoxLayout(history_frame)
+        self.detail_browser.setOpenExternalLinks(True)
+        detail_layout.addWidget(self.detail_browser)
+        tab_widget.addTab(detail_tab, "详情")
+
+        # 更新记录选项卡
+        history_tab = QWidget()
+        history_tab.setStyleSheet(f"background: {self.colors['tab_active'].name()}; border-radius: 12px;")
+        history_layout = QVBoxLayout(history_tab)
         history_layout.setContentsMargins(0, 0, 0, 0)
 
-        # 版本历史标题
-        history_title = QLabel("版本历史")
-        history_title.setStyleSheet(f"""
-            QLabel {{
-                background-color: {self.colors["title_bar"].name()};
-                font-size: 18px;
-                font-weight: bold;
-                color: {self.colors["text_primary"].name()};
-                padding: 15px 20px;
-                border-bottom: 1px solid {self.colors["divider"].name()};
-                border-top-left-radius: 12px;
-                border-top-right-radius: 12px;
-            }}
-        """)
-        history_layout.addWidget(history_title)
-
-        # 版本历史内容区域
+        # 更新记录内容
         self.version_browser = QTextBrowser()
         self.version_browser.setStyleSheet(f"""
             QTextBrowser {{
-                background-color: transparent;
+                background: transparent;
                 border: none;
-                padding: 15px 20px;
+                padding: 20px;
                 font-size: 13px;
                 color: {self.colors["text_secondary"].name()};
             }}
@@ -278,11 +292,10 @@ class CardDetailWidget(QWidget):
         """)
         self.version_browser.setOpenExternalLinks(True)
         history_layout.addWidget(self.version_browser)
+        tab_widget.addTab(history_tab, "更新记录")
 
-        main_layout.addWidget(history_frame, 1)  # 添加伸缩因子使版本历史区域可扩展
-
-        # 添加底部留白
-        # main_layout.addStretch(1)
+        # 将选项卡添加到主布局
+        main_layout.addWidget(tab_widget, 1)  # 添加伸缩因子使选项卡区域可扩展
 
     def fetch_card_data(self):
         """请求卡片数据"""
@@ -300,6 +313,7 @@ class CardDetailWidget(QWidget):
 
         try:
             data = json.loads(bytes(reply.readAll()).decode('utf-8'))
+            print(data)
             # 确保返回的数据结构正确
             if "data" in data:
                 result = data["data"]
@@ -351,6 +365,12 @@ class CardDetailWidget(QWidget):
                     f"卡片大小(宽×高): {', '.join(current_version.setdefault('supportSizeList')).replace('_', '×')}")
             else:
                 self.support_size_label.setText(f"卡片大小(宽×高): 未知")
+
+            # 设置详情内容
+            introduction = data.setdefault("introduction", "暂无详情介绍")
+            print(f"详情内容:{introduction}")
+            self.detail_browser.setMarkdown(introduction)
+            self.detail_browser.moveCursor(QTextCursor.Start)  # 滚动到顶部
 
             # 生成版本历史Markdown
             self.generate_version_history(data.setdefault("versionHistory", []))
