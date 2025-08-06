@@ -14,7 +14,7 @@ from src.card.main_card.SettingCard.setting.setting_system import SettingSystemW
 from src.card.main_card.SettingCard.setting.setting_screen import SettingScreenWindow
 from src.card.main_card.SettingCard.setting.setting_theme import SettingThemeWindow
 from src.client import common
-from src.constant import version_constant, data_save_constant
+from src.constant import version_constant, data_save_constant, open_source_constant
 from src.module.About.about_us import AboutUsWindow
 from src.module.Feedback import feedback_box_util
 from src.module.Ticket import ticket_box_util
@@ -105,6 +105,7 @@ class SettingCard(MainCard):
             # 关于
             [self.parent.push_button_setting_service_agreement, "服务协议", "Office", "agreement", None, None],
             [self.parent.push_button_setting_privacy_agreement, "隐私协议", "Peoples", "personal-privacy", None, None],
+            [self.parent.push_button_setting_open_source, "开源许可", "Brand", "github-one", None, None],
             [self.parent.push_button_setting_about_us, "关于我们", "Character", "info", None, None],
         ]
 
@@ -143,6 +144,7 @@ class SettingCard(MainCard):
         # 关于
         self.parent.push_button_setting_service_agreement.clicked.connect(self.push_button_setting_service_agreement_click)
         self.parent.push_button_setting_privacy_agreement.clicked.connect(self.push_button_setting_privacy_agreement_click)
+        self.parent.push_button_setting_open_source.clicked.connect(self.push_button_setting_open_source_click)
         self.parent.push_button_setting_about_us.clicked.connect(self.push_button_setting_about_us_click)
         # 设置快捷键
         self.main_object.keyboard_re_init()
@@ -287,6 +289,15 @@ class SettingCard(MainCard):
     def push_button_setting_privacy_agreement_click(self):
         self.toolkit.resolution_util.out_animation(self.main_object)
         browser_util.open_url(common.privacy_policy_url)
+
+    def push_button_setting_open_source_click(self):
+        self.toolkit.resolution_util.out_animation(self.main_object)
+        text_box_util.show_text_dialog(self.main_object, "开源许可", {
+            "content": open_source_constant.open_source,
+            "size": [600, 600],
+            "longText": True,
+            "markdown": True
+        })
 
     def push_button_setting_about_us_click(self):
         self.toolkit.resolution_util.out_animation(self.main_object)

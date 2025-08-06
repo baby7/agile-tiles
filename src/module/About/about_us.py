@@ -48,7 +48,7 @@ class AboutUsWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.label_icon.setStyleSheet(background)
         self.label_title.setStyleSheet(background)
         self.label_copyright.setStyleSheet(background)
-        self.label_framework.setStyleSheet(background)
+        self.label_company.setStyleSheet(background)
         # 设置图标
         if self.is_dark:
             self.label_icon.setPixmap(QPixmap("./static/img/icon/dark/icon.png"))

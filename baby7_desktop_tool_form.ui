@@ -352,6 +352,22 @@ background-color:rgba(255, 255, 255, 200);
              </widget>
             </item>
             <item>
+             <widget class="QPushButton" name="push_button_setting_open_source">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>70</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string>开源许可</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="push_button_setting_about_us">
               <property name="minimumSize">
                <size>

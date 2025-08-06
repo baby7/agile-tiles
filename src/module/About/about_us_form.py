@@ -23,7 +23,7 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(337, 394)
+        Form.resize(326, 358)
         self.gridLayout = QGridLayout(Form)
         self.gridLayout.setObjectName(u"gridLayout")
         self.verticalLayout = QVBoxLayout()
@@ -67,6 +67,13 @@ class Ui_Form(object):
 
         self.verticalLayout.addWidget(self.label_copyright)
 
+        self.label_company = QLabel(Form)
+        self.label_company.setObjectName(u"label_company")
+        self.label_company.setMaximumSize(QSize(16777215, 40))
+        self.label_company.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout.addWidget(self.label_company)
+
         self.push_button_link = QPushButton(Form)
         self.push_button_link.setObjectName(u"push_button_link")
 
@@ -75,13 +82,6 @@ class Ui_Form(object):
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer)
-
-        self.label_framework = QLabel(Form)
-        self.label_framework.setObjectName(u"label_framework")
-        self.label_framework.setMaximumSize(QSize(16777215, 40))
-        self.label_framework.setAlignment(Qt.AlignCenter)
-
-        self.verticalLayout.addWidget(self.label_framework)
 
 
         self.gridLayout.addLayout(self.verticalLayout, 0, 0, 1, 1)
@@ -97,7 +97,7 @@ class Ui_Form(object):
         self.label_icon.setText(QCoreApplication.translate("Form", u"\u56fe\u6807", None))
         self.label_title.setText(QCoreApplication.translate("Form", u"\u7075\u5361\u9762\u677f v0.1.1", None))
         self.label_copyright.setText(QCoreApplication.translate("Form", u"Copyright \u00a9 2025", None))
+        self.label_company.setText(QCoreApplication.translate("Form", u"\u676d\u5dde\u5e02\u62f1\u5885\u533a\u542f\u676d\u7075\u5361\u8f6f\u4ef6\u5f00\u53d1\u5de5\u4f5c\u5ba4", None))
         self.push_button_link.setText(QCoreApplication.translate("Form", u"https://www.agiletiles.com/index.html", None))
-        self.label_framework.setText(QCoreApplication.translate("Form", u"\u57fa\u4e8ePySide6\u5f00\u53d1", None))
     # retranslateUi
 

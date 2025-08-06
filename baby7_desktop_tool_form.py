@@ -199,6 +199,13 @@ class Ui_Form(object):
 
         self.horizontalLayout_3.addWidget(self.push_button_setting_privacy_agreement)
 
+        self.push_button_setting_open_source = QPushButton(self.widget_setting_about)
+        self.push_button_setting_open_source.setObjectName(u"push_button_setting_open_source")
+        self.push_button_setting_open_source.setMinimumSize(QSize(70, 70))
+        self.push_button_setting_open_source.setStyleSheet(u"")
+
+        self.horizontalLayout_3.addWidget(self.push_button_setting_open_source)
+
         self.push_button_setting_about_us = QPushButton(self.widget_setting_about)
         self.push_button_setting_about_us.setObjectName(u"push_button_setting_about_us")
         self.push_button_setting_about_us.setMinimumSize(QSize(70, 70))
@@ -1078,6 +1085,7 @@ class Ui_Form(object):
         self.label_19.setText(QCoreApplication.translate("Form", u"\u5173\u4e8e", None))
         self.push_button_setting_service_agreement.setText(QCoreApplication.translate("Form", u"\u670d\u52a1\u534f\u8bae", None))
         self.push_button_setting_privacy_agreement.setText(QCoreApplication.translate("Form", u"\u9690\u79c1\u534f\u8bae", None))
+        self.push_button_setting_open_source.setText(QCoreApplication.translate("Form", u"\u5f00\u6e90\u8bb8\u53ef", None))
         self.push_button_setting_about_us.setText(QCoreApplication.translate("Form", u"\u5173\u4e8e\u6211\u4eec", None))
         self.label_background.setText("")
         self.label_user_avatar.setText("")

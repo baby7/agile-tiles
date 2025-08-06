@@ -83,7 +83,15 @@ print("正在重命名文件夹 AgileTiles.dist 为 AgileTiles")
 copy_files("static", f"{output_dir}/static")
 print("完成复制 static 文件夹")
 
-# 步骤7: 删除"out/AgileTiles.dist"文件夹
+# 步骤7: 复制 licenses 文件夹
+copy_files("licenses", f"{output_dir}/licenses")
+print("完成复制 licenses 文件夹")
+
+# 步骤8: 复制 doc 文件夹
+copy_files("doc", f"{output_dir}/doc")
+print("完成复制 doc 文件夹")
+
+# 步骤0: 删除"out/AgileTiles.dist"文件夹
 if os.path.exists("out/AgileTiles.dist"):
     shutil.rmtree("out/AgileTiles.dist")
     print("完成删除 out/AgileTiles.dist 文件夹")

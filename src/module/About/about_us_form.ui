@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>337</width>
-    <height>394</height>
+    <width>326</width>
+    <height>358</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -114,6 +114,22 @@
       </widget>
      </item>
      <item>
+      <widget class="QLabel" name="label_company">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>杭州市拱墅区启杭灵卡软件开发工作室</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="push_button_link">
        <property name="text">
         <string>https://www.agiletiles.com/index.html</string>
@@ -132,22 +148,6 @@
         </size>
        </property>
       </spacer>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_framework">
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>40</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>基于PySide6开发</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>
