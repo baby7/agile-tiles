@@ -217,13 +217,7 @@ class AggregationCard(MainCard):
 
     def push_button_browser_click(self, aggregation_module):
         try:
-            title = aggregation_module["title"]
-            content = aggregation_module["content"]
-            link = None
-            if "link" in aggregation_module:
-                link = aggregation_module["link"]
-            dialog = self.toolkit.browser_box_util.show_browser_dialog(self.main_object, title, content, link)
-            self.dialog_list.append(dialog)
+            self.toolkit.browser_util.open_url(aggregation_module["content"]["url"])
         except Exception as e:
             print(e)
             self.main_object.logger.card_error("聚合卡片", f"获取{str(aggregation_module)}失败,请稍后重试")

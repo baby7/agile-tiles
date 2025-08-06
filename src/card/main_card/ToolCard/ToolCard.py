@@ -44,7 +44,7 @@ class ToolCard(AggregationCard):
                 "des": "程序员工具箱",
                 "icon": "png:Actor/Ctool.png",
                 "content":{
-                    "url": "/static/html/Tool/ctool_web/index.html",
+                    "url": "https://ctool.dev/tool.html#/tool/json?category=conversion",
                     "size": [1000, 600]
                 },
                 "link": "https://github.com/baiy/ctool",
@@ -57,7 +57,7 @@ class ToolCard(AggregationCard):
                 "des": "程序员速查表",
                 "icon": "png:Actor/QuickReference.png",
                 "content":{
-                    "url": "/static/html/Tool/reference/index.html",
+                    "url": "https://wangchujiang.com/reference/",
                     "size": [1200, 950]
                 },
                 "link": "https://github.com/jaywcjlove/reference",
@@ -136,7 +136,7 @@ class ToolCard(AggregationCard):
                 "des": "Ascii作图工具",
                 "icon": "png:Actor/AsciiFlow.png",
                 "content":{
-                    "url": "/static/html/Tool/asciiflow/index.html",
+                    "url": "https://asciiflow.com/#/",
                     "size": [1200, 950]
                 },
                 "link": "https://github.com/lewish/asciiflow",

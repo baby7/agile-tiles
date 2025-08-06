@@ -57,7 +57,7 @@ DEFAULT_DATA_MODEL = {
     "timestamp": 1716426823229,
     "card": [
         {
-            "name": "FlipClockCard",
+            "name": "LcdClockCard",
             "x": 1,
             "y": 1,
             "size": "2_1",

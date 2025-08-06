@@ -35,7 +35,7 @@ faulthandler.enable()
 # 热键监听
 from ctypes.wintypes import MSG
 # 基础界面框架
-from PySide6.QtCore import QEvent, Qt, qInstallMessageHandler, QSettings, QTimer, Signal, QEventLoop, Q_ARG, Slot, \
+from PySide6.QtCore import QEvent, Qt, qInstallMessageHandler, QSettings, Signal, QEventLoop, Q_ARG, Slot, \
     QMetaObject
 from PySide6.QtWidgets import QApplication, QSystemTrayIcon
 # 我的界面内容
@@ -1397,12 +1397,12 @@ if __name__ == '__main__':
     os.environ['QT_DEBUG_PLUGINS'] = '1'  # 启用插件调试
     # os.environ['QT_FATAL_WARNINGS'] = '1'  # 将警告转为崩溃
     # 其他配置
-    os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = (
-        "--disable-ipv6"            # 禁用IPv6
-        #" --log-level=3"            # 设置日志级别为警告及以上
-        " --no-sandbox"             # 禁用沙箱模式（在部分系统环境下需要）
-        # " --enable-logging --v=1"   # 启用Chromium日志
-    )
+    # os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = (
+    #     "--disable-ipv6"            # 禁用IPv6
+    #     #" --log-level=3"            # 设置日志级别为警告及以上
+    #     " --no-sandbox"             # 禁用沙箱模式（在部分系统环境下需要）
+    #     # " --enable-logging --v=1"   # 启用Chromium日志
+    # )
     # 限制单机挂载数量一个
     try:
         app = QtWidgets.QApplication(sys.argv)

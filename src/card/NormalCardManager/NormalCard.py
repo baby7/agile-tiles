@@ -9,7 +9,7 @@ from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QLabel
 
 from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
-from src.component.AgileTilesFramelessWebEngineView.AgileTilesFramelessWebEngineView import AgileTilesFramelessWebEngineView
+# from src.component.AgileTilesFramelessWebEngineView.AgileTilesFramelessWebEngineView import AgileTilesFramelessWebEngineView
 from src.card.NormalCardManager.UiSetting import UiSetting
 from src.constant import card_constant, data_save_constant
 
@@ -105,8 +105,8 @@ class NormalCard(QObject):
                                                  save_func=self.save_card_data_func,
                                                  toolkit=self.toolkit, logger=self.logger)
             # 对于需要引用的特殊类
-            if hasattr(self.card_plugin, 'AgileTilesFramelessWebEngineView'):
-                self.card_plugin.AgileTilesFramelessWebEngineView = AgileTilesFramelessWebEngineView
+            # if hasattr(self.card_plugin, 'AgileTilesFramelessWebEngineView'):
+            #     self.card_plugin.AgileTilesFramelessWebEngineView = AgileTilesFramelessWebEngineView
             if hasattr(self.card_plugin, 'AgileTilesAcrylicWindow'):
                 self.card_plugin.AgileTilesAcrylicWindow = AgileTilesAcrylicWindow
         except Exception as e:
