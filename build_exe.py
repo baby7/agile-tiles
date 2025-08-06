@@ -27,13 +27,12 @@ nuitka_command = [
     "nuitka",
 
     "--mingw64",                                    # 使用 MinGW64 编译器
-    # "--onefile",                                    # 将所有文件打包为一个单独的 .exe 文件，适合分发时使用。
     "--standalone",                                 # 生成一个包含所有依赖的文件夹，里面有可执行文件和依赖。
     "--windows-console-mode=disable",               # 禁用控制台窗口
 
     "--enable-plugin=pyside6",                      # 使用 PySide6 插件
     "--disable-plugin=pyqt5,pyqt6",                 # 禁用 PyQt5 和 PyQt6 插件
-    "--include-qt-plugins=multimedia", # 音乐播放器需要用到mediaservice,multimedia
+    "--include-qt-plugins=multimedia",              # 音乐播放器需要用到multimedia
     "--include-package=wmi",                        # wmi包
     "--include-package=win32com",                   # pywin32的核心包
     "--include-package=pywintypes",                 # pywin32的核心包
