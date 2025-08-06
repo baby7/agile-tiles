@@ -310,6 +310,8 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
                 return
             if not self.validate_register_validator_code():
                 return
+            if not self.validate_register_invite_code():
+                return
             # 判断用户是否同意服务协议
             if not self.check_box_user_area_agree_protocol.isChecked():
                 confirm = message_box_util.box_acknowledgement(
@@ -582,9 +584,9 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
         self.line_edit_user_register_nickname.textChanged.connect(self.validate_register_nickname)
         self.line_edit_user_register_username.textChanged.connect(self.validate_register_phone)
         self.line_edit_register_validator_code.textChanged.connect(self.validate_register_validator_code)
-        # self.line_edit_user_register_invite_code.textChanged.connect(self.validate_register_invite_code)
         self.line_edit_user_register_password.textChanged.connect(self.validate_register_password)
         self.line_edit_user_register_password_check.textChanged.connect(self.validate_register_password_check)
+        self.line_edit_user_register_invite_code.textChanged.connect(self.validate_register_invite_code)
         # 实时输入校验(忘记密码界面)
         self.line_edit_user_forget_username.textChanged.connect(self.validate_forget_phone)
         self.line_edit_forget_validator_code.textChanged.connect(self.validate_forget_validator_code)

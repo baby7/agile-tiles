@@ -137,9 +137,12 @@ def validate_validator_code(line_edit, label_prompt):
 def validate_invite_code(line_edit, label_prompt):
     """
     校验邀请码格式
-    规则：6位数字或字母（常见验证码格式）
+    规则：6位数字或字母（常见邀请码格式）可为空
     """
     text = line_edit.text()
+    if text == "":
+        label_prompt.setText("")
+        return True
     # 使用正则表达式校验6位数字或字母
     pattern = QRegularExpression("^[A-Za-z0-9]{6}$")
     if not pattern.match(text).hasMatch():

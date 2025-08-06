@@ -965,6 +965,9 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             # 如果登录界面正在显示，则不进行令牌刷新避免登录界面的闪退
             if self.start_login_view:
                 return
+            # 如果支付界面正在显示，则不进行令牌刷新避免闪退
+            if self.qr_code_dialog is not None and self.qr_code_dialog.isVisible():
+                return
             # 更新令牌
             self.user_info_client.refresh(self.current_user["username"], self.refresh_token, self.hardware_id, self.os_version)
         except Exception:
