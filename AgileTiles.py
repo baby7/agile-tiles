@@ -27,7 +27,7 @@ import gc
 import tracemalloc
 import faulthandler
 
-from PySide6.QtNetwork import QNetworkProxyFactory, QNetworkProxy
+from PySide6.QtNetwork import QNetworkProxyFactory, QNetworkProxy, QLocalServer, QLocalSocket
 
 from src.component.ImageCacheManager.ImageCacheManager import ImageCacheManager
 
@@ -1403,12 +1403,24 @@ if __name__ == '__main__':
         " --no-sandbox"             # 禁用沙箱模式（在部分系统环境下需要）
         # " --enable-logging --v=1"   # 启用Chromium日志
     )
-    # 创建QApplication对象
-    app = QtWidgets.QApplication(sys.argv)
-    # 防止事件循环退出
-    # timer = QTimer()
-    # timer.start(1000)
-    # 启动
-    my_form = MyForm()
-    my_form.show()
-    sys.exit(app.exec())
+    # 限制单机挂载数量一个
+    try:
+        app = QtWidgets.QApplication(sys.argv)
+        serverName = 'AgileTiles'
+        socket = QLocalSocket()
+        socket.connectToServer(serverName)
+        # 判定应用服务是否正常链接，如正常则证明程序实例已经在运行
+        if socket.waitForConnected(500):
+            app.quit()
+        # 如果没有实例运行，则创建应用服务器并监听服务
+        else:
+            localServer = QLocalServer()
+            localServer.listen(serverName)
+            # 原始启动逻辑
+            my_form = MyForm()
+            my_form.show()
+            sys.exit(app.exec())
+    except Exception as e:
+        print("程序启动异常：{}".format(e))
+        # 打印错误详细信息
+        traceback.print_exc()
