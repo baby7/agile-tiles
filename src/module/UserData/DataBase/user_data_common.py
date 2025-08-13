@@ -222,6 +222,9 @@ def get_data(hardware_id):
     complete_setting_config = {
         hardware_id: setting_config
     }
+    # mini设备需要修改宽度
+    if desktop_height <= 1000:
+        complete_setting_config[hardware_id]["width"] = 10
     # 默认数据补全
     if "data" not in data:
         data["data"] = {
