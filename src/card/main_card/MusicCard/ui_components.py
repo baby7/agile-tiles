@@ -113,28 +113,31 @@ def init_playlist_ui(music_card):
     music_card.playlist_widget.setFixedSize(music_card.card.width(), music_card.card.height())
     music_card.playlist_layout = QVBoxLayout()
     music_card.playlist_layout.setContentsMargins(8, 8, 8, 8)  # 设置边距
-    music_card.playlist_layout.setSpacing(10)
+    music_card.playlist_layout.setSpacing(4)
     # 顶部按钮布局
     music_card.close_playlist_button = _create_icon_button(music_card, "Edit/return", 20)
+    music_card.close_playlist_button.setText("返回")
     music_card.close_playlist_button.clicked.connect(music_card.show_base)
 
     music_card.playlist_title_label = QLabel("歌单列表", alignment=Qt.AlignmentFlag.AlignCenter)
-    music_card.playlist_title_label.setFixedWidth(200)
 
     music_card.edit_playlist_button = _create_icon_button(music_card, "Edit/edit", 20)
+    music_card.edit_playlist_button.setText("编辑")
     music_card.edit_playlist_button.clicked.connect(lambda: edit_current_playlist(music_card))
 
     music_card.delete_playlist_button = _create_icon_button(music_card, "Edit/delete", 20)
+    music_card.delete_playlist_button.setText("删除")
     music_card.delete_playlist_button.clicked.connect(lambda: delete_current_playlist(music_card))
     music_card.edit_playlist_button.setVisible(False)
 
     music_card.add_playlist_button = _create_icon_button(music_card, "Music/list-add", 20)
+    music_card.add_playlist_button.setText("添加")
     music_card.add_playlist_button.clicked.connect(music_card.add_playlist)
     music_card.delete_playlist_button.setVisible(False)
 
     playlist_button_layout = QHBoxLayout()
     playlist_button_layout.addWidget(music_card.close_playlist_button)
-    playlist_button_layout.addWidget(music_card.playlist_title_label, alignment=Qt.AlignmentFlag.AlignCenter)
+    playlist_button_layout.addWidget(music_card.playlist_title_label)
     playlist_button_layout.addWidget(music_card.edit_playlist_button)
     playlist_button_layout.addWidget(music_card.delete_playlist_button)
     playlist_button_layout.addWidget(music_card.add_playlist_button)
@@ -252,6 +255,7 @@ def init_songlist_ui(music_card):
 
     # 新增水平布局容纳导入按钮和关闭按钮
     music_card.close_song_list_button = _create_icon_button(music_card, "Edit/return", 20)
+    music_card.close_song_list_button.setText("返回")
     music_card.close_song_list_button.clicked.connect(music_card.show_base)
 
     music_card.song_list_title_label = QLabel(
@@ -261,10 +265,12 @@ def init_songlist_ui(music_card):
     music_card.song_list_title_label.setFixedWidth(200)
 
     music_card.delete_song_button = _create_icon_button(music_card, "Edit/delete", 20)
+    music_card.delete_song_button.setText("删除")
     music_card.delete_song_button.clicked.connect(lambda: delete_selected_song(music_card))
     music_card.delete_song_button.setVisible(False)
 
     music_card.import_button = _create_icon_button(music_card, "Arrows/afferent-three", 20)
+    music_card.import_button.setText("导入歌曲")
     music_card.import_button.clicked.connect(music_card.import_music)
 
     songlist_button_layout = QHBoxLayout()
@@ -342,17 +348,17 @@ def init_other_ui(music_card):
     QPushButton:hover { background-color: rgba(0, 0, 0, 0.1); }
     QPushButton:pressed { background-color: rgba(0, 0, 0, 0.2); }
     """
-    base_btn_list = [music_card.close_song_list_button,
-                     music_card.delete_song_button, music_card.add_playlist_button, music_card.close_playlist_button,
-                     music_card.edit_playlist_button, music_card.delete_playlist_button, music_card.import_button] + music_card.button_list
+    base_btn_list = music_card.button_list
     for button in base_btn_list:
         button.setStyleSheet(button_style)
     top_button_style = """
-    QPushButton { border-radius: 10px; background-color: transparent; border: 1px solid #888888; }
+    QPushButton { border-radius: 10px; background-color: transparent; border: 1px solid #888888; padding-left: 2px; padding-right: 2px;}
     QPushButton:hover { background-color: rgba(0, 0, 0, 0.1); }
     QPushButton:pressed { background-color: rgba(0, 0, 0, 0.2); }
     """
-    base_top_btn_list = [music_card.playlist_button, music_card.song_list_button]
+    base_top_btn_list = [music_card.playlist_button, music_card.song_list_button, music_card.close_song_list_button,
+                     music_card.delete_song_button, music_card.add_playlist_button, music_card.close_playlist_button,
+                     music_card.edit_playlist_button, music_card.delete_playlist_button, music_card.import_button]
     for button in base_top_btn_list:
         button.setStyleSheet(top_button_style)
 

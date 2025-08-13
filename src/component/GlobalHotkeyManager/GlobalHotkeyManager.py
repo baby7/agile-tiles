@@ -33,13 +33,13 @@ TEMP_ID = 0x0000FFFF
 
 class GlobalHotkeyManager(QObject):
     """全局热键管理器"""
-    hotkey_triggered = Signal(str)
 
     def __init__(self, window):
         super().__init__()
         self.window = window
-        self.hotkey_ids = {}  # 存储热键ID: (modifiers, key)
-        self.next_id = 1  # 热键ID计数器
+        self.hotkey_ids = {}       # 存储热键ID: 热键字符串
+        self.hotkey_actions = {}   # 存储热键ID: 回调函数
+        self.next_id = 1           # 热键ID计数器
 
     @staticmethod
     def parse_hotkey(key_combination):
@@ -96,7 +96,7 @@ class GlobalHotkeyManager(QObject):
             # 0x581 (1409) 表示热键已被占用
             return error_code == 0x581
 
-    def register_hotkey(self, key_combination):
+    def register_hotkey(self, key_combination, action):
         """
         注册全局热键
         :param key_combination: 格式如 "Ctrl+Shift+A"
@@ -115,6 +115,7 @@ class GlobalHotkeyManager(QObject):
                 raise RuntimeError(f"注册热键失败，错误代码: {error_code}")
 
         self.hotkey_ids[hotkey_id] = key_combination
+        self.hotkey_actions[hotkey_id] = action  # 存储回调函数
         self.next_id += 1
         return hotkey_id
 
@@ -123,6 +124,7 @@ class GlobalHotkeyManager(QObject):
         if hotkey_id in self.hotkey_ids:
             ctypes.windll.user32.UnregisterHotKey(self.window.winId(), hotkey_id)
             del self.hotkey_ids[hotkey_id]
+            del self.hotkey_actions[hotkey_id]  # 同时删除回调函数引用
 
     def unregister_all(self):
         """注销所有热键"""
@@ -131,5 +133,6 @@ class GlobalHotkeyManager(QObject):
 
     def handle_hotkey(self, hotkey_id):
         """处理热键触发事件"""
-        if hotkey_id in self.hotkey_ids:
-            self.hotkey_triggered.emit(self.hotkey_ids[hotkey_id])
+        if hotkey_id in self.hotkey_actions:
+            # 直接调用注册时指定的回调函数
+            self.hotkey_actions[hotkey_id]()

@@ -301,7 +301,6 @@ class SettingCard(MainCard):
 
     def push_button_setting_about_us_click(self):
         self.toolkit.resolution_util.out_animation(self.main_object)
-        self.toolkit.resolution_util.out_animation(self.main_object)
         self.setting_about_us_win = AboutUsWindow(None, self.main_object)
         self.setting_about_us_win.refresh_geometry(self.toolkit.resolution_util.get_screen(self.main_object))
         # self.setting_about_us_win.set_top()

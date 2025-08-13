@@ -67,9 +67,9 @@ class InformationCard(AggregationCard):
                 "title": "摸鱼人日历",
                 "des": "摸鱼摸得好,上班没烦恼",
                 "icon": "png:Actor/MoYu.png",
-                "content": "https://api.vvhan.com/api/moyu",
+                "content": None,
                 "link": "https://moyu.games/",
-                "call_back_func": None
+                "call_back_func": lambda : self.push_button_moyu_image_click()
             },
             { "category": self.module_category_image,
                 "type": "瞅瞅图",
@@ -274,16 +274,38 @@ class InformationCard(AggregationCard):
         except Exception as e:
             self.main_object.toolkit.message_box_util.box_information(self.main_object, "错误信息", "获取{}失败,请稍后重试".format("土味情话"))
 
+    def push_button_moyu_image_click(self):
+        url = QUrl(f'{common.BASE_URL}/imageContent/normal/moyu/today')
+        request = QNetworkRequest(url)
+        request.setRawHeader(b"Authorization", self.main_object.access_token.encode())
+
+        reply = self.network_manager.get(request)
+        reply.setProperty("callback", self.process_moyu_image)
+
+    # 每日一图处理函数
+    def process_moyu_image(self, data, reply):
+        try:
+            result = json.loads(data)
+            image_url = result['data']['result']
+            self.toolkit.image_box_util.show_image_dialog(
+                self.main_object, "摸鱼人日历", image_url, "https://moyu.games/"
+            )
+        except Exception as e:
+            self.main_object.toolkit.message_box_util.box_information(
+                self.main_object, "错误信息",
+                f"获取摸鱼人日历失败: {str(e)}"
+            )
+
     def push_button_random_image_click(self, image_type):
         url = QUrl(f'{common.BASE_URL}/imageContent/normal/random?type={image_type}')
         request = QNetworkRequest(url)
         request.setRawHeader(b"Authorization", self.main_object.access_token.encode())
 
         reply = self.network_manager.get(request)
-        reply.setProperty("callback", self.process_bing_image)
+        reply.setProperty("callback", self.process_random_image)
 
     # 每日一图处理函数
-    def process_bing_image(self, data, reply):
+    def process_random_image(self, data, reply):
         try:
             result = json.loads(data)
             image_url = result['data']['result']

@@ -28,10 +28,7 @@ class AgileTilesFramelessDialog(AcrylicDialog):
         # 窗口设置
         self.standard_title_bar = AgileTilesTitleBar(self, self.is_dark)
         self.setTitleBar(self.standard_title_bar)
-        if self.is_dark:
-            self.setWindowIcon(QIcon("./static/img/icon/dark/icon.png"))
-        else:
-            self.setWindowIcon(QIcon("./static/img/icon/light/icon.png"))
+        self.setWindowIcon(QIcon("./static/img/icon/icon.png"))
         self.titleBar.minBtn.close()
         self.titleBar.maxBtn.close()
         self.titleBar.raise_()

@@ -1,15 +1,16 @@
-import time
+import base64
+import urllib
 import uuid
 from typing import Union
 
 from PIL import Image, ImageDraw
-from PySide6 import QtGui
-from PySide6.QtCore import QByteArray, Qt, QPoint, QRectF
+from PySide6 import QtGui, QtCore
+from PySide6.QtCore import QByteArray, Qt, QPoint, QRectF, QBuffer
 from PySide6.QtGui import QPainter, QPixmap, QColor, QImage, QRegion, QPainterPath
 from PySide6.QtSvg import QSvgRenderer
 from io import BytesIO
 
-from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtWidgets import QWidget
 
 
 def load_light_svg(file_path):
@@ -157,3 +158,68 @@ def screenshot(widget):
         painter.end()
     except Exception as e:
         print(f"截图失败,error:{str(e)}")
+
+def pixmap_to_base64(pixmap: QPixmap, image_format: str = "PNG") -> str:
+    """
+    将 QPixmap 转换为 Base64 编码字符串。
+
+    Args:
+        pixmap (QPixmap): 输入的 QPixmap 对象。
+        image_format (str): 图像格式，默认为 "PNG"。
+
+    Returns:
+        str: Base64 编码的图像字符串。
+    """
+    if pixmap.isNull():
+        raise ValueError("输入的 QPixmap 是空的，无法转换。")
+
+    # 将 QPixmap 转换为 QImage
+    image = pixmap.toImage()
+
+    # 创建字节缓冲区
+    buffer = QBuffer()
+    buffer.open(QBuffer.ReadWrite)
+    image.save(buffer, image_format)  # 将图像保存到缓冲区
+
+    # 获取缓冲区中的数据并进行 Base64 编码
+    base64_data = base64.b64encode(buffer.data().data()).decode('utf-8')
+
+    # 关闭缓冲区
+    buffer.close()
+
+    return base64_data
+
+
+def compress_pixmap_for_baidu(pixmap: QPixmap, max_size_bytes=9 * 1024 * 1024) -> str:
+    """压缩并编码pixmap，返回base64字符串，直到符合百度上传限制"""
+
+    def encode_pixmap(pixmap_obj):
+        buffer = QtCore.QBuffer()
+        buffer.open(QtCore.QBuffer.ReadWrite)
+        # 你可以调节压缩质量，比如 JPEG 的 70%（但 PNG 通常更适合 OCR）
+        pixmap_obj.save(buffer, "PNG")
+        base64_data = base64.b64encode(buffer.data())
+        return urllib.parse.quote(base64_data), len(base64_data)
+
+    # 首先尝试直接编码
+    encoded_data, size = encode_pixmap(pixmap)
+    if size <= max_size_bytes:
+        return encoded_data
+
+    # 如果太大，缩小尺寸再尝试
+    width = pixmap.width()
+    height = pixmap.height()
+    min_width = 15
+    min_height = 15
+
+    while width > min_width and height > min_height:
+        width = int(width * 0.9)
+        height = int(height * 0.9)
+
+        scaled = pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        encoded_data, size = encode_pixmap(scaled)
+
+        if size <= max_size_bytes:
+            return encoded_data
+
+    raise ValueError("图像压缩后仍超过百度OCR上传限制")

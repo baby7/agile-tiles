@@ -27,10 +27,6 @@ def load_data(main_window):
         main_window.is_dark = False
     else:
         main_window.is_dark = True
-    # 图标颜色
-    if 'themeIcon' not in setting_data:
-        setting_data["themeIcon"] = "Black"
-    main_window.form_theme_icon = setting_data["themeIcon"]
     # 主题模式
     main_window.form_theme_mode = setting_data["themeMode"]
     # 透明度

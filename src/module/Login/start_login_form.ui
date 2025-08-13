@@ -1626,7 +1626,7 @@ border-radius: 0px;
 background-color: rgba(0, 0, 0, 0);</string>
              </property>
              <property name="text">
-              <string>*密码(10-20位字符,包含字母和数字)：</string>
+              <string>*新密码(10-20位字符,包含字母和数字)：</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1740,7 +1740,7 @@ border-radius: 0px;
 background-color: rgba(0, 0, 0, 0);</string>
              </property>
              <property name="text">
-              <string>*确认密码：</string>
+              <string>*确认新密码：</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>

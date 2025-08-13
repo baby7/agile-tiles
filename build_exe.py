@@ -26,32 +26,32 @@ print("开始执行 Nuitka 编译命令")
 nuitka_command = [
     "nuitka",
 
-    "--mingw64",                                    # 使用 MinGW64 编译器
-    "--standalone",                                 # 生成一个包含所有依赖的文件夹，里面有可执行文件和依赖。
-    "--windows-console-mode=disable",               # 禁用控制台窗口
+    "--mingw64",                                                            # 使用 MinGW64 编译器
+    "--standalone",                                                         # 生成一个包含所有依赖的文件夹，里面有可执行文件和依赖。
+    "--windows-console-mode=disable",                                       # 禁用控制台窗口
 
-    "--enable-plugin=pyside6",                      # 使用 PySide6 插件
-    "--disable-plugin=pyqt5,pyqt6",                 # 禁用 PyQt5 和 PyQt6 插件
-    "--include-qt-plugins=multimedia",              # 音乐播放器需要用到multimedia
-    "--include-package=wmi",                        # wmi包
-    "--include-package=win32com",                   # pywin32的核心包
-    "--include-package=pywintypes",                 # pywin32的核心包
+    "--enable-plugin=pyside6",                                              # 使用 PySide6 插件
+    "--disable-plugin=pyqt5,pyqt6",                                         # 禁用 PyQt5 和 PyQt6 插件
+    "--include-qt-plugins=multimedia",                                      # 音乐播放器需要用到multimedia
+    "--include-package=wmi",                                                # wmi包
+    "--include-package=win32com",                                           # pywin32的核心包
+    "--include-package=pywintypes",                                         # pywin32的核心包
 
-    "--windows-icon-from-ico=static/img/icon/light/icon.ico",    # 图标路径
-    "--output-dir=out",                             # 输出目录
+    "--windows-icon-from-ico=static/img/icon/icon.ico",                     # 图标路径
+    "--output-dir=out",                                                     # 输出目录
 
-    "--windows-company-name=AgileTiles",            # Windows下软件公司信息
-    "--windows-product-name=AgileTiles",            # Windows下软件名称
-    "--windows-file-version=" + no_v_version,       # Windows下软件的版本
-    "--windows-product-version=" + no_v_version,    # Windows下软件的产品版本
-    "--windows-file-description=AgileTiles",        # Windows下软件的作用描述
+    "--windows-company-name=\"杭州市拱墅区启杭灵卡软件开发工作室（个体工商户）\"",   # Windows下软件公司信息
+    "--windows-product-name=\"灵卡面板\"",                                    # Windows下软件名称
+    "--windows-file-version=" + no_v_version,                               # Windows下软件的版本
+    "--windows-product-version=" + no_v_version,                            # Windows下软件的产品版本
+    "--windows-file-description=\"打造你的专属工具面板\"",                      # Windows下软件的作用描述
 
-    "--windows-uac-admin",                          # 嵌入清单
+    "--windows-uac-admin",                                                  # 嵌入清单
 
-    "--lto=yes",                                    # 启用 Link Time Optimization（LTO）以优化编译速度和性能。
-    "--jobs=14",                                    # 使用 16 个线程并行编译，加速编译速度。
-    "--show-progress",                              # 显示编译进度。
-    "--show-memory",                                # 显示内存使用情况。
+    "--lto=yes",                                                            # 启用 Link Time Optimization（LTO）以优化编译速度和性能。
+    "--jobs=14",                                                            # 使用 16 个线程并行编译，加速编译速度。
+    "--show-progress",                                                      # 显示编译进度。
+    "--show-memory",                                                        # 显示内存使用情况。
 
     "AgileTiles.py"
 ]

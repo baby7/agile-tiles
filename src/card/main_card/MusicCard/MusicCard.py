@@ -207,6 +207,13 @@ class MusicCard(MainCard):
         with open("error.log", "a") as f:
             f.write(f"播放器错误: {error} - {error_msg}\n")
 
+    def seek_position(self, position):
+        """跳转到指定播放位置"""
+        try:
+            self.player.setPosition(position)
+        except Exception as e:
+            print(f"Error: {e}")
+
     def update_playlist_display(self):
         """更新歌单列表显示"""
         self.playlists.clear()

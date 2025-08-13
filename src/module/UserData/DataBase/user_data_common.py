@@ -1,5 +1,6 @@
 import copy
 
+from PySide6.QtWidgets import QApplication
 
 setting_config = {
     "theme": "Light",                   # 主题颜色
@@ -8,6 +9,9 @@ setting_config = {
 
     "wakeUpByKeyboard": True,           # 是否启用快捷唤醒
     "wakeUpByKeyboardType": "Ctrl+1",    # 唤醒快捷键
+
+    "translateByKeyboard": True,           # 是否启用截图翻译
+    "translateByKeyboardType": "Ctrl+2",    # 截图翻译快捷键
 
     "screenName": None,                 # 屏幕名称
     "windowPosition": "Left",           # 窗口位置
@@ -116,11 +120,86 @@ DEFAULT_DATA_MODEL = {
     "bigCard": [],
     "data": {}
 }
+DEFAULT_MINI_DATA_MODEL = {
+    "timestamp": 1716426823229,
+    "card": [
+        {
+            "name": "LcdClockCard",
+            "x": 1,
+            "y": 1,
+            "size": "2_1",
+            "data": {}
+        },
+        {
+            "name": "DrinkingCard",
+            "x": 1,
+            "y": 5,
+            "size": "2_2",
+            "data": {}
+        },
+        {
+            "name": "WorkdayCard",
+            "x": 3,
+            "y": 7,
+            "size": "2_2",
+            "data": {}
+        },
+        {
+            "size": "6_8",
+            "data": {},
+            "name": "MainCard",
+            "x": 5,
+            "y": 1
+        },
+        {
+            "name": "WeatherCard",
+            "data": {},
+            "size": "4_2",
+            "x": 1,
+            "y": 3
+        },
+        {
+            "name": "CalendarCard",
+            "data": {},
+            "size": "2_2",
+            "x": 3,
+            "y": 1
+        },
+        {
+            "name": "WoodenFishCard",
+            "data": {},
+            "size": "2_2",
+            "x": 3,
+            "y": 5
+        },
+        {
+            "data": {},
+            "name": "CountdownDayCard",
+            "size": "2_2",
+            "x": 1,
+            "y": 7
+        },
+        {
+            "data": {},
+            "name": "SearchCard",
+            "size": "2_1",
+            "x": 1,
+            "y": 2
+        }
+    ],
+    "bigCard": [],
+    "data": {}
+}
 big_card_name_list = ["GameCard", "BookCard", "ToolCard", "TodoCard", "ChatCard", "MusicCard", "SettingCard",
                       "TopSearchCard", "InformationCard", "TranslateCard"]
 
 def get_data(hardware_id):
-    data = copy.deepcopy(DEFAULT_DATA_MODEL)
+    # 获取屏幕高度
+    desktop_height = QApplication.screens()[0].size().height()
+    if desktop_height > 1000:
+        data = copy.deepcopy(DEFAULT_DATA_MODEL)
+    else:
+        data = copy.deepcopy(DEFAULT_MINI_DATA_MODEL)
     # 大卡片数据补全
     if "bigCard" not in data:
         data["bigCard"] = []

@@ -2,11 +2,10 @@
 import datetime
 from PySide6.QtCore import QObject, QThread, QTimer, Signal, Slot, QMutex, QMutexLocker
 
+from src.util import send_win_message_util
+
 
 class TodoWorker(QObject):
-    # 提醒信号
-    remind_trigger = Signal(str, str)  # (title, time_str)
-
     # 停止请求信号
     stop_requested = Signal()
 
@@ -58,7 +57,7 @@ class TodoWorker(QObject):
                         continue
                     if task['remindTime'] == current_time_str:
                         # 发出提醒信号
-                        self.remind_trigger.emit(task["title"], current_time_str)
+                        send_win_message_util.send_message("灵卡面板", "待办事项任务提醒", task["title"])
         except Exception as e:
             print(f"TodoWorker error: {str(e)}")
 
@@ -71,7 +70,6 @@ class TodoWorker(QObject):
 
 class TodoThread(QObject):
     """待办事项线程管理器"""
-    remind_trigger = Signal(str, str)  # 转发提醒信号
 
     def __init__(self, parent=None, task_list=None):
         super().__init__(parent)
@@ -81,8 +79,6 @@ class TodoThread(QObject):
         self.worker = TodoWorker(task_list=self.task_list)
         # 将worker移至新线程
         self.worker.moveToThread(self.thread)
-        # 连接信号
-        self.worker.remind_trigger.connect(self.remind_trigger)
         # 设置线程启动时启动定时器
         self.thread.started.connect(self.worker.start_timer)
 

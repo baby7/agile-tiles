@@ -24,7 +24,7 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(337, 241)
+        Form.resize(337, 202)
         self.gridLayout_3 = QGridLayout(Form)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.verticalLayout_3 = QVBoxLayout()
@@ -45,62 +45,6 @@ class Ui_Form(object):
         self.label_2.setStyleSheet(u"background: transparent;")
 
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label_2)
-
-        self.horizontalLayout_7 = QHBoxLayout()
-        self.horizontalLayout_7.setSpacing(10)
-        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
-        self.combo_box_mode = QComboBox(Form)
-        self.combo_box_mode.setObjectName(u"combo_box_mode")
-
-        self.horizontalLayout_7.addWidget(self.combo_box_mode)
-
-
-        self.formLayout.setLayout(2, QFormLayout.FieldRole, self.horizontalLayout_7)
-
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setSpacing(10)
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontal_slider_transparency = QSlider(Form)
-        self.horizontal_slider_transparency.setObjectName(u"horizontal_slider_transparency")
-        self.horizontal_slider_transparency.setMinimum(0)
-        self.horizontal_slider_transparency.setMaximum(100)
-        self.horizontal_slider_transparency.setOrientation(Qt.Horizontal)
-
-        self.horizontalLayout_2.addWidget(self.horizontal_slider_transparency)
-
-        self.label_transparency = QLabel(Form)
-        self.label_transparency.setObjectName(u"label_transparency")
-        self.label_transparency.setMinimumSize(QSize(35, 0))
-        self.label_transparency.setStyleSheet(u"background-color: transparent;")
-
-        self.horizontalLayout_2.addWidget(self.label_transparency)
-
-
-        self.formLayout.setLayout(3, QFormLayout.FieldRole, self.horizontalLayout_2)
-
-        self.label_3 = QLabel(Form)
-        self.label_3.setObjectName(u"label_3")
-        self.label_3.setMinimumSize(QSize(0, 20))
-        self.label_3.setFont(font)
-        self.label_3.setStyleSheet(u"background: transparent;")
-
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label_3)
-
-        self.label_4 = QLabel(Form)
-        self.label_4.setObjectName(u"label_4")
-        self.label_4.setMinimumSize(QSize(0, 20))
-        self.label_4.setFont(font)
-        self.label_4.setStyleSheet(u"background: transparent;")
-
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_4)
-
-        self.label_5 = QLabel(Form)
-        self.label_5.setObjectName(u"label_5")
-        self.label_5.setMinimumSize(QSize(0, 20))
-        self.label_5.setFont(font)
-        self.label_5.setStyleSheet(u"background: transparent;")
-
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label_5)
 
         self.frame = QFrame(Form)
         self.frame.setObjectName(u"frame")
@@ -138,39 +82,53 @@ class Ui_Form(object):
 
         self.formLayout.setWidget(0, QFormLayout.FieldRole, self.frame)
 
-        self.frame_2 = QFrame(Form)
-        self.frame_2.setObjectName(u"frame_2")
-        self.frame_2.setFrameShape(QFrame.StyledPanel)
-        self.frame_2.setFrameShadow(QFrame.Raised)
-        self.gridLayout_2 = QGridLayout(self.frame_2)
-        self.gridLayout_2.setSpacing(0)
-        self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.radio_button_icon_color_white = QRadioButton(self.frame_2)
-        self.radio_button_icon_color_white.setObjectName(u"radio_button_icon_color_white")
-        self.radio_button_icon_color_white.setMinimumSize(QSize(80, 20))
-        self.radio_button_icon_color_white.setMaximumSize(QSize(80, 16777215))
-        self.radio_button_icon_color_white.setFont(font)
+        self.label_3 = QLabel(Form)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setMinimumSize(QSize(0, 20))
+        self.label_3.setFont(font)
+        self.label_3.setStyleSheet(u"background: transparent;")
 
-        self.horizontalLayout_3.addWidget(self.radio_button_icon_color_white)
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label_3)
 
-        self.radio_button_icon_color_black = QRadioButton(self.frame_2)
-        self.radio_button_icon_color_black.setObjectName(u"radio_button_icon_color_black")
-        self.radio_button_icon_color_black.setMinimumSize(QSize(80, 20))
-        self.radio_button_icon_color_black.setMaximumSize(QSize(80, 16777215))
-        self.radio_button_icon_color_black.setSizeIncrement(QSize(55, 0))
-        self.radio_button_icon_color_black.setFont(font)
-        self.radio_button_icon_color_black.setChecked(True)
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.horizontalLayout_7.setSpacing(10)
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.combo_box_mode = QComboBox(Form)
+        self.combo_box_mode.setObjectName(u"combo_box_mode")
 
-        self.horizontalLayout_3.addWidget(self.radio_button_icon_color_black)
+        self.horizontalLayout_7.addWidget(self.combo_box_mode)
 
 
-        self.gridLayout_2.addLayout(self.horizontalLayout_3, 0, 0, 1, 1)
+        self.formLayout.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout_7)
+
+        self.label_4 = QLabel(Form)
+        self.label_4.setObjectName(u"label_4")
+        self.label_4.setMinimumSize(QSize(0, 20))
+        self.label_4.setFont(font)
+        self.label_4.setStyleSheet(u"background: transparent;")
+
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label_4)
+
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setSpacing(10)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontal_slider_transparency = QSlider(Form)
+        self.horizontal_slider_transparency.setObjectName(u"horizontal_slider_transparency")
+        self.horizontal_slider_transparency.setMinimum(0)
+        self.horizontal_slider_transparency.setMaximum(100)
+        self.horizontal_slider_transparency.setOrientation(Qt.Horizontal)
+
+        self.horizontalLayout_2.addWidget(self.horizontal_slider_transparency)
+
+        self.label_transparency = QLabel(Form)
+        self.label_transparency.setObjectName(u"label_transparency")
+        self.label_transparency.setMinimumSize(QSize(35, 0))
+        self.label_transparency.setStyleSheet(u"background-color: transparent;")
+
+        self.horizontalLayout_2.addWidget(self.label_transparency)
 
 
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.frame_2)
+        self.formLayout.setLayout(2, QFormLayout.FieldRole, self.horizontalLayout_2)
 
 
         self.verticalLayout_3.addLayout(self.formLayout)
@@ -209,14 +167,11 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
         self.label_2.setText(QCoreApplication.translate("Form", u"\u4e3b\u9898\u989c\u8272\uff1a", None))
-        self.label_transparency.setText(QCoreApplication.translate("Form", u"100%", None))
-        self.label_3.setText(QCoreApplication.translate("Form", u"\u4e3b\u9898\u6a21\u5f0f\uff1a", None))
-        self.label_4.setText(QCoreApplication.translate("Form", u"\u900f\u660e\u5ea6\uff1a", None))
-        self.label_5.setText(QCoreApplication.translate("Form", u"\u6258\u76d8\u56fe\u6807\uff1a", None))
         self.radio_button_color_light.setText(QCoreApplication.translate("Form", u"\u6d45\u8272", None))
         self.radio_button_color_dark.setText(QCoreApplication.translate("Form", u"\u6df1\u8272", None))
-        self.radio_button_icon_color_white.setText(QCoreApplication.translate("Form", u"\u767d\u8272\u56fe\u6807", None))
-        self.radio_button_icon_color_black.setText(QCoreApplication.translate("Form", u"\u9ed1\u8272\u56fe\u6807", None))
+        self.label_3.setText(QCoreApplication.translate("Form", u"\u4e3b\u9898\u6a21\u5f0f\uff1a", None))
+        self.label_4.setText(QCoreApplication.translate("Form", u"\u900f\u660e\u5ea6\uff1a", None))
+        self.label_transparency.setText(QCoreApplication.translate("Form", u"100%", None))
         self.push_button_ok.setText(QCoreApplication.translate("Form", u"\u786e\u5b9a", None))
     # retranslateUi
 

@@ -217,7 +217,7 @@ def setting_keyboard_has_change(old_data, new_data):
     """
     old_setting = old_data["data"]["SettingCard"]
     new_setting = new_data["data"]["SettingCard"]
-    setting_key_list = ["wakeUpByKeyboard", "wakeUpByKeyboardType"]
+    setting_key_list = ["wakeUpByKeyboard", "wakeUpByKeyboardType", "translateByKeyboard", "translateByKeyboardType"]
     for setting_key in setting_key_list:
         if old_setting.get(setting_key) != new_setting.get(setting_key):
             return True
@@ -232,10 +232,10 @@ def setting_has_change(old_data, new_data):
     """
     old_setting = old_data["data"]["SettingCard"]
     new_setting = new_data["data"]["SettingCard"]
-    setting_key_list = ["theme", "themeMode", "themeTransparency", "wakeUpByKeyboard", "wakeUpByKeyboardType",
+    setting_key_list = ["theme", "themeMode", "themeTransparency", "wakeUpByKeyboard", "wakeUpByKeyboardType", "translateByKeyboard", "translateByKeyboardType",
                         "screenName", "windowPosition", "formAnimationType", "formAnimationTime", "wakeUpByMouse",
                         "wakeUpByMouseTime", "wakeUpByMouseHide", "menuPosition", "fontName", "messageNotification",
-                        "autoUpdate", "width", "height", "themeIcon"]
+                        "autoUpdate", "width", "height"]
     for setting_key in setting_key_list:
         if old_setting.get(setting_key) != new_setting.get(setting_key):
             return True
@@ -266,7 +266,7 @@ def setting_system_has_change(old_data, new_data):
     """
     old_setting = old_data["data"]["SettingCard"]
     new_setting = new_data["data"]["SettingCard"]
-    setting_key_list = ["wakeUpByKeyboard", "wakeUpByKeyboardType"]
+    setting_key_list = ["wakeUpByKeyboard", "wakeUpByKeyboardType", "translateByKeyboard", "translateByKeyboardType"]
     for setting_key in setting_key_list:
         if old_setting.get(setting_key) != new_setting.get(setting_key):
             return True
@@ -281,7 +281,7 @@ def setting_theme_has_change(old_data, new_data):
     """
     old_setting = old_data["data"]["SettingCard"]
     new_setting = new_data["data"]["SettingCard"]
-    setting_key_list = ["theme", "themeMode", "themeTransparency", "themeIcon"]
+    setting_key_list = ["theme", "themeMode", "themeTransparency"]
     for setting_key in setting_key_list:
         if old_setting.get(setting_key) != new_setting.get(setting_key):
             return True

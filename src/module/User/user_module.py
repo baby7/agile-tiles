@@ -398,7 +398,8 @@ def update_user_view(main_object):
 
 
 def push_button_area_user_join_group_click(main_object):
-    main_object.toolkit.text_box_util.show_text_dialog(
-        main_object, "加入QQ用户交流群",
-        {"content": "725814322", "size": [300, 200]}
-    )
+    try:
+        main_object.toolkit.browser_util.open_url(common.about_us_url)
+    except Exception as e:
+        main_object.info_logger.card_error("主程序", "查看用户交流群失败,错误信息:{}".format(e))
+        message_box_util.box_information(main_object, "错误信息", "查看用户交流群失败")

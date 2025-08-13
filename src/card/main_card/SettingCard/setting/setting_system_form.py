@@ -15,32 +15,22 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFormLayout,
-    QFrame, QGridLayout, QHBoxLayout, QLabel,
-    QPushButton, QSizePolicy, QSpacerItem, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
+    QGridLayout, QHBoxLayout, QLabel, QPushButton,
+    QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(256, 287)
-        self.gridLayout = QGridLayout(Form)
-        self.gridLayout.setObjectName(u"gridLayout")
+        Form.resize(369, 369)
+        self.gridLayout_4 = QGridLayout(Form)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(20, 20, 20, 20)
-        self.formLayout = QFormLayout()
-        self.formLayout.setObjectName(u"formLayout")
-        self.formLayout.setLabelAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
-        self.formLayout.setVerticalSpacing(15)
-        self.formLayout.setContentsMargins(-1, 10, -1, 10)
-        self.label_6 = QLabel(Form)
-        self.label_6.setObjectName(u"label_6")
-        self.label_6.setStyleSheet(u"background: transparent;")
-
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label_6)
-
+        self.gridLayout_2 = QGridLayout()
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.check_box_self_starting = QCheckBox(Form)
         self.check_box_self_starting.setObjectName(u"check_box_self_starting")
         self.check_box_self_starting.setMinimumSize(QSize(0, 20))
@@ -50,67 +40,147 @@ class Ui_Form(object):
         self.check_box_self_starting.setFont(font)
         self.check_box_self_starting.setChecked(True)
 
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.check_box_self_starting)
+        self.gridLayout_2.addWidget(self.check_box_self_starting, 0, 1, 1, 1)
 
-        self.label_5 = QLabel(Form)
-        self.label_5.setObjectName(u"label_5")
-        self.label_5.setStyleSheet(u"background: transparent;")
+        self.label_6 = QLabel(Form)
+        self.label_6.setObjectName(u"label_6")
+        self.label_6.setStyleSheet(u"background: transparent;")
+        self.label_6.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label_5)
+        self.gridLayout_2.addWidget(self.label_6, 0, 0, 1, 1)
 
-        self.check_box_keyboard = QCheckBox(Form)
-        self.check_box_keyboard.setObjectName(u"check_box_keyboard")
-        self.check_box_keyboard.setMinimumSize(QSize(0, 20))
-        self.check_box_keyboard.setFont(font)
-        self.check_box_keyboard.setChecked(True)
 
-        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.check_box_keyboard)
-
-        self.label = QLabel(Form)
-        self.label.setObjectName(u"label")
-        self.label.setMinimumSize(QSize(0, 20))
-        self.label.setFont(font)
-        self.label.setStyleSheet(u"background: transparent;")
-
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label)
-
-        self.combo_box_main_keyboard = QComboBox(Form)
-        self.combo_box_main_keyboard.setObjectName(u"combo_box_main_keyboard")
-        self.combo_box_main_keyboard.setMinimumSize(QSize(0, 20))
-        self.combo_box_main_keyboard.setFont(font)
-        self.combo_box_main_keyboard.setStyleSheet(u"")
-        self.combo_box_main_keyboard.setEditable(False)
-        self.combo_box_main_keyboard.setDuplicatesEnabled(False)
-
-        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.combo_box_main_keyboard)
-
-        self.label_2 = QLabel(Form)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setMinimumSize(QSize(0, 20))
-        self.label_2.setFont(font)
-        self.label_2.setStyleSheet(u"background: transparent;")
-
-        self.formLayout.setWidget(4, QFormLayout.LabelRole, self.label_2)
-
-        self.combo_box_vice_keyboard = QComboBox(Form)
-        self.combo_box_vice_keyboard.setObjectName(u"combo_box_vice_keyboard")
-        self.combo_box_vice_keyboard.setMinimumSize(QSize(0, 20))
-        self.combo_box_vice_keyboard.setFont(font)
-        self.combo_box_vice_keyboard.setStyleSheet(u"")
-        self.combo_box_vice_keyboard.setEditable(False)
-        self.combo_box_vice_keyboard.setDuplicatesEnabled(False)
-
-        self.formLayout.setWidget(4, QFormLayout.FieldRole, self.combo_box_vice_keyboard)
+        self.verticalLayout.addLayout(self.gridLayout_2)
 
         self.line = QFrame(Form)
         self.line.setObjectName(u"line")
         self.line.setFrameShape(QFrame.HLine)
         self.line.setFrameShadow(QFrame.Sunken)
 
-        self.formLayout.setWidget(1, QFormLayout.SpanningRole, self.line)
+        self.verticalLayout.addWidget(self.line)
+
+        self.gridLayout = QGridLayout()
+        self.gridLayout.setObjectName(u"gridLayout")
+        self.label = QLabel(Form)
+        self.label.setObjectName(u"label")
+        self.label.setMinimumSize(QSize(0, 20))
+        self.label.setFont(font)
+        self.label.setStyleSheet(u"background: transparent;")
+        self.label.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+
+        self.gridLayout.addWidget(self.label, 1, 0, 1, 1)
+
+        self.check_box_wake_up_keyboard = QCheckBox(Form)
+        self.check_box_wake_up_keyboard.setObjectName(u"check_box_wake_up_keyboard")
+        self.check_box_wake_up_keyboard.setMinimumSize(QSize(0, 20))
+        self.check_box_wake_up_keyboard.setFont(font)
+        self.check_box_wake_up_keyboard.setChecked(True)
+
+        self.gridLayout.addWidget(self.check_box_wake_up_keyboard, 0, 1, 1, 1)
+
+        self.label_5 = QLabel(Form)
+        self.label_5.setObjectName(u"label_5")
+        self.label_5.setStyleSheet(u"background: transparent;")
+        self.label_5.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+
+        self.gridLayout.addWidget(self.label_5, 0, 0, 1, 1)
+
+        self.combo_box_wake_up_main_keyboard = QComboBox(Form)
+        self.combo_box_wake_up_main_keyboard.setObjectName(u"combo_box_wake_up_main_keyboard")
+        self.combo_box_wake_up_main_keyboard.setMinimumSize(QSize(0, 20))
+        self.combo_box_wake_up_main_keyboard.setFont(font)
+        self.combo_box_wake_up_main_keyboard.setStyleSheet(u"")
+        self.combo_box_wake_up_main_keyboard.setEditable(False)
+        self.combo_box_wake_up_main_keyboard.setDuplicatesEnabled(False)
+
+        self.gridLayout.addWidget(self.combo_box_wake_up_main_keyboard, 1, 1, 1, 1)
+
+        self.label_2 = QLabel(Form)
+        self.label_2.setObjectName(u"label_2")
+        self.label_2.setMinimumSize(QSize(0, 20))
+        self.label_2.setFont(font)
+        self.label_2.setStyleSheet(u"background: transparent;")
+        self.label_2.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+
+        self.gridLayout.addWidget(self.label_2, 2, 0, 1, 1)
+
+        self.combo_box_wake_up_vice_keyboard = QComboBox(Form)
+        self.combo_box_wake_up_vice_keyboard.setObjectName(u"combo_box_wake_up_vice_keyboard")
+        self.combo_box_wake_up_vice_keyboard.setMinimumSize(QSize(0, 20))
+        self.combo_box_wake_up_vice_keyboard.setFont(font)
+        self.combo_box_wake_up_vice_keyboard.setStyleSheet(u"")
+        self.combo_box_wake_up_vice_keyboard.setEditable(False)
+        self.combo_box_wake_up_vice_keyboard.setDuplicatesEnabled(False)
+
+        self.gridLayout.addWidget(self.combo_box_wake_up_vice_keyboard, 2, 1, 1, 1)
 
 
-        self.verticalLayout.addLayout(self.formLayout)
+        self.verticalLayout.addLayout(self.gridLayout)
+
+        self.line_2 = QFrame(Form)
+        self.line_2.setObjectName(u"line_2")
+        self.line_2.setFrameShape(QFrame.HLine)
+        self.line_2.setFrameShadow(QFrame.Sunken)
+
+        self.verticalLayout.addWidget(self.line_2)
+
+        self.gridLayout_3 = QGridLayout()
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.label_3 = QLabel(Form)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setMinimumSize(QSize(0, 20))
+        self.label_3.setFont(font)
+        self.label_3.setStyleSheet(u"background: transparent;")
+        self.label_3.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+
+        self.gridLayout_3.addWidget(self.label_3, 1, 0, 1, 1)
+
+        self.check_box_translate_keyboard = QCheckBox(Form)
+        self.check_box_translate_keyboard.setObjectName(u"check_box_translate_keyboard")
+        self.check_box_translate_keyboard.setMinimumSize(QSize(0, 20))
+        self.check_box_translate_keyboard.setFont(font)
+        self.check_box_translate_keyboard.setChecked(True)
+
+        self.gridLayout_3.addWidget(self.check_box_translate_keyboard, 0, 1, 1, 1)
+
+        self.label_7 = QLabel(Form)
+        self.label_7.setObjectName(u"label_7")
+        self.label_7.setStyleSheet(u"background: transparent;")
+        self.label_7.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+
+        self.gridLayout_3.addWidget(self.label_7, 0, 0, 1, 1)
+
+        self.combo_box_translate_main_keyboard = QComboBox(Form)
+        self.combo_box_translate_main_keyboard.setObjectName(u"combo_box_translate_main_keyboard")
+        self.combo_box_translate_main_keyboard.setMinimumSize(QSize(0, 20))
+        self.combo_box_translate_main_keyboard.setFont(font)
+        self.combo_box_translate_main_keyboard.setStyleSheet(u"")
+        self.combo_box_translate_main_keyboard.setEditable(False)
+        self.combo_box_translate_main_keyboard.setDuplicatesEnabled(False)
+
+        self.gridLayout_3.addWidget(self.combo_box_translate_main_keyboard, 1, 1, 1, 1)
+
+        self.label_4 = QLabel(Form)
+        self.label_4.setObjectName(u"label_4")
+        self.label_4.setMinimumSize(QSize(0, 20))
+        self.label_4.setFont(font)
+        self.label_4.setStyleSheet(u"background: transparent;")
+        self.label_4.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+
+        self.gridLayout_3.addWidget(self.label_4, 2, 0, 1, 1)
+
+        self.combo_box_translate_vice_keyboard = QComboBox(Form)
+        self.combo_box_translate_vice_keyboard.setObjectName(u"combo_box_translate_vice_keyboard")
+        self.combo_box_translate_vice_keyboard.setMinimumSize(QSize(0, 20))
+        self.combo_box_translate_vice_keyboard.setFont(font)
+        self.combo_box_translate_vice_keyboard.setStyleSheet(u"")
+        self.combo_box_translate_vice_keyboard.setEditable(False)
+        self.combo_box_translate_vice_keyboard.setDuplicatesEnabled(False)
+
+        self.gridLayout_3.addWidget(self.combo_box_translate_vice_keyboard, 2, 1, 1, 1)
+
+
+        self.verticalLayout.addLayout(self.gridLayout_3)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -134,7 +204,7 @@ class Ui_Form(object):
         self.verticalLayout.addLayout(self.horizontalLayout)
 
 
-        self.gridLayout.addLayout(self.verticalLayout, 0, 0, 1, 1)
+        self.gridLayout_4.addLayout(self.verticalLayout, 0, 0, 1, 1)
 
 
         self.retranslateUi(Form)
@@ -144,12 +214,16 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
-        self.label_6.setText(QCoreApplication.translate("Form", u"\u5f00\u673a\u81ea\u542f\u52a8\uff1a", None))
         self.check_box_self_starting.setText(QCoreApplication.translate("Form", u"\u542f\u7528", None))
-        self.label_5.setText(QCoreApplication.translate("Form", u"\u754c\u9762\u5feb\u6377\u952e\uff1a", None))
-        self.check_box_keyboard.setText(QCoreApplication.translate("Form", u"\u542f\u7528", None))
+        self.label_6.setText(QCoreApplication.translate("Form", u"\u5f00\u673a\u81ea\u542f\u52a8\uff1a", None))
         self.label.setText(QCoreApplication.translate("Form", u"\u4e3b\u8981\u7684\uff1a", None))
+        self.check_box_wake_up_keyboard.setText(QCoreApplication.translate("Form", u"\u542f\u7528", None))
+        self.label_5.setText(QCoreApplication.translate("Form", u"\u754c\u9762\u5c55\u793a/\u9690\u85cf\u5feb\u6377\u952e\uff1a", None))
         self.label_2.setText(QCoreApplication.translate("Form", u"\u6b21\u8981\u7684\uff1a", None))
+        self.label_3.setText(QCoreApplication.translate("Form", u"\u4e3b\u8981\u7684\uff1a", None))
+        self.check_box_translate_keyboard.setText(QCoreApplication.translate("Form", u"\u542f\u7528", None))
+        self.label_7.setText(QCoreApplication.translate("Form", u"\u622a\u56fe\u7ffb\u8bd1\u5feb\u6377\u952e\uff1a", None))
+        self.label_4.setText(QCoreApplication.translate("Form", u"\u6b21\u8981\u7684\uff1a", None))
         self.push_button_ok.setText(QCoreApplication.translate("Form", u"\u786e\u5b9a", None))
     # retranslateUi
 

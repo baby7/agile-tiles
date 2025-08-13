@@ -27,10 +27,7 @@ def refresh_theme(main_object, is_dark=False):
         style_util.set_line_edit_style(line_edit, is_dark)
     # 选项卡样式
     style_util.set_tab_widget_style(main_object.tab_widget_login, is_dark)
-    if is_dark:
-        icon = "./static/img/icon/dark/icon.png"
-    else:
-        icon = "./static/img/icon/light/icon.png"
+    icon = "./static/img/icon/icon.png"
     # 复选框
     style_util.set_check_box_style(main_object.check_box_user_area_agree_protocol, is_dark)
     # logo
@@ -89,20 +86,20 @@ def validate_nickname(line_edit, label_prompt):
 def validate_password(line_edit, label_prompt):
     """
     校验密码（简化版）
-    规则：10-20位，必须同时包含字母（不区分大小写）和数字
+    规则：8-20位，必须同时包含字母（不区分大小写）和数字
     """
     text = line_edit.text()
     has_letter = any(c.isalpha() for c in text)  # 检查任意字母（不区分大小写）
     has_digit = any(c.isdigit() for c in text)  # 检查数字
 
-    if len(text) < 10:
-        label_prompt.setText("<font color='red'>密码太短（至少10位）</font>")
+    if len(text) < 8:
+        label_prompt.setText("<font color='red'>密码太短（至少8位）</font>")
         return False
     elif len(text) > 20:
         label_prompt.setText("<font color='red'>密码太长（至多20位）</font>")
         return False
     elif not (has_letter and has_digit):
-        label_prompt.setText("<font color='red'>需包含字母和数字</font>")
+        label_prompt.setText("<font color='red'>最少需要包含字母和数字</font>")
         return False
     else:
         label_prompt.setText("")
@@ -137,16 +134,16 @@ def validate_validator_code(line_edit, label_prompt):
 def validate_invite_code(line_edit, label_prompt):
     """
     校验邀请码格式
-    规则：6位数字或字母（常见邀请码格式）可为空
+    规则：数字或字母（常见邀请码格式）可为空
     """
     text = line_edit.text()
     if text == "":
         label_prompt.setText("")
         return True
     # 使用正则表达式校验6位数字或字母
-    pattern = QRegularExpression("^[A-Za-z0-9]{6}$")
+    pattern = QRegularExpression("^[A-Za-z0-9]{0,20}$")
     if not pattern.match(text).hasMatch():
-        label_prompt.setText("<font color='red'>邀请码必须是6位数字或字母</font>")
+        label_prompt.setText("<font color='red'>邀请码必须是数字或字母</font>")
         return False
     label_prompt.setText("")
     return True

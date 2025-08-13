@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QLine
 from PySide6.QtGui import QFont, QPalette, QColor
 from PySide6.QtWidgets import QComboBox, QPushButton, QCheckBox, QLineEdit, QSpinBox, QTextEdit, QRadioButton, \
     QFontComboBox, QFrame, QBoxLayout, QWidget, QToolTip, QDateEdit, QTabWidget, QTableWidget
@@ -140,6 +140,8 @@ header_button_dark_style = """
 QPushButton {
     border-radius: none;
     background-color: transparent;
+    padding-left: 4px;
+    padding-right: 4px;
 }
 QPushButton:hover {
     border:0px solid #2C2E39;

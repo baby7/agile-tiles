@@ -31,10 +31,7 @@ class AgileTilesAcrylicWindow(BaseAcrylicWindow):
             self.message_box_util = message_box_util
             self.standard_title_bar = AgileTilesTitleBar(self, self.is_dark)
             self.setTitleBar(self.standard_title_bar)
-            if self.is_dark:
-                self.setWindowIcon(QIcon("./static/img/icon/dark/icon.png"))
-            else:
-                self.setWindowIcon(QIcon("./static/img/icon/light/icon.png"))
+            self.setWindowIcon(QIcon("./static/img/icon/icon.png"))
             self.titleBar.raise_()
             # 布局设置
             self.widget_base = None

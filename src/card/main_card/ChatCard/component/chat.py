@@ -114,12 +114,17 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
         input_widget = QWidget()
         input_widget.setMaximumHeight(120)
         input_widget.setMinimumHeight(80)
+        if self.ai_actor is not None:
+            input_widget.setMaximumHeight(60)
+            input_widget.setMinimumHeight(40)
 
         main_input_layout = QHBoxLayout(input_widget)
         main_input_layout.setContentsMargins(10, 10, 10, 10)
 
         self.input_field = EnterTextEdit()
         self.input_field.setMaximumHeight(100)
+        if self.ai_actor is not None:
+            self.input_field.setMaximumHeight(60)
         self.input_field.setPlaceholderText("输入消息...(Shift+Enter 换行/Enter发送)")
         self.input_field.setAcceptRichText(False)
         # 连接回车信号到发送方法
@@ -254,22 +259,20 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
     def set_info_bar(self, today_calls):
         # 根据会员状态显示不同信息
         if self.use_parent.is_vip:
-            text = f"会员用户每天限制1000次对话，今天已使用{today_calls}次"
-            color = "rgba(4, 115, 247, 0.8)"
+            if today_calls >= 1000:
+                text = f"尊敬的会员用户，您今天已使用{today_calls}次，已超限"
+                color = "rgba(255, 140, 0, 0.8)"
+            else:
+                text = f"会员用户畅享使用，今天已使用{today_calls}次"
+                color = "rgba(4, 115, 247, 0.8)"
         else:
-            text = f"非会员每天限制5次对话，今天已使用{today_calls}次"
-            color = "rgba(243, 207, 19, 0.8)"
-
-        # 根据主题设置背景
-        if self.is_dark:
-            bg_color = "rgba(255, 255, 255, 0.1)"
-        else:
-            bg_color = "rgb(255, 255, 255)"
+            text = f"非会员每天限制5次翻译，今天已使用{today_calls}次"
+            color = "rgba(255, 140, 0, 0.8)"
 
         # 设置信息条样式和内容
         self.info_bar.setText(text)
         self.info_bar.setStyleSheet(
-            f"background-color: {bg_color}; "
+            f"background-color: rgba(125, 125, 125, 60); "
             f"border-radius: 5px; "
             f"color: {color}; "
             f"font-weight: bold; "
@@ -610,7 +613,7 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
         }
         data = json.dumps(request_data)
         data_str = data.encode('utf-8')
-        print("请求数据:", request_data)
+        print(f"请求数据:{json.dumps(request_data, indent=4, ensure_ascii=False, sort_keys=True)}")
 
         # 发送POST请求
         self.sse_reply = self.network_manager.post(request, data_str)
@@ -689,7 +692,7 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
                         # 将AI回复添加到历史记录
                         if self.current_reply:
                             self.history.append({
-                                "role": "system",
+                                "role": "assistant",
                                 "content": self.current_reply
                             })
 
@@ -754,7 +757,7 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
                             # 处理未完成的回复
                             if is_finished and self.current_reply:
                                 self.history.append({
-                                    "role": "system",
+                                    "role": "assistant",
                                     "content": self.current_reply
                                 })
                     except json.JSONDecodeError:
@@ -770,7 +773,7 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
                     # 确保将最终回复添加到历史记录
                     if self.current_reply:
                         self.history.append({
-                            "role": "system",
+                            "role": "assistant",
                             "content": self.current_reply
                         })
 
@@ -870,7 +873,7 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
                 # 将已接收的内容添加到历史记录（如果内容不为空）
                 if self.current_reply.strip():
                     self.history.append({
-                        "role": "system",
+                        "role": "assistant",
                         "content": current_content
                     })
 

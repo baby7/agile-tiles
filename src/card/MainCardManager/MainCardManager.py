@@ -79,17 +79,17 @@ class MainCardManager(QObject):
             self.main_object.main_card_list = []
             # 隐藏区域
             area_list = [
+                self.main_object.user_area,
+                self.main_object.setting_area,
                 self.main_object.top_area,
                 self.main_object.translate_area,
                 self.main_object.chat_area,
-                self.main_object.looking_area,
-                self.main_object.tool_area,
                 self.main_object.todo_area,
                 self.main_object.book_area,
-                self.main_object.game_area,
                 self.main_object.music_area,
-                self.main_object.user_area,
-                self.main_object.setting_area
+                self.main_object.looking_area,
+                self.main_object.tool_area,
+                self.main_object.game_area,
             ]
             for card_area in area_list:
                 # 清理内容
@@ -147,18 +147,18 @@ class MainCardManager(QObject):
         self.init_menu_bg_and_slider()
         # 设置菜单样式
         self.menu_button_map = {
+            "user": [self.main_object.push_button_user, "Peoples/people", self.main_object.user_area, "用户管理"],
+            "setting": [self.main_object.push_button_setting, "Base/setting-two", self.main_object.setting_area, "设置"],
+            # "exit": [self.main_object.push_button_exit, "Base/power", None],
             "trending": [self.main_object.push_button_weibo_info, "Energy/fire", self.main_object.top_area, "热搜"],
             "translate": [self.main_object.push_button_translate, "Base/translate", self.main_object.translate_area, "翻译"],
             "chat": [self.main_object.push_button_chat, "Abstract/smart-optimization", self.main_object.chat_area, "智能助手"],
-            "looking": [self.main_object.push_button_looking, "Base/preview-open", self.main_object.looking_area, "信息聚合"],
-            "tool": [self.main_object.push_button_tool, "Others/toolkit", self.main_object.tool_area, "工具箱"],
-            "game": [self.main_object.push_button_game, "Game/game-handle", self.main_object.game_area, "游戏"],
             "todo": [self.main_object.push_button_todo, "Edit/plan", self.main_object.todo_area, "待办事项"],
             "book": [self.main_object.push_button_book, "Office/book-one", self.main_object.book_area, "阅读"],
             "music": [self.main_object.push_button_music, "Music/music-one", self.main_object.music_area, "音乐"],
-            "user": [self.main_object.push_button_user, "Peoples/people", self.main_object.user_area, "用户管理"],
-            "setting": [self.main_object.push_button_setting, "Base/setting-two", self.main_object.setting_area, "设置"],
-            "exit": [self.main_object.push_button_exit, "Base/power", None],
+            "looking": [self.main_object.push_button_looking, "Base/preview-open", self.main_object.looking_area, "信息聚合"],
+            "tool": [self.main_object.push_button_tool, "Others/toolkit", self.main_object.tool_area, "工具箱"],
+            "game": [self.main_object.push_button_game, "Game/game-handle", self.main_object.game_area, "游戏"],
         }
         # 初始化卡片位置数据
         self.init_geometry_data(card_data)
@@ -176,23 +176,23 @@ class MainCardManager(QObject):
             self.main_object.top_area = QScrollArea(self.main_object.widget_base)
             self.main_object.translate_area = QScrollArea(self.main_object.widget_base)
             self.main_object.chat_area = QScrollArea(self.main_object.widget_base)
-            self.main_object.looking_area = QScrollArea(self.main_object.widget_base)
-            self.main_object.tool_area = QScrollArea(self.main_object.widget_base)
             self.main_object.todo_area = QScrollArea(self.main_object.widget_base)
             self.main_object.book_area = QScrollArea(self.main_object.widget_base)
-            self.main_object.game_area = QScrollArea(self.main_object.widget_base)
             self.main_object.music_area = QScrollArea(self.main_object.widget_base)
+            self.main_object.looking_area = QScrollArea(self.main_object.widget_base)
+            self.main_object.tool_area = QScrollArea(self.main_object.widget_base)
+            self.main_object.game_area = QScrollArea(self.main_object.widget_base)
             # 初始化主卡片区域
             area_list = [
                 self.main_object.top_area,
                 self.main_object.translate_area,
                 self.main_object.chat_area,
-                self.main_object.looking_area,
-                self.main_object.tool_area,
                 self.main_object.todo_area,
                 self.main_object.book_area,
+                self.main_object.music_area,
+                self.main_object.looking_area,
+                self.main_object.tool_area,
                 self.main_object.game_area,
-                self.main_object.music_area
             ]
             for area in area_list:
                 font = QFont()
@@ -212,17 +212,17 @@ class MainCardManager(QObject):
                 area.setParent(self.main_object.widget_base)
         # 修改区域父节点
         self.area_list = [
+            self.main_object.user_area,
+            self.main_object.setting_area,
             self.main_object.top_area,
             self.main_object.translate_area,
             self.main_object.chat_area,
-            self.main_object.looking_area,
-            self.main_object.tool_area,
             self.main_object.todo_area,
             self.main_object.book_area,
-            self.main_object.game_area,
             self.main_object.music_area,
-            self.main_object.user_area,
-            self.main_object.setting_area
+            self.main_object.looking_area,
+            self.main_object.tool_area,
+            self.main_object.game_area,
         ]
         for area in self.area_list:
             area.setParent(self.main_object.widget_base)
@@ -234,18 +234,18 @@ class MainCardManager(QObject):
         """
         if not self.main_object.is_first:
             return
+        self.main_object.push_button_user.clicked.connect(self.push_button_user_click)
+        self.main_object.push_button_setting.clicked.connect(self.push_button_setting_click)
+        # self.main_object.push_button_exit.clicked.connect(partial(self.main_object.quit_before,  False))
         self.main_object.push_button_weibo_info.clicked.connect(self.push_button_weibo_click)
         self.main_object.push_button_translate.clicked.connect(self.push_button_translate_click)
         self.main_object.push_button_chat.clicked.connect(self.push_button_chat_click)
+        self.main_object.push_button_todo.clicked.connect(self.push_button_todo_click)
+        self.main_object.push_button_book.clicked.connect(self.push_button_book_click)
+        self.main_object.push_button_music.clicked.connect(self.push_button_music_click)
         self.main_object.push_button_looking.clicked.connect(self.push_button_looking_click)
         self.main_object.push_button_tool.clicked.connect(self.push_button_tool_click)
-        self.main_object.push_button_todo.clicked.connect(self.push_button_todo_click)
-        self.main_object.push_button_setting.clicked.connect(self.push_button_setting_click)
-        self.main_object.push_button_book.clicked.connect(self.push_button_book_click)
         self.main_object.push_button_game.clicked.connect(self.push_button_game_click)
-        self.main_object.push_button_music.clicked.connect(self.push_button_music_click)
-        self.main_object.push_button_user.clicked.connect(self.push_button_user_click)
-        self.main_object.push_button_exit.clicked.connect(partial(self.main_object.quit_before,  False))
 
     def init_main_card(self):
         """
@@ -420,6 +420,15 @@ class MainCardManager(QObject):
             button.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
         return 0, 0, width, height
 
+    def change_menu_indicate_location(self):
+        for button_name, value in self.menu_button_map.items():
+            if button_name != self.see_card:
+                continue
+            button = value[0]
+            self.main_object.toolkit.animation_util.start_line_y_animation(
+                self.main_object.label_current_menu, self.main_object.label_current_menu.y(), get_position(button).y() + 4)
+            print("设置菜单按钮指示位置")
+
     def theme_switch_button_click(self):
         theme_module.change_theme_data(self.main_object)
         self.main_object.change_theme()
@@ -432,7 +441,7 @@ class MainCardManager(QObject):
             font.setPointSize(11)
             if not is_init:
                 self.main_object.toolkit.animation_util.start_line_y_animation(
-                    self.main_object.label_current_menu, self.main_object.label_current_menu.y(), get_position(button).y() + 6)
+                    self.main_object.label_current_menu, self.main_object.label_current_menu.y(), get_position(button).y() + 4)
         else:
             font.setPointSize(10)
         font.setBold(state)
@@ -621,7 +630,7 @@ class MainCardManager(QObject):
         # 导航栏布局
         self.main_object.layout_header = QHBoxLayout()
         self.main_object.layout_header.setSpacing(self.CARD_INTERVAL)
-        self.main_object.layout_header.setContentsMargins(self.CARD_INTERVAL * 2, 5, self.CARD_INTERVAL * 2, 0)
+        self.main_object.layout_header.setContentsMargins(self.CARD_INTERVAL, 5, self.CARD_INTERVAL, 0)
         self.main_object.layout_header.setObjectName(u"layout_header")
         self.main_object.layout_base_header.addStretch()
         self.main_object.layout_base_header.addLayout(self.main_object.layout_header)
@@ -630,8 +639,8 @@ class MainCardManager(QObject):
         self.main_object.push_button_header_title.setObjectName(u"push_button_header_title")
         self.main_object.push_button_header_title.setText("灵卡面板")
         self.main_object.push_button_header_title.setMinimumHeight(26)
-        self.main_object.push_button_header_title.setMinimumWidth(26)
-        self.main_object.push_button_header_title.setIconSize(QSize(22, 22))
+        self.main_object.push_button_header_title.setMinimumWidth(80)
+        self.main_object.push_button_header_title.setIconSize(QSize(20, 20))
         self.main_object.push_button_header_title.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
         self.main_object.layout_header.addWidget(self.main_object.push_button_header_title)
         self.main_object.layout_header.addStretch()
@@ -737,23 +746,15 @@ class MainCardManager(QObject):
         self.main_object.label_menu_background.lower()
         self.main_object.label_current_menu = QLabel(self.main_object.widget_base)
         self.main_object.label_current_menu.setObjectName(u"label_current_menu")
-        self.main_object.label_current_menu.setGeometry(QRect(0, 0, 2, 17))
-        self.main_object.label_current_menu.setStyleSheet("""
-        QLabel {
-            border-style: solid;
-            border-radius: 1px;
-            border: none;
-            background: black;
-        }""")
+        self.main_object.label_current_menu.setGeometry(QRect(0, 0, 4, 21))
         # 菜单栏按钮列表
         font = QFont()
         font.setPointSize(11)
         font.setBold(True)
         font.setKerning(True)
         button_names = [
-            'weibo_info', 'translate', 'chat', 'looking', 'tool',
-            'game', 'todo', 'book', 'music', 'user',
-            'setting', 'exit'
+            'user', 'setting',
+            'weibo_info', 'translate', 'chat', 'todo', 'book', 'music', 'looking', 'tool', 'game'
         ]
         for name in button_names:
             # 创建按钮
@@ -764,10 +765,8 @@ class MainCardManager(QObject):
             menu_button.setObjectName(f'push_button_{name}')
             menu_button.setStyleSheet("""
             QPushButton {
-                border-style: solid;
-                border-radius: 10px;
                 color: #FFFFFF;
-                border-color: #000000;
+                border: 10px solid #000000;
                 background-color: rgba(0, 0, 0, 0);
             }
             QPushButton:hover {
@@ -776,10 +775,9 @@ class MainCardManager(QObject):
             }""")
             menu_button.setFont(font)
             menu_button.setIconSize(QSize(20, 20))
+            self.main_object.layout_menu_background.addWidget(menu_button)
             # 上下半部分需要增加伸缩条和主题切换按钮
-            if name == 'user':
-                # 伸缩条
-                self.main_object.layout_menu_background.addStretch()
+            if name == 'setting':
                 # 主题切换按钮
                 print(f"self.main_object.is_dark:{self.main_object.is_dark}")
                 self.main_object.theme_switch_button = ThemeSwitchButton(default_theme=not self.main_object.is_dark)
@@ -788,7 +786,11 @@ class MainCardManager(QObject):
                 self.main_object.theme_switch_button.resize(self.main_object.theme_switch_button.size())
                 self.main_object.theme_switch_button.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
                 self.main_object.layout_menu_background.addWidget(self.main_object.theme_switch_button)
-            self.main_object.layout_menu_background.addWidget(menu_button)
+                # 伸缩条
+                self.main_object.layout_menu_background.addStretch()
+            # 底部伸缩条
+            if name == button_names[-1]:
+                self.main_object.layout_menu_background.addStretch()
         # 强制刷新
         self.main_object.label_menu.update()
 
@@ -797,12 +799,12 @@ class MainCardManager(QObject):
         if self.main_object.is_dark:
             self.main_object.label_menu.setStyleSheet("border-radius: 15px; border: 1px solid #2C2E39; background-color: transparent;")
             self.main_object.label_menu_background.setStyleSheet("border-radius: 15px; border: none; background-color: rgba(34, 34, 34, 255);")
-            self.main_object.label_current_menu.setStyleSheet("border-radius: 1px; border: none; background-color: white;")
+            self.main_object.label_current_menu.setStyleSheet("border-radius: 2px; border: 0px solid white; background-color: white;")
             style_util.set_card_shadow_effect(self.main_object.label_menu_background)       # 添加外部阴影效果
         else:
             self.main_object.label_menu.setStyleSheet("border-radius: 15px; border: none; background-color:rgba(255, 255, 255, 160);")
             self.main_object.label_menu_background.setStyleSheet("border-radius: 15px; border: 1px solid rgba(255, 255, 255, 170); background-color: transparent;")
-            self.main_object.label_current_menu.setStyleSheet("border-radius: 1px; border: none; background-color: black;")
+            self.main_object.label_current_menu.setStyleSheet("border-radius: 2px; border: 0px solid black; background-color: black;")
             style_util.remove_card_shadow_effect(self.main_object.label_menu_background)    # 移除外部阴影效果
         self.set_menu_theme()
         # 卡片样式
@@ -831,7 +833,6 @@ class MainCardManager(QObject):
         # screenshot_icon = QIcon()
         card_design_icon = QIcon()
         hide_window_icon = QIcon()
-        header_title_icon_path = "Base/home"
         header_exit_icon_path = "Base/power"
         # screenshot_icon_path = "Edit/screenshot"
         card_design_icon_path = "Base/waterfalls-h"
@@ -840,17 +841,16 @@ class MainCardManager(QObject):
         else:
             hide_window_icon_path = "Arrows/to-left"
         if self.main_object.is_dark:
-            header_title_icon.addFile(u"static/img/IconPark/light/" + header_title_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
             header_exit_icon.addFile(u"static/img/IconPark/light/" + header_exit_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
             # screenshot_icon.addFile(u"static/img/IconPark/light/" + screenshot_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
             card_design_icon.addFile(u"static/img/IconPark/light/" + card_design_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
             hide_window_icon.addFile(u"static/img/IconPark/light/" + hide_window_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         else:
-            header_title_icon.addFile(u"static/img/IconPark/dark/" + header_title_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
             header_exit_icon.addFile(u"static/img/IconPark/dark/" + header_exit_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
             # screenshot_icon.addFile(u"static/img/IconPark/dark/" + screenshot_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
             card_design_icon.addFile(u"static/img/IconPark/dark/" + card_design_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
             hide_window_icon.addFile(u"static/img/IconPark/dark/" + hide_window_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        header_title_icon.addFile("./static/img/icon/icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.main_object.push_button_header_title.setIcon(header_title_icon)
         self.main_object.push_button_header_exit.setIcon(header_exit_icon)
         # self.main_object.push_button_screenshot.setIcon(screenshot_icon)
@@ -915,3 +915,12 @@ class MainCardManager(QObject):
                         card.update_data(data=enduring_data)
                         card.update_all(cache=cache_data, data=enduring_data)
                     break
+
+    def on_translate_hotkey_triggered(self):
+        """
+        ocr翻译
+        """
+        for card in self.main_object.main_card_list:
+            if hasattr(card, 'start_screenshot'):
+                card.start_screenshot()
+                self.push_button_translate_click()

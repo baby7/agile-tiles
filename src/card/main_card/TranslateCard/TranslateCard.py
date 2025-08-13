@@ -1,13 +1,14 @@
 import json
 
 from PySide6 import QtCore
-from PySide6.QtCore import Slot, QUrl, Qt
+from PySide6.QtCore import Slot, QUrl, Qt, QTimer
 from PySide6.QtGui import QIcon, QAction
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QTextEdit, \
     QApplication, QMenu, QPlainTextEdit
 
 from src.card.MainCardManager.MainCard import MainCard
+from src.card.main_card.TranslateCard.ScreenshotOverlay import ScreenshotOverlay
 from src.client import common
 from src.ui import style_util
 
@@ -37,6 +38,11 @@ class TranslateCard(MainCard):
     need_refresh_ui = False
     # 模块列表
     aggregation_module_list = []
+    # 调用次数
+    today_calls = 0
+    # ocr部分
+    captured_pixmap = None
+    show_overlay_status = False
 
 
     def __init__(self, main_object=None, parent=None, theme=None, card=None, cache=None, data=None,
@@ -44,7 +50,7 @@ class TranslateCard(MainCard):
         super().__init__(main_object=main_object, parent=parent, theme=theme, card=card, cache=cache, data=data,
                          toolkit=toolkit, logger=logger, save_data_func=save_data_func)
         # 当前翻译引擎
-        self.current_engine = "百度"
+        self.current_engine = "有道"
         # 网络管理器
         self.network_manager = QNetworkAccessManager(self)
 
@@ -122,7 +128,7 @@ class TranslateCard(MainCard):
         self.engine_combo = QComboBox()
         self.engine_combo.setMinimumHeight(24)
         self.engine_combo.setMinimumWidth(60)
-        self.engine_combo.addItems(["百度", "有道"])
+        self.engine_combo.addItems(["有道", "百度"])
         self.engine_combo.currentTextChanged.connect(self.set_engine)
         toolbar_layout.addWidget(self.engine_combo)
         toolbar_layout.addStretch()
@@ -152,6 +158,13 @@ class TranslateCard(MainCard):
         self.target_lang_combo.setCurrentText("中")
         toolbar_layout.addWidget(self.target_lang_combo)
         toolbar_layout.addStretch()
+
+        # OCR按钮
+        self.ocr_button = QPushButton("截图翻译")
+        self.ocr_button.setMinimumHeight(24)
+        self.ocr_button.setMinimumWidth(80)
+        self.ocr_button.clicked.connect(self.start_screenshot)
+        toolbar_layout.addWidget(self.ocr_button)
 
         # 翻译按钮
         self.translate_button = QPushButton("翻译")
@@ -189,7 +202,7 @@ class TranslateCard(MainCard):
         main_layout.addWidget(status_widget)
 
         # 状态标签（左对齐）
-        self.status_label = QLabel("就绪 | 当前引擎: 百度")
+        self.status_label = QLabel("就绪 | 当前引擎: 有道")
         status_layout.addWidget(self.status_label)
 
         # 添加弹簧使复制按钮右对齐
@@ -210,9 +223,23 @@ class TranslateCard(MainCard):
         status_layout.addWidget(self.copy_button)
 
         # 填充部分信息
-        self.set_info_bar(0)
+        self.set_info_bar()
         # 请求并更新对话次数信息
         self.update_call_count()
+
+        # 为目标文本框绑定回车键事件
+        self.source_text.keyPressEvent = self.custom_key_press_event
+
+    def custom_key_press_event(self, event):
+        """
+        自定义 keyPressEvent，监听回车键并触发翻译操作。
+        """
+        if event.key() in (Qt.Key_Return, Qt.Key_Enter) and (event.modifiers() == Qt.NoModifier):
+            # 如果按下的是回车键且没有修饰键（如 Shift、Ctrl 等），触发翻译
+            self.translate_text()
+        else:
+            # 调用原始的 keyPressEvent 方法以保留默认行为
+            QPlainTextEdit.keyPressEvent(self.source_text, event)
 
     def show_source_context_menu(self, position):
         # 创建中文右键菜单
@@ -314,10 +341,10 @@ class TranslateCard(MainCard):
             if reply.error() == QNetworkReply.NoError:
                 data = reply.readAll()
                 json_data = json.loads(str(data, 'utf-8'))
-                today_calls = json_data.get("data", 0)
+                self.today_calls = json_data.get("data", 0)
 
                 # 根据会员状态显示不同信息
-                self.set_info_bar(today_calls)
+                self.set_info_bar()
             else:
                 error = reply.errorString()
                 print(f"获取调用次数失败: {error}")
@@ -334,30 +361,29 @@ class TranslateCard(MainCard):
 
         reply.finished.connect(handle_reply)
 
-    def set_info_bar(self, today_calls):
+    def set_info_bar(self):
         # 根据会员状态显示不同信息
         if self.main_object.is_vip:
-            text = f"会员用户每天限制1000次翻译，今天已使用{today_calls}次"
-            color = "rgba(4, 115, 247, 0.8)"
+            if self.today_calls >= 1000:
+                text = f"尊敬的会员用户，您今天已使用{self.today_calls}次，已超限"
+                color = "rgba(255, 140, 0, 0.8)"
+            else:
+                text = f"会员用户畅享使用，今天已使用{self.today_calls}次"
+                color = "rgba(4, 115, 247, 0.8)"
         else:
-            text = f"非会员每天限制10次翻译，今天已使用{today_calls}次"
-            color = "rgba(243, 207, 19, 0.8)"
-
-        # 根据主题设置背景
-        if self.is_dark:
-            bg_color = "rgba(255, 255, 255, 0.1)"
-        else:
-            bg_color = "rgb(255, 255, 255)"
+            text = f"非会员每天限制10次翻译，今天已使用{self.today_calls}次"
+            color = "rgba(255, 140, 0, 0.8)"
 
         # 设置信息条样式和内容
         self.info_bar.setText(text)
         self.info_bar.setStyleSheet(
-            f"background-color: {bg_color}; "
-            f"border-radius: 5px; "
+            f"background-color: rgba(125, 125, 125, 60); "
+            f"border-radius: 10px; "
             f"color: {color}; "
             f"font-weight: bold; "
             f"font-size: 12px;"
         )
+        # self.info_bar.setStyleSheet("background: rgba(125, 125, 125, 60); font-weight: bold; font-size: 12px;")
 
     def set_engine(self, engine):
         self.current_engine = engine
@@ -367,14 +393,11 @@ class TranslateCard(MainCard):
         # 交换当前选择的语言
         source_lang = self.source_lang_combo.currentText()
         target_lang = self.target_lang_combo.currentText()
-
         self.source_lang_combo.setCurrentText(target_lang)
         self.target_lang_combo.setCurrentText(source_lang)
-
         # 交换文本内容
         # source_text = self.source_text.toPlainText()
         # target_text = self.target_text.toPlainText()
-        #
         # self.source_text.setPlainText(target_text)
         # self.target_text.setPlainText(source_text)
 
@@ -405,6 +428,100 @@ class TranslateCard(MainCard):
 
             # 显示提示信息
             self.status_label.setText(f"文本长度超过{MAX_LENGTH}字符，已自动截断")
+
+    def start_screenshot(self):
+        if self.show_overlay_status:
+            return
+        # 隐藏主窗口
+        if self.main_object.show_form:
+            self.toolkit.resolution_util.out_animation(self.main_object)
+        # 延迟显示遮罩层
+        QTimer.singleShot(600, self._show_overlay)
+        self.show_overlay_status = True
+
+    def _show_overlay(self):
+        self.overlay = ScreenshotOverlay(self.card, self)
+        self.overlay.show()
+
+    def screenshot_captured(self, pixmap):
+        """截图完成处理"""
+        self.show_overlay_status = False
+        # 保存截图
+        self.captured_pixmap = pixmap
+        # 显示主窗口
+        self.toolkit.resolution_util.in_animation(self.main_object)
+        # 更新状态
+        self.status_label.setText("截图完成,正在压缩图片...")
+        try:
+            # 这里使用压缩后的版本
+            base64_data = self.toolkit.image_util.compress_pixmap_for_baidu(pixmap)
+        except ValueError as e:
+            self.status_label.setText("图片太大，压缩失败")
+            self.source_text.setPlainText("")
+            return
+        self.status_label.setText("压缩完成,正在识图...")
+        # 发送ocr请求
+        self.ocr(base64_data)
+
+    def cancel_screenshot(self):
+        """取消截图"""
+        self.show_overlay_status = False
+        # 显示主窗口
+        self.toolkit.resolution_util.in_animation(self.main_object)
+        self.status_label.setText("截图已取消")
+
+    def ocr(self, base64_data: str):
+        # 准备请求数据
+        engine = "baidu"
+        data = {
+            "engine": engine,
+            "imageBase64": base64_data
+        }
+
+        # 创建网络请求
+        url = QUrl(common.BASE_URL + "/ocr/normal")
+        request = QNetworkRequest(url)
+        request.setRawHeader(b"Authorization", bytes(self.main_object.access_token, "utf-8"))
+        request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")
+
+        # 发送POST请求
+        self.status_label.setText("识图中...")
+        self.translate_button.setEnabled(False)
+
+        reply = self.network_manager.post(
+            request,
+            json.dumps(data).encode('utf-8')
+        )
+        reply.finished.connect(lambda: self.handle_ocr_response(reply))
+
+    @Slot()
+    def handle_ocr_response(self, ocr_reply):
+        # 检查错误
+        if ocr_reply.error() != QNetworkReply.NoError:
+            self.target_text.setPlainText(f"网络错误: {ocr_reply.errorString()}")
+            self.status_label.setText("网络错误")
+            ocr_reply.deleteLater()
+            return
+        # 解析响应
+        data = ocr_reply.readAll().data()
+        try:
+            response = json.loads(data)
+            if response.get("code") == 0:
+                result = response.get("data", {}).get("text", "")
+                self.source_text.setPlainText(result)
+                self.status_label.setText("识图完成")
+                # 然后再进行翻译
+                self.translate_text()
+            else:
+                error_msg = response.get("msg", "未知错误")
+                self.source_text.setPlainText("")
+                self.status_label.setText(error_msg)
+                self.translate_button.setEnabled(True)
+        except json.JSONDecodeError:
+            self.source_text.setPlainText("")
+            self.status_label.setText("解析错误")
+            self.translate_button.setEnabled(True)
+        ocr_reply.deleteLater()
 
     def translate_text(self):
         # 获取输入文本
@@ -447,10 +564,10 @@ class TranslateCard(MainCard):
             request,
             json.dumps(data).encode('utf-8')
         )
-        reply.finished.connect(lambda: self.handle_response(reply))
+        reply.finished.connect(lambda: self.handle_translate_response(reply))
 
     @Slot()
-    def handle_response(self, reply):
+    def handle_translate_response(self, reply):
         # 请求并更新对话次数信息
         self.update_call_count()
 
@@ -510,6 +627,7 @@ class TranslateCard(MainCard):
         style_util.set_combo_box_style(self.source_lang_combo, is_dark)
         style_util.set_combo_box_style(self.target_lang_combo, is_dark)
         # 调整按钮样式
+        style_util.set_button_style(self.ocr_button, is_dark)
         style_util.set_button_style(self.translate_button, is_dark)
         style_util.set_button_style(self.copy_button, is_dark)
         style_util.set_button_style(self.clear_button, is_dark)
@@ -538,7 +656,7 @@ class TranslateCard(MainCard):
         self.source_text.setStyleSheet(text_edit_style)
         self.target_text.setStyleSheet(text_edit_style)
         # 提示信息
-        self.info_bar.setStyleSheet("background: rgba(125, 125, 125, 60); font-weight: bold; font-size: 12px;")
+        self.set_info_bar()
 
 
 # 语言代码映射

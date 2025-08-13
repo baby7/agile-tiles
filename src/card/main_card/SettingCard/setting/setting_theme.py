@@ -44,16 +44,8 @@ class SettingThemeWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.set_mode_list()
         # 事件
         self.push_button_ok.clicked.connect(self.push_button_submit_clicked)
-        self.radio_button_color_light.toggled.connect(lambda: self.on_radio_button_color_toggled())
-        self.radio_button_color_dark.toggled.connect(lambda: self.on_radio_button_color_toggled())
         # 加载数据
         self.load_date()
-
-    def on_radio_button_color_toggled(self):
-        if self.radio_button_color_light.isChecked():
-            self.radio_button_icon_color_black.setChecked(True)
-        else:
-            self.radio_button_icon_color_white.setChecked(True)
 
     def set_mode_list(self):
         self.mode_list = ["亚克力", "半透明"]
@@ -68,11 +60,6 @@ class SettingThemeWindow(AgileTilesAcrylicWindow, Ui_Form):
             self.radio_button_color_light.setChecked(True)
         else:
             self.radio_button_color_dark.setChecked(True)
-        # 设置图标颜色
-        if self.setting_config["themeIcon"] == "White":
-            self.radio_button_icon_color_white.setChecked(True)
-        else:
-            self.radio_button_icon_color_black.setChecked(True)
         # 设置主题模式
         if self.setting_config["themeMode"] is not None:
             if self.setting_config["themeMode"] == "Acrylic":
@@ -96,11 +83,6 @@ class SettingThemeWindow(AgileTilesAcrylicWindow, Ui_Form):
                     self.setting_config["theme"] = "Light"
                 else:
                     self.setting_config["theme"] = "Dark"
-                # 图标颜色
-                if self.radio_button_icon_color_white.isChecked():
-                    self.setting_config["themeIcon"] = "White"
-                else:
-                    self.setting_config["themeIcon"] = "Black"
                 # 主题模式
                 if self.combo_box_mode.currentText() == "亚克力":
                     self.setting_config["themeMode"] = "Acrylic"

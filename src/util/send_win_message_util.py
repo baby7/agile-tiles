@@ -17,11 +17,11 @@ def send_message(app_title, title, descript, url=None):
         Notification(app_id=app_title + " " + str(datetime.datetime.now().strftime("%H:%M:%S")),
                      title=title,
                      msg=descript,
-                     icon=str(os.getcwd()) + r"\img\icon\icon.png",
+                     icon=str(os.getcwd()) + r"\static\img\icon\icon.png",
                      launch=url).show()
     else:
         Notification(app_id=app_title + " " + str(datetime.datetime.now().strftime("%H:%M:%S")),
                      title=title,
                      msg=descript,
-                     icon=str(os.getcwd()) + r"\img\icon\icon.png").show()
+                     icon=str(os.getcwd()) + r"\static\img\icon\icon.png").show()
     time.sleep(1)

@@ -144,7 +144,7 @@ class Ui_Form(object):
         self.spin_box_form_animation_time.setMinimumSize(QSize(0, 20))
         self.spin_box_form_animation_time.setFont(font)
         self.spin_box_form_animation_time.setMinimum(1)
-        self.spin_box_form_animation_time.setMaximum(1000)
+        self.spin_box_form_animation_time.setMaximum(500)
         self.spin_box_form_animation_time.setSingleStep(10)
 
         self.horizontalLayout_2.addWidget(self.spin_box_form_animation_time)

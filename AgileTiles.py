@@ -133,7 +133,6 @@ class MyForm(MainAcrylicWindow, Ui_Form):
     setting_keyboard_win = None
     # 键盘热键管理
     hotkey_manager = None
-    hotkey_listening = False
     # 用户
     current_user = None
     login_restart_data = None       # 用于登录时刷新失效重新登录的数据
@@ -251,6 +250,8 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         self.time_task()
         # 设置字体
         style_util.set_font_and_right_click_style(self, self)
+        # 调整主卡片菜单位置
+        self.main_card_manager.change_menu_indicate_location()
 
     ''' **********************************数据管理*************************************** '''
     def load_data(self):
@@ -1121,7 +1122,8 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         # 移除热键
         self.remove_keyboard_shortcut()
         # 获取热键
-        keyboard_key = None
+        wake_keyboard_key = None
+        translate_keyboard_key = None
         try:
             # 判断是否设置了键盘快捷键
             if self.main_data is None or self.main_data["data"] is None:
@@ -1130,25 +1132,34 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             if main_data_data["SettingCard"] is None or main_data_data["SettingCard"][self.hardware_id] is None:
                 return
             setting_data = main_data_data["SettingCard"][self.hardware_id]
-            if setting_data["wakeUpByKeyboard"] is False or setting_data["wakeUpByKeyboardType"] is None:
-                return
-            keyboard_key = setting_data["wakeUpByKeyboardType"]
+            # 获取到具体唤醒热键
+            if ("wakeUpByKeyboard" in setting_data and "wakeUpByKeyboardType" in setting_data
+                    and setting_data["wakeUpByKeyboard"] and setting_data["wakeUpByKeyboardType"] is not None):
+                wake_keyboard_key = setting_data["wakeUpByKeyboardType"]
+            # 获取到具体翻译热键
+            if ("translateByKeyboard" in setting_data and "translateByKeyboardType" in setting_data
+                    and setting_data["translateByKeyboard"] and setting_data["translateByKeyboardType"] is not None):
+                translate_keyboard_key = setting_data["translateByKeyboardType"]
         except Exception:
             traceback.print_exc()
         # 判断是否获取到热键
-        if keyboard_key is None:
+        if wake_keyboard_key is None and translate_keyboard_key is None:
             return
         # 创建热键管理器
         self.hotkey_manager = GlobalHotkeyManager.GlobalHotkeyManager(self)
-        self.hotkey_manager.hotkey_triggered.connect(self.on_hotkey_triggered)
         # 注册热键
-        try:
-            self.hotkey_manager.register_hotkey(keyboard_key)
-            self.hotkey_listening = True
-        except Exception as e:
-            print(f"热键注册失败: {e}")
+        if wake_keyboard_key:
+            try:
+                self.hotkey_manager.register_hotkey(wake_keyboard_key, self.on_wake_hotkey_triggered)
+            except Exception as e:
+                print(f"热键注册失败: {e}")
+        if translate_keyboard_key:
+            try:
+                self.hotkey_manager.register_hotkey(translate_keyboard_key, self.on_translate_hotkey_triggered)
+            except Exception as e:
+                print(f"热键注册失败: {e}")
 
-    def on_hotkey_triggered(self):
+    def on_wake_hotkey_triggered(self):
         """快捷键进入退出动画"""
         # 如果登录窗口展示则不处理动画
         if self.start_login_view:
@@ -1165,6 +1176,10 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             self.toolkit.resolution_util.out_animation(self)
         else:
             self.toolkit.resolution_util.in_animation(self)
+
+    def on_translate_hotkey_triggered(self):
+        """快捷键OCR"""
+        self.main_card_manager.on_translate_hotkey_triggered()
 
     def nativeEvent(self, eventType, message):
         """处理 Windows 原生事件"""
@@ -1188,7 +1203,6 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         except Exception as e:
             self.info_logger.error(e)
             traceback.print_exc()
-        self.hotkey_listening = False
 
 
     ''' **********************************其他*************************************** '''

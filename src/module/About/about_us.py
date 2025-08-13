@@ -32,7 +32,7 @@ class AboutUsWindow(AgileTilesAcrylicWindow, Ui_Form):
         # 设置样式
         style_util.set_dialog_control_style(self, self.is_dark)
         # 设置文字
-        self.label_title.setText("灵卡面板 " + str(version_constant.get_current_version()))
+        self.label_title.setText(str(version_constant.get_current_version()))
         # 设置按钮
         self.push_button_link.setText(common.index_url)
         # 按钮点击事件
@@ -50,10 +50,8 @@ class AboutUsWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.label_copyright.setStyleSheet(background)
         self.label_company.setStyleSheet(background)
         # 设置图标
-        if self.is_dark:
-            self.label_icon.setPixmap(QPixmap("./static/img/icon/dark/icon.png"))
-        else:
-            self.label_icon.setPixmap(QPixmap("./static/img/icon/light/icon.png"))
+        self.label_icon.setPixmap(QPixmap("./static/img/icon/icon_title.png"))
+        self.label_icon.setFixedSize(128, 165)
         self.label_icon.setScaledContents(True)
 
     def push_button_link_click(self):

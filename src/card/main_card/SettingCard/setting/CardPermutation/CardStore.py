@@ -3,10 +3,12 @@ import json
 import os
 
 from PySide6 import QtCore, QtWidgets, QtGui, QtNetwork
-from PySide6.QtCore import Signal, Qt, QSize
+from PySide6.QtCore import Signal, Qt, QSize, QRect
 from PySide6.QtGui import QIcon, QCursor
+from PySide6.QtWidgets import QLabel
 
 from src.card.main_card.SettingCard.setting.CardPermutation.CardDetailWidget import CardDetailWidget
+from src.component.LoadAnimation.LoadAnimation import LoadAnimation
 from src.ui import style_util
 from src.client import card_store_client
 
@@ -30,6 +32,12 @@ class CardStore(QtWidgets.QWidget):
         # 加载卡片列表
         self.card_store_client = card_store_client.CardStoreClient(self.use_parent)
         self.card_store_client.card_list_received.connect(self.load_store_card_finished)
+        self.card_store_client.request_error.connect(self.load_store_card_error)
+        # 显示加载动画
+        self.label_top_mask.show()
+        self.load_animation.show()
+        self.load_animation.load()
+        # 发起加载卡片列表请求
         self.card_store_client.fetch_card_store_list()
         # 图片缓存
         self.image_cache = {}  # 图片缓存字典
@@ -64,8 +72,7 @@ class CardStore(QtWidgets.QWidget):
         # 顶部工具栏
         top_layout = QtWidgets.QHBoxLayout()
         close_btn = self.create_close_button()
-        top_layout.addItem(
-            QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum))
+        top_layout.addStretch()
         top_layout.addWidget(close_btn)
         main_layout.addLayout(top_layout)
 
@@ -75,10 +82,33 @@ class CardStore(QtWidgets.QWidget):
         # self.init_store_card_list()
         main_layout.addWidget(self.tab_widget)
 
+        # 顶部遮罩层
+        self.label_top_mask = QLabel(self.tab_widget)
+        self.label_top_mask.setObjectName(u"label_top_mask")
+        self.label_top_mask.setGeometry(QRect(0, 20, self.tab_widget.width(), self.tab_widget.height() - 20))
+        # 中心加载动画
+        self.load_animation = LoadAnimation(self, 'Dark' if self.is_dark else 'Light')
+        self.load_animation.setStyleSheet("background:transparent;border: 0px solid gray;")
+        self.load_animation.setGeometry(QRect(int(self.width() / 2 - 60 / 2), int(self.height() / 2 - 60 / 2), 60, 60))
+        self.load_animation.raise_()
+        self.label_top_mask.raise_()
+        self.load_animation.hide()
+        self.label_top_mask.hide()
+
     def load_store_card_finished(self, response):
         print(f"response:{response}")
         self.card_store_data = response
         self.init_store_card_list()
+        # 隐藏加载动画
+        self.load_animation_end_call_back()
+
+    def load_store_card_error(self, response):
+        # 隐藏加载动画
+        self.load_animation_end_call_back()
+
+    def load_animation_end_call_back(self):
+        self.label_top_mask.hide()
+        self.load_animation.hide()
 
     def create_close_button(self):
         btn = QtWidgets.QPushButton()

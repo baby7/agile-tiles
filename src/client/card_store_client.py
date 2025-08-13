@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
-from PySide6.QtCore import QObject, QUrl, Signal, Slot
+
+from PySide6.QtCore import QObject, QUrl, Signal
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
 import src.client.common as common
