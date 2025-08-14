@@ -749,7 +749,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             if need_all_restart:
                 print("server_trigger_data_update - 对整体进行重载")
                 # 初始化分辨率参数、位置和大小
-                screen_module.init_resolution(self, is_first=False, out_animation_tag=False)
+                screen_module.init_resolution(self, is_first=False, out_animation_tag=False, is_show=self.show_form)
                 # 重新初始化卡片
                 self.restart_card(need_menu_change=False)
                 # 获取有改变的大卡片列表

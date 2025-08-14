@@ -31,11 +31,13 @@ def get_screen(main_window):
     return desktop
 
 
-def init_resolution(main_window, is_first=True, out_animation_tag=True):
+def init_resolution(main_window, is_first=True, out_animation_tag=True, is_show=True):
     """
     初始化分辨率参数
     :param main_window: 主窗口
     :param is_first: 是否第一次初始化
+    :param out_animation_tag: 是否需要退出动画
+    :param is_show: 界面是否在屏幕内
     """
     # 初始化界面和固定大小
     if is_first:
@@ -66,13 +68,27 @@ def init_resolution(main_window, is_first=True, out_animation_tag=True):
     main_window.screen_x = desktop_geometry.x()
     main_window.screen_y = desktop_geometry.y()
     print(f"显示器位置：{desktop_geometry}")
-    if main_window.form_locate == "Right":
-        main_window.move(main_window.screen_x + main_window.desktop_width - main_window.width(), main_window.screen_y)
-    else:
-        main_window.move(main_window.screen_x, main_window.screen_y)
     # 初始化大小
     new_width = main_window.CARD_WIDTH * main_window.form_width + main_window.CARD_INTERVAL * (main_window.form_width + 1)
     main_window.resize(new_width, main_window.desktop_height - main_window.taskbar_height)
+    if is_show:
+        if main_window.form_locate == "Right":
+            move_x = main_window.screen_x + main_window.desktop_width - main_window.width()
+            move_y = main_window.screen_y
+        else:
+            move_x = main_window.screen_x
+            move_y = main_window.screen_y
+        main_window.move(move_x, move_y)
+    else:
+        if main_window.form_locate == "Right":
+            move_x = main_window.screen_x + main_window.desktop_width - main_window.width()
+            move_x += new_width
+            move_y = main_window.screen_y
+        else:
+            move_x = main_window.screen_x
+            move_x -= new_width
+            move_y = main_window.screen_y
+        main_window.move(move_x, move_y)
     # 退出
     if out_animation_tag:
         out_animation(main_window)

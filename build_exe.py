@@ -40,11 +40,11 @@ nuitka_command = [
     "--windows-icon-from-ico=static/img/icon/icon.ico",                     # 图标路径
     "--output-dir=out",                                                     # 输出目录
 
-    "--windows-company-name=\"杭州市拱墅区启杭灵卡软件开发工作室（个体工商户）\"",   # Windows下软件公司信息
-    "--windows-product-name=\"灵卡面板\"",                                    # Windows下软件名称
+    "--windows-company-name=杭州市拱墅区启杭灵卡软件开发工作室",                  # Windows下软件公司信息
+    "--windows-product-name=灵卡面板",                                       # Windows下软件名称
     "--windows-file-version=" + no_v_version,                               # Windows下软件的版本
     "--windows-product-version=" + no_v_version,                            # Windows下软件的产品版本
-    "--windows-file-description=\"打造你的专属工具面板\"",                      # Windows下软件的作用描述
+    "--windows-file-description=灵卡面板",                      # Windows下软件的作用描述
 
     "--windows-uac-admin",                                                  # 嵌入清单
 
