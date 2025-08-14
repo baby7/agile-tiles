@@ -42,7 +42,7 @@ class MainWorker(QObject):
             return
         try:
             datetime_now = datetime.datetime.now()
-            if datetime_now - self.start_datetime >= datetime.timedelta(minutes=5):
+            if datetime_now - self.start_datetime >= datetime.timedelta(seconds=30):
                 self.time_task_trigger.emit(datetime_now.strftime("%H:%M:%S"))
                 self.start_datetime = datetime_now
         except Exception as e:

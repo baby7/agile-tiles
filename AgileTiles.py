@@ -143,6 +143,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
     is_vip = False
     access_token = None
     refresh_token = None
+    refresh_token_datetime = None
     # 启动状态
     is_first = True
     start_login_view = False        # 登录窗口是否展示
@@ -360,6 +361,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             self.is_login = True
             self.access_token = "Bearer " + result_data['accessToken']
             self.refresh_token = result_data['refreshToken']
+            self.refresh_token_datetime = datetime.datetime.now()
             self.is_vip = result_data['vipStatus']
             self.current_user = {
                 "id": result_data["id"],
@@ -578,14 +580,18 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         if server_user_data['code'] == 1:
             self.toolkit.message_box_util.box_information(self, "提醒", f"同步云端数据失败，原因：{server_user_data['msg']}")
             return
-        server_main_data = json.loads(server_user_data["data"]["data"])
         server_timestamp = int(server_user_data["data"]["timestamp"])
         local_timestamp = int(self.main_data["timestamp"])
+        print(f"服务器时间戳:{server_timestamp},本地时间戳:{local_timestamp},服务器比本地多了{server_timestamp - local_timestamp}毫秒")
         if server_timestamp <= local_timestamp:
             self.toolkit.message_box_util.box_information(self, "提醒", f"云端数据与本地数据一致，无需同步")
-            print(self.main_data["timestamp"])
             self.label_user_last_backup_time.setText(self.toolkit.time_util.get_datetime_str_by_timestamp(self.main_data["timestamp"]))
             return
+        if server_user_data["data"]["data"] is None or server_user_data["data"]["data"] == "":
+            self.toolkit.message_box_util.box_information(self, "提醒", f"云端数据为空，无需同步")
+            self.label_user_last_backup_time.setText(self.toolkit.time_util.get_datetime_str_by_timestamp(self.main_data["timestamp"]))
+            return
+        server_main_data = json.loads(server_user_data["data"]["data"])
         old_data = copy.deepcopy(self.main_data)
         new_data = copy.deepcopy(server_main_data)
         self.main_data = server_main_data
@@ -618,6 +624,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             self.vip_expire_time = None
             self.access_token = None
             self.refresh_token = None
+            self.refresh_token_datetime = None
             self.main_data = None
             self.current_user = None
             # 登出前的操作
@@ -704,6 +711,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         :param old_data: 更新前的数据
         :param new_data: 更新后的数据
         """
+        print("server_trigger_data_update - 云端触发的数据更新")
         # 判断需要进行哪些刷新(进行了高级别刷新就不需要进行低级别刷新)
         need_all_restart = False        # 对整体进行重载(3级别)
         need_all_card_restart = False   # 进行卡片整体重载(2级别)
@@ -712,10 +720,12 @@ class MyForm(MainAcrylicWindow, Ui_Form):
 
         # 如果新老数据不一致
         if old_data != new_data:
+            print("server_trigger_data_update - 新老数据不一致")
             # 如果卡片数据有更新
             if main_data_compare.card_has_change(old_data, new_data):
                 # 如果卡片有新增、删除、位置改变，需要对卡片进行重载
-                need_all_card_restart = True
+                # need_all_card_restart = True
+                need_all_restart = True
             else:
                 # 否则只需要进行部分卡片数据刷新
                 need_part_card_refresh = True
@@ -737,33 +747,43 @@ class MyForm(MainAcrylicWindow, Ui_Form):
 
             # 对整体进行重载
             if need_all_restart:
+                print("server_trigger_data_update - 对整体进行重载")
                 # 初始化分辨率参数、位置和大小
-                screen_module.init_resolution(self, is_first=False)
+                screen_module.init_resolution(self, is_first=False, out_animation_tag=False)
                 # 重新初始化卡片
-                self.restart_card()
+                self.restart_card(need_menu_change=False)
+                # 获取有改变的大卡片列表
+                normal_card_data_update_list, big_card_data_update_list, enduring_changes = (main_data_compare.
+                                                                            get_card_list_by_data_change(old_data, new_data))
+                # 对需要改变的卡片列表进行数据更新
+                self.main_card_manager.refresh_card_list(big_card_data_update_list, enduring_changes)
                 # 设置字体
                 style_util.set_font_and_right_click_style(self, self)
             # 进行卡片整体重载
             elif need_all_card_restart:
+                print("server_trigger_data_update - 卡片整体重载")
                 # 重新初始化卡片
-                self.restart_card()
+                self.restart_card(need_menu_change=False)
                 # 设置字体
                 style_util.set_font_and_right_click_style(self, self)
             # 进行部分卡片数据刷新
             elif need_part_card_refresh:
+                print("server_trigger_data_update - 进行部分卡片数据刷新")
                 # 如果只是部分卡片的缓存数据有改变，则获取有改变的卡片列表
                 normal_card_data_update_list, big_card_data_update_list, enduring_changes = (main_data_compare.
                                                                             get_card_list_by_data_change(old_data, new_data))
                 # 对需要改变的卡片列表进行数据更新
-                self.main_card_manager.refresh_card_list(normal_card_data_update_list, enduring_changes)
+                self.main_card_manager.refresh_card_list(big_card_data_update_list, enduring_changes)
                 self.normal_card_manager.refresh_card_list(normal_card_data_update_list, enduring_changes)
 
             # 对键盘进行重载
             if need_keyboard_restart:
+                print("server_trigger_data_update - 对键盘进行重载")
                 # 重新初始化热键
                 self.keyboard_re_init()
 
         # 保存到本地数据库
+        print("server_trigger_data_update - 保存到本地数据库")
         self.save_local_data(data_save_constant.TRIGGER_TYPE_DATA_SYNC)
 
     def local_trigger_data_update(self, trigger_type=None, need_upload=True, in_data=None, data_type=None, card_type=None, card_name=None):
@@ -825,6 +845,8 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             need_all_restart = True     # 这里因为安装了新的卡片，所以需要重启
             self.main_data["card"] = in_data["card"]
             self.main_data["data"]["SettingCard"] = in_data["SettingCard"]
+            self.main_data["width"] = in_data["width"]
+            self.main_data["height"] = in_data["height"]
         # 屏幕数据更新
         elif trigger_type == data_save_constant.TRIGGER_TYPE_SETTING_SCREEN:
             need_all_restart = True
@@ -969,8 +991,11 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             # 如果支付界面正在显示，则不进行令牌刷新避免闪退
             if self.qr_code_dialog is not None and self.qr_code_dialog.isVisible():
                 return
-            # 更新令牌
-            self.user_info_client.refresh(self.current_user["username"], self.refresh_token, self.hardware_id, self.os_version)
+            # 判断时间，如果时间超过12个小时就更新令牌
+            datetime_now = datetime.datetime.now()
+            if self.refresh_token_datetime is None or datetime_now - self.refresh_token_datetime >= datetime.timedelta(hours=12):
+                # 更新令牌
+                self.user_info_client.refresh(self.current_user["username"], self.refresh_token, self.hardware_id, self.os_version)
         except Exception:
             traceback.print_exc()
 
@@ -978,6 +1003,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         print("主进程 - handle_user_detection_result")
         if result['code'] == 1:
             self.info_logger.error(f"获取用户信息失败，原因：{result['msg']}")
+            self.logout()
             return
         self.info_logger.info(f"获取用户信息成功")
         # 更新信息
@@ -1016,6 +1042,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         print(f"刷新令牌结果:{result}")
         self.access_token = "Bearer " + result["data"]['accessToken']
         self.refresh_token = result["data"]['refreshToken']
+        self.refresh_token_datetime = datetime.datetime.now()
         # 更新信息
         self.current_user["accessToken"] = self.access_token
         self.current_user["refreshToken"] = self.refresh_token
@@ -1034,7 +1061,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         self.normal_card_manager.set_card_map_list(self.main_data["card"], self.main_data["data"],
                                             self.toolkit, self.info_logger, self.local_trigger_data_update)
 
-    def restart_card(self):
+    def restart_card(self, need_menu_change=True):
         # 停止卡片线程
         self.stop_normal_card_thread_list()
         # 清空卡片
@@ -1054,12 +1081,14 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         # 主题切换
         user_module.refresh_theme(self)
         init_module.set_theme(self, is_main=True)
-        # 切换卡片到默认的热搜卡片
-        try:
+        # 是否需要切换卡片到默认的热搜卡片
+        if need_menu_change:
             self.main_card_manager.see_card = "trending"
+        # 切换卡片
+        try:
             self.main_card_manager.show_change()
         except Exception as e:
-            self.info_logger.card_error("主程序", "切换热搜失败,错误信息:{}".format(e))
+            self.info_logger.card_error("主程序", "切换菜单失败,错误信息:{}".format(e))
 
     def set_all_card_data(self):
         pass

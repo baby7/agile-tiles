@@ -700,8 +700,8 @@ class MainCardManager(QObject):
             if card.name == "SettingCard":
                 setting_card = card
         user_card_list = copy.deepcopy(self.main_object.main_data["card"])
-        setting_config = copy.deepcopy(self.main_object.main_data["data"]["SettingCard"][self.main_object.hardware_id])
-        self.main_object.card_permutation_win = CardPermutationWindow(setting_card, self.main_object, user_card_list, setting_config)
+        main_config = copy.deepcopy(self.main_object.main_data)
+        self.main_object.card_permutation_win = CardPermutationWindow(setting_card, self.main_object, user_card_list, main_config)
         # self.card_permutation_win.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
         self.main_object.card_permutation_win.show()
 
@@ -904,17 +904,44 @@ class MainCardManager(QObject):
         """
         对需要改变的卡片列表进行数据更新
         """
-        for card in self.main_object.main_card_list:
-            name = card.name
+        for main_card in self.main_object.main_card_list:
+            name = main_card.name
+            need_update_cache = False
+            need_update_data = False
+            cache_data = None
+            enduring_real_data = None
+            # 判断是否需要更新缓存
             for card in main_card_data_update_list:
                 if card["name"] == name:
+                    need_update_cache = True
                     cache_data = card["data"]
-                    card.update_cache(cache=cache_data)
-                    if name in enduring_changes:
-                        enduring_data = enduring_changes[name]
-                        card.update_data(data=enduring_data)
-                        card.update_all(cache=cache_data, data=enduring_data)
                     break
+            # 判断是否需要更新数据
+            if name in enduring_changes:
+                need_update_data = True
+                enduring_data = enduring_changes[name]
+                enduring_data_type = enduring_data["type"]
+                if enduring_data_type == "added" or enduring_data_type == "removed":
+                    enduring_real_data = enduring_data["data"]
+                else:
+                    enduring_real_data = enduring_data["new_data"]
+            # 如果两个都不需更新，则跳过
+            if not need_update_cache and not need_update_data:
+                continue
+            is_hide = main_card.card.isHidden()
+            if not is_hide:
+                main_card.card.hide()
+            # 如果仅需更新缓存，则更新缓存
+            if need_update_cache and not need_update_data:
+                main_card.update_cache(cache=cache_data)
+            # 如果仅需更新数据，则更新数据
+            if need_update_data and not need_update_cache:
+                main_card.update_data(data=enduring_real_data)
+            # 如果需更新缓存和数据，则更新所有
+            if need_update_cache and need_update_data:
+                main_card.update_all(cache=cache_data, data=enduring_real_data)
+            if not is_hide:
+                main_card.card.show()
 
     def on_translate_hotkey_triggered(self):
         """

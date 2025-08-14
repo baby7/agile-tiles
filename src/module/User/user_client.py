@@ -108,11 +108,14 @@ class UserClient(QObject):
 
     def get_user_info(self, username, token):
         """获取用户信息"""
-        url = common.BASE_URL + "/user/normal/info?username=" + str(username)
-        request = QNetworkRequest(QUrl(url))
-        request.setRawHeader(b"Authorization", token.encode())
-        # 发送异步请求
-        self.network_manager_info.get(request)
+        try:
+            url = common.BASE_URL + "/user/normal/info?username=" + str(username)
+            request = QNetworkRequest(QUrl(url))
+            request.setRawHeader(b"Authorization", token.encode())
+            # 发送异步请求
+            self.network_manager_info.get(request)
+        except Exception as e:
+            print(e)
 
     def refresh(self, username, refresh_token, hardware_id, os_version=None):
         """刷新令牌"""
@@ -157,6 +160,17 @@ class UserClient(QObject):
         """统一处理网络响应"""
         try:
             if reply.error() == QNetworkReply.NetworkError.NoError:
+                # 获取 HTTP 状态码
+                status_code = reply.attribute(QNetworkRequest.HttpStatusCodeAttribute)
+                if status_code:
+                    if status_code == 401:
+                        error_result = {"code": 1, "msg": "未授权，请重新登录"}
+                        finished.emit(error_result)
+                        return
+                    elif status_code == 403:
+                        error_result = {"code": 1, "msg": "禁止访问，权限不足"}
+                        finished.emit(error_result)
+                        return
                 data = reply.readAll().data().decode('utf-8')
                 result = json.loads(data)
                 finished.emit(result)

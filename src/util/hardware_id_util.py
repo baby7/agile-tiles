@@ -81,7 +81,10 @@ def get_hardware_id():
         system_info = platform.node()
 
     # 生成SHA256哈希值（固定长度64字符）
-    return hashlib.sha256(system_info.encode()).hexdigest()
+    print("System Info:", system_info)
+    hardware_id = hashlib.sha256(system_info.encode()).hexdigest()
+    print("Hardware ID:", hardware_id)
+    return hardware_id
 
 
 def get_os_version():
@@ -139,7 +142,9 @@ def get_os_version():
         # 异常时使用平台默认标识
         os_version = platform.platform()
 
-    return os_version.strip()
+    os_version_str = os_version.strip()
+    print("OS Version:", os_version_str)
+    return os_version_str
 
 
 # 使用示例

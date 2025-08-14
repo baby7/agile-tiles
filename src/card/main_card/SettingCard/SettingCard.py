@@ -171,8 +171,8 @@ class SettingCard(MainCard):
     def push_button_setting_card_permutation_click(self):
         self.toolkit.resolution_util.out_animation(self.main_object)
         user_card_list = copy.deepcopy(self.main_object.main_data["card"])
-        setting_config = copy.deepcopy(self.setting_data)
-        self.card_permutation_win = CardPermutationWindow(self, self.main_object, user_card_list, setting_config)
+        main_config = copy.deepcopy(self.main_object.main_data)
+        self.card_permutation_win = CardPermutationWindow(self, self.main_object, user_card_list, main_config)
         # self.card_permutation_win.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
         self.card_permutation_win.show()
 
@@ -181,7 +181,9 @@ class SettingCard(MainCard):
         self.setting_data["height"] = data["height"]
         in_data = {
             "card": card,
-            "SettingCard": self.data
+            "SettingCard": self.data,
+            "width": data["width"],
+            "height": data["height"],
         }
         self.save_data_func(trigger_type=data_save_constant.TRIGGER_TYPE_SETTING_PERMUTATION, in_data=in_data)
 

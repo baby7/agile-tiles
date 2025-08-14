@@ -31,7 +31,7 @@ def get_screen(main_window):
     return desktop
 
 
-def init_resolution(main_window, is_first=True):
+def init_resolution(main_window, is_first=True, out_animation_tag=True):
     """
     初始化分辨率参数
     :param main_window: 主窗口
@@ -74,7 +74,8 @@ def init_resolution(main_window, is_first=True):
     new_width = main_window.CARD_WIDTH * main_window.form_width + main_window.CARD_INTERVAL * (main_window.form_width + 1)
     main_window.resize(new_width, main_window.desktop_height - main_window.taskbar_height)
     # 退出
-    out_animation(main_window)
+    if out_animation_tag:
+        out_animation(main_window)
 
 
 def load_data(main_window):
@@ -107,8 +108,11 @@ def load_data(main_window):
     # 字体
     main_window.form_font_name = setting_data['fontName']
     # 大小
-    main_window.form_width = setting_data["width"]
-    main_window.form_height = setting_data["height"]
+    if "width" not in main_window.main_data or "height" not in main_window.main_data:
+        main_window.main_data["width"] = setting_data["width"]
+        main_window.main_data["height"] = setting_data["height"]
+    main_window.form_width = main_window.main_data["width"]
+    main_window.form_height = main_window.main_data["height"]
 
 
 def in_animation(main_window):

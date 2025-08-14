@@ -270,8 +270,13 @@ class NormalCardManager(QWidget):
                         card_item.card.update_cache(cache=cache_data)
                     if name in enduring_changes:
                         enduring_data = enduring_changes[name]
+                        enduring_data_type = enduring_data["type"]
+                        if enduring_data_type == "added" or enduring_data_type == "removed":
+                            enduring_real_data = enduring_data["data"]
+                        else:
+                            enduring_real_data = enduring_data["new_data"]
                         if hasattr(card_item, 'update_data'):
-                            card_item.card.update_data(data=enduring_data)
+                            card_item.card.update_data(data=enduring_real_data)
                         if hasattr(card_item, 'update_all'):
-                            card_item.card.update_all(cache=cache_data, data=enduring_data)
+                            card_item.card.update_all(cache=cache_data, data=enduring_real_data)
                     break

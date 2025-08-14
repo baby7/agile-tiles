@@ -260,7 +260,10 @@ class TodoBody(object):
         list_widget.setItemWidget(widget_item, item)
 
     def refresh_theme(self, is_dark):
-        for todo_id in self.complete_widget_map:
-            self.complete_widget_map[todo_id].refresh_theme(is_dark)
-        for todo_id in self.proceed_widget_map:
-            self.proceed_widget_map[todo_id].refresh_theme(is_dark)
+        try:
+            for todo_id in self.complete_widget_map:
+                self.complete_widget_map[todo_id].refresh_theme(is_dark)
+            for todo_id in self.proceed_widget_map:
+                self.proceed_widget_map[todo_id].refresh_theme(is_dark)
+        except Exception as e:
+            print("刷新待办主题失败:{}".format(e))

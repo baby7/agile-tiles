@@ -42,7 +42,7 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
     do_not_ask_me = False            # 关闭前是否不再询问
     is_install_or_update = False    # 是否需要安装、更新卡片
 
-    def __init__(self, parent=None, use_parent=None, user_card_list=None, setting_config=None):
+    def __init__(self, parent=None, use_parent=None, user_card_list=None, main_config=None):
         super(CardPermutationWindow, self).__init__(is_dark=use_parent.is_dark, form_theme_mode=use_parent.form_theme_mode,
                                                  form_theme_transparency=use_parent.form_theme_transparency)
         self.parent = parent
@@ -82,9 +82,9 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
         self.parent_user_card_data_list = user_card_list
         # 大小
-        setting_data = setting_config
-        self.box_card_width = setting_data["width"]
-        self.box_card_height = setting_data["height"]
+        main_config = main_config
+        self.box_card_width = main_config["width"]
+        self.box_card_height = main_config["height"]
         # 设置标题栏
         self.setWindowTitle("灵卡面板 - 卡片排列设置")
         self.titleBar.minBtn.close()
