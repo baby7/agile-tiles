@@ -203,7 +203,7 @@ def handle_silent_update_normal_result(main_object, success, update_info):
             return
         else:
             # 判断是否需要更新
-            if update_info.get("updateTag") is not None and not update_info.get("updateTag"):
+            if version_constant.compare_version(main_object.silent_updater.app_version, update_info["version"]) >= 0:
                 return
             # 有更新，就在检查更新右上角添加/显示更新提示
             button_width = 70

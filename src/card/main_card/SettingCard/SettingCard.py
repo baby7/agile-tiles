@@ -371,7 +371,7 @@ class SettingCard(MainCard):
             return
 
         # 判断是否需要更新
-        if update_info.get("updateTag") is not None and not update_info.get("updateTag"):
+        if version_constant.compare_version(self.main_object.app_version, update_info.get("version")) >= 0:
             # 如果当前版本大于等于更新版本，隐藏检查更新右上角更新提示
             if self.main_object.update_red_dot is not None:
                 self.main_object.update_red_dot.hide()
@@ -379,7 +379,7 @@ class SettingCard(MainCard):
             self.toolkit.message_box_util.box_information(
                 self.main_object,
                 "版本信息",
-                "当前已是最新版本"
+                f"当前已是最新版本: {update_info['version']}"
             )
             return
         # 如果不同表示云端有更新版本，在检查更新右上角添加/显示更新提示
