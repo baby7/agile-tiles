@@ -8,14 +8,14 @@ class ScreenshotOverlay(QWidget):
     card_object = None
 
     def __init__(self, parent=None, card_object=None):
-        super().__init__(parent)
+        super().__init__(parent=None)
         self.card_object = card_object
         self.setWindowFlags(
             Qt.WindowType.FramelessWindowHint |
-            Qt.WindowType.WindowStaysOnTopHint |
-            Qt.WindowType.Tool
+            Qt.WindowType.WindowStaysOnTopHint
         )
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)  # 允许接收键盘事件
         self.setMouseTracking(True)
 
         # 获取所有屏幕的总体矩形

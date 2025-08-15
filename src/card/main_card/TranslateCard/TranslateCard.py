@@ -442,6 +442,7 @@ class TranslateCard(MainCard):
     def _show_overlay(self):
         self.overlay = ScreenshotOverlay(self.card, self)
         self.overlay.show()
+        self.overlay.setFocus(Qt.FocusReason.ActiveWindowFocusReason)  # 强制获取焦点
 
     def screenshot_captured(self, pixmap):
         """截图完成处理"""
