@@ -107,6 +107,26 @@ class InformationCard(AggregationCard):
                 "link": "https://api.pexels.com",
                 "call_back_func": lambda : self.push_button_random_image_click("delicious")
             },
+            {
+                "category": self.module_category_image,
+                "type": "瞅瞅图",
+                "title": "显卡天梯图",
+                "des": "桌面端显卡性能天梯图",
+                "icon": "Hardware/chip.svg",
+                "content": "https://server.agiletiles.com/file_cdn/gpu_top_qiudaoyu/Gpu-2025-08.jpg",
+                "link": "https://tieba.baidu.com/p/6133450546?pn=1",
+                "call_back_func": None
+            },
+            {
+                "category": self.module_category_image,
+                "type": "瞅瞅图",
+                "title": "处理器天梯图",
+                "des": "桌面端处理器性能天梯图",
+                "icon": "Hardware/cpu.svg",
+                "content": "https://server.agiletiles.com/file_cdn/gpu_top_qiudaoyu/Cpu-2025-08.jpg",
+                "link": "https://tieba.baidu.com/p/5005825360?pn=1",
+                "call_back_func": None
+            },
             # 文字类
             {
                 "category": self.module_category_text,
