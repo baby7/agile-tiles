@@ -1,4 +1,5 @@
 from src.card.component.AggregationCard.AggregationCard import AggregationCard
+from src.card.main_card.ToolCard.hold_grudges_gen import hold_grudges_gen_util
 
 
 class ToolCard(AggregationCard):
@@ -142,10 +143,20 @@ class ToolCard(AggregationCard):
                 "link": "https://github.com/lewish/asciiflow",
                 "call_back_func": None
             },
-            # 生活
+            # 趣味
             {
                 "category": self.module_category_browser,
-                "type": "生活",
+                "type": "趣味",
+                "title": "记仇生成器",
+                "des": "这个仇我记下了",
+                "icon": "Emoji/angry-face.svg",
+                "content": None,
+                "link": None,
+                "call_back_func": lambda : self.hold_grudges_gen()
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "趣味",
                 "title": "中国家庭称谓计算器",
                 "des": "这下搞懂了",
                 "icon": "png:Actor/RelationShip.png",
@@ -158,7 +169,7 @@ class ToolCard(AggregationCard):
             },
             {
                 "category": self.module_category_browser,
-                "type": "生活",
+                "type": "趣味",
                 "title": "中国制霸生成器",
                 "des": "看看你都去过哪些省",
                 "icon": "png:Actor/ChinaWorldEX.png",
@@ -171,7 +182,7 @@ class ToolCard(AggregationCard):
             },
             {
                 "category": self.module_category_browser,
-                "type": "生活",
+                "type": "趣味",
                 "title": "全球制霸生成器",
                 "des": "看看你都去过哪些国家",
                 "icon": "png:Actor/ChinaWorldEX.png",
@@ -224,6 +235,10 @@ class ToolCard(AggregationCard):
             },
         ]
         self.init_tab_widget()
+
+    def hold_grudges_gen(self):
+        self.toolkit.resolution_util.out_animation(self.main_object)
+        hold_grudges_gen_util.show_hold_grudges_gen_dialog(self.main_object, "记仇生成器", None)
 
     def refresh_data(self, date_time_str):
         super().refresh_data(date_time_str)
