@@ -224,6 +224,10 @@ class AggregationCard(MainCard):
             message_box_util.box_information(self.main_object, "错误信息", f"获取{str(aggregation_module)}失败,请稍后重试")
 
     def refresh_theme(self):
+        if self.before_theme is not None and self.before_theme == self.theme:
+            # 重复不刷新
+            return False
+        self.before_theme = self.theme
         for aggregation_module in self.aggregation_module_list:
             if "button_index" not in aggregation_module:
                 break

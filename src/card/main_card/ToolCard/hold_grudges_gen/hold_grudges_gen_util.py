@@ -18,7 +18,7 @@ class HoldGrudgesGenPopup(AgileTilesAcrylicWindow):
         self.setWindowTitle(title)  # 设置到标题栏
         self.titleBar.minBtn.close()
         self.titleBar.maxBtn.close()
-        self.setMinimumSize(500, 900)
+        self.setMinimumSize(450, 900)
         # 初始化界面
         self.init_ui()
         # 设置样式
@@ -56,9 +56,18 @@ class HoldGrudgesGenPopup(AgileTilesAcrylicWindow):
         main_layout.addWidget(content_label)
 
         self.content_input = QTextEdit()
-        self.content_input.setText("群主拒绝了女装，这个仇，我先记下了")
+        self.content_input.setText("群主拒绝了女装")
         self.content_input.setMaximumHeight(80)
         main_layout.addWidget(self.content_input)
+
+        # 结束语
+        end_label = QLabel("输入结束语：")
+        end_label.setStyleSheet("background: transparent;")
+        main_layout.addWidget(end_label)
+
+        self.end_input = QLineEdit()
+        self.end_input.setText("这个仇，我先记下了")
+        main_layout.addWidget(self.end_input)
 
         # 生成按钮
         generate_button = QPushButton("生成图片")
@@ -111,10 +120,11 @@ class HoldGrudgesGenPopup(AgileTilesAcrylicWindow):
         # 获取输入内容
         date = self.time_input.text().strip() or QDate.currentDate().toString("yyyy年M月d日")
         weather = self.weather_input.text().strip() or "晴天"
-        content = self.content_input.toPlainText().strip() or "群主拒绝了女装，这个仇，我先记下了"
+        content = self.content_input.toPlainText().strip() or "群主拒绝了女装"
+        end = self.end_input.text().strip() or "这个仇，我先记下了"
 
         # 组合文本
-        text = f"{date}，{weather}，{content}"
+        text = f"{date}，{weather}，{content}，{end}"
 
         # 设置图片宽度：比加载的图片稍宽
         width = self.top_image.width() + 50  # 264 + 50 = 314px
@@ -194,7 +204,7 @@ class HoldGrudgesGenPopup(AgileTilesAcrylicWindow):
 
 
 def show_hold_grudges_gen_dialog(main_object, title, content):
-    """显示内容对话框"""
+    """显示记仇生成器对话框"""
     dialog = HoldGrudgesGenPopup(None, main_object, title, content)
     dialog.refresh_geometry(main_object.toolkit.resolution_util.get_screen(main_object))
     dialog.show()

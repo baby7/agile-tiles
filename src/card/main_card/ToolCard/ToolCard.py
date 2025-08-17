@@ -152,7 +152,7 @@ class ToolCard(AggregationCard):
                 "icon": "Emoji/angry-face.svg",
                 "content": None,
                 "link": None,
-                "call_back_func": lambda : self.hold_grudges_gen()
+                "call_back_func": self.hold_grudges_gen
             },
             {
                 "category": self.module_category_browser,
