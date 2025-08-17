@@ -1372,6 +1372,13 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         self.stop_thread_list()
         # 隐藏窗口
         self.setVisible(False)
+        # 如果登录窗口存在则隐藏登录窗口并关闭
+        try:
+            if self.start_login_view:
+                self.user_server_recover_win.hide()
+                self.user_server_recover_win.close()
+        except Exception as e:
+            print(e)
         # 关闭托盘
         if self.tray_icon is not None:
             self.tray_icon.hide()

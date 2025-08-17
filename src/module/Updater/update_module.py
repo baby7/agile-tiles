@@ -118,6 +118,8 @@ def start_update_process(main_object, update_info):
     # 显示对话框
     main_object.progress_dialog = progress_dialog
     main_object.progress_dialog.show()
+    # 置顶对话框
+    main_object.progress_dialog.raise_()
 
     # 创建下载器
     main_object.downloader = Updater(
