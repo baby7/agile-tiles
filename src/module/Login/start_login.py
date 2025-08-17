@@ -671,7 +671,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
     # ************************************************** 软件更新 ***************************************************
     def push_button_update_soft_click(self):
         print("点击检查更新")
-        self.use_parent.check_update_run(must_have_dialog=True)
+        self.use_parent.check_update_run(tag="Login")
 
     # ************************************************** 信息展示 ***************************************************
 

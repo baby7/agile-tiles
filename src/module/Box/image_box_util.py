@@ -1,8 +1,8 @@
-from PySide6.QtGui import QPixmap, Qt, QWheelEvent
-from PySide6.QtCore import Slot, QUrl, QTimer
+from PySide6.QtGui import QPixmap, Qt, QWheelEvent, QMouseEvent
+from PySide6.QtCore import Slot, QUrl, QTimer, QPoint
+from PySide6.QtNetwork import QNetworkReply, QNetworkAccessManager, QNetworkRequest
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QPushButton, QApplication, QFileDialog, QHBoxLayout, QScrollArea, \
     QFrame, QSizePolicy
-from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
 from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 from src.component.LoadAnimation.LoadAnimation import LoadAnimation
@@ -15,12 +15,15 @@ class ImagePopup(AgileTilesAcrylicWindow):
                          form_theme_transparency=use_parent.form_theme_transparency)
         try:
             self.setWindowTitle("图片查看" if title is None else title)
-            # 初始化缩放相关变量
+            # 初始化缩放和拖动相关变量
             self.original_pixmap = None  # 保存原始图片
             self.scale_factor = 1.0  # 当前缩放比例
             self.min_scale = 0.1  # 最小缩放比例
             self.max_scale = 5.0  # 最大缩放比例
             self.zoom_step = 0.1  # 缩放步长
+            self.last_mouse_pos = QPoint()  # 用于拖动图片
+            self.is_dragging = False  # 是否正在拖动图片
+            self.mouse_position = QPoint()  # 存储鼠标位置用于缩放中心点
 
             self.init_ui()
             if link:
@@ -154,24 +157,100 @@ class ImagePopup(AgileTilesAcrylicWindow):
         self.zoom_out_button.hide()
         self.reset_zoom_button.hide()
 
-        # 启用滚轮事件
+        # 启用滚轮事件和鼠标事件
         self.image_label.setFocusPolicy(Qt.StrongFocus)
         self.image_label.wheelEvent = self.image_wheel_event
+        self.image_label.mousePressEvent = self.image_mouse_press_event
+        self.image_label.mouseMoveEvent = self.image_mouse_move_event
+        self.image_label.mouseReleaseEvent = self.image_mouse_release_event
 
         self.update()
 
+    def image_mouse_press_event(self, event: QMouseEvent):
+        """鼠标按下事件 - 开始拖动"""
+        if event.button() == Qt.LeftButton:
+            self.last_mouse_pos = event.globalPosition().toPoint()
+            self.is_dragging = True
+            self.image_label.setCursor(Qt.ClosedHandCursor)
+            event.accept()
+
+    def image_mouse_move_event(self, event: QMouseEvent):
+        """鼠标移动事件 - 拖动图片"""
+        if self.is_dragging and self.original_pixmap:
+            current_pos = event.globalPosition().toPoint()
+            delta = current_pos - self.last_mouse_pos
+            self.last_mouse_pos = current_pos
+
+            # 移动滚动条
+            h_scroll = self.scroll_area.horizontalScrollBar()
+            v_scroll = self.scroll_area.verticalScrollBar()
+            h_scroll.setValue(h_scroll.value() - delta.x())
+            v_scroll.setValue(v_scroll.value() - delta.y())
+            event.accept()
+        else:
+            # 更新鼠标位置用于缩放中心点
+            self.mouse_position = event.position().toPoint()
+            self.image_label.setCursor(Qt.OpenHandCursor if self.is_dragging else Qt.ArrowCursor)
+
+    def image_mouse_release_event(self, event: QMouseEvent):
+        """鼠标释放事件 - 停止拖动"""
+        if event.button() == Qt.LeftButton:
+            self.is_dragging = False
+            self.image_label.setCursor(Qt.ArrowCursor)
+            event.accept()
+
     def image_wheel_event(self, event: QWheelEvent):
-        """处理图片区域的滚轮事件进行缩放"""
+        """处理图片区域的滚轮事件进行缩放 - 基于鼠标位置"""
         if self.original_pixmap is None:
             return
 
         # 获取滚轮滚动方向
         delta = event.angleDelta().y()
+        self.mouse_position = event.position().toPoint()  # 获取鼠标在图片上的位置
 
+        # 获取当前滚动条位置
+        h_scroll = self.scroll_area.horizontalScrollBar()
+        v_scroll = self.scroll_area.verticalScrollBar()
+        scroll_pos = QPoint(h_scroll.value(), v_scroll.value())
+
+        # 计算缩放前鼠标在图片上的位置
+        label_size = self.image_label.size()
+        pixmap_size = self.image_label.pixmap().size() / self.image_label.devicePixelRatio()
+        pixmap_x = (label_size.width() - pixmap_size.width()) / 2
+        pixmap_y = (label_size.height() - pixmap_size.height()) / 2
+
+        # 鼠标在图片上的位置（相对于图片左上角）
+        img_pos_before = QPoint(
+            int(self.mouse_position.x() - pixmap_x),
+            int(self.mouse_position.y() - pixmap_y)
+        )
+
+        # 执行缩放
         if delta > 0:
             self.zoom_in()
         elif delta < 0:
             self.zoom_out()
+
+        # 缩放后重新计算鼠标位置
+        pixmap_size = self.image_label.pixmap().size() / self.image_label.devicePixelRatio()
+        pixmap_x = (label_size.width() - pixmap_size.width()) / 2
+        pixmap_y = (label_size.height() - pixmap_size.height()) / 2
+
+        # 计算缩放后鼠标应该在的位置
+        img_pos_after = QPoint(
+            int(img_pos_before.x() * self.scale_factor),
+            int(img_pos_before.y() * self.scale_factor)
+        )
+
+        # 计算新的滚动位置以保持鼠标位置不变
+        new_scroll_pos = QPoint(
+            int(scroll_pos.x() + (self.mouse_position.x() - (pixmap_x + img_pos_after.x()))),
+            int(scroll_pos.y() + (self.mouse_position.y() - (pixmap_y + img_pos_after.y())))
+        )
+
+        # 应用新的滚动位置
+        h_scroll.setValue(new_scroll_pos.x())
+        v_scroll.setValue(new_scroll_pos.y())
 
         event.accept()
 
@@ -184,8 +263,6 @@ class ImagePopup(AgileTilesAcrylicWindow):
         if new_scale <= self.max_scale:
             self.scale_factor = new_scale
             self.update_image_display()
-            # 缩放后居中图片
-            self.center_image()
 
     def zoom_out(self):
         """缩小图片"""
@@ -196,8 +273,6 @@ class ImagePopup(AgileTilesAcrylicWindow):
         if new_scale >= self.min_scale:
             self.scale_factor = new_scale
             self.update_image_display()
-            # 缩放后居中图片
-            self.center_image()
 
     def reset_zoom(self):
         """重置缩放比例"""

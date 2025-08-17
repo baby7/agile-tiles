@@ -182,7 +182,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         # 数据加载完成信号
         self.update_ready.connect(update_loop.quit)
         # 启动时，检测更新
-        self.check_update_run()
+        self.check_update_run(tag="Start")
         # 阻塞等待数据就绪
         update_loop.exec()
         # 判断用户是否同意更新版本
@@ -966,9 +966,9 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         self.tutorial.start()
 
     ''' **********************************更新程序*************************************** '''
-    def check_update_run(self, must_have_dialog=False):
+    def check_update_run(self, tag=None):
         self.app_version = str(version_constant.get_current_version())
-        update_module.check_update_on_start(self, must_have_dialog=must_have_dialog)
+        update_module.check_update_on_start(self, tag=tag)
 
     ''' **********************************更新卡片*************************************** '''
     def check_card_run(self):

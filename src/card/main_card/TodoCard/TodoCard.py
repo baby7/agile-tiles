@@ -63,6 +63,9 @@ class TodoCard(MainCard):
     complete_data_list = []
     todo_body = None
 
+    Max_Todo_Type_Title_Count = 20
+    Max_Todo_Type_Count = 50
+
     def __init__(self, main_object=None, parent=None, theme=None, card=None, cache=None, data=None,
                  toolkit=None, logger=None, save_data_func=None):
         super().__init__(main_object=main_object, parent=parent, theme=theme, card=card, cache=cache, data=data,
@@ -348,6 +351,10 @@ class TodoCard(MainCard):
         self.save_data_func(in_data=self.data, card_name=self.name, data_type=data_save_constant.DATA_TYPE_ENDURING)
 
     def add_todo_type_clicked(self):
+        # 限制分类数量
+        if len(self.todo_type_list) >= self.Max_Todo_Type_Count:
+            message_box_util.box_information(self.main_object, "提示", f"待办事项分类数量已达到上限，不能超过{self.Max_Todo_Type_Count}个！")
+            return
         todo_type = message_box_util.box_input(self.main_object, "添加", "待办事项分类名称：")
         if todo_type is None:
             return
@@ -359,6 +366,14 @@ class TodoCard(MainCard):
             if todo_data["title"] == todo_type:
                 message_box_util.box_information(self.main_object, "提示", "待办事项分类名称重复！")
                 return
+        # 限制字数
+        if len(todo_type) > self.Max_Todo_Type_Title_Count:
+            message_box_util.box_information(self.main_object, "提示", f"待办事项分类名称过长，不能超过{self.Max_Todo_Type_Title_Count}字！")
+            return
+        # 限制分类数量
+        if len(self.todo_type_list) >= self.Max_Todo_Type_Count:
+            message_box_util.box_information(self.main_object, "提示", f"待办事项分类数量已达到上限，不能超过{self.Max_Todo_Type_Count}个！")
+            return
         # 添加分类
         self.todo_type_list.append({
             "title": todo_type
@@ -367,6 +382,8 @@ class TodoCard(MainCard):
         self.stash_list_widget.set_card_map_list(self.todo_type_list)
         # 保存数据
         self.save_data_func(in_data=self.data, card_name=self.name, data_type=data_save_constant.DATA_TYPE_ENDURING)
+        # 刷新主题
+        self.refresh_theme()
 
     def remove_todo_type_clicked(self, todo_type):
         if not message_box_util.box_acknowledgement(self.main_object, "注意",
@@ -387,6 +404,8 @@ class TodoCard(MainCard):
         self.stash_list_widget.set_card_map_list(self.todo_type_list)
         # 保存数据
         self.save_data_func(in_data=self.data, card_name=self.name, data_type=data_save_constant.DATA_TYPE_ENDURING)
+        # 刷新主题
+        self.refresh_theme()
 
     def refresh_theme(self):
         super().refresh_theme()

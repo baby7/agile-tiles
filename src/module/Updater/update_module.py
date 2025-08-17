@@ -9,20 +9,20 @@ from src.module.Updater.Updater import Updater
 from src.module.Box import message_box_util
 
 
-def check_update_on_start(main_object, must_have_dialog=False):
+def check_update_on_start(main_object, tag=None):
     """启动时静默检查更新"""
     main_object.silent_updater = Updater(
         api_url=common.BASE_URL + "/version/public/check?type=Windows",
         app_version=main_object.app_version
     )
     main_object.silent_updater.finished.connect(
-        lambda success, update_info: handle_silent_update_result(main_object, success, update_info, must_have_dialog)
+        lambda success, update_info: handle_silent_update_result(main_object, success, update_info, tag)
     )
     # 直接调用检查更新方法，不再使用线程
     main_object.silent_updater.check_update()
 
 
-def handle_silent_update_result(main_object, success, update_info, must_have_dialog):
+def handle_silent_update_result(main_object, success, update_info, tag):
     """静默更新检查回调"""
     if not success or update_info is None:
         message_box_util.box_information(
@@ -34,22 +34,43 @@ def handle_silent_update_result(main_object, success, update_info, must_have_dia
         main_object.update_ready.emit()
         return
 
-    # 判断是否需要更新
-    if update_info.get("updateTag") is not None and not update_info.get("updateTag"):
-        # 当前版本大于等于更新版本,无需更新
-        main_object.agree_update = True
-        main_object.update_ready.emit()
-        print("无需更新")
-        if must_have_dialog:
-            message_box_util.box_information(
-                main_object,
-                "更新信息",
-                f"无需更新，您已是最新版本，版本: {update_info['version']}"
-            )
+    # 如果强制更新
+    if tag == "Start" and update_info.get("updateTag") is not None and update_info.get("updateTag"):
+        # 强制更新
+        show_force_update_dialog(main_object, update_info)
         return
 
-    # 强制更新
-    show_force_update_dialog(main_object, update_info)
+    # 有更新
+    if version_constant.compare_version(main_object.silent_updater.app_version, update_info["version"]) < 0:
+        if tag == "Login":
+            result = message_box_util.box_acknowledgement(main_object,
+                                                          title="更新提醒",
+                                                          content=f'可以进行更新，当前版本: {main_object.silent_updater.app_version}，新版本: {update_info["version"]}',
+                                                          button_ok_text="确定更新", button_no_text="以后再说"
+                                                          )
+            if result:
+                main_object.agree_update = True
+                start_update_process(main_object, update_info)
+            else:
+                main_object.agree_update = False
+                main_object.update_ready.emit()
+            return
+        else:
+            main_object.agree_update = True
+            main_object.update_ready.emit()
+            return
+
+    # 无需更新
+    main_object.agree_update = True
+    main_object.update_ready.emit()
+    print("无需更新")
+    if tag == "Login":
+        message_box_util.box_information(
+            main_object,
+            "更新信息",
+            f"无需更新，您已是最新版本，版本: {main_object.silent_updater.app_version}"
+        )
+    return
 
 
 def show_force_update_dialog(main_object, update_info):
