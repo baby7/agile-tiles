@@ -38,7 +38,7 @@ class HoldGrudgesGenPopup(AgileTilesAcrylicWindow):
 
         self.time_input = QLineEdit()
         today = QDate.currentDate().toString("yyyy年M月d日")
-        self.time_input.setText(today)
+        self.time_input.setText(today + "，")
         main_layout.addWidget(self.time_input)
 
         # 输入天气
@@ -47,7 +47,7 @@ class HoldGrudgesGenPopup(AgileTilesAcrylicWindow):
         main_layout.addWidget(weather_label)
 
         self.weather_input = QLineEdit()
-        self.weather_input.setText("晴天")
+        self.weather_input.setText("晴天，")
         main_layout.addWidget(self.weather_input)
 
         # 输入内容
@@ -56,7 +56,7 @@ class HoldGrudgesGenPopup(AgileTilesAcrylicWindow):
         main_layout.addWidget(content_label)
 
         self.content_input = QTextEdit()
-        self.content_input.setText("群主拒绝了女装")
+        self.content_input.setText("群主拒绝了女装，")
         self.content_input.setMaximumHeight(80)
         main_layout.addWidget(self.content_input)
 
@@ -107,7 +107,7 @@ class HoldGrudgesGenPopup(AgileTilesAcrylicWindow):
             self.top_image = QPixmap(264, 254)
             self.top_image.fill(QColor("#e0e0e0"))
             painter = QPainter(self.top_image)
-            painter.setFont(QFont("Arial", 16))
+            painter.setFont(QFont("", 16))
             painter.drawText(self.top_image.rect(), Qt.AlignCenter, "记仇图片")
             painter.end()
 
@@ -118,20 +118,20 @@ class HoldGrudgesGenPopup(AgileTilesAcrylicWindow):
     def generate_image(self):
         """生成记仇图片，高度根据内容自动调整"""
         # 获取输入内容
-        date = self.time_input.text().strip() or QDate.currentDate().toString("yyyy年M月d日")
-        weather = self.weather_input.text().strip() or "晴天"
-        content = self.content_input.toPlainText().strip() or "群主拒绝了女装"
-        end = self.end_input.text().strip() or "这个仇，我先记下了"
+        date = self.time_input.text() or ""
+        weather = self.weather_input.text() or ""
+        content = self.content_input.toPlainText() or ""
+        end = self.end_input.text() or ""
 
         # 组合文本
-        text = f"{date}，{weather}，{content}，{end}"
+        text = f"{date}{weather}{content}{end}"
 
         # 设置图片宽度：比加载的图片稍宽
         width = self.top_image.width() + 50  # 264 + 50 = 314px
         margin = 20
 
         # 创建字体
-        text_font = QFont("Arial", 14)
+        text_font = QFont("", 14)
         text_font.setBold(True)
 
         # 计算文本高度

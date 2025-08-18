@@ -987,6 +987,7 @@ def set_dialog_control_style(widget, is_dark=False):
         elif isinstance(widget_item, QPushButton):
             if widget_item.objectName() in [
                 "AgileTilesTitleBarTitlePushButton",
+                "AgileTilesTitleBarQuestionPushButton",
                 "push_button_importance_exigency",
                 "push_button_no_importance_exigency",
                 "push_button_importance_no_exigency",
