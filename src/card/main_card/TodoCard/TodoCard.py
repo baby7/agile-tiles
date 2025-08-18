@@ -409,10 +409,6 @@ class TodoCard(MainCard):
 
     def refresh_theme(self):
         super().refresh_theme()
-        if self.before_theme is not None and self.before_theme == self.theme:
-            # 重复不刷新
-            return False
-        self.before_theme = self.theme
         # 设置按钮样式
         push_button_style = """
         QPushButton {
