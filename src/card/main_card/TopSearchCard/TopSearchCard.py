@@ -205,12 +205,11 @@ class TopSearchCard(MainCard):
         current_tab_title = self.tab_widget_toggle.tabText(self.tab_widget_toggle.currentIndex())
         current_tab_name = self.tab_map[current_tab_title]
 
-        url = QUrl(common.BASE_URL + "/trending/normal/last")
+        url = QUrl(common.BASE_URL + "/trending/normal/last?company=" + str(current_tab_name))
+        print(url)
         request = QtNetwork.QNetworkRequest(url)
         # 存储token
         request.setRawHeader(b"Authorization", bytes(self.main_object.access_token, "utf-8"))
-        # 存储请求上下文
-        request.setAttribute(QtNetwork.QNetworkRequest.Attribute.User, current_tab_name)
 
         # 显示加载动画
         self.label_top_mask.show()
@@ -235,31 +234,21 @@ class TopSearchCard(MainCard):
             # 读取并解析数据
             data = reply.readAll().data()
             result = json.loads(data)
-            current_tab_name = reply.request().attribute(QtNetwork.QNetworkRequest.Attribute.User)
 
             # 处理数据
-            old_base_time = self.base_time
             self.base_html = ""
             for data_entry in result["data"]:
-                if data_entry['company'] != current_tab_name:
-                    continue
-
                 self.base_time = '刷新时间: ' + data_entry['updateDateStr']
-
-                if old_base_time is None or old_base_time != self.base_time:
-                    self.base_html = get_tophub_blog_info.get_html(
-                        data_entry["content"],
-                        current_tab_name,
-                        self.logger
-                    )
-                    self.base_html = get_micro_blog_info.change_css(self.base_html)
-
-                break
+                self.base_html = get_tophub_blog_info.get_html(
+                    data_entry["content"],
+                    data_entry["company"],
+                    self.logger
+                )
+                self.base_html = get_micro_blog_info.change_css(self.base_html)
 
             # 更新UI
-            if old_base_time is None or old_base_time != self.base_time:
-                self.set_ui()
-                self.logger.card_info("主程序", "数据更新成功")
+            self.set_ui()
+            self.logger.card_info("主程序", "数据更新成功")
 
         except Exception as e:
             self.logger.card_error("主程序", f"Error: {str(e)}")

@@ -62,6 +62,9 @@ update_map_info = {
         "工具箱模块增加【中国房贷计算器】功能",
         "工具箱模块增加【BMI计算器】功能",
     ],
+    "v1.1.10": [
+        "修复热搜模块切换分类出现的热搜未改变问题",
+    ],
 }
 
 update_map_date = {
@@ -76,6 +79,7 @@ update_map_date = {
     "v1.1.7": "2025-08-17",
     "v1.1.8": "2025-08-18",
     "v1.1.9": "2025-08-18",
+    "v1.1.10": "2025-08-19",
 }
 
 
@@ -144,4 +148,4 @@ def compare_version(version_1, version_2):
     else:
         return -1
 
-# print(gen_download_history_md())
+print(gen_download_history_md())
