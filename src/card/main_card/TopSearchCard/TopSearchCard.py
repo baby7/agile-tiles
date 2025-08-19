@@ -206,7 +206,6 @@ class TopSearchCard(MainCard):
         current_tab_name = self.tab_map[current_tab_title]
 
         url = QUrl(common.BASE_URL + "/trending/normal/last?company=" + str(current_tab_name))
-        print(url)
         request = QtNetwork.QNetworkRequest(url)
         # 存储token
         request.setRawHeader(b"Authorization", bytes(self.main_object.access_token, "utf-8"))
