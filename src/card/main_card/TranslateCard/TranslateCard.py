@@ -433,8 +433,7 @@ class TranslateCard(MainCard):
         if self.show_overlay_status:
             return
         # 隐藏主窗口
-        if self.main_object.show_form:
-            self.toolkit.resolution_util.out_animation(self.main_object)
+        self.main_object.hide()
         # 延迟显示遮罩层
         QTimer.singleShot(600, self._show_overlay)
         self.show_overlay_status = True
@@ -450,6 +449,7 @@ class TranslateCard(MainCard):
         # 保存截图
         self.captured_pixmap = pixmap
         # 显示主窗口
+        self.main_object.show()
         self.toolkit.resolution_util.in_animation(self.main_object)
         # 更新状态
         self.status_label.setText("截图完成,正在压缩图片...")
@@ -467,9 +467,8 @@ class TranslateCard(MainCard):
     def cancel_screenshot(self):
         """取消截图"""
         self.show_overlay_status = False
-        # 显示主窗口
-        self.toolkit.resolution_util.in_animation(self.main_object)
         self.status_label.setText("截图已取消")
+        self.main_object.show()
 
     def ocr(self, base64_data: str):
         # 准备请求数据

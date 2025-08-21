@@ -328,14 +328,7 @@ class BookCard(MainCard):
         self.text_label_setting_filtration_left.setText(
             QCoreApplication.translate("Form", "字符串过滤列表（支持正则）：", None))
         self.text_setting_edit_filtration.setPlainText(
-            QCoreApplication.translate("Form", u"百度仙逆吧\n"
-                                               "\\(顶点小说手打小说\\)\n"
-                                               "①⑥kxs网更新最快\n"
-                                               "\\s*♀♀♀♀♀♀.{1}♀♀♀♀♀♀\n"
-                                               "\\s*︴︴︴︴︴︴︴︴︴︴.{1}︴\n"
-                                               "【花花更新】\n"
-                                               "\\s*║┆┆┆┆.{0,1}║\n"
-                                               "www.uu234.com", None))
+            QCoreApplication.translate("Form", u"", None))
         self.text_label_setting_font_size_left.setText(QCoreApplication.translate("Form", "字号：", None))
         self.text_push_button_setting_font_size_minus.setText(QCoreApplication.translate("Form", u"A-", None))
         self.text_push_button_setting_font_size_add.setText(QCoreApplication.translate("Form", u"A+", None))
@@ -411,7 +404,7 @@ class BookCard(MainCard):
         self.book_data["currentFile"] = self.current_file
         self.book_data["currentChapter"] = self.current_chapter
         # 保存数据
-        self.save_data_func(in_data=self.cache, card_name=self.name, data_type=data_save_constant.DATA_TYPE_ENDURING)
+        self.save_data_func(in_data=self.data, card_name=self.name, data_type=data_save_constant.DATA_TYPE_ENDURING)
 
     def save_setting(self):
         self.font_size = self.text_label_setting_font_size_minus.text()
@@ -421,7 +414,7 @@ class BookCard(MainCard):
         self.book_data["lineSpacing"] = self.line_spacing
         self.book_data["textFiltration"] = self.text_filtration
         # 保存数据
-        self.save_data_func(in_data=self.cache, card_name=self.name, data_type=data_save_constant.DATA_TYPE_ENDURING)
+        self.save_data_func(in_data=self.data, card_name=self.name, data_type=data_save_constant.DATA_TYPE_ENDURING)
         # 显示内容
         self.show_content()
         # 提示
@@ -494,7 +487,7 @@ class BookCard(MainCard):
 
     def matching_chapter_name(self):
         # 一种匹配章节目录的规则
-        pattern = r"(第)([\u4e00-\u9fa5a-zA-Z0-9\s]{1,7})[章|节][^\n]{0,35}()?(|\n)"
+        pattern = r"(第)([\u4e00-\u9fa5a-zA-Z0-9\s]{1,7})[章|节|章节|回|集|卷|篇|册|部][^\n]{0,35}()?(|\n)"
         last_index = 0
         for i in range(len(self.book_lines)):
             line = self.book_lines[i].strip()

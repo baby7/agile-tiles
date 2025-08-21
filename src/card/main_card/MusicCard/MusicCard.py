@@ -172,6 +172,9 @@ class MusicCard(MainCard):
         self.save_settings()
 
     def import_music(self):
+        if self.playlist_data is None or self.playlist_data == {}:
+            message_box_util.box_information(self.main_object, "告警", f"当前无歌单，请先创建歌单！")
+            return
         folder_path = QFileDialog.getExistingDirectory(self.card, "选择音乐文件夹", self.last_folder)
         if not folder_path:
             return

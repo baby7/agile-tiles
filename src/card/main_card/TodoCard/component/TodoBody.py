@@ -85,6 +85,8 @@ class TodoBody(object):
         :param todo_id: 任务id
         :param todo_state: 任务状态(True表示进行中)
         """
+        if not message_box_util.box_acknowledgement(self.main_object, "注意", f"确定要删除该待办事项吗？"):
+            return
         if todo_state:
             print("[双击]从待办中删除id:{},数据列表:{}".format(todo_id, self.proceed_data_list))
             self.delete_one(todo_id, self.proceed_data_list, self.proceed_item_map, self.proceed_widget_map,

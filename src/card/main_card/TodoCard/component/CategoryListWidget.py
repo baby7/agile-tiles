@@ -179,10 +179,12 @@ class CategoryListWidget(QListWidget):
         for i in range(meta_obj.methodCount()):
             method = meta_obj.method(i)
             if method.methodType() == QtCore.QMetaMethod.Signal:
-                receiver = widget.receivers(method)
-                if receiver > 0:
+                # 获取信号对象
+                signal_name = method.name().data().decode()
+                signal = getattr(widget, signal_name, None)
+                if signal is not None:
                     try:
-                        signal = getattr(widget, method.name().data().decode())
+                        # 断开所有连接
                         signal.disconnect()
                     except (TypeError, RuntimeError):
                         # 如果断开失败，可能是没有连接或者已经断开，可以忽略

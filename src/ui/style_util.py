@@ -1,7 +1,7 @@
 from PySide6.QtCore import Qt, QLine
 from PySide6.QtGui import QFont, QPalette, QColor
 from PySide6.QtWidgets import QComboBox, QPushButton, QCheckBox, QLineEdit, QSpinBox, QTextEdit, QRadioButton, \
-    QFontComboBox, QFrame, QBoxLayout, QWidget, QToolTip, QDateEdit, QTabWidget, QTableWidget
+    QFontComboBox, QFrame, QBoxLayout, QWidget, QToolTip, QDateEdit, QTabWidget, QTableWidget, QDoubleSpinBox
 from qframelesswindow import TitleBar
 from qframelesswindow.titlebar import MinimizeButton, MaximizeButton, CloseButton
 
@@ -1010,6 +1010,9 @@ def set_dialog_control_style(widget, is_dark=False):
             continue
         elif isinstance(widget_item, QSpinBox):
             set_spin_box_style(widget_item, is_dark)
+            continue
+        elif isinstance(widget_item, QDoubleSpinBox):
+            set_double_spin_box_style(widget_item, is_dark)
             continue
         elif isinstance(widget_item, QDateEdit):
             set_date_edit_style(widget_item, is_dark)

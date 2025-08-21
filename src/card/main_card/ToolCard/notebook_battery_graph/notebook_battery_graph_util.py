@@ -228,6 +228,7 @@ class NotebookBatteryGraph(AgileTilesAcrylicWindow):
         # 底部信息
         bottom_layout = QHBoxLayout()
         self.info_label = QLabel("")
+        self.info_label.setStyleSheet("background-color: transparent;")
         bottom_layout.addWidget(self.info_label)
 
         refresh_btn = QPushButton('重新生成报告', self)
