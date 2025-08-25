@@ -9,8 +9,8 @@ from PySide6.QtGui import QFont, QColor
 from PySide6.QtWidgets import (QWidget, QFrame, QLabel, QPushButton, QScrollArea, QTabWidget, QTextBrowser,
                                QTreeWidget, QComboBox, QFileDialog, QPlainTextEdit, QTreeWidgetItem, QScrollBar, QHBoxLayout, QSizePolicy)
 import src.ui.style_util as style_util
-import src.module.Box.message_box_util as message_box_util
 from src.constant import data_save_constant
+from src.module import dialog_module
 
 
 def get_encoding(file):
@@ -418,7 +418,7 @@ class BookCard(MainCard):
         # 显示内容
         self.show_content()
         # 提示
-        message_box_util.box_information(self.main_object, "成功", "修改阅读设置成功")
+        dialog_module.box_information(self.main_object, "成功", "修改阅读设置成功")
 
     def push_button_book_select_click(self):
         # 弹出QFileDialog窗口。getOpenFileName()方法的第一个参数是说明文字，
@@ -596,7 +596,7 @@ class BookCard(MainCard):
     # 展示上一章
     def show_last(self):
         if self.current_chapter <= 0 or self.book_tree_widget.topLevelItem(self.current_chapter - 1) is None:
-            message_box_util.box_information(self.main_object, "提醒", "已经到第一章了哦~")
+            dialog_module.box_information(self.main_object, "提醒", "已经到第一章了哦~")
             return
         # 更改目录背景色
         self.book_tree_widget.topLevelItem(self.current_chapter).setBackground(0, QColor(0, 0, 0, 0))
@@ -608,7 +608,7 @@ class BookCard(MainCard):
     # 展示下一章
     def show_next(self):
         if (self.current_chapter + 1) >= len(self.book_chapters):
-            message_box_util.box_information(self.main_object, "提醒", "已经到最后一章了哦~")
+            dialog_module.box_information(self.main_object, "提醒", "已经到最后一章了哦~")
             return
         # 更改目录背景色
         self.book_tree_widget.topLevelItem(self.current_chapter).setBackground(0, QColor(0, 0, 0, 0))
@@ -621,7 +621,7 @@ class BookCard(MainCard):
         font_size = self.text_label_setting_font_size_minus.text()
         font_size = int(font_size) + 1
         if font_size > 30:
-            message_box_util.box_information(self.main_object, "失败", "抱歉，最大只能设置到30哦~")
+            dialog_module.box_information(self.main_object, "失败", "抱歉，最大只能设置到30哦~")
             return
         self.text_label_setting_font_size_minus.setText(str(font_size))
 
@@ -629,7 +629,7 @@ class BookCard(MainCard):
         font_size = self.text_label_setting_font_size_minus.text()
         font_size = int(font_size) - 1
         if font_size < 8:
-            message_box_util.box_information(self.main_object, "失败", "抱歉，最小只能设置到8哦~")
+            dialog_module.box_information(self.main_object, "失败", "抱歉，最小只能设置到8哦~")
             return
         self.text_label_setting_font_size_minus.setText(str(font_size))
 

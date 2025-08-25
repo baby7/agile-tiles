@@ -4,8 +4,8 @@ from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QPushButton, QLabel,
 from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Qt, QSize
 import src.card.main_card.MusicCard.music_style as music_style
+from src.module import dialog_module
 from src.ui import image_util
-from src.module.Box import message_box_util
 
 
 def init_base_ui(music_card):
@@ -189,15 +189,15 @@ def show_playlist_context_menu(music_card, pos):
 
 
 def edit_playlist(music_card, old_name):
-    new_name = message_box_util.box_input(music_card.main_object, "编辑歌单", "请输入歌单名称：", old_text=old_name)
+    new_name = dialog_module.box_input(music_card.main_object, "编辑歌单", "请输入歌单名称：", old_text=old_name)
     if new_name is None:
         return
     if new_name == "":
-        message_box_util.box_information(music_card.main_object, "提示", "歌单名称不能为空！")
+        dialog_module.box_information(music_card.main_object, "提示", "歌单名称不能为空！")
         return
 
     if new_name in music_card.playlist_data:
-        message_box_util.box_information(music_card.main_object, "提示", "歌单名称已存在！")
+        dialog_module.box_information(music_card.main_object, "提示", "歌单名称已存在！")
         return
 
     # 更新数据结构
@@ -221,7 +221,7 @@ def edit_playlist(music_card, old_name):
 
 
 def delete_playlist(music_card, name):
-    confirm = message_box_util.box_acknowledgement(
+    confirm = dialog_module.box_acknowledgement(
         music_card.main_object, "确认删除", f"确定要删除歌单 {name} 吗？")
 
     if confirm:
@@ -319,7 +319,7 @@ def show_song_context_menu(music_card, pos):
 
 
 def delete_song(music_card, item):
-    confirm = message_box_util.box_acknowledgement(
+    confirm = dialog_module.box_acknowledgement(
         music_card.main_object, "确认删除", "确定要从歌单中移除这首歌曲吗？")
 
     if not confirm:
@@ -364,7 +364,7 @@ def init_other_ui(music_card):
 
 def edit_current_playlist(music_card):
     if not music_card.current_playlist:
-        message_box_util.box_information(music_card.main_object, "提示", "请先选择歌单")
+        dialog_module.box_information(music_card.main_object, "提示", "请先选择歌单")
         return
     edit_playlist(music_card, music_card.current_playlist)
 
@@ -373,12 +373,12 @@ def delete_current_playlist(music_card):
     # 获取选中的歌单项
     selected_items = music_card.playlists.selectedItems()
     if not selected_items:
-        message_box_util.box_information(music_card.main_object, "提示", "请先选择要删除的歌单")
+        dialog_module.box_information(music_card.main_object, "提示", "请先选择要删除的歌单")
         return
     # 获取选中歌单名称
     playlist_name = selected_items[0].text()
     # 原有删除逻辑（替换最后一行参数为playlist_name）
-    confirm = message_box_util.box_acknowledgement(
+    confirm = dialog_module.box_acknowledgement(
         music_card.main_object, "确认删除", f"确定要删除歌单 {playlist_name} 吗？")
     if confirm:
         # 删除数据结构

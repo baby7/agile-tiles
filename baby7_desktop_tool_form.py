@@ -23,7 +23,7 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(1542, 1255)
+        Form.resize(2069, 1255)
         self.setting_area = QScrollArea(Form)
         self.setting_area.setObjectName(u"setting_area")
         self.setting_area.setGeometry(QRect(490, 10, 386, 461))
@@ -823,11 +823,16 @@ class Ui_Form(object):
 
         self.label_area_user_invite_info = QLabel(self.widget_area_user_invite_bg)
         self.label_area_user_invite_info.setObjectName(u"label_area_user_invite_info")
-        self.label_area_user_invite_info.setFont(font6)
+        font10 = QFont()
+        font10.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
+        font10.setPointSize(9)
+        font10.setBold(False)
+        font10.setKerning(False)
+        self.label_area_user_invite_info.setFont(font10)
         self.label_area_user_invite_info.setStyleSheet(u"border: 0px solid #FF8D16;\n"
 "border-radius: 0px;\n"
 "background-color: rgba(0, 0, 0, 0);\n"
-"color: rgb(0, 0, 0);")
+"color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 rgb(255, 178, 0), stop:1 rgb(254, 232, 67));")
 
         self.verticalLayout_19.addWidget(self.label_area_user_invite_info)
 
@@ -883,11 +888,11 @@ class Ui_Form(object):
         self.label_user_last_backup_time_title = QLabel(self.tab_5)
         self.label_user_last_backup_time_title.setObjectName(u"label_user_last_backup_time_title")
         self.label_user_last_backup_time_title.setGeometry(QRect(40, 30, 61, 21))
-        font10 = QFont()
-        font10.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
-        font10.setBold(False)
-        font10.setKerning(False)
-        self.label_user_last_backup_time_title.setFont(font10)
+        font11 = QFont()
+        font11.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
+        font11.setBold(False)
+        font11.setKerning(False)
+        self.label_user_last_backup_time_title.setFont(font11)
         self.label_user_last_backup_time_title.setStyleSheet(u"border: 0px solid #FF8D16;\n"
 "border-radius: 0px;\n"
 "background-color: rgba(0, 0, 0, 0);\n"
@@ -1021,46 +1026,109 @@ class Ui_Form(object):
         self.label_user_last_backup_time = QLabel(self.tab_5)
         self.label_user_last_backup_time.setObjectName(u"label_user_last_backup_time")
         self.label_user_last_backup_time.setGeometry(QRect(100, 30, 241, 21))
-        self.label_user_last_backup_time.setFont(font10)
+        self.label_user_last_backup_time.setFont(font11)
         self.label_user_last_backup_time.setStyleSheet(u"border: 0px solid #FF8D16;\n"
 "border-radius: 0px;\n"
 "background-color: rgba(0, 0, 0, 0);\n"
 "color: rgba(0, 0, 0, 0.5);")
-        self.widget_area_user_communicate = QWidget(self.tab_5)
-        self.widget_area_user_communicate.setObjectName(u"widget_area_user_communicate")
-        self.widget_area_user_communicate.setGeometry(QRect(30, 330, 321, 41))
-        self.widget_area_user_communicate.setStyleSheet(u"QWidget {\n"
-"border-style: solid;\n"
-"border-radius: 10px;\n"
-"border: 1px solid white;\n"
-"background-color:rgba(255, 255, 255, 200);\n"
-"}")
-        self.gridLayout_13 = QGridLayout(self.widget_area_user_communicate)
-        self.gridLayout_13.setObjectName(u"gridLayout_13")
-        self.verticalLayout_17 = QVBoxLayout()
-        self.verticalLayout_17.setObjectName(u"verticalLayout_17")
-        self.push_button_area_user_join_group = QPushButton(self.widget_area_user_communicate)
-        self.push_button_area_user_join_group.setObjectName(u"push_button_area_user_join_group")
-        self.push_button_area_user_join_group.setFont(font5)
-        self.push_button_area_user_join_group.setStyleSheet(u"QPushButton {\n"
-"border: none;\n"
-"background: rgba(0, 0, 0, 0);\n"
-"text-align:left;\n"
-"}\n"
-"QPushButton:hover {\n"
-"font-weight: bold;\n"
-"}")
-
-        self.verticalLayout_17.addWidget(self.push_button_area_user_join_group)
-
-
-        self.gridLayout_13.addLayout(self.verticalLayout_17, 0, 0, 1, 1)
-
         self.tab_widget_user.addTab(self.tab_5, "")
         self.user_area.setWidget(self.scrollAreaWidgetContents)
+        self.widget_dialog_base = QWidget(Form)
+        self.widget_dialog_base.setObjectName(u"widget_dialog_base")
+        self.widget_dialog_base.setGeometry(QRect(1580, 110, 361, 641))
+        self.gridLayout_7 = QGridLayout(self.widget_dialog_base)
+        self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.verticalLayout_6 = QVBoxLayout()
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.verticalLayout_6.setContentsMargins(20, -1, 20, -1)
+        self.verticalSpacer_8 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_6.addItem(self.verticalSpacer_8)
+
+        self.widget_dialog_entity = QWidget(self.widget_dialog_base)
+        self.widget_dialog_entity.setObjectName(u"widget_dialog_entity")
+        self.gridLayout_9 = QGridLayout(self.widget_dialog_entity)
+        self.gridLayout_9.setObjectName(u"gridLayout_9")
+        self.verticalLayout_22 = QVBoxLayout()
+        self.verticalLayout_22.setObjectName(u"verticalLayout_22")
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.label_dialog_icon = QLabel(self.widget_dialog_entity)
+        self.label_dialog_icon.setObjectName(u"label_dialog_icon")
+        self.label_dialog_icon.setMinimumSize(QSize(0, 0))
+        self.label_dialog_icon.setMaximumSize(QSize(40, 40))
+
+        self.horizontalLayout_6.addWidget(self.label_dialog_icon)
+
+        self.label_dialog_title = QLabel(self.widget_dialog_entity)
+        self.label_dialog_title.setObjectName(u"label_dialog_title")
+        self.label_dialog_title.setMaximumSize(QSize(16777215, 40))
+
+        self.horizontalLayout_6.addWidget(self.label_dialog_title)
+
+        self.push_button_dialog_close = QPushButton(self.widget_dialog_entity)
+        self.push_button_dialog_close.setObjectName(u"push_button_dialog_close")
+        self.push_button_dialog_close.setMaximumSize(QSize(40, 40))
+
+        self.horizontalLayout_6.addWidget(self.push_button_dialog_close)
+
+
+        self.verticalLayout_22.addLayout(self.horizontalLayout_6)
+
+
+        self.gridLayout_9.addLayout(self.verticalLayout_22, 0, 0, 1, 1)
+
+        self.widget_dialog_content_layout = QWidget(self.widget_dialog_entity)
+        self.widget_dialog_content_layout.setObjectName(u"widget_dialog_content_layout")
+        self.widget_dialog_content_layout.setMinimumSize(QSize(0, 0))
+        self.gridLayout_15 = QGridLayout(self.widget_dialog_content_layout)
+        self.gridLayout_15.setSpacing(0)
+        self.gridLayout_15.setObjectName(u"gridLayout_15")
+        self.gridLayout_15.setContentsMargins(0, 0, 0, 0)
+        self.widget_dialog_content = QWidget(self.widget_dialog_content_layout)
+        self.widget_dialog_content.setObjectName(u"widget_dialog_content")
+        self.widget_dialog_content.setMinimumSize(QSize(0, 80))
+
+        self.gridLayout_15.addWidget(self.widget_dialog_content, 0, 0, 1, 1)
+
+
+        self.gridLayout_9.addWidget(self.widget_dialog_content_layout, 1, 0, 1, 1)
+
+        self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.horizontalSpacer_8 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_5.addItem(self.horizontalSpacer_8)
+
+        self.push_button_dialog_cancel = QPushButton(self.widget_dialog_entity)
+        self.push_button_dialog_cancel.setObjectName(u"push_button_dialog_cancel")
+        self.push_button_dialog_cancel.setMinimumSize(QSize(50, 25))
+
+        self.horizontalLayout_5.addWidget(self.push_button_dialog_cancel)
+
+        self.push_button_dialog_confirm = QPushButton(self.widget_dialog_entity)
+        self.push_button_dialog_confirm.setObjectName(u"push_button_dialog_confirm")
+        self.push_button_dialog_confirm.setMinimumSize(QSize(50, 25))
+
+        self.horizontalLayout_5.addWidget(self.push_button_dialog_confirm)
+
+
+        self.gridLayout_9.addLayout(self.horizontalLayout_5, 2, 0, 1, 1)
+
+
+        self.verticalLayout_6.addWidget(self.widget_dialog_entity)
+
+        self.verticalSpacer_7 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_6.addItem(self.verticalSpacer_7)
+
+
+        self.gridLayout_7.addLayout(self.verticalLayout_6, 0, 0, 1, 1)
+
         self.label_background.raise_()
         self.setting_area.raise_()
         self.user_area.raise_()
+        self.widget_dialog_base.raise_()
 
         self.retranslateUi(Form)
 
@@ -1124,7 +1192,11 @@ class Ui_Form(object):
         self.push_button_area_user_data_export.setText(QCoreApplication.translate("Form", u"\u5bfc\u51fa\u6570\u636e\u5230\u672c\u5730", None))
         self.push_button_area_user_data_synchronization.setText(QCoreApplication.translate("Form", u"\u4ece\u4e91\u7aef\u540c\u6b65\u6570\u636e\u5230\u672c\u5730", None))
         self.label_user_last_backup_time.setText(QCoreApplication.translate("Form", u"\u975eVIP\u7528\u6237\u6682\u4e0d\u652f\u6301\u540c\u6b65", None))
-        self.push_button_area_user_join_group.setText(QCoreApplication.translate("Form", u"\u52a0\u5165\u7528\u6237\u4ea4\u6d41\u7fa4", None))
         self.tab_widget_user.setTabText(self.tab_widget_user.indexOf(self.tab_5), QCoreApplication.translate("Form", u"\u6570\u636e", None))
+        self.label_dialog_icon.setText("")
+        self.label_dialog_title.setText("")
+        self.push_button_dialog_close.setText("")
+        self.push_button_dialog_cancel.setText(QCoreApplication.translate("Form", u"\u53d6\u6d88", None))
+        self.push_button_dialog_confirm.setText(QCoreApplication.translate("Form", u"\u786e\u8ba4", None))
     # retranslateUi
 

@@ -193,22 +193,32 @@ button_light_style = """
 QPushButton {
     border-radius: 10px;
     border: 1px solid black;
-    background-color: rgba(255, 255, 255, 200);
+    background-color: rgba(230, 231, 232, 200);
 }
 QPushButton:hover {
     background: rgba(0, 0, 0, 0.3);
     color: rgb(255, 255, 255);
+    border: none;
+}
+QPushButton:disabled {
+    background: rgba(125, 125, 125, 125);
+    color: rgba(125, 125, 125, 125);
     border: none;
 }"""
 button_dark_style = """
 QPushButton {
     border-radius: 10px;
     border: 1px solid white;
-    background-color: rgba(0, 0, 0, 200);
+    background-color: rgba(20, 21, 22, 200);
 }
 QPushButton:hover {
     background: rgba(255, 255, 255, 0.3);
     color: rgb(0, 0, 0);
+    border: none;
+}
+QPushButton:disabled {
+    background: rgba(125, 125, 125, 125);
+    color: rgba(125, 125, 125, 125);
     border: none;
 }"""
 box_button_style = """
@@ -220,12 +230,17 @@ QPushButton {
     border-radius: 10px;
     border: 1px solid black;
     color: rgb(0, 0, 0);
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(230, 231, 232);
 }
 QPushButton:hover {
     background: rgba(0, 0, 0, 0.3);
     color: rgb(255, 255, 255);
     border: 0px solid black;
+}
+QPushButton:disabled {
+    background: rgba(125, 125, 125, 125);
+    color: rgba(125, 125, 125, 125);
+    border: none;
 }
 """
 card_button_style = """
@@ -243,6 +258,11 @@ QPushButton:hover {
     border: 0px solid black;
     image: url(./static/img/IconPark/light/{image}.png);
 }
+QPushButton:disabled {
+    background: rgba(125, 125, 125, 125);
+    color: rgba(125, 125, 125, 125);
+    border: none;
+}
 """
 card_button_dark_style = """
 QPushButton {
@@ -259,16 +279,26 @@ QPushButton:hover {
     border: 0px solid black;
     image: url(./static/img/IconPark/dark/{image}.png);
 }
+QPushButton:disabled {
+    background: rgba(125, 125, 125, 125);
+    color: rgba(125, 125, 125, 125);
+    border: none;
+}
 """
 normal_light_button_style = """
 QPushButton {
     border-radius: 10px;
     border: 1px solid white;
-    background-color:rgba(255, 255, 255, 200);
+    background-color:rgba(230, 231, 232, 200);
 }
 QPushButton:hover {
     background: rgba(0, 0, 0, 0.3);
     color: rgb(255, 255, 255);
+    border: none;
+}
+QPushButton:disabled {
+    background: rgba(125, 125, 125, 125);
+    color: rgba(125, 125, 125, 125);
     border: none;
 }
 """
@@ -276,11 +306,16 @@ normal_dark_button_style = """
 QPushButton {
     border-radius: 10px;
     border: 1px solid black;
-    background-color:rgba(34, 34, 34, 200);
+    background-color:rgba(20, 21, 22, 200);
 }
 QPushButton:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(230, 231, 232, 0.3);
     color: rgb(0, 0, 0);
+    border: none;
+}
+QPushButton:disabled {
+    background: rgba(125, 125, 125, 125);
+    color: rgba(125, 125, 125, 125);
     border: none;
 }
 """

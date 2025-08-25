@@ -158,7 +158,7 @@
                <widget class="QPushButton" name="push_button_importance_exigency">
                 <property name="minimumSize">
                  <size>
-                  <width>180</width>
+                  <width>140</width>
                   <height>25</height>
                  </size>
                 </property>
@@ -185,7 +185,7 @@
                <widget class="QPushButton" name="push_button_importance_no_exigency">
                 <property name="minimumSize">
                  <size>
-                  <width>180</width>
+                  <width>140</width>
                   <height>25</height>
                  </size>
                 </property>
@@ -218,7 +218,7 @@
                <widget class="QPushButton" name="push_button_no_importance_exigency">
                 <property name="minimumSize">
                  <size>
-                  <width>180</width>
+                  <width>140</width>
                   <height>25</height>
                  </size>
                 </property>
@@ -245,7 +245,7 @@
                <widget class="QPushButton" name="push_button_no_importance_no_exigency">
                 <property name="minimumSize">
                  <size>
-                  <width>180</width>
+                  <width>140</width>
                   <height>25</height>
                  </size>
                 </property>

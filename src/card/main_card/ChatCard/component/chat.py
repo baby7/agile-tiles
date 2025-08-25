@@ -1,5 +1,6 @@
 # coding:utf-8
 import json
+import random
 
 from PySide6.QtCore import Signal, Qt, QUrl, QEasingCurve, QPropertyAnimation
 from PySide6.QtGui import QPixmap, QIcon
@@ -53,8 +54,8 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.scroll_anim = None
         # 模型对照表
         self.mode_map = {
-            "DeepSeek-V3": { "provider": "deepseek", "model": "deepseek-chat" },
-            "Deepseek-R1": { "provider": "deepseek", "model": "deepseek-reasoner" },
+            "DeepSeek-Chat(V3.1)": { "provider": "deepseek", "model": "deepseek-chat" },
+            "Deepseek-Reasoner(V3.1)": { "provider": "deepseek", "model": "deepseek-reasoner" },
 
             "通义千问-Plus": { "provider": "qwen", "model": "qwen-plus" },
             "通义千问-Turbo": { "provider": "qwen", "model": "qwen-turbo" },
@@ -178,7 +179,7 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
 
         # 初始化模型选择
         if ai_title == "DeepSeek":
-            self.model_selector.setCurrentText("Deepseek-R1")
+            self.model_selector.setCurrentText("Deepseek-Reasoner(V3.1)")
         elif ai_title == "通义千问":
             self.model_selector.setCurrentText("通义千问-Max")
         elif ai_title == "文心一言":
@@ -190,7 +191,7 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
         elif ai_title == "豆包":
             self.model_selector.setCurrentText("豆包-Seed-1.6-Thinking")
         else:
-            self.model_selector.setCurrentText("Deepseek-V3")
+            self.model_selector.setCurrentText("DeepSeek-Chat(V3.1)")
 
         # 设置输入焦点
         self.input_field.setFocus()
@@ -213,13 +214,19 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
                 "content": content["persona"]
             })
 
+            if isinstance(content["prologue"], list):
+                # 随机取一个
+                prologue = random.choice(content["prologue"])
+            else:
+                prologue = content["prologue"]
+
             # 添加开场白并显示
-            self.add_message(content["prologue"], is_user=False, provider=provider, is_actor=True)
+            self.add_message(prologue, is_user=False, provider=provider, is_actor=True)
 
             # 将开场白添加到历史记录
             self.history.append({
                 "role": "assistant",
-                "content": content["prologue"]
+                "content": prologue
             })
 
     def update_call_count(self):

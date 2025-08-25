@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QDialog, QSlider, QVBoxLayout, QStackedWidget, QFi
 from PySide6.QtCore import Qt, QRect, QPoint
 from src.card.MainCardManager.MainCard import MainCard
 from src.constant import data_save_constant
-from src.module.Box import message_box_util
+from src.module import dialog_module
 
 from . import music_style, music_analysis
 from .ui_components import init_base_ui, init_playlist_ui, init_songlist_ui, init_other_ui, delete_current_playlist
@@ -157,11 +157,11 @@ class MusicCard(MainCard):
         self.stacked_widget.setCurrentWidget(self.song_list_widget)  # 直接跳转到歌曲列表
 
     def add_playlist(self):
-        song_list = message_box_util.box_input(self.main_object, "新增歌单", "请输入歌单名称：")
+        song_list = dialog_module.box_input(self.main_object, "新增歌单", "请输入歌单名称：")
         if song_list is None:
             return
         if song_list == "":
-            message_box_util.box_information(self.main_object, "提示", "歌单名称不能为空！")
+            dialog_module.box_information(self.main_object, "提示", "歌单名称不能为空！")
             return
         self.playlists.addItem(song_list)
         self.playlist_data[song_list] = []
@@ -173,7 +173,7 @@ class MusicCard(MainCard):
 
     def import_music(self):
         if self.playlist_data is None or self.playlist_data == {}:
-            message_box_util.box_information(self.main_object, "告警", f"当前无歌单，请先创建歌单！")
+            dialog_module.box_information(self.main_object, "告警", f"当前无歌单，请先创建歌单！")
             return
         folder_path = QFileDialog.getExistingDirectory(self.card, "选择音乐文件夹", self.last_folder)
         if not folder_path:

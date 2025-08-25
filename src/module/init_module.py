@@ -1,10 +1,8 @@
 # 基础包
-import os
 import logging
 import winreg
 
 from PySide6.QtCore import Qt
-from qframelesswindow.utils import win32_utils as win_utils
 
 from src.constant import current_version_info
 # 模块

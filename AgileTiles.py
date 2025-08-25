@@ -6,6 +6,7 @@ import os, sys
 import ctypes
 import time, datetime
 
+from src.module.Screenshot.ScreenshotOverlay import ScreenshotOverlay
 from src.util import main_data_compare, hardware_id_util
 
 
@@ -36,7 +37,7 @@ faulthandler.enable()
 from ctypes.wintypes import MSG
 # 基础界面框架
 from PySide6.QtCore import QEvent, Qt, qInstallMessageHandler, QSettings, Signal, QEventLoop, Q_ARG, Slot, \
-    QMetaObject
+    QMetaObject, QTimer
 from PySide6.QtWidgets import QApplication, QSystemTrayIcon
 # 我的界面内容
 from baby7_desktop_tool_form import Ui_Form
@@ -46,7 +47,7 @@ from src.card.MainCardManager.MainCardManager import MainCardManager
 from src.component.TutorialWindow.TutorialWindow import TutorialWindow
 from src.component.MainAcrylicWindow.MainAcrylicWindow import MainAcrylicWindow
 # 模块
-from src.module import init_module
+from src.module import init_module, dialog_module
 from src.module.Icon import icon_tool
 from src.module.Theme import theme_module
 from src.module.Screen import screen_module
@@ -77,7 +78,7 @@ qInstallMessageHandler(qt_message_handler)
 
 
 # 主窗口
-class MyForm(MainAcrylicWindow, Ui_Form):
+class AgileTilesForm(MainAcrylicWindow, Ui_Form):
 
     # 基础
     app_name = "AgileTiles"                 # 应用名称
@@ -100,6 +101,7 @@ class MyForm(MainAcrylicWindow, Ui_Form):
     desktop_height = 0              # 桌面高度
     group = None                    # 执行动画的对象
     show_form = False               # 是否显示（隐藏是移动到窗口外）
+    pin_form = False                # 是否钉住界面
     is_mouse_trigger = False        # 是否是鼠标触发的窗口弹出
     animation_time = 0              # 动画时间
     form_locate = "Right"           # 窗口位置 Left/Right
@@ -158,13 +160,15 @@ class MyForm(MainAcrylicWindow, Ui_Form):
     # 其他
     theme_switch_button = None
     silent_updater = None
+    # 截图
+    show_overlay_status = False
 
     update_ready = Signal()
     login_ready = Signal()
     card_ready = Signal()
 
     def __init__(self):
-        super(MyForm, self).__init__()
+        super(AgileTilesForm, self).__init__()
         # **************** 基本初始化 ****************
         # 窗口置顶
         self.setWindowFlag(Qt.WindowType.ToolTip)
@@ -243,6 +247,8 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         screen_module.init_mouse_detect_window(self)
         # 初始化主题
         init_module.set_theme(self, is_main=True)
+        # 初始化弹窗
+        dialog_module.set_dialog(self)
         # 首次启动时，显示引导程序
         self.check_first_run()
         # 更新状态
@@ -574,21 +580,21 @@ class MyForm(MainAcrylicWindow, Ui_Form):
     # 连接信号处理
     def handle_pull_area_user_data_synchronization(self, result):
         if result['code'] == 1:
-            self.toolkit.message_box_util.box_information(self, "提醒", f"同步云端数据失败，原因：{result['msg']}")
+            self.toolkit.dialog_module.box_information(self, "提醒", f"同步云端数据失败，原因：{result['msg']}")
             return
         server_user_data = result
         if server_user_data['code'] == 1:
-            self.toolkit.message_box_util.box_information(self, "提醒", f"同步云端数据失败，原因：{server_user_data['msg']}")
+            self.toolkit.dialog_module.box_information(self, "提醒", f"同步云端数据失败，原因：{server_user_data['msg']}")
             return
         server_timestamp = int(server_user_data["data"]["timestamp"])
         local_timestamp = int(self.main_data["timestamp"])
         print(f"服务器时间戳:{server_timestamp},本地时间戳:{local_timestamp},服务器比本地多了{server_timestamp - local_timestamp}毫秒")
         if server_timestamp <= local_timestamp:
-            self.toolkit.message_box_util.box_information(self, "提醒", f"云端数据与本地数据一致，无需同步")
+            self.toolkit.dialog_module.box_information(self, "提醒", f"云端数据与本地数据一致，无需同步")
             self.label_user_last_backup_time.setText(self.toolkit.time_util.get_datetime_str_by_timestamp(self.main_data["timestamp"]))
             return
         if server_user_data["data"]["data"] is None or server_user_data["data"]["data"] == "":
-            self.toolkit.message_box_util.box_information(self, "提醒", f"云端数据为空，无需同步")
+            self.toolkit.dialog_module.box_information(self, "提醒", f"云端数据为空，无需同步")
             self.label_user_last_backup_time.setText(self.toolkit.time_util.get_datetime_str_by_timestamp(self.main_data["timestamp"]))
             return
         server_main_data = json.loads(server_user_data["data"]["data"])
@@ -596,15 +602,15 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         new_data = copy.deepcopy(server_main_data)
         self.main_data = server_main_data
         self.server_trigger_data_update(old_data=old_data, new_data=new_data)
-        self.toolkit.message_box_util.box_information(self, "提醒", f"同步云端数据成功")
+        self.toolkit.dialog_module.box_information(self, "提醒", f"同步云端数据成功")
         self.label_user_last_backup_time.setText(self.toolkit.time_util.get_datetime_str_by_timestamp(self.main_data["timestamp"]))
 
     # 连接信号处理
     def handle_push_area_user_data_backup(self, result):
         if result['code'] == 1:
-            self.toolkit.message_box_util.box_information(self, "提醒", f"保存云端数据失败，原因：{result['msg']}")
+            self.toolkit.dialog_module.box_information(self, "提醒", f"保存云端数据失败，原因：{result['msg']}")
         else:
-            self.toolkit.message_box_util.box_information(self, "提醒", f"保存云端数据成功")
+            self.toolkit.dialog_module.box_information(self, "提醒", f"保存云端数据成功")
             self.label_user_last_backup_time.setText(
                 self.toolkit.time_util.get_datetime_str_by_timestamp(
                     self.main_data["timestamp"]
@@ -614,6 +620,10 @@ class MyForm(MainAcrylicWindow, Ui_Form):
 
     ''' **********************************退出登录*************************************** '''
     def logout(self):
+        # 显示对话框来确认
+        confirm = self.toolkit.message_box_util.box_acknowledgement(self, "退出", f"确定要退出登录吗？")
+        if not confirm:
+            return
         try:
             # 隐藏窗口
             self.hide()
@@ -1152,7 +1162,8 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         self.remove_keyboard_shortcut()
         # 获取热键
         wake_keyboard_key = None
-        translate_keyboard_key = None
+        screenshot_keyboard_key = None
+        search_keyboard_key = None
         try:
             # 判断是否设置了键盘快捷键
             if self.main_data is None or self.main_data["data"] is None:
@@ -1165,26 +1176,37 @@ class MyForm(MainAcrylicWindow, Ui_Form):
             if ("wakeUpByKeyboard" in setting_data and "wakeUpByKeyboardType" in setting_data
                     and setting_data["wakeUpByKeyboard"] and setting_data["wakeUpByKeyboardType"] is not None):
                 wake_keyboard_key = setting_data["wakeUpByKeyboardType"]
-            # 获取到具体翻译热键
-            if ("translateByKeyboard" in setting_data and "translateByKeyboardType" in setting_data
-                    and setting_data["translateByKeyboard"] and setting_data["translateByKeyboardType"] is not None):
-                translate_keyboard_key = setting_data["translateByKeyboardType"]
+            # 获取到具体截屏热键
+            if ("screenshotByKeyboard" in setting_data and "screenshotByKeyboardType" in setting_data
+                    and setting_data["screenshotByKeyboard"] and setting_data["screenshotByKeyboardType"] is not None):
+                screenshot_keyboard_key = setting_data["screenshotByKeyboardType"]
+            # 获取到具体本地搜索热键
+            if ("searchByKeyboard" in setting_data and "searchByKeyboardType" in setting_data
+                    and setting_data["searchByKeyboard"] and setting_data["searchByKeyboardType"] is not None):
+                search_keyboard_key = setting_data["searchByKeyboardType"]
         except Exception:
             traceback.print_exc()
         # 判断是否获取到热键
-        if wake_keyboard_key is None and translate_keyboard_key is None:
+        if wake_keyboard_key is None and screenshot_keyboard_key is None:
             return
         # 创建热键管理器
         self.hotkey_manager = GlobalHotkeyManager.GlobalHotkeyManager(self)
-        # 注册热键
+        # 注册唤醒热键
         if wake_keyboard_key:
             try:
                 self.hotkey_manager.register_hotkey(wake_keyboard_key, self.on_wake_hotkey_triggered)
             except Exception as e:
                 print(f"热键注册失败: {e}")
-        if translate_keyboard_key:
+        # 注册截屏热键
+        if screenshot_keyboard_key:
             try:
-                self.hotkey_manager.register_hotkey(translate_keyboard_key, self.on_translate_hotkey_triggered)
+                self.hotkey_manager.register_hotkey(screenshot_keyboard_key, self.on_screenshot_hotkey_triggered)
+            except Exception as e:
+                print(f"热键注册失败: {e}")
+        # 注册本地搜索热键
+        if search_keyboard_key:
+            try:
+                self.hotkey_manager.register_hotkey(search_keyboard_key, self.on_search_hotkey_triggered)
             except Exception as e:
                 print(f"热键注册失败: {e}")
 
@@ -1206,9 +1228,43 @@ class MyForm(MainAcrylicWindow, Ui_Form):
         else:
             self.toolkit.resolution_util.in_animation(self)
 
-    def on_translate_hotkey_triggered(self):
-        """快捷键OCR"""
-        self.main_card_manager.on_translate_hotkey_triggered()
+    def on_search_hotkey_triggered(self):
+        """快捷键本地搜索"""
+        self.main_card_manager.push_button_search_click()
+        if not self.show_form:
+            self.toolkit.resolution_util.in_animation(self)
+
+    def on_screenshot_hotkey_triggered(self):
+        """快捷键截图"""
+        self.start_screenshot()
+
+    def start_screenshot(self):
+        if self.show_overlay_status:
+            return
+        # 隐藏主窗口
+        self.hide()
+        # 延迟显示遮罩层
+        QTimer.singleShot(600, self._show_overlay)
+        self.show_overlay_status = True
+
+    def _show_overlay(self):
+        self.overlay = ScreenshotOverlay(self, self)
+        self.overlay.show()
+        self.overlay.setFocus(Qt.FocusReason.ActiveWindowFocusReason)  # 强制获取焦点
+
+    def screenshot_captured(self, pixmap):
+        """截图完成处理"""
+        self.show_overlay_status = False
+        # 显示主窗口
+        self.show()
+        self.toolkit.resolution_util.in_animation(self)
+        # 进行翻译
+        self.main_card_manager.on_translate(pixmap)
+
+    def cancel_screenshot(self):
+        """取消截图"""
+        self.show_overlay_status = False
+        self.show()
 
     def nativeEvent(self, eventType, message):
         """处理 Windows 原生事件"""
@@ -1410,13 +1466,13 @@ class MyForm(MainAcrylicWindow, Ui_Form):
 
     def enterEvent(self, event):
         """ 鼠标进入窗口时取消隐藏定时 """
-        super(MyForm, self).enterEvent(event)
+        super(AgileTilesForm, self).enterEvent(event)
         if self.hide_timer is not None:
             self.hide_timer.stop()
 
     def leaveEvent(self, event):
         """ 鼠标离开窗口时启动延迟检测 """
-        super(MyForm, self).leaveEvent(event)
+        super(AgileTilesForm, self).leaveEvent(event)
         if self.show_form and self.hide_timer is not None:
             self.hide_timer.start(100)
 
@@ -1467,10 +1523,11 @@ if __name__ == '__main__':
             localServer = QLocalServer()
             localServer.listen(serverName)
             # 原始启动逻辑
-            my_form = MyForm()
+            my_form = AgileTilesForm()
             my_form.show()
             sys.exit(app.exec())
     except Exception as e:
         print("程序启动异常：{}".format(e))
         # 打印错误详细信息
         traceback.print_exc()
+    exit()

@@ -105,7 +105,7 @@ class Ui_Form(object):
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.push_button_importance_exigency = QPushButton(self.top_widget)
         self.push_button_importance_exigency.setObjectName(u"push_button_importance_exigency")
-        self.push_button_importance_exigency.setMinimumSize(QSize(180, 25))
+        self.push_button_importance_exigency.setMinimumSize(QSize(140, 25))
         self.push_button_importance_exigency.setFont(font)
         self.push_button_importance_exigency.setStyleSheet(u"    border-style: solid;\n"
 "    border-radius: 10px;\n"
@@ -118,7 +118,7 @@ class Ui_Form(object):
 
         self.push_button_importance_no_exigency = QPushButton(self.top_widget)
         self.push_button_importance_no_exigency.setObjectName(u"push_button_importance_no_exigency")
-        self.push_button_importance_no_exigency.setMinimumSize(QSize(180, 25))
+        self.push_button_importance_no_exigency.setMinimumSize(QSize(140, 25))
         self.push_button_importance_no_exigency.setFont(font)
         self.push_button_importance_no_exigency.setStyleSheet(u"    border-style: solid;\n"
 "    border-radius: 10px;\n"
@@ -132,7 +132,7 @@ class Ui_Form(object):
 
         self.push_button_no_importance_exigency = QPushButton(self.top_widget)
         self.push_button_no_importance_exigency.setObjectName(u"push_button_no_importance_exigency")
-        self.push_button_no_importance_exigency.setMinimumSize(QSize(180, 25))
+        self.push_button_no_importance_exigency.setMinimumSize(QSize(140, 25))
         self.push_button_no_importance_exigency.setFont(font)
         self.push_button_no_importance_exigency.setStyleSheet(u"    border-style: solid;\n"
 "    border-radius: 10px;\n"
@@ -145,7 +145,7 @@ class Ui_Form(object):
 
         self.push_button_no_importance_no_exigency = QPushButton(self.top_widget)
         self.push_button_no_importance_no_exigency.setObjectName(u"push_button_no_importance_no_exigency")
-        self.push_button_no_importance_no_exigency.setMinimumSize(QSize(180, 25))
+        self.push_button_no_importance_no_exigency.setMinimumSize(QSize(140, 25))
         self.push_button_no_importance_no_exigency.setFont(font)
         self.push_button_no_importance_no_exigency.setStyleSheet(u"    border-style: solid;\n"
 "    border-radius: 10px;\n"

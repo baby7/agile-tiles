@@ -1,7 +1,7 @@
 import json
-from PySide6.QtWidgets import QTableView, QVBoxLayout, QHeaderView, QMessageBox, QTableWidget, QHBoxLayout, QPushButton, \
+from PySide6.QtWidgets import QVBoxLayout, QHeaderView, QTableWidget, QHBoxLayout, QPushButton, \
     QLabel, QTableWidgetItem
-from PySide6.QtCore import QUrl, Slot
+from PySide6.QtCore import QUrl
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
 from src.client import common

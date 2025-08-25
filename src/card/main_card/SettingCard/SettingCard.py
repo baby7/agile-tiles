@@ -15,6 +15,7 @@ from src.card.main_card.SettingCard.setting.setting_screen import SettingScreenW
 from src.card.main_card.SettingCard.setting.setting_theme import SettingThemeWindow
 from src.client import common
 from src.constant import version_constant, data_save_constant, open_source_constant
+from src.module import dialog_module
 from src.module.About.about_us import AboutUsWindow
 from src.module.Feedback import feedback_box_util
 from src.module.Ticket import ticket_box_util
@@ -22,7 +23,7 @@ from src.module.Updater.Updater import Updater
 from src.module.UserData.DataBase import user_data_common
 # 获取信息
 from src.util import browser_util
-from src.module.Box import text_box_util, message_box_util
+from src.module.Box import text_box_util
 
 
 def get_pixmap_park_path(icon_position, is_dark, is_yellow=False):
@@ -310,7 +311,7 @@ class SettingCard(MainCard):
 
     def push_button_setting_ticket_click(self):
         if not self.main_object.is_vip:
-            message_box_util.box_information(self.main_object, "提示信息", "会员专属功能，请开通会员后使用哦")
+            dialog_module.box_information(self.main_object, "提示信息", "会员专属功能，请开通会员后使用哦")
             return
         self.toolkit.resolution_util.out_animation(self.main_object)
         ticket_box_util.show_ticket_list_dialog(main_object=self.main_object,

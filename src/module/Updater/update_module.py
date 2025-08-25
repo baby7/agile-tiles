@@ -87,19 +87,6 @@ def show_force_update_dialog(main_object, update_info):
         main_object.update_ready.emit()
 
 
-# def show_optional_update_dialog(main_object, update_info):
-#     """可选更新提示"""
-#     msg = QMessageBox()
-#     msg.setIcon(QMessageBox.Information)
-#     msg.setWindowTitle("发现新版本")
-#     msg.setText(f"发现新版本 {update_info['version']}")
-#     msg.setInformativeText("是否立即更新？")
-#     msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-#     msg.buttonClicked.connect(
-#         lambda button: handle_update_choice(main_object, button, update_info))
-#     msg.exec()
-
-
 def handle_update_choice(main_object, button, update_info):
     """处理用户更新选择"""
     if button.text() == "&Yes":

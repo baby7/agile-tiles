@@ -1,31 +1,26 @@
-from PySide6.QtWidgets import QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox
+from PySide6.QtWidgets import QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget
 from PySide6.QtCore import Qt
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+
+from src.module import dialog_module
 from src.ui import style_util
 
 
-class BMICalculatorPopup(AgileTilesAcrylicWindow):
-    def __init__(self, parent=None, use_parent=None, title=None, content=None):
-        super().__init__(parent=parent, is_dark=use_parent.is_dark, form_theme_mode=use_parent.form_theme_mode,
-                         form_theme_transparency=use_parent.form_theme_transparency)
+class BMICalculatorPopup(QWidget):
+
+    def __init__(self, parent=None, main_object=None, is_dark=None):
+        super().__init__(parent=parent)
         # 初始化
         self.parent = parent
-        self.use_parent = use_parent
-        # 设置标题栏
-        self.setWindowTitle(title)  # 设置到标题栏
-        self.titleBar.minBtn.close()
-        self.titleBar.maxBtn.close()
-        self.setMinimumSize(400, 300)
+        self.use_parent = main_object
         # 初始化界面
         self.init_ui()
         # 设置样式
-        style_util.set_dialog_control_style(self, self.is_dark)
+        style_util.set_dialog_control_style(self, is_dark)
 
     def init_ui(self):
         # 主部件和布局
-        main_layout = QVBoxLayout()
+        main_layout = QVBoxLayout(self)
         main_layout.setSpacing(15)
-        self.widget_base.setLayout(main_layout)
         main_layout.setContentsMargins(10, 10, 10, 10)
 
         # 输入身高
@@ -89,13 +84,9 @@ class BMICalculatorPopup(AgileTilesAcrylicWindow):
 
         except ValueError as e:
             # 错误提示
-            QMessageBox.warning(self, "输入错误", str(e))
+            dialog_module.box_information(self.use_parent, "输入错误", "请确保输入正确的数值")
             self.result_label.setText("")
 
-
-def show_bmi_calculator_dialog(main_object, title, content):
-    """显示 BMI 计算器对话框"""
-    dialog = BMICalculatorPopup(None, main_object, title, content)
-    dialog.refresh_geometry(main_object.toolkit.resolution_util.get_screen(main_object))
-    dialog.show()
-    return dialog
+    def refresh_theme(self, main_object):
+        # 设置样式
+        style_util.set_dialog_control_style(self, main_object.is_dark)

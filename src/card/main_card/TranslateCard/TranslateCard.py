@@ -4,11 +4,10 @@ from PySide6 import QtCore
 from PySide6.QtCore import Slot, QUrl, Qt, QTimer
 from PySide6.QtGui import QIcon, QAction
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QTextEdit, \
-    QApplication, QMenu, QPlainTextEdit
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QMenu, QPlainTextEdit
 
 from src.card.MainCardManager.MainCard import MainCard
-from src.card.main_card.TranslateCard.ScreenshotOverlay import ScreenshotOverlay
+from src.module.Screenshot.ScreenshotOverlay import ScreenshotOverlay
 from src.client import common
 from src.ui import style_util
 
@@ -42,7 +41,6 @@ class TranslateCard(MainCard):
     today_calls = 0
     # ocr部分
     captured_pixmap = None
-    show_overlay_status = False
 
 
     def __init__(self, main_object=None, parent=None, theme=None, card=None, cache=None, data=None,
@@ -163,7 +161,7 @@ class TranslateCard(MainCard):
         self.ocr_button = QPushButton("截图翻译")
         self.ocr_button.setMinimumHeight(24)
         self.ocr_button.setMinimumWidth(80)
-        self.ocr_button.clicked.connect(self.start_screenshot)
+        self.ocr_button.clicked.connect(self.main_object.start_screenshot)
         toolbar_layout.addWidget(self.ocr_button)
 
         # 翻译按钮
@@ -429,28 +427,9 @@ class TranslateCard(MainCard):
             # 显示提示信息
             self.status_label.setText(f"文本长度超过{MAX_LENGTH}字符，已自动截断")
 
-    def start_screenshot(self):
-        if self.show_overlay_status:
-            return
-        # 隐藏主窗口
-        self.main_object.hide()
-        # 延迟显示遮罩层
-        QTimer.singleShot(600, self._show_overlay)
-        self.show_overlay_status = True
-
-    def _show_overlay(self):
-        self.overlay = ScreenshotOverlay(self.card, self)
-        self.overlay.show()
-        self.overlay.setFocus(Qt.FocusReason.ActiveWindowFocusReason)  # 强制获取焦点
-
     def screenshot_captured(self, pixmap):
-        """截图完成处理"""
-        self.show_overlay_status = False
         # 保存截图
         self.captured_pixmap = pixmap
-        # 显示主窗口
-        self.main_object.show()
-        self.toolkit.resolution_util.in_animation(self.main_object)
         # 更新状态
         self.status_label.setText("截图完成,正在压缩图片...")
         try:
@@ -463,12 +442,6 @@ class TranslateCard(MainCard):
         self.status_label.setText("压缩完成,正在识图...")
         # 发送ocr请求
         self.ocr(base64_data)
-
-    def cancel_screenshot(self):
-        """取消截图"""
-        self.show_overlay_status = False
-        self.status_label.setText("截图已取消")
-        self.main_object.show()
 
     def ocr(self, base64_data: str):
         # 准备请求数据
@@ -617,6 +590,13 @@ class TranslateCard(MainCard):
     def refresh_ui(self, date_time_str):
         super().refresh_ui(date_time_str)
         super().refresh_ui_end(date_time_str)
+
+    def show_form(self):
+        """
+        隐藏窗口
+        """
+        # 设置输入焦点
+        self.source_text.setFocus()
 
     def refresh_theme(self):
         if not super().refresh_theme():

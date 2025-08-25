@@ -183,6 +183,9 @@ def out_animation(main_window):
     :param main_window: 主窗口
     :return:
     """
+    # 钉住时不进行退出
+    if main_window.pin_form:
+        return
     # print("退出动画")
     # 当前时间戳
     current_time = int(round(time.time() * 1000))

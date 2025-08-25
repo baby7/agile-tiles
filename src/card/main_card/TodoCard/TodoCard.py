@@ -1,16 +1,17 @@
 from functools import partial
 
-from PySide6.QtWidgets import QLabel, QFrame
+from PySide6.QtWidgets import QLabel, QFrame, QApplication
 
 from src.card.main_card.TodoCard.component.CategoryListWidget import CategoryListWidget
 from src.card.MainCardManager.MainCard import MainCard
 from src.card.main_card.TodoCard.component.TodoBody import TodoBody
 from PySide6 import QtCore, QtGui, QtWidgets
-from PySide6.QtCore import Qt, QRect
+from PySide6.QtCore import Qt, QRect, QTimer
 
+from src.card.main_card.TodoCard.component.TodoEditWidget import TodoEditWidget
 from src.constant import data_save_constant
+from src.module import dialog_module
 from src.thread_list import todo_thread
-from src.module.Box import message_box_util
 import src.ui.style_util as style_util
 
 """
@@ -240,6 +241,32 @@ class TodoCard(MainCard):
         self.stash_list_widget.raise_()
         self.add_button.clicked.connect(self.add_todo_type_clicked)
         self.todo_area.hide()
+        # 创建堆栈窗口
+        self.stacked_widget = QtWidgets.QStackedWidget(self.card)
+        self.stacked_widget.setGeometry(QtCore.QRect(0, 0, self.card.width(), self.card.height()))
+        self.stacked_widget.setObjectName("stacked_widget")
+        # 将现有的分类列表和待办列表添加到堆栈中
+        self.stacked_widget.addWidget(self.todo_area_group)     # 索引0 - 分类列表
+        self.stacked_widget.addWidget(self.todo_area)           # 索引1 - 待办列表
+        # 创建编辑视图
+        self.todo_edit_widget = TodoEditWidget(self.card, self.todo_type_list, self)
+        self.stacked_widget.addWidget(self.todo_edit_widget)    # 索引2 - 编辑视图
+        # 默认显示分类列表
+        self.stacked_widget.setCurrentIndex(0)
+        # 修改返回按钮的连接
+        self.push_button_todo_back.clicked.connect(self.on_back_clicked)
+
+    # 添加返回按钮处理函数
+    def on_back_clicked(self):
+        current_index = self.stacked_widget.currentIndex()
+        if current_index == 1:  # 从待办列表返回
+            self.stacked_widget.setCurrentIndex(0)  # 返回分类列表
+        elif current_index == 2:  # 从编辑视图返回
+            # 根据是否有待办类型决定返回到哪里
+            if self.todo_body and self.todo_body.todo_type:
+                self.stacked_widget.setCurrentIndex(1)  # 返回待办列表
+            else:
+                self.stacked_widget.setCurrentIndex(0)  # 返回分类列表
 
     def refresh_data(self, date_time_str):
         super().refresh_data(date_time_str)
@@ -249,20 +276,23 @@ class TodoCard(MainCard):
         super().refresh_ui_end(date_time_str)
 
     def show_hide_todo_group(self, todo_type):
-        print(todo_type)
-        if self.todo_area_group.isHidden():
-            self.todo_area_group.show()
-            self.todo_area_group.raise_()
-            self.todo_area.hide()
+        if todo_type is None:
+            # 返回分类列表
+            self.stacked_widget.setCurrentIndex(0)  # 分类列表视图
             return
+        print(todo_type)
+        # 初始化待办事项数据
         if self.todo_body is not None:
-            self.push_button_todo_add.clicked.disconnect()
-            self.todo_body.proceed_list_widget.itemDoubleClicked.disconnect()
-            self.todo_body.complete_list_widget.itemDoubleClicked.disconnect()
+            try:
+                self.push_button_todo_add.clicked.disconnect()
+                self.todo_body.proceed_list_widget.itemDoubleClicked.disconnect()
+                self.todo_body.complete_list_widget.itemDoubleClicked.disconnect()
+            except:
+                pass
             self.todo_body = None
             self.todo_list_widget_todo.clear()
             self.todo_list_widget_success.clear()
-        # 初始化
+        # 初始化数据
         self.proceed_data_list = []
         self.complete_data_list = []
         for todo_data in self.todo_list:
@@ -301,14 +331,15 @@ class TodoCard(MainCard):
         for complete_data in self.complete_data_list:
             if todo_type == complete_data[7]:
                 complete_data_list.append(complete_data)
+        # 创建待办事项主体
         self.todo_body = TodoBody(self.main_object, self.tab_widget_todo, self.todo_type_list, proceed_data_list, complete_data_list,
                                   self.todo_list_widget_todo, self.todo_list_widget_success, self)
         self.push_button_todo_add.clicked.connect(partial(self.todo_body.open_new_todo_view, None, todo_type))
         self.todo_body.set_todo_type(todo_type)
         self.todo_body.init()
         self.label_todo_type_title.setText(todo_type)
-        self.todo_area_group.hide()
-        self.todo_area.show()
+        # 切换到待办列表视图
+        self.stacked_widget.setCurrentIndex(1)  # 待办列表视图
 
     def data_process_call_back(self, proceed_data_list, complete_data_list, todo_type):
         # 剔除类型为todo_type的
@@ -353,26 +384,32 @@ class TodoCard(MainCard):
     def add_todo_type_clicked(self):
         # 限制分类数量
         if len(self.todo_type_list) >= self.Max_Todo_Type_Count:
-            message_box_util.box_information(self.main_object, "提示", f"待办事项分类数量已达到上限，不能超过{self.Max_Todo_Type_Count}个！")
+            dialog_module.box_information(self.main_object, "提示", f"待办事项分类数量已达到上限，不能超过{self.Max_Todo_Type_Count}个！")
             return
-        todo_type = message_box_util.box_input(self.main_object, "添加", "待办事项分类名称：")
+        todo_type = dialog_module.box_input(self.main_object, "添加", "待办事项分类名称：")
         if todo_type is None:
             return
+        # 强制处理所有待处理的事件
+        QApplication.processEvents()
+        # 使用定时器延迟创建新布局，确保删除操作完成
+        QTimer.singleShot(10, lambda : self.add_todo_type_clicked_delayed(todo_type))
+
+    def add_todo_type_clicked_delayed(self, todo_type):
         if todo_type == "":
-            message_box_util.box_information(self.main_object, "提示", "待办事项分类名称不能为空！")
+            dialog_module.box_information(self.main_object, "提示", "待办事项分类名称不能为空！")
             return
         # 判断重复
         for todo_data in self.todo_type_list:
             if todo_data["title"] == todo_type:
-                message_box_util.box_information(self.main_object, "提示", "待办事项分类名称重复！")
+                dialog_module.box_information(self.main_object, "提示", "待办事项分类名称重复！")
                 return
         # 限制字数
         if len(todo_type) > self.Max_Todo_Type_Title_Count:
-            message_box_util.box_information(self.main_object, "提示", f"待办事项分类名称过长，不能超过{self.Max_Todo_Type_Title_Count}字！")
+            dialog_module.box_information(self.main_object, "提示", f"待办事项分类名称过长，不能超过{self.Max_Todo_Type_Title_Count}字！")
             return
         # 限制分类数量
         if len(self.todo_type_list) >= self.Max_Todo_Type_Count:
-            message_box_util.box_information(self.main_object, "提示", f"待办事项分类数量已达到上限，不能超过{self.Max_Todo_Type_Count}个！")
+            dialog_module.box_information(self.main_object, "提示", f"待办事项分类数量已达到上限，不能超过{self.Max_Todo_Type_Count}个！")
             return
         # 添加分类
         self.todo_type_list.append({
@@ -384,9 +421,11 @@ class TodoCard(MainCard):
         self.save_data_func(in_data=self.data, card_name=self.name, data_type=data_save_constant.DATA_TYPE_ENDURING)
         # 刷新主题
         self.refresh_theme()
+        # 确保当前显示的是分类列表
+        self.stacked_widget.setCurrentIndex(0)
 
     def remove_todo_type_clicked(self, todo_type):
-        if not message_box_util.box_acknowledgement(self.main_object, "注意",
+        if not dialog_module.box_acknowledgement(self.main_object, "注意",
                                             f"确定要删除 {todo_type} 分类吗？这将删除该分类下的所有待办事项！"):
             return
         print("删除 待办事项分类：", todo_type)
@@ -406,6 +445,8 @@ class TodoCard(MainCard):
         self.save_data_func(in_data=self.data, card_name=self.name, data_type=data_save_constant.DATA_TYPE_ENDURING)
         # 刷新主题
         self.refresh_theme()
+        # 确保当前显示的是分类列表
+        self.stacked_widget.setCurrentIndex(0)
 
     def refresh_theme(self):
         super().refresh_theme()
@@ -424,7 +465,7 @@ class TodoCard(MainCard):
         self.push_button_todo_add.setStyleSheet(push_button_style)
         self.push_button_todo_add.setIcon(self.get_icon_park_path("Character/add-one"))
         self.push_button_todo_back.setStyleSheet(push_button_style)
-        self.push_button_todo_back.setIcon(self.get_icon_park_path("Edit/back"))
+        self.push_button_todo_back.setIcon(self.get_icon_park_path("Edit/return"))
         # 其他
         if self.is_dark():
             line_style = "border: 1px solid white;"
@@ -460,6 +501,9 @@ class TodoCard(MainCard):
         }"""
         self.todo_list_widget_todo.setStyleSheet(select_style)
         self.todo_list_widget_success.setStyleSheet(select_style)
+        # 设置编辑视图的主题
+        if hasattr(self, 'todo_edit_widget') and self.todo_edit_widget:
+            self.todo_edit_widget.refresh_theme()
 
     def update_data(self, data=None):
         """

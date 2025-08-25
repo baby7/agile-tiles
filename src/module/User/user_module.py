@@ -10,7 +10,7 @@ from src.client import common
 from src.constant import data_save_constant
 # 初始化日志
 import src.ui.style_util as style_util
-import src.module.Box.message_box_util as message_box_util
+from src.module import dialog_module
 from src.module.SubscriptionHistory import subscription_history_box_util
 from src.module.UserData.HistoryRecover.user_data_history_recover import UserServerRecoverWindow
 
@@ -57,86 +57,92 @@ def init_click_connect(main_object):
     main_object.push_button_area_user_data_synchronization.clicked.connect(partial(push_button_area_user_data_synchronization_click, main_object))
     main_object.push_button_area_user_data_recover.clicked.connect(partial(push_button_area_user_data_recover_click, main_object))
     main_object.push_button_area_user_data_backup.clicked.connect(partial(push_button_area_user_data_backup_click, main_object))
-    main_object.push_button_area_user_join_group.clicked.connect(partial(push_button_area_user_join_group_click, main_object))
     main_object.push_button_area_user_invite_code.clicked.connect(partial(push_button_area_user_invite_code_click, main_object))
     # vip权益提示
-    main_object.push_button_area_user_vip_power_1.clicked.connect(partial(push_button_area_user_vip_power_1_click, main_object))
-    main_object.push_button_area_user_vip_power_2.clicked.connect(partial(push_button_area_user_vip_power_2_click, main_object))
-    main_object.push_button_area_user_vip_power_3.clicked.connect(partial(push_button_area_user_vip_power_3_click, main_object))
-    main_object.push_button_area_user_vip_power_4.clicked.connect(partial(push_button_area_user_vip_power_4_click, main_object))
-    main_object.push_button_area_user_vip_power_5.clicked.connect(partial(push_button_area_user_vip_power_5_click, main_object))
-    main_object.push_button_area_user_vip_power_6.clicked.connect(partial(push_button_area_user_vip_power_6_click, main_object))
-    main_object.push_button_area_user_vip_info.clicked.connect(partial(push_button_area_user_vip_info_click, main_object))
+    # main_object.push_button_area_user_vip_power_1.clicked.connect(partial(push_button_area_user_vip_power_1_click, main_object))
+    # main_object.push_button_area_user_vip_power_2.clicked.connect(partial(push_button_area_user_vip_power_2_click, main_object))
+    # main_object.push_button_area_user_vip_power_3.clicked.connect(partial(push_button_area_user_vip_power_3_click, main_object))
+    # main_object.push_button_area_user_vip_power_4.clicked.connect(partial(push_button_area_user_vip_power_4_click, main_object))
+    # main_object.push_button_area_user_vip_power_5.clicked.connect(partial(push_button_area_user_vip_power_5_click, main_object))
+    # main_object.push_button_area_user_vip_power_6.clicked.connect(partial(push_button_area_user_vip_power_6_click, main_object))
+    main_object.push_button_area_user_vip_power_1.clicked.connect(partial(push_button_area_user_vip_info_click, main_object))
+    main_object.push_button_area_user_vip_power_2.clicked.connect(partial(push_button_area_user_vip_info_click, main_object))
+    main_object.push_button_area_user_vip_power_3.clicked.connect(partial(push_button_area_user_vip_info_click, main_object))
+    main_object.push_button_area_user_vip_power_4.clicked.connect(partial(push_button_area_user_vip_info_click, main_object))
+    main_object.push_button_area_user_vip_power_5.clicked.connect(partial(push_button_area_user_vip_info_click, main_object))
+    main_object.push_button_area_user_vip_power_6.clicked.connect(partial(push_button_area_user_vip_info_click, main_object))
+    main_object.push_button_area_user_vip_info.hide()
+    # main_object.push_button_area_user_vip_info.clicked.connect(partial(push_button_area_user_vip_info_click, main_object))
     main_object.push_button_area_user_vip_subscription_history.clicked.connect(partial(push_button_area_user_vip_subscription_history_click, main_object))
 
-def push_button_area_user_vip_power_1_click(main_object):
-    try:
-        content = "用户可将数据备份至服务器，实现数据备份与恢复。\n功能在菜单->用户->数据页面处哦~"
-        main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-云端数据备份", {"content": content, "size": [300, 200]})
-    except Exception as e:
-        main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
-        message_box_util.box_information(main_object, "错误信息", "查看会员权益失败")
-
-def push_button_area_user_vip_power_2_click(main_object):
-    try:
-        content = "用户可在多台设备上使用，且数据可在多台设备上同步。\n功能在菜单->用户->数据页面处哦~"
-        main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-数据多端同步", {"content": content, "size": [300, 200]})
-    except Exception as e:
-        main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
-        message_box_util.box_information(main_object, "错误信息", "查看会员权益失败")
-
-def push_button_area_user_vip_power_3_click(main_object):
-    try:
-        content = "非会员用户可以每天使用5次AI大模型对话，会员用户每天1000次AI大模型对话。未来会开放更多智能体。\n用户可以在菜单->智能对话处进行对话哦~"
-        main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-AI大模型对话", {"content": content, "size": [300, 200]})
-    except Exception as e:
-        main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
-        message_box_util.box_information(main_object, "错误信息", "查看会员权益失败")
-
-def push_button_area_user_vip_power_4_click(main_object):
-    try:
-        content = "非会员用户可以每天使用10次翻译功能，会员用户每天1000次翻译功能。\n用户可以在菜单->翻译处进行翻译哦~"
-        main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-翻译", {"content": content, "size": [300, 200]})
-    except Exception as e:
-        main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
-        message_box_util.box_information(main_object, "错误信息", "查看会员权益失败")
-
-def push_button_area_user_vip_power_5_click(main_object):
-    try:
-        content = "会员用户可在有问题或意见时，使用设置->会员工单处进行工单提交。我们会在第一时间处理工单。\n会员可以在菜单->设置->会员工单处提交工单哦~"
-        main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-专属工单系统", {"content": content, "size": [300, 200]})
-    except Exception as e:
-        main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
-        message_box_util.box_information(main_object, "错误信息", "查看会员权益失败")
-
-def push_button_area_user_vip_power_6_click(main_object):
-    try:
-        content = "用户可在多处中看到专属会员头像哦~"
-        main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-会员尊享标识", {"content": content, "size": [300, 200]})
-    except Exception as e:
-        main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
-        message_box_util.box_information(main_object, "错误信息", "查看会员权益失败")
+# def push_button_area_user_vip_power_1_click(main_object):
+#     try:
+#         content = "用户可将数据备份至服务器，实现数据备份与恢复。\n功能在菜单->用户->数据页面处哦~"
+#         main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-云端数据备份", {"content": content, "size": [300, 200]})
+#     except Exception as e:
+#         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
+#         dialog_module.box_information(main_object, "错误信息", "查看会员权益失败")
+#
+# def push_button_area_user_vip_power_2_click(main_object):
+#     try:
+#         content = "用户可在多台设备上使用，且数据可在多台设备上同步。\n功能在菜单->用户->数据页面处哦~"
+#         main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-数据多端同步", {"content": content, "size": [300, 200]})
+#     except Exception as e:
+#         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
+#         dialog_module.box_information(main_object, "错误信息", "查看会员权益失败")
+#
+# def push_button_area_user_vip_power_3_click(main_object):
+#     try:
+#         content = "非会员用户可以每天使用5次AI大模型对话，会员用户每天1000次AI大模型对话。未来会开放更多智能体。\n用户可以在菜单->智能对话处进行对话哦~"
+#         main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-AI大模型对话", {"content": content, "size": [300, 200]})
+#     except Exception as e:
+#         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
+#         dialog_module.box_information(main_object, "错误信息", "查看会员权益失败")
+#
+# def push_button_area_user_vip_power_4_click(main_object):
+#     try:
+#         content = "非会员用户可以每天使用10次翻译功能，会员用户每天1000次翻译功能。\n用户可以在菜单->翻译处进行翻译哦~"
+#         main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-翻译", {"content": content, "size": [300, 200]})
+#     except Exception as e:
+#         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
+#         dialog_module.box_information(main_object, "错误信息", "查看会员权益失败")
+#
+# def push_button_area_user_vip_power_5_click(main_object):
+#     try:
+#         content = "会员用户可在有问题或意见时，使用设置->会员工单处进行工单提交。我们会在第一时间处理工单。\n会员可以在菜单->设置->会员工单处提交工单哦~"
+#         main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-专属工单系统", {"content": content, "size": [300, 200]})
+#     except Exception as e:
+#         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
+#         dialog_module.box_information(main_object, "错误信息", "查看会员权益失败")
+#
+# def push_button_area_user_vip_power_6_click(main_object):
+#     try:
+#         content = "用户可在多处中看到专属会员头像哦~"
+#         main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-会员尊享标识", {"content": content, "size": [300, 200]})
+#     except Exception as e:
+#         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
+#         dialog_module.box_information(main_object, "错误信息", "查看会员权益失败")
 
 def push_button_area_user_vip_info_click(main_object):
     try:
         main_object.toolkit.browser_util.open_url(common.price_url)
     except Exception as e:
         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
-        message_box_util.box_information(main_object, "错误信息", "查看会员权益失败")
+        dialog_module.box_information(main_object, "错误信息", "查看会员权益失败")
 
 def push_button_area_user_vip_subscription_history_click(main_object):
     try:
         if not main_object.is_login:
-            message_box_util.box_information(main_object, "提示信息", "请先登录")
+            dialog_module.box_information(main_object, "提示信息", "请先登录")
             return
         # 窗口仅能存在一个
         if main_object.subscription_history_dialog is not None and main_object.subscription_history_dialog.isVisible():
-            main_object.toolkit.message_box_util.box_information(main_object, "提示", "会员订阅记录窗口仅能存在一个哦~")
+            main_object.toolkit.dialog_module.box_information(main_object, "提示", "会员订阅记录窗口仅能存在一个哦~")
             return
         subscription_history_box_util.show_subscription_history_dialog(main_object=main_object, current_user=main_object.current_user)
     except Exception as e:
         main_object.info_logger.card_error("主程序", "查看会员订阅记录失败,错误信息:{}".format(e))
-        message_box_util.box_information(main_object, "错误信息", "查看会员订阅记录失败")
+        dialog_module.box_information(main_object, "错误信息", "查看会员订阅记录失败")
 
 
 def push_button_area_user_vip_subscription_click(main_object):
@@ -145,16 +151,16 @@ def push_button_area_user_vip_subscription_click(main_object):
     """
     try:
         if not main_object.is_login:
-            message_box_util.box_information(main_object, "提示信息", "请先登录")
+            dialog_module.box_information(main_object, "提示信息", "请先登录")
             return
         # 窗口仅能存在一个
         if main_object.qr_code_dialog is not None and main_object.qr_code_dialog.isVisible():
-            main_object.toolkit.message_box_util.box_information(main_object, "提示", "支付窗口仅能存在一个哦~")
+            main_object.toolkit.dialog_module.box_information(main_object, "提示", "支付窗口仅能存在一个哦~")
             return
         main_object.qr_code_dialog = main_object.toolkit.qr_code_box_util.show_qr_code_dialog(main_object, "支付宝支付")
     except Exception as e:
         main_object.info_logger.card_error("主程序", "续费或开通会员失败,错误信息:{}".format(e))
-        message_box_util.box_information(main_object, "错误信息", "续费或开通会员失败")
+        dialog_module.box_information(main_object, "错误信息", "续费或开通会员失败")
 
 
 def push_button_area_user_invite_code_click(main_object):
@@ -163,7 +169,7 @@ def push_button_area_user_invite_code_click(main_object):
     """
     try:
         if not main_object.is_login:
-            message_box_util.box_information(main_object, "提示信息", "请先登录")
+            dialog_module.box_information(main_object, "提示信息", "请先登录")
             return
         invite_code = main_object.current_user["inviteCode"]
         main_object.toolkit.text_box_util.show_text_dialog(
@@ -172,7 +178,7 @@ def push_button_area_user_invite_code_click(main_object):
         )
     except Exception as e:
         main_object.info_logger.card_error("主程序", "复制邀请码失败,错误信息:{}".format(e))
-        message_box_util.box_information(main_object, "错误信息", "复制邀请码失败")
+        dialog_module.box_information(main_object, "错误信息", "复制邀请码失败")
 
 
 def push_button_export_data_to_windows_click(main_object):
@@ -187,7 +193,7 @@ def push_button_export_data_to_windows_click(main_object):
             json.dump(main_object.main_data, f, ensure_ascii=False)
     except Exception as e:
         main_object.info_logger.card_error("主程序", "导出数据失败,错误信息:{}".format(e))
-        message_box_util.box_information(main_object, "错误信息", "导出数据失败")
+        dialog_module.box_information(main_object, "错误信息", "导出数据失败")
 
 
 def push_button_import_data_from_windows_click(main_object):
@@ -202,31 +208,31 @@ def push_button_import_data_from_windows_click(main_object):
             with open(file_name[0], 'r', encoding='utf-8') as f:
                 import_data = json.load(f)
         except UnicodeDecodeError:
-            message_box_util.box_information(main_object, "错误", "文件编码不是UTF-8，请使用UTF-8编码的文件导入")
+            dialog_module.box_information(main_object, "错误", "文件编码不是UTF-8，请使用UTF-8编码的文件导入")
             return
         if import_data is None:
-            message_box_util.box_information(main_object, "提醒", "数据为空，导入失败！")
+            dialog_module.box_information(main_object, "提醒", "数据为空，导入失败！")
             return
         if 'timestamp' not in import_data or 'data' not in import_data or 'card' not in import_data or 'bigCard' not in import_data:
-            message_box_util.box_information(main_object, "提醒", "数据格式不正确，导入失败！")
+            dialog_module.box_information(main_object, "提醒", "数据格式不正确，导入失败！")
             return
-        if not message_box_util.box_acknowledgement(main_object, "警告", "确定导入该数据吗，这将覆盖现有数据！"):
+        if not dialog_module.box_acknowledgement(main_object, "警告", "确定导入该数据吗，这将覆盖现有数据！"):
             return
         main_object.local_trigger_data_update(trigger_type=data_save_constant.TRIGGER_TYPE_DATA_IMPORT, in_data=import_data)
-        message_box_util.box_information(main_object, "提示信息", "导入数据成功")
+        dialog_module.box_information(main_object, "提示信息", "导入数据成功")
     except Exception as e:
         main_object.info_logger.card_error("主程序", "导入数据失败,错误信息:{}".format(e))
 
 def push_button_area_user_data_synchronization_click(main_object):
     try:
         if main_object.current_user is None or main_object.current_user["username"] is None:
-            message_box_util.box_information(main_object, "提醒", f"未知错误，请重新登录")
+            dialog_module.box_information(main_object, "提醒", f"未知错误，请重新登录")
             return
         if not main_object.is_login:
-            message_box_util.box_information(main_object, "提示信息", "请先登录")
+            dialog_module.box_information(main_object, "提示信息", "请先登录")
             return
         if not main_object.is_vip:
-            message_box_util.box_information(main_object, "提示信息", "会员专属功能，请开通会员后使用哦")
+            dialog_module.box_information(main_object, "提示信息", "会员专属功能，请开通会员后使用哦")
             return
 
         # 使用信号连接
@@ -237,18 +243,18 @@ def push_button_area_user_data_synchronization_click(main_object):
 def push_button_area_user_data_recover_click(main_object):
     try:
         if main_object.current_user is None or main_object.current_user["username"] is None:
-            message_box_util.box_information(main_object, "提醒", f"未知错误，请重新登录")
+            dialog_module.box_information(main_object, "提醒", f"未知错误，请重新登录")
             return
         if not main_object.is_login:
-            message_box_util.box_information(main_object, "提示信息", "请先登录")
+            dialog_module.box_information(main_object, "提示信息", "请先登录")
             return
         if not main_object.is_vip:
-            message_box_util.box_information(main_object, "提示信息", "会员专属功能，请开通会员后使用哦")
+            dialog_module.box_information(main_object, "提示信息", "会员专属功能，请开通会员后使用哦")
             return
         main_object.toolkit.resolution_util.out_animation(main_object)
         # 窗口仅能存在一个
         if main_object.user_server_recover_win is not None and main_object.user_server_recover_win.isVisible():
-            main_object.toolkit.message_box_util.box_information(main_object, "提示", "恢复历史数据窗口仅能存在一个哦~")
+            main_object.toolkit.dialog_module.box_information(main_object, "提示", "恢复历史数据窗口仅能存在一个哦~")
             return
         main_object.user_server_recover_win = UserServerRecoverWindow(None, main_object)
         main_object.user_server_recover_win.refresh_geometry(main_object.toolkit.resolution_util.get_screen(main_object))
@@ -259,13 +265,13 @@ def push_button_area_user_data_recover_click(main_object):
 def push_button_area_user_data_backup_click(main_object):
     try:
         if main_object.current_user is None or main_object.current_user["username"] is None:
-            message_box_util.box_information(main_object, "提醒", f"未知错误，请重新登录")
+            dialog_module.box_information(main_object, "提醒", f"未知错误，请重新登录")
             return
         if not main_object.is_login:
-            message_box_util.box_information(main_object, "提示信息", "请先登录")
+            dialog_module.box_information(main_object, "提示信息", "请先登录")
             return
         if not main_object.is_vip:
-            message_box_util.box_information(main_object, "提示信息", "会员专属功能，请开通会员后使用哦")
+            dialog_module.box_information(main_object, "提示信息", "会员专属功能，请开通会员后使用哦")
             return
 
         # 使用信号连接
@@ -311,7 +317,7 @@ def refresh_theme(main_object):
         main_object.widget_area_user_vip_power_content.setStyleSheet("background-color: black;")
         vip_linear_gradient_top = "background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,stop:0 rgb(34, 34, 34), stop:1 rgb(71, 153, 253));"
         vip_linear_gradient_bottom = "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(34, 34, 34), stop:1 rgb(71, 153, 253));"
-        invite_linear_gradient = "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(34, 34, 34), stop:1 rgb(14, 204, 156));"
+        invite_linear_gradient = "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(34, 34, 34), stop:1 rgb(71, 153, 253));"
         user_data_style = "border-radius: 10px; border: 1px solid black; background-color:rgba(0, 0, 0, 200);"
         title_info_style = "border: 0px solid #FF8D16; border-radius: 0px; background-color: rgba(0, 0, 0, 0); color: rgb(255, 255, 255);"
     else:
@@ -323,13 +329,13 @@ def refresh_theme(main_object):
         main_object.widget_area_user_vip_power_content.setStyleSheet("background-color: white;")
         vip_linear_gradient_top = "background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,stop:0 rgb(205, 232, 255), stop:1 rgb(71, 153, 253));"
         vip_linear_gradient_bottom = "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(205, 232, 255), stop:1 rgb(71, 153, 253));"
-        invite_linear_gradient = "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(205, 232, 255), stop:1 rgb(14, 204, 156));"
+        invite_linear_gradient = "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(205, 232, 255), stop:1 rgb(71, 153, 253));"
         user_data_style = "border-radius: 10px; border: 1px solid white; background-color:rgba(255, 255, 255, 200);"
         title_info_style = "border: 0px solid #FF8D16; border-radius: 0px; background-color: rgba(0, 0, 0, 0); color: rgb(0, 0, 0);"
     main_object.widget_area_user_vip_power_bg.setStyleSheet(vip_linear_gradient_top)
     main_object.widget_area_user_invite_bg.setStyleSheet(invite_linear_gradient)
     main_object.label_user_login_invite_title.setStyleSheet(title_info_style)
-    main_object.label_area_user_invite_info.setStyleSheet(title_info_style)
+    # main_object.label_area_user_invite_info.setStyleSheet(title_info_style)
     # vip按钮图标
     push_button_area_user_vip_power_list = [
         [ main_object.push_button_area_user_vip_power_1, "Connect/link-cloud-sucess"],
@@ -361,10 +367,11 @@ def refresh_theme(main_object):
     main_object.widget_area_user_data_sync.setStyleSheet(user_data_style)
     main_object.widget_area_user_data_server.setStyleSheet(user_data_style)
     main_object.widget_area_user_data_local.setStyleSheet(user_data_style)
-    main_object.widget_area_user_communicate.setStyleSheet(user_data_style)
     # logo
     main_object.label_area_user_vip_icon.setPixmap(get_pixmap_park_path("Others/vip-one", is_dark, is_yellow=True))
     main_object.label_area_user_invite_icon.setPixmap(get_pixmap_park_path("Baby/holding-hands", is_dark))
+    # 弹出框
+    dialog_module.refresh_theme(main_object)
 
 def get_icon_park_path(icon_position, is_dark, is_yellow=False):
     icon_theme_folder = "light" if is_dark else "dark"
@@ -395,11 +402,3 @@ def update_user_view(main_object):
         main_object.push_button_area_user_vip_subscription.setText("开通会员")
         main_object.label_area_user_vip_info.setText("开通会员享受服务")
         main_object.label_user_avatar.setPixmap(QPixmap("./static/img/user/head_normal.png"))
-
-
-def push_button_area_user_join_group_click(main_object):
-    try:
-        main_object.toolkit.browser_util.open_url(common.about_us_url)
-    except Exception as e:
-        main_object.info_logger.card_error("主程序", "查看用户交流群失败,错误信息:{}".format(e))
-        message_box_util.box_information(main_object, "错误信息", "查看用户交流群失败")

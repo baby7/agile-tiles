@@ -4,11 +4,10 @@ from functools import partial
 from PySide6.QtWidgets import QListWidgetItem
 from PySide6.QtCore import QSize
 
-from src.card.main_card.TodoCard.component.new_todo import NewTodoWindow
 from src.card.main_card.TodoCard.component.MyQListWidgetItemWidget import MyQListWidgetItemWidget
 
 import src.util.time_util as time_util
-from src.module.Box import message_box_util
+from src.module import dialog_module
 
 
 class TodoBody(object):
@@ -85,7 +84,7 @@ class TodoBody(object):
         :param todo_id: 任务id
         :param todo_state: 任务状态(True表示进行中)
         """
-        if not message_box_util.box_acknowledgement(self.main_object, "注意", f"确定要删除该待办事项吗？"):
+        if not dialog_module.box_acknowledgement(self.main_object, "注意", f"确定要删除该待办事项吗？"):
             return
         if todo_state:
             print("[双击]从待办中删除id:{},数据列表:{}".format(todo_id, self.proceed_data_list))
@@ -136,10 +135,10 @@ class TodoBody(object):
     def double_click(self, item):
         if int(self.tab_widget_todo.currentIndex()) == 0:
             double_index = self.proceed_list_widget.currentRow()
-            self.open_new_todo_view(self.proceed_data_list[double_index])
+            self.open_new_todo_view(input_data=self.proceed_data_list[double_index])
         else:
             double_index = self.complete_list_widget.currentRow()
-            self.open_new_todo_view(self.complete_data_list[double_index])
+            self.open_new_todo_view(input_data=self.complete_data_list[double_index])
     '''
     ↑                                                                                 ↑
     ********************************** 点击事件 ****************************************
@@ -152,57 +151,40 @@ class TodoBody(object):
     def open_new_todo_view(self, input_data=None, todo_type=None):
         # 限制数量
         if len(self.proceed_data_list) >= self.Max_Todo_Count or len(self.complete_data_list) >= self.Max_Todo_Count:
-            message_box_util.box_information(self.main_object, "提示", "待办事项数量已达到上限！")
+            dialog_module.box_information(self.main_object, "提示", "待办事项数量已达到上限！")
             return
-        self.main_object.new_todo_win = NewTodoWindow(None, self.main_object, self.todo_type_list, input_data, todo_type)
-        self.main_object.new_todo_win.refresh_geometry(self.main_object.toolkit.resolution_util.get_screen(self.main_object))
-        self.main_object.new_todo_win.push_button_ok.clicked.connect(self.open_success_click)
-        self.main_object.new_todo_win.show()
+        # 切换到编辑视图
+        self.todo_card.stacked_widget.setCurrentIndex(2)
+        # 确保编辑视图的主题是最新的
+        self.todo_card.todo_edit_widget.refresh_theme()
+        self.todo_card.todo_edit_widget.set_data(input_data, todo_type)
+        # 连接编辑完成信号
+        try:
+            self.todo_card.todo_edit_widget.edit_finished.disconnect()
+        except:
+            pass
+        self.todo_card.todo_edit_widget.edit_finished.connect(self.open_success_click)
+        # 连接编辑取消信号
+        try:
+            self.todo_card.todo_edit_widget.edit_cancelled.disconnect()
+        except:
+            pass
+        self.todo_card.todo_edit_widget.edit_cancelled.connect(lambda: self.todo_card.stacked_widget.setCurrentIndex(1))
     
-    def open_success_click(self):
-        new_todo_win = self.main_object.new_todo_win
-        # 限制标题不能为空
-        if new_todo_win.line_edit_title.text() == "":
-            message_box_util.box_information(self.main_object, "提示", "待办事项标题不能为空！")
-            return
-        # 限制标题字数
-        if len(new_todo_win.line_edit_title.text()) > self.Max_Todo_Title_Count:
-            message_box_util.box_information(self.main_object, "提示", f"待办事项标题字数不能超过{self.Max_Todo_Title_Count}字！")
-            return
-        # 限制详情字数
-        if len(new_todo_win.text_edit_des.toPlainText()) > self.Max_Todo_Des_Count:
-            message_box_util.box_information(self.main_object, "提示", f"待办事项详情字数不能超过{self.Max_Todo_Des_Count}字！")
-            return
-        # 获取信息
-        new_todo_win.input_data[1] = new_todo_win.line_edit_title.text()
-        new_todo_win.input_data[3] = "First"
-        # if not new_todo_win.label_importance_exigency.isHidden():
-        #     new_todo_win.input_data[3] = "First"
-        # elif not new_todo_win.label_no_importance_exigency.isHidden():
-        #     new_todo_win.input_data[3] = "Second"
-        # elif not new_todo_win.label_importance_no_exigency.isHidden():
-        #     new_todo_win.input_data[3] = "Third"
-        if new_todo_win.check_box.isChecked():
-            new_todo_win.input_data[4] = True
-            new_todo_win.input_data[5] = new_todo_win.push_button_date.text() + " " + new_todo_win.push_button_time.text()
-        else:
-            new_todo_win.input_data[4] = False
-            new_todo_win.input_data[5] = ""
-        new_todo_win.input_data[6] = new_todo_win.text_edit_des.toPlainText()
-        new_todo_win.input_data[7] = new_todo_win.combo_box.currentText()
-        new_todo_win.input_data[8] = time_util.get_datetime_str()
-        new_todo_win.input_data[9] = "--"
-        input_data = new_todo_win.input_data
-        new_todo_win.close()
-        if new_todo_win.input_data[0] is None or new_todo_win.input_data[0] == "":
+    def open_success_click(self, input_data):
+        # 这里不再需要从窗口获取数据，直接使用传入的input_data
+        if input_data[0] is None or input_data[0] == "":
             # 限制数量
             if len(self.proceed_data_list) >= self.Max_Todo_Count or len(self.complete_data_list) >= self.Max_Todo_Count:
-                message_box_util.box_information(self.main_object, "提示", "待办事项数量已达到上限！")
+                dialog_module.box_information(self.main_object, "提示", "待办事项数量已达到上限！")
                 return
-            new_todo_win.input_data[0] = str(uuid.uuid4())
+            input_data[0] = str(uuid.uuid4())
             self.todo_add(input_data)
         else:
             self.todo_edit(input_data)
+
+        # 切换回待办列表视图
+        self.todo_card.stacked_widget.setCurrentIndex(1)
         self.todo_card.data_process_call_back(self.proceed_data_list, self.complete_data_list, self.todo_type)
 
     def todo_add(self, input_data):

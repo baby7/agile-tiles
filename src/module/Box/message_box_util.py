@@ -1,4 +1,4 @@
-from PySide6.QtCore import QSettings, QTimer
+from PySide6.QtCore import QSettings, QTimer, Qt
 from PySide6.QtWidgets import QLineEdit, QPushButton, QWidget, QHBoxLayout, QLabel, QVBoxLayout, QDialog, QProgressBar
 import src.ui.style_util as style_util
 

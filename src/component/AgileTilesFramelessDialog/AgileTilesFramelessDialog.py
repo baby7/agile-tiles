@@ -58,6 +58,9 @@ class AgileTilesFramelessDialog(AcrylicDialog):
                 border: none;
                 background-color: rgba(34, 34, 34, 255);
                 color: rgba(255, 255, 255, 200);
+            }
+            QLabel {
+                background-color: transparent;
             }""")
         else:
             self.widget_base.setStyleSheet("""
@@ -66,6 +69,9 @@ class AgileTilesFramelessDialog(AcrylicDialog):
                 border: none;
                 background-color: rgba(255, 255, 255, 160);
                 color: #000000;
+            }
+            QLabel {
+                background-color: transparent;
             }""")
         self.base_layout.addWidget(self.widget_base)
         print("初始化布局完成")

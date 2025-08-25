@@ -7,6 +7,7 @@ from PySide6.QtGui import QIcon, QFont, QCursor
 from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QScrollArea, QFrame
 
 from src.card.component.ThemeSwitchButton.ThemeSwitchButton import ThemeSwitchButton
+from src.card.main_card.FileSearchCard.FileSearchCard import FileSearchCard
 from src.card.main_card.SettingCard.setting.card_permutation import CardPermutationWindow
 from src.card.main_card.ToolCard.ToolCard import ToolCard
 from src.card.main_card.TodoCard.TodoCard import TodoCard
@@ -84,6 +85,7 @@ class MainCardManager(QObject):
                 self.main_object.top_area,
                 self.main_object.translate_area,
                 self.main_object.chat_area,
+                self.main_object.search_area,
                 self.main_object.todo_area,
                 self.main_object.book_area,
                 self.main_object.music_area,
@@ -153,6 +155,7 @@ class MainCardManager(QObject):
             "trending": [self.main_object.push_button_weibo_info, "Energy/fire", self.main_object.top_area, "热搜"],
             "translate": [self.main_object.push_button_translate, "Base/translate", self.main_object.translate_area, "翻译"],
             "chat": [self.main_object.push_button_chat, "Abstract/smart-optimization", self.main_object.chat_area, "智能助手"],
+            "search": [self.main_object.push_button_search, "Base/search", self.main_object.search_area, "本地搜索"],
             "todo": [self.main_object.push_button_todo, "Edit/plan", self.main_object.todo_area, "待办事项"],
             "book": [self.main_object.push_button_book, "Office/book-one", self.main_object.book_area, "阅读"],
             "music": [self.main_object.push_button_music, "Music/music-one", self.main_object.music_area, "音乐"],
@@ -176,6 +179,7 @@ class MainCardManager(QObject):
             self.main_object.top_area = QScrollArea(self.main_object.widget_base)
             self.main_object.translate_area = QScrollArea(self.main_object.widget_base)
             self.main_object.chat_area = QScrollArea(self.main_object.widget_base)
+            self.main_object.search_area = QScrollArea(self.main_object.widget_base)
             self.main_object.todo_area = QScrollArea(self.main_object.widget_base)
             self.main_object.book_area = QScrollArea(self.main_object.widget_base)
             self.main_object.music_area = QScrollArea(self.main_object.widget_base)
@@ -187,6 +191,7 @@ class MainCardManager(QObject):
                 self.main_object.top_area,
                 self.main_object.translate_area,
                 self.main_object.chat_area,
+                self.main_object.search_area,
                 self.main_object.todo_area,
                 self.main_object.book_area,
                 self.main_object.music_area,
@@ -217,6 +222,7 @@ class MainCardManager(QObject):
             self.main_object.top_area,
             self.main_object.translate_area,
             self.main_object.chat_area,
+            self.main_object.search_area,
             self.main_object.todo_area,
             self.main_object.book_area,
             self.main_object.music_area,
@@ -240,6 +246,7 @@ class MainCardManager(QObject):
         self.main_object.push_button_weibo_info.clicked.connect(self.push_button_weibo_click)
         self.main_object.push_button_translate.clicked.connect(self.push_button_translate_click)
         self.main_object.push_button_chat.clicked.connect(self.push_button_chat_click)
+        self.main_object.push_button_search.clicked.connect(self.push_button_search_click)
         self.main_object.push_button_todo.clicked.connect(self.push_button_todo_click)
         self.main_object.push_button_book.clicked.connect(self.push_button_book_click)
         self.main_object.push_button_music.clicked.connect(self.push_button_music_click)
@@ -322,6 +329,12 @@ class MainCardManager(QObject):
             elif card_data["name"] == "ChatCard":
                 card_area = self.main_object.chat_area
                 card = ChatCard(main_object=self.main_object, parent=self.main_object, theme=theme, card=card_area,
+                                cache=in_card_cache, data=in_card_data,
+                                toolkit=self.main_object.toolkit, logger=self.main_object.info_logger,
+                                save_data_func=self.save_card_data_func)
+            elif card_data["name"] == "FileSearchCard":
+                card_area = self.main_object.search_area
+                card = FileSearchCard(main_object=self.main_object, parent=self.main_object, theme=theme, card=card_area,
                                 cache=in_card_cache, data=in_card_data,
                                 toolkit=self.main_object.toolkit, logger=self.main_object.info_logger,
                                 save_data_func=self.save_card_data_func)
@@ -469,7 +482,7 @@ class MainCardManager(QObject):
             self.show_change()
         except Exception as e:
             self.main_object.info_logger.card_error("主程序", "切换热搜失败,错误信息:{}".format(e))
-            self.main_object.toolkit.message_box_util.box_information(self.main_object, "错误信息", "切换热搜失败,请稍后重试")
+            self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换热搜失败,请稍后重试")
 
     def push_button_looking_click(self):
         print("点击Looking按钮")
@@ -479,7 +492,7 @@ class MainCardManager(QObject):
             self.show_change()
         except Exception as e:
             self.main_object.info_logger.card_error("主程序", "切换Looking失败,错误信息:{}".format(e))
-            self.main_object.toolkit.message_box_util.box_information(self.main_object, "错误信息", "切换Looking失败,请稍后重试")
+            self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换Looking失败,请稍后重试")
 
     def push_button_tool_click(self):
         print("点击Tool按钮")
@@ -489,7 +502,7 @@ class MainCardManager(QObject):
             self.show_change()
         except Exception as e:
             self.main_object.info_logger.card_error("主程序", "切换工具失败,错误信息:{}".format(e))
-            self.main_object.toolkit.message_box_util.box_information(self.main_object, "错误信息", "切换工具失败,请稍后重试")
+            self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换工具失败,请稍后重试")
 
     def push_button_todo_click(self):
         print("点击Todo按钮")
@@ -499,7 +512,7 @@ class MainCardManager(QObject):
             self.show_change()
         except Exception as e:
             self.main_object.info_logger.card_error("主程序", "切换待办事项失败,错误信息:{}".format(e))
-            self.main_object.toolkit.message_box_util.box_information(self.main_object, "错误信息", "切换待办事项失败,请稍后重试")
+            self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换待办事项失败,请稍后重试")
 
     def push_button_book_click(self):
         print("点击Book按钮")
@@ -509,7 +522,7 @@ class MainCardManager(QObject):
             self.show_change()
         except Exception as e:
             self.main_object.info_logger.card_error("主程序", "切换小说失败,错误信息:{}".format(e))
-            self.main_object.toolkit.message_box_util.box_information(self.main_object, "错误信息", "切换小说失败,请稍后重试")
+            self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换小说失败,请稍后重试")
             
     def push_button_music_click(self):
         print("点击Music按钮")
@@ -519,7 +532,7 @@ class MainCardManager(QObject):
             self.show_change()
         except Exception as e:
             self.main_object.info_logger.card_error("主程序", "切换音乐失败,错误信息:{}".format(e))
-            self.main_object.toolkit.message_box_util.box_information(self.main_object, "错误信息", "切换音乐失败,请稍后重试")
+            self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换音乐失败,请稍后重试")
 
     def push_button_translate_click(self):
         print("点击Translate按钮")
@@ -529,7 +542,7 @@ class MainCardManager(QObject):
             self.show_change()
         except Exception as e:
             self.main_object.info_logger.card_error("主程序", "切换翻译失败,错误信息:{}".format(e))
-            self.main_object.toolkit.message_box_util.box_information(self.main_object, "错误信息", "切换翻译失败,请稍后重试")
+            self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换翻译失败,请稍后重试")
 
     def push_button_game_click(self):
         print("点击Game按钮")
@@ -539,7 +552,7 @@ class MainCardManager(QObject):
             self.show_change()
         except Exception as e:
             self.main_object.info_logger.card_error("主程序", "切换游戏失败,错误信息:{}".format(e))
-            self.main_object.toolkit.message_box_util.box_information(self.main_object, "错误信息", "切换游戏失败,请稍后重试")
+            self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换游戏失败,请稍后重试")
 
     def push_button_user_click(self):
         print("点击User按钮")
@@ -551,7 +564,7 @@ class MainCardManager(QObject):
             self.show_change()
         except Exception as e:
             self.main_object.info_logger.card_error("主程序", "切换用户失败,错误信息:{}".format(e))
-            self.main_object.toolkit.message_box_util.box_information(self.main_object, "错误信息", "切换用户失败,请稍后重试")
+            self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换用户失败,请稍后重试")
 
     def push_button_chat_click(self):
         print("点击Chat按钮")
@@ -561,7 +574,17 @@ class MainCardManager(QObject):
             self.show_change()
         except Exception as e:
             self.main_object.info_logger.card_error("主程序", "切换聊天失败,错误信息:{}".format(e))
-            self.main_object.toolkit.message_box_util.box_information(self.main_object, "错误信息", "切换聊天失败,请稍后重试")
+            self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换聊天失败,请稍后重试")
+
+    def push_button_search_click(self):
+        print("点击Search按钮")
+        try:
+            self.main_object.info_logger.card_info("主程序", "切换搜索完成")
+            self.see_card = "search"
+            self.show_change()
+        except Exception as e:
+            self.main_object.info_logger.card_error("主程序", "切换搜索失败,错误信息:{}".format(e))
+            self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换搜索失败,请稍后重试")
 
     def push_button_setting_click(self):
         print("点击Setting按钮")
@@ -571,7 +594,7 @@ class MainCardManager(QObject):
             self.show_change()
         except Exception as e:
             self.main_object.info_logger.card_error("主程序", "切换设置失败,错误信息:{}".format(e))
-            self.main_object.toolkit.message_box_util.box_information(self.main_object, "错误信息", "切换设置失败,请稍后重试")
+            self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换设置失败,请稍后重试")
 
     def init_geometry_data(self, card_data):
         card_map = None
@@ -645,13 +668,13 @@ class MainCardManager(QObject):
         self.main_object.layout_header.addWidget(self.main_object.push_button_header_title)
         self.main_object.layout_header.addStretch()
         # 右侧第一个是退出按钮
-        self.main_object.push_button_header_exit = QPushButton()
-        self.main_object.push_button_header_exit.setObjectName(u"push_button_header_exit")
-        self.main_object.push_button_header_exit.setText("")
-        self.main_object.push_button_header_exit.setMinimumHeight(26)
-        self.main_object.push_button_header_exit.setMinimumWidth(26)
-        self.main_object.push_button_header_exit.setIconSize(QSize(22, 22))
-        self.main_object.push_button_header_exit.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
+        # self.main_object.push_button_header_exit = QPushButton()
+        # self.main_object.push_button_header_exit.setObjectName(u"push_button_header_exit")
+        # self.main_object.push_button_header_exit.setText("")
+        # self.main_object.push_button_header_exit.setMinimumHeight(26)
+        # self.main_object.push_button_header_exit.setMinimumWidth(26)
+        # self.main_object.push_button_header_exit.setIconSize(QSize(22, 22))
+        # self.main_object.push_button_header_exit.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
         # 右侧第二个是截屏按钮
         # self.main_object.push_button_screenshot = QPushButton()
         # self.main_object.push_button_screenshot.setObjectName(u"push_button_screenshot")
@@ -660,7 +683,23 @@ class MainCardManager(QObject):
         # self.main_object.push_button_screenshot.setMinimumWidth(26)
         # self.main_object.push_button_screenshot.setIconSize(QSize(22, 22))
         # self.main_object.push_button_screenshot.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
-        # 右侧第三个是卡片设计按钮
+        # 右侧第三个是钉住按钮
+        self.main_object.push_button_pin = QPushButton()
+        self.main_object.push_button_pin.setObjectName(u"push_button_pin")
+        self.main_object.push_button_pin.setText("")
+        self.main_object.push_button_pin.setMinimumHeight(26)
+        self.main_object.push_button_pin.setMinimumWidth(26)
+        self.main_object.push_button_pin.setIconSize(QSize(22, 22))
+        self.main_object.push_button_pin.setCursor(QCursor(Qt.PointingHandCursor))              # 鼠标手形
+        # 右侧第四个是截图按钮
+        self.main_object.push_button_screenshot = QPushButton()
+        self.main_object.push_button_screenshot.setObjectName(u"push_button_screenshot")
+        self.main_object.push_button_screenshot.setText("")
+        self.main_object.push_button_screenshot.setMinimumHeight(26)
+        self.main_object.push_button_screenshot.setMinimumWidth(26)
+        self.main_object.push_button_screenshot.setIconSize(QSize(22, 22))
+        self.main_object.push_button_screenshot.setCursor(QCursor(Qt.PointingHandCursor))              # 鼠标手形
+        # 右侧第五个是卡片设计按钮
         self.main_object.push_button_card_design = QPushButton()
         self.main_object.push_button_card_design.setObjectName(u"push_button_card_design")
         self.main_object.push_button_card_design.setText("")
@@ -677,20 +716,53 @@ class MainCardManager(QObject):
         self.main_object.push_button_hide_window.setIconSize(QSize(22, 22))
         self.main_object.push_button_hide_window.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
         # 添加到布局
-        self.main_object.layout_header.addWidget(self.main_object.push_button_header_exit)
+        # self.main_object.layout_header.addWidget(self.main_object.push_button_header_exit)
         # self.main_object.layout_header.addWidget(self.main_object.push_button_screenshot)
+        self.main_object.layout_header.addWidget(self.main_object.push_button_pin)
+        self.main_object.layout_header.addWidget(self.main_object.push_button_screenshot)
         self.main_object.layout_header.addWidget(self.main_object.push_button_card_design)
         self.main_object.layout_header.addWidget(self.main_object.push_button_hide_window)
         # 设置按钮样式
         self.set_header_button_theme()
         # 点击事件
         self.main_object.push_button_header_title.clicked.connect(partial(self.click_header_title_button))
-        self.main_object.push_button_header_exit.clicked.connect(partial(self.main_object.quit_before,  False))
+        # self.main_object.push_button_header_exit.clicked.connect(partial(self.main_object.quit_before,  False))
         # self.main_object.push_button_screenshot.clicked.connect(
         #     partial(self.main_object.toolkit.image_util.screenshot, self.main_object))
+        self.main_object.push_button_pin.clicked.connect(partial(self.push_button_pin_click))
+        self.main_object.push_button_screenshot.clicked.connect(partial(self.push_button_screenshot_click))
         self.main_object.push_button_card_design.clicked.connect(partial(self.push_button_setting_card_permutation_click))
-        self.main_object.push_button_hide_window.clicked.connect(
-            partial(self.main_object.toolkit.resolution_util.out_animation, self.main_object))
+        self.main_object.push_button_hide_window.clicked.connect(partial(self.push_button_hide_window_click))
+
+    # 设置
+    def push_button_screenshot_click(self):
+        self.main_object.on_screenshot_hotkey_triggered()
+
+    # 设置钉住
+    def push_button_pin_click(self):
+        if self.main_object.pin_form:
+            self.main_object.pin_form = False
+        else:
+            self.main_object.pin_form = True
+        card_pin_icon = QIcon()
+        card_pin_icon_path = "Edit/pin"
+        if self.main_object.is_dark:
+            if self.main_object.pin_form:
+                card_pin_icon.addFile(u"static/img/IconPark/blue/" + card_pin_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+            else:
+                card_pin_icon.addFile(u"static/img/IconPark/light/" + card_pin_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        else:
+            if self.main_object.pin_form:
+                card_pin_icon.addFile(u"static/img/IconPark/blue/" + card_pin_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+            else:
+                card_pin_icon.addFile(u"static/img/IconPark/dark/" + card_pin_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.main_object.push_button_pin.setIcon(card_pin_icon)
+
+    # 退出
+    def push_button_hide_window_click(self):
+        if self.main_object.pin_form:
+            self.push_button_pin_click()
+        self.main_object.toolkit.resolution_util.out_animation(self.main_object)
 
     # 设置卡片排列
     def push_button_setting_card_permutation_click(self):
@@ -754,7 +826,7 @@ class MainCardManager(QObject):
         font.setKerning(True)
         button_names = [
             'user', 'setting',
-            'weibo_info', 'translate', 'chat', 'todo', 'book', 'music', 'looking', 'tool', 'game'
+            'weibo_info', 'translate', 'chat', 'search', 'todo', 'book', 'music', 'looking', 'tool', 'game'
         ]
         for name in button_names:
             # 创建按钮
@@ -829,44 +901,64 @@ class MainCardManager(QObject):
         self.main_object.widget_header.resize(QSize(self.main_object.width(), self.HEADER_VIEW_HEIGHT))
         # 标题栏图标
         header_title_icon = QIcon()
-        header_exit_icon = QIcon()
+        # header_exit_icon = QIcon()
         # screenshot_icon = QIcon()
+        card_pin_icon = QIcon()
         card_design_icon = QIcon()
+        card_screenshot_icon = QIcon()
         hide_window_icon = QIcon()
-        header_exit_icon_path = "Base/power"
+        # header_exit_icon_path = "Base/power"
         # screenshot_icon_path = "Edit/screenshot"
+        card_pin_icon_path = "Edit/pin"
+        card_screenshot_icon_path = "Edit/screenshot"
         card_design_icon_path = "Base/waterfalls-h"
         if self.main_object.form_locate == card_constant.MENU_POSITION_RIGHT:
             hide_window_icon_path = "Arrows/to-right"
         else:
             hide_window_icon_path = "Arrows/to-left"
         if self.main_object.is_dark:
-            header_exit_icon.addFile(u"static/img/IconPark/light/" + header_exit_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+            # header_exit_icon.addFile(u"static/img/IconPark/light/" + header_exit_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
             # screenshot_icon.addFile(u"static/img/IconPark/light/" + screenshot_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+            card_screenshot_icon.addFile(u"static/img/IconPark/light/" + card_screenshot_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
             card_design_icon.addFile(u"static/img/IconPark/light/" + card_design_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
             hide_window_icon.addFile(u"static/img/IconPark/light/" + hide_window_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+            if self.main_object.pin_form:
+                card_pin_icon.addFile(u"static/img/IconPark/green/" + card_pin_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+            else:
+                card_pin_icon.addFile(u"static/img/IconPark/light/" + card_pin_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         else:
-            header_exit_icon.addFile(u"static/img/IconPark/dark/" + header_exit_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+            # header_exit_icon.addFile(u"static/img/IconPark/dark/" + header_exit_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
             # screenshot_icon.addFile(u"static/img/IconPark/dark/" + screenshot_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+            card_screenshot_icon.addFile(u"static/img/IconPark/dark/" + card_screenshot_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
             card_design_icon.addFile(u"static/img/IconPark/dark/" + card_design_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
             hide_window_icon.addFile(u"static/img/IconPark/dark/" + hide_window_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+            if self.main_object.pin_form:
+                card_pin_icon.addFile(u"static/img/IconPark/green/" + card_pin_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+            else:
+                card_pin_icon.addFile(u"static/img/IconPark/dark/" + card_pin_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         header_title_icon.addFile("./static/img/icon/icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.main_object.push_button_header_title.setIcon(header_title_icon)
-        self.main_object.push_button_header_exit.setIcon(header_exit_icon)
+        # self.main_object.push_button_header_exit.setIcon(header_exit_icon)
         # self.main_object.push_button_screenshot.setIcon(screenshot_icon)
+        self.main_object.push_button_pin.setIcon(card_pin_icon)
+        self.main_object.push_button_screenshot.setIcon(card_screenshot_icon)
         self.main_object.push_button_card_design.setIcon(card_design_icon)
         self.main_object.push_button_hide_window.setIcon(hide_window_icon)
         if self.main_object.is_dark:
             self.main_object.push_button_header_title.setStyleSheet(self.main_object.toolkit.style_util.header_button_dark_style)
-            self.main_object.push_button_header_exit.setStyleSheet(self.main_object.toolkit.style_util.header_button_dark_style)
+            # self.main_object.push_button_header_exit.setStyleSheet(self.main_object.toolkit.style_util.header_button_dark_style)
             # self.main_object.push_button_screenshot.setStyleSheet(self.main_object.toolkit.style_util.header_button_dark_style)
+            self.main_object.push_button_pin.setStyleSheet(self.main_object.toolkit.style_util.header_button_dark_style)
+            self.main_object.push_button_screenshot.setStyleSheet(self.main_object.toolkit.style_util.header_button_dark_style)
             self.main_object.push_button_card_design.setStyleSheet(self.main_object.toolkit.style_util.header_button_dark_style)
             self.main_object.push_button_hide_window.setStyleSheet(self.main_object.toolkit.style_util.header_button_dark_style)
             style_util.set_card_shadow_effect(self.main_object.push_button_hide_window)  # 添加外部阴影效果
         else:
             self.main_object.push_button_header_title.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
-            self.main_object.push_button_header_exit.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
+            # self.main_object.push_button_header_exit.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
             # self.main_object.push_button_screenshot.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
+            self.main_object.push_button_pin.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
+            self.main_object.push_button_screenshot.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
             self.main_object.push_button_card_design.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
             self.main_object.push_button_hide_window.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
             style_util.remove_card_shadow_effect(self.main_object.push_button_hide_window)  # 移除外部阴影效果
@@ -943,11 +1035,11 @@ class MainCardManager(QObject):
             if not is_hide:
                 main_card.card.show()
 
-    def on_translate_hotkey_triggered(self):
+    def on_translate(self, pixmap):
         """
         ocr翻译
         """
         for card in self.main_object.main_card_list:
-            if hasattr(card, 'start_screenshot'):
-                card.start_screenshot()
+            if hasattr(card, 'screenshot_captured'):
                 self.push_button_translate_click()
+                card.screenshot_captured(pixmap)

@@ -226,7 +226,7 @@ class CategoryListWidget(QListWidget):
                     border-style: solid;
                     border-radius: 10px;
                     border: 1px solid white;
-                    background-color:rgba(255, 255, 255, 200);
+                    background-color:rgba(240, 242, 244, 200);
                 }""")
                 push_button_detail.setStyleSheet("""
                 QPushButton {

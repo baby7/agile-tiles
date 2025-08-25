@@ -78,7 +78,6 @@ class CardDesignItem(QGraphicsRectItem, QObject):
     def load_image(self, response):
         """加载图片"""
         image_url = response["darkUrl" if self.is_dark else "lightUrl"]
-        print("加载图片:", image_url)
         pixmap = self.use_parent.image_cache_manager.get_pixmap_by_url(image_url)
         if pixmap is not None:
             self.label.setPixmap(pixmap)

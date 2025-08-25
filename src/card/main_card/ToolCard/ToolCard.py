@@ -1,10 +1,17 @@
+from PySide6.QtWidgets import QVBoxLayout
+
 from src.card.component.AggregationCard.AggregationCard import AggregationCard
 from src.card.main_card.ToolCard.bmi_calculator import bmi_calculator_util
+from src.card.main_card.ToolCard.bmi_calculator.bmi_calculator_util import BMICalculatorPopup
 from src.card.main_card.ToolCard.hold_grudges_gen import hold_grudges_gen_util
+from src.card.main_card.ToolCard.hold_grudges_gen.hold_grudges_gen_util import HoldGrudgesGenPopup
 from src.card.main_card.ToolCard.housing_loan_rates import housing_loan_rates_util
+from src.card.main_card.ToolCard.json_formatter import json_formatter_util
 from src.card.main_card.ToolCard.notebook_battery_graph import notebook_battery_graph_util
+from src.card.main_card.ToolCard.progress_bar_generator import progress_bar_generator_util
 from src.card.main_card.ToolCard.relationship_calculator import relationship_calculator_util
 from src.card.main_card.ToolCard.salary_calculator import salary_calculator_util
+from src.card.main_card.ToolCard.time_calculator.time_calculator_util import TimeCalculatorApp
 
 
 class ToolCard(AggregationCard):
@@ -61,7 +68,7 @@ class ToolCard(AggregationCard):
                 "icon": "Emoji/angry-face.svg",
                 "content": None,
                 "link": None,
-                "call_back_func": self.hold_grudges_gen
+                "call_back_func": lambda : self.hold_grudges_gen("记仇生成器")
             },
             {
                 "category": self.module_category_browser,
@@ -103,11 +110,21 @@ class ToolCard(AggregationCard):
             {
                 "category": self.module_category_browser,
                 "type": "工具",
+                "title": "视频进度条生成器",
+                "des": "为视频底部增加进度条",
+                "icon": "Music/playback-progress.svg",
+                "content": None,
+                "link": None,
+                "call_back_func": self.progress_bar_generator
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "工具",
                 "title": "笔记本电池健康曲线",
                 "des": "查看你的电池健康报告",
                 "icon": "Hardware/battery-storage.svg",
                 "content": None,
-                "link": "https://github.com/baiy/ctool",
+                "link": None,
                 "call_back_func": self.notebook_battery_graph
             },
             {
@@ -128,9 +145,29 @@ class ToolCard(AggregationCard):
                 "icon": "Sports/muscle.svg",
                 "content": None,
                 "link": None,
-                "call_back_func": self.bmi_calculator
+                "call_back_func": lambda : self.bmi_calculator("BMI计算器")
             },
             # 程序员
+            {
+                "category": self.module_category_browser,
+                "type": "程序员",
+                "title": "Json格式化工具",
+                "des": "经典Json格式化工具",
+                "icon": "Edit/code-brackets.svg",
+                "content": None,
+                "link": None,
+                "call_back_func": self.json_formatter
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "程序员",
+                "title": "时间计算器",
+                "des": "时间、时区、时间戳的计算器",
+                "icon": "Time/stopwatch-start.svg",
+                "content": None,
+                "link": None,
+                "call_back_func": lambda : self.time_calculator("时间计算器")
+            },
             {
                 "category": self.module_category_browser,
                 "type": "程序员",
@@ -157,19 +194,19 @@ class ToolCard(AggregationCard):
                 "link": "https://github.com/jaywcjlove/reference",
                 "call_back_func": None
             },
-            {
-                "category": self.module_category_browser,
-                "type": "程序员",
-                "title": "Hoppscotch",
-                "des": "API调试工具",
-                "icon": "png:Actor/Hoppscotch.png",
-                "content":{
-                    "url": "https://hoppscotch.io/",
-                    "size": [1200, 950]
-                },
-                "link": "https://github.com/hoppscotch/hoppscotch",
-                "call_back_func": None
-            },
+            # {
+            #     "category": self.module_category_browser,
+            #     "type": "程序员",
+            #     "title": "Hoppscotch",
+            #     "des": "API调试工具",
+            #     "icon": "png:Actor/Hoppscotch.png",
+            #     "content":{
+            #         "url": "https://hoppscotch.io/",
+            #         "size": [1200, 950]
+            #     },
+            #     "link": "https://github.com/hoppscotch/hoppscotch",
+            #     "call_back_func": None
+            # },
             # 作图
             {
                 "category": self.module_category_browser,
@@ -243,25 +280,59 @@ class ToolCard(AggregationCard):
         self.toolkit.resolution_util.out_animation(self.main_object)
         salary_calculator_util.show_salary_calculator_dialog(self.main_object, "这班上得值不值·测算版", None)
 
-    def hold_grudges_gen(self):
-        self.toolkit.resolution_util.out_animation(self.main_object)
-        hold_grudges_gen_util.show_hold_grudges_gen_dialog(self.main_object, "记仇生成器", None)
+    def hold_grudges_gen(self, title):
+        # 清理展示面板
+        self.clear_show_panel()
+        self.util_app = HoldGrudgesGenPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
+        self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def relationship_calculator(self):
         self.toolkit.resolution_util.out_animation(self.main_object)
         relationship_calculator_util.show_relationship_calculator_dialog(self.main_object, "中国家庭称谓计算器", None)
 
+    def progress_bar_generator(self):
+        self.toolkit.resolution_util.out_animation(self.main_object)
+        progress_bar_generator_util.show_progress_bar_generator_dialog(self.main_object, "视频进度条生成器", None)
+
     def notebook_battery_graph(self):
         self.toolkit.resolution_util.out_animation(self.main_object)
         notebook_battery_graph_util.show_notebook_battery_graph_dialog(self.main_object, "笔记本电池健康报告", None)
 
-    def bmi_calculator(self):
+    def bmi_calculator(self, title):
+        # 清理展示面板
+        self.clear_show_panel()
+        self.util_app = BMICalculatorPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
+        self.show_util_in_show_panel(title=title, util_app=self.util_app)
+
+    def json_formatter(self):
         self.toolkit.resolution_util.out_animation(self.main_object)
-        bmi_calculator_util.show_bmi_calculator_dialog(self.main_object, "BMI计算器", None)
+        json_formatter_util.show_json_formatter_dialog(self.main_object, "Json格式化工具", None)
+
+    def time_calculator(self, title):
+        # 清理展示面板
+        self.clear_show_panel()
+        self.util_app = TimeCalculatorApp(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
+        self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def housing_loan_rates(self):
         self.toolkit.resolution_util.out_animation(self.main_object)
         housing_loan_rates_util.show_housing_loan_rates_dialog(self.main_object, "中国房贷计算器", None)
+
+    def show_util_in_show_panel(self, title, util_app):
+        # 设置标题
+        self.show_panel_label_title.setText(title)
+        # 设置右上角按钮内容
+        self.show_panel_hide_button.hide()
+        # 设置右上角2按钮内容
+        self.show_panel_hide_button_2.hide()
+        # 面板增加布局
+        layout = QVBoxLayout(self.show_panel_content_panel)
+        layout.setSpacing(0)
+        layout.setContentsMargins(0, 0, 0, 0)
+        # 加入工具
+        layout.addWidget(util_app)
+        # 切换到展示面板
+        self.stacked_widget.setCurrentIndex(1)
 
     def refresh_data(self, date_time_str):
         super().refresh_data(date_time_str)
@@ -269,3 +340,8 @@ class ToolCard(AggregationCard):
     def refresh_ui(self, date_time_str):
         super().refresh_ui(date_time_str)
         super().refresh_ui_end(date_time_str)
+
+    def refresh_theme(self):
+        super().refresh_theme()
+        if self.util_app is not None:
+            self.util_app.refresh_theme(self.main_object)

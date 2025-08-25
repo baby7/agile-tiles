@@ -8,10 +8,13 @@ setting_config = {
     "themeTransparency": 100,           # 窗口透明度
 
     "wakeUpByKeyboard": True,           # 是否启用快捷唤醒
-    "wakeUpByKeyboardType": "Ctrl+1",    # 唤醒快捷键
+    "wakeUpByKeyboardType": "Alt+1",    # 唤醒快捷键
 
-    "translateByKeyboard": True,           # 是否启用截图翻译
-    "translateByKeyboardType": "Ctrl+2",    # 截图翻译快捷键
+    "screenshotByKeyboard": True,        # 是否启用截图翻译
+    "screenshotByKeyboardType": "Alt+2", # 截图翻译快捷键
+
+    "searchByKeyboard": True,           # 是否启用截图翻译
+    "searchByKeyboardType": "Alt+3",    # 截图翻译快捷键
 
     "screenName": None,                 # 屏幕名称
     "windowPosition": "Left",           # 窗口位置
@@ -190,7 +193,7 @@ DEFAULT_MINI_DATA_MODEL = {
     "bigCard": [],
     "data": {}
 }
-big_card_name_list = ["GameCard", "BookCard", "ToolCard", "TodoCard", "ChatCard", "MusicCard", "SettingCard",
+big_card_name_list = ["GameCard", "BookCard", "ToolCard", "TodoCard", "ChatCard", "FileSearchCard", "MusicCard", "SettingCard",
                       "TopSearchCard", "InformationCard", "TranslateCard"]
 
 def get_data(hardware_id):

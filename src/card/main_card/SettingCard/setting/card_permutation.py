@@ -1,5 +1,5 @@
 # coding:utf-8
-
+from PySide6 import QtGui
 from PySide6.QtGui import QIcon
 from PySide6.QtCore import Qt, Signal, QDateTime
 
@@ -75,6 +75,12 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
             self.widget_left.setStyleSheet(button_bg_style)
             self.widget_middle.setStyleSheet(button_bg_style)
             self.widget_right.setStyleSheet(button_bg_style)
+        # 按钮图标初始化
+        self.add_btn.setIcon(self.get_icon("Build/application"))
+        self.delete_btn.setIcon(self.get_icon("Edit/delete"))
+        self.push_button_add_box_width.setIcon(self.get_icon("Edit/fullwidth"))
+        self.push_button_reduce_box_width.setIcon(self.get_icon("Edit/link-in"))
+        self.push_button_ok.setIcon(self.get_icon("Character/check"))
         # 布局初始化
         self.widget_base.setLayout(self.gridLayout_2)
         self.gridLayout_2.setContentsMargins(10, 10, 10, 10)
@@ -112,6 +118,13 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
         # 按钮防抖机制
         self.last_click_time = 0  # 上次点击时间戳
         self.click_delay = 500    # 防抖延迟(毫秒)
+
+    def get_icon(self, icon_path, custom_theme=None):
+        if custom_theme is not None:
+            theme = custom_theme
+        else:
+            theme = "light" if self.is_dark else "dark"
+        return QtGui.QIcon(f"./static/img/IconPark/{theme}/{icon_path}.png")
 
     def set_main_visible(self, visible: bool):
         """设置主界面可见性"""

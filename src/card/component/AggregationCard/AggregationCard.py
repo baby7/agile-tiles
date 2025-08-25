@@ -1,10 +1,11 @@
+from PySide6 import QtWidgets, QtCore, QtGui
 from PySide6.QtGui import QFont, QPixmap
 from PySide6.QtCore import QCoreApplication, QRect, QSize
-from PySide6.QtWidgets import QTabWidget, QWidget, QPushButton, QVBoxLayout, QLabel, QHBoxLayout
+from PySide6.QtWidgets import QTabWidget, QWidget, QPushButton, QVBoxLayout, QLabel, QHBoxLayout, QFrame
 # 获取信息
 from src.card.MainCardManager.MainCard import MainCard
+from src.module import dialog_module
 from src.ui import style_util
-from src.module.Box import message_box_util
 
 
 class AggregationCard(MainCard):
@@ -59,6 +60,8 @@ class AggregationCard(MainCard):
                  toolkit=None, logger=None, save_data_func=None):
         super().__init__(main_object=main_object, parent=parent, theme=theme, card=card, cache=cache, data=data,
                          toolkit=toolkit, logger=logger, save_data_func=save_data_func)
+        self.current_show_panel_type = None
+        self.util_app = None
 
     def clear(self):
         try:
@@ -73,6 +76,9 @@ class AggregationCard(MainCard):
         font1 = QFont()
         font1.setPointSize(10)
         font1.setBold(False)
+        # 创建堆栈窗口
+        self.stacked_widget = QtWidgets.QStackedWidget(self.card)
+        self.stacked_widget.setGeometry(QtCore.QRect(0, 0, self.card.width(), self.card.height()))
         # 下方切换
         self.aggregation_tab_widget = QTabWidget(self.card)
         self.aggregation_tab_widget.setObjectName(u"aggregation_tab_widget")
@@ -80,6 +86,115 @@ class AggregationCard(MainCard):
         self.aggregation_tab_widget.setFont(font1)
         self.aggregation_tab_widget.setTabPosition(QTabWidget.North)
         self.aggregation_tab_widget.setTabShape(QTabWidget.Rounded)
+        # 点击进入的面板
+        self.show_panel = QWidget(self.card)
+        self.show_panel.setObjectName(u"show_panel")
+        self.show_panel.setGeometry(QRect(0, 0, self.card.width(), self.card.height()))
+        self.show_panel.setStyleSheet("background: transparent; border: none;")
+        # 面板增加竖向布局
+        self.show_panel_layout = QVBoxLayout(self.show_panel)
+        self.show_panel_layout.setSpacing(10)
+        self.show_panel_layout.setContentsMargins(10, 10, 10, 10)
+        # 顶部左侧返回按钮
+        button_style = """
+        QPushButton { border-radius: 10px; background-color: transparent; border: 1px solid #888888; padding-left: 2px; padding-right: 2px;}
+        QPushButton:hover { background-color: rgba(0, 0, 0, 0.1); }
+        QPushButton:pressed { background-color: rgba(0, 0, 0, 0.2); }
+        """
+        self.show_panel_back_button = QtWidgets.QPushButton()
+        self.show_panel_back_button.setMinimumHeight(20)
+        self.show_panel_back_button.setMinimumHeight(20)
+        self.show_panel_back_button.setObjectName("show_panel_back_button")
+        self.show_panel_back_button.setText("返回")
+        self.show_panel_back_button.setStyleSheet(button_style)
+        # 顶部标题栏
+        self.show_panel_head = QWidget()
+        self.show_panel_head.setObjectName("show_panel_content_panel")
+        self.show_panel_head.setStyleSheet(f"background: transparent; border: none;")
+        self.show_panel_head.setMaximumHeight(30)
+        # 顶部标题布局
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.show_panel_label_title = QLabel()
+        self.show_panel_label_title.setText("暂无标题")
+        self.show_panel_label_title.setFont(font)
+        self.show_panel_label_title.setStyleSheet("background: transparent; border: none;")
+        # 顶部右侧隐藏按钮
+        self.show_panel_hide_button = QtWidgets.QPushButton()
+        self.show_panel_hide_button.setMinimumHeight(20)
+        self.show_panel_hide_button.setMinimumHeight(20)
+        self.show_panel_hide_button.setObjectName("show_panel_hide_button")
+        self.show_panel_hide_button.setStyleSheet(button_style)
+        # 顶部右侧隐藏按钮
+        self.show_panel_hide_button_2 = QtWidgets.QPushButton()
+        self.show_panel_hide_button_2.setMinimumHeight(20)
+        self.show_panel_hide_button_2.setMinimumHeight(20)
+        self.show_panel_hide_button_2.setObjectName("show_panel_hide_button_2")
+        self.show_panel_hide_button_2.setStyleSheet(button_style)
+        # 顶部布局
+        self.show_panel_head_layout = QHBoxLayout()
+        self.show_panel_head_layout.setSpacing(5)
+        self.show_panel_head_layout.setContentsMargins(5, 5, 5, 5)
+        self.show_panel_head_layout.addWidget(self.show_panel_back_button)
+        self.show_panel_head_layout.addStretch()
+        self.show_panel_head_layout.addWidget(self.show_panel_label_title)
+        self.show_panel_head_layout.addStretch()
+        self.show_panel_head_layout.addWidget(self.show_panel_hide_button)
+        self.show_panel_head_layout.addWidget(self.show_panel_hide_button_2)
+        self.show_panel_head.setLayout(self.show_panel_head_layout)
+        self.show_panel_layout.addWidget(self.show_panel_head)
+        # 下面增加一个内容面板
+        self.show_panel_content_panel = QWidget()
+        self.show_panel_content_panel.setObjectName("show_panel_content_panel")
+        self.show_panel_layout.addWidget(self.show_panel_content_panel, 1)
+        # 将现有的分类列表和展示面板添加到堆栈中
+        self.stacked_widget.addWidget(self.aggregation_tab_widget)      # 索引0 - 分类列表
+        self.stacked_widget.addWidget(self.show_panel)                  # 索引1 - 展示面板
+        # 默认显示分类列表
+        self.stacked_widget.setCurrentIndex(0)
+        # 事件
+        self.show_panel_back_button.clicked.connect(self.back_to_aggregation_tab)
+
+    def back_to_aggregation_tab(self):
+        # 切换到分类列表
+        self.stacked_widget.setCurrentIndex(0)
+        # 清空面板
+        self.clear_show_panel()
+
+    def clear_show_panel(self):
+        # 解绑事件
+        try:
+            self.show_panel_hide_button.clicked.disconnect()
+        except Exception as e:
+            print(e)
+        try:
+            self.show_panel_hide_button_2.clicked.disconnect()
+        except Exception as e:
+            print(e)
+        # 删除子控件
+        layout = self.show_panel_content_panel.layout()
+        if layout is not None:
+            # 递归删除所有子控件
+            self._clear_layout(layout)
+            # 删除布局本身
+            layout.deleteLater()
+            # 从widget中移除布局引用
+            self.show_panel_content_panel.setLayout(None)
+        self.util_app = None
+
+    def _clear_layout(self, layout):
+        """递归清除布局中的所有控件"""
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                # 删除控件
+                widget.deleteLater()
+            else:
+                # 如果是子布局，递归清除
+                child_layout = item.layout()
+                if child_layout is not None:
+                    self._clear_layout(child_layout)
 
     def init_tab_widget(self):
         # 初始化tab组信息
@@ -199,7 +314,7 @@ class AggregationCard(MainCard):
         except Exception as e:
             print(e)
             self.main_object.logger.card_error("聚合卡片", f"获取{str(aggregation_module)}失败,请稍后重试")
-            message_box_util.box_information(self.main_object, "错误信息", f"获取{str(aggregation_module)}失败,请稍后重试")
+            dialog_module.box_information(self.main_object, "错误信息", f"获取{str(aggregation_module)}失败,请稍后重试")
 
     def push_button_image_click(self, aggregation_module):
         try:
@@ -213,7 +328,7 @@ class AggregationCard(MainCard):
         except Exception as e:
             print(e)
             self.main_object.logger.card_error("聚合卡片", f"获取{str(aggregation_module)}失败,请稍后重试")
-            message_box_util.box_information(self.main_object, "错误信息", f"获取{str(aggregation_module)}失败,请稍后重试")
+            dialog_module.box_information(self.main_object, "错误信息", f"获取{str(aggregation_module)}失败,请稍后重试")
 
     def push_button_browser_click(self, aggregation_module):
         try:
@@ -221,7 +336,7 @@ class AggregationCard(MainCard):
         except Exception as e:
             print(e)
             self.main_object.logger.card_error("聚合卡片", f"获取{str(aggregation_module)}失败,请稍后重试")
-            message_box_util.box_information(self.main_object, "错误信息", f"获取{str(aggregation_module)}失败,请稍后重试")
+            dialog_module.box_information(self.main_object, "错误信息", f"获取{str(aggregation_module)}失败,请稍后重试")
 
     def refresh_theme(self):
         if self.before_theme is not None and self.before_theme == self.theme:
@@ -269,3 +384,12 @@ class AggregationCard(MainCard):
                     image_label.setPixmap(self.toolkit.image_util.load_light_svg(image_path))
                 else:
                     image_label.setPixmap(self.toolkit.image_util.load_dark_svg(image_path))
+        # 展示面板左上角按钮图标
+        self.show_panel_back_button.setIcon(self.get_icon_park_path("Edit/return"))
+        self.show_panel_hide_button.setIcon(self.get_icon_park_path("Base/preview-open"))
+        self.show_panel_hide_button_2.setIcon(self.get_icon_park_path("Office/copy-one"))
+        # 显示面板背景
+        if self.is_dark():
+            self.show_panel_content_panel.setStyleSheet(f"background: rgba(24, 24, 24, 150); border-radius: 10px; border: none; padding: 10px;")
+        else:
+            self.show_panel_content_panel.setStyleSheet(f"background: rgba(255, 255, 255, 150); border-radius: 10px; border: none; padding: 10px;")

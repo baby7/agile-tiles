@@ -3,7 +3,7 @@ import subprocess
 import tempfile
 from datetime import timedelta
 
-from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QMessageBox, QHBoxLayout, \
+from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, \
     QLabel, QTableWidget, QTableWidgetItem, QHeaderView, QAbstractItemView
 from PySide6.QtGui import Qt, QColor, QBrush, QPainter, QPen
 from PySide6.QtCore import Slot, QPointF
@@ -11,6 +11,7 @@ from lxml import html
 from dateutil import parser
 
 from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.module.Box import message_box_util
 from src.ui import style_util
 
 
@@ -302,7 +303,7 @@ class NotebookBatteryGraph(AgileTilesAcrylicWindow):
 
         except Exception as e:
             self.status_label.setText(f"错误: {str(e)}")
-            QMessageBox.critical(self, "错误", f"生成或加载电池报告时出错:\n{str(e)}")
+            message_box_util.box_information(self.use_parent, "错误", f"生成或加载电池报告时出错:\n{str(e)}")
         finally:
             # 删除临时文件
             if os.path.exists(temp_path):
@@ -353,12 +354,7 @@ class NotebookBatteryGraph(AgileTilesAcrylicWindow):
     @Slot()
     def show_report_generation_instructions(self):
         """显示生成电池健康报告的指令"""
-        msg_box = QMessageBox(self)
-        msg_box.setWindowTitle("生成电池健康报告")
-        msg_box.setText("在命令提示符（CMD）中输入以下命令来生成电池健康报告：\n\npowercfg /batteryreport")
-        msg_box.setInformativeText("本功能会在窗口打开时自动执行此命令并加载生成的报告")
-        msg_box.setStandardButtons(QMessageBox.Ok)
-        msg_box.exec_()
+        message_box_util.box_information(self.use_parent, "生成电池健康报告", "在命令提示符（CMD）中输入以下命令来生成电池健康报告：\n\npowercfg /batteryreport")
 
 
 def show_notebook_battery_graph_dialog(main_object, title, content):

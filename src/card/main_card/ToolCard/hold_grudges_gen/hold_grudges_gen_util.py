@@ -1,54 +1,52 @@
 from PySide6.QtWidgets import (QWidget, QLabel, QLineEdit,
                                QPushButton, QVBoxLayout, QTextEdit, QFileDialog,
-                               QScrollArea)
+                               QScrollArea, QHBoxLayout)
 from PySide6.QtGui import QPixmap, QPainter, QFont, QFontMetrics, QImage, QColor
 from PySide6.QtCore import Qt, QDate, QSize
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 from src.ui import style_util
 
 
-class HoldGrudgesGenPopup(AgileTilesAcrylicWindow):
-    def __init__(self, parent=None, use_parent=None, title=None, content=None):
-        super().__init__(parent=parent, is_dark=use_parent.is_dark, form_theme_mode=use_parent.form_theme_mode,
-                         form_theme_transparency=use_parent.form_theme_transparency)
+class HoldGrudgesGenPopup(QWidget):
+    def __init__(self, parent=None, main_object=None, is_dark=None):
+        super().__init__(parent=parent)
         # 初始化
         self.parent = parent
-        self.use_parent = use_parent
-        # 设置标题栏
-        self.setWindowTitle(title)  # 设置到标题栏
-        self.titleBar.minBtn.close()
-        self.titleBar.maxBtn.close()
-        self.setMinimumSize(450, 900)
+        self.use_parent = main_object
+        self.setStyleSheet("background: transparent; border: none; padding: 0px;")
         # 初始化界面
         self.init_ui()
         # 设置样式
-        style_util.set_dialog_control_style(self, self.is_dark)
+        style_util.set_dialog_control_style(self, is_dark)
 
     def init_ui(self):
         # 主部件和布局
-        main_layout = QVBoxLayout()
-        main_layout.setSpacing(15)
-        self.widget_base.setLayout(main_layout)
-        main_layout.setContentsMargins(10, 10, 10, 10)
+        main_layout = QVBoxLayout(self)
+        main_layout.setSpacing(3)
 
         # 输入时间
+        time_layout = QHBoxLayout(self)
+        time_layout.setSpacing(5)
         time_label = QLabel("输入时间：")
         time_label.setStyleSheet("background: transparent;")
-        main_layout.addWidget(time_label)
+        time_layout.addWidget(time_label)
 
         self.time_input = QLineEdit()
         today = QDate.currentDate().toString("yyyy年M月d日")
         self.time_input.setText(today + "，")
-        main_layout.addWidget(self.time_input)
+        time_layout.addWidget(self.time_input)
+        main_layout.addLayout(time_layout)
 
         # 输入天气
+        weather_layout = QHBoxLayout(self)
+        weather_layout.setSpacing(5)
         weather_label = QLabel("输入天气：")
         weather_label.setStyleSheet("background: transparent;")
-        main_layout.addWidget(weather_label)
+        weather_layout.addWidget(weather_label)
 
         self.weather_input = QLineEdit()
         self.weather_input.setText("晴天，")
-        main_layout.addWidget(self.weather_input)
+        weather_layout.addWidget(self.weather_input)
+        main_layout.addLayout(weather_layout)
 
         # 输入内容
         content_label = QLabel("输入内容：")
@@ -61,19 +59,31 @@ class HoldGrudgesGenPopup(AgileTilesAcrylicWindow):
         main_layout.addWidget(self.content_input)
 
         # 结束语
+        end_layout = QHBoxLayout(self)
+        end_layout.setSpacing(5)
         end_label = QLabel("输入结束语：")
         end_label.setStyleSheet("background: transparent;")
-        main_layout.addWidget(end_label)
+        end_layout.addWidget(end_label)
 
         self.end_input = QLineEdit()
         self.end_input.setText("这个仇，我先记下了")
-        main_layout.addWidget(self.end_input)
+        end_layout.addWidget(self.end_input)
+        main_layout.addLayout(end_layout)
 
         # 生成按钮
+        button_layout = QHBoxLayout(self)
+        button_layout.setSpacing(5)
         generate_button = QPushButton("生成图片")
         generate_button.clicked.connect(self.generate_image)
         generate_button.setMinimumSize(QSize(80, 30))
-        main_layout.addWidget(generate_button, alignment=Qt.AlignCenter)
+        button_layout.addWidget(generate_button)
+
+        # 保存按钮
+        save_button = QPushButton("保存图片")
+        save_button.clicked.connect(self.save_image)
+        save_button.setMinimumSize(QSize(80, 30))
+        button_layout.addWidget(save_button)
+        main_layout.addLayout(button_layout)
 
         # 创建滚动区域用于显示图片
         scroll_area = QScrollArea()
@@ -92,12 +102,6 @@ class HoldGrudgesGenPopup(AgileTilesAcrylicWindow):
         self.image_label.setMinimumSize(300, 300)
         self.image_label.setStyleSheet("background-color: #f0f0f0; border: none;")
         container_layout.addWidget(self.image_label, 0, Qt.AlignCenter)
-
-        # 保存按钮
-        save_button = QPushButton("保存图片")
-        save_button.clicked.connect(self.save_image)
-        save_button.setMinimumSize(QSize(80, 30))
-        main_layout.addWidget(save_button, alignment=Qt.AlignCenter)
 
         # 加载顶部图片
         self.top_image = QPixmap("./static/img/card/ToolCard/HoldGrudges/HoldGrudges.jpg")
@@ -202,10 +206,6 @@ class HoldGrudgesGenPopup(AgileTilesAcrylicWindow):
                 file_path += ".png"
             self.original_image.save(file_path, "PNG")
 
-
-def show_hold_grudges_gen_dialog(main_object, title, content):
-    """显示记仇生成器对话框"""
-    dialog = HoldGrudgesGenPopup(None, main_object, title, content)
-    dialog.refresh_geometry(main_object.toolkit.resolution_util.get_screen(main_object))
-    dialog.show()
-    return dialog
+    def refresh_theme(self, main_object):
+        # 设置样式
+        style_util.set_dialog_control_style(self, main_object.is_dark)

@@ -294,7 +294,9 @@ def setting_keyboard_has_change(old_data, new_data):
     """
     old_setting = old_data["data"]["SettingCard"]
     new_setting = new_data["data"]["SettingCard"]
-    setting_key_list = ["wakeUpByKeyboard", "wakeUpByKeyboardType", "translateByKeyboard", "translateByKeyboardType"]
+    setting_key_list = ["wakeUpByKeyboard", "wakeUpByKeyboardType",
+                        "screenshotByKeyboard", "screenshotByKeyboardType",
+                        "searchByKeyboard", "searchByKeyboardType"]
     for setting_key in setting_key_list:
         if old_setting.get(setting_key) != new_setting.get(setting_key):
             return True
@@ -309,7 +311,10 @@ def setting_has_change(old_data, new_data):
     """
     old_setting = old_data["data"]["SettingCard"]
     new_setting = new_data["data"]["SettingCard"]
-    setting_key_list = ["theme", "themeMode", "themeTransparency", "wakeUpByKeyboard", "wakeUpByKeyboardType", "translateByKeyboard", "translateByKeyboardType",
+    setting_key_list = ["theme", "themeMode", "themeTransparency",
+                        "wakeUpByKeyboard", "wakeUpByKeyboardType",
+                        "screenshotByKeyboard", "screenshotByKeyboardType",
+                        "searchByKeyboard", "searchByKeyboardType",
                         "screenName", "windowPosition", "formAnimationType", "formAnimationTime", "wakeUpByMouse",
                         "wakeUpByMouseTime", "wakeUpByMouseHide", "menuPosition", "fontName", "messageNotification",
                         "autoUpdate"]
@@ -343,7 +348,9 @@ def setting_system_has_change(old_data, new_data):
     """
     old_setting = old_data["data"]["SettingCard"]
     new_setting = new_data["data"]["SettingCard"]
-    setting_key_list = ["wakeUpByKeyboard", "wakeUpByKeyboardType", "translateByKeyboard", "translateByKeyboardType"]
+    setting_key_list = ["wakeUpByKeyboard", "wakeUpByKeyboardType",
+                        "screenshotByKeyboard", "screenshotByKeyboardType",
+                        "searchByKeyboard", "searchByKeyboardType"]
     for setting_key in setting_key_list:
         if old_setting.get(setting_key) != new_setting.get(setting_key):
             return True
