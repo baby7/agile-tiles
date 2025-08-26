@@ -142,8 +142,7 @@ class ScreenshotOverlay(QWidget):
                 self.captured_pixmap = self.fullscreen_pixmap.copy(dpr_rect)
                 self.show_toolbar(rect)
             else:
-                self.main_object.cancel_screenshot()
-                self.close()
+                self.close_trigger()
 
         # 右键完成截图
         elif event.button() == Qt.MouseButton.RightButton and self.dragging:
@@ -162,20 +161,32 @@ class ScreenshotOverlay(QWidget):
     def show_toolbar(self, rect):
         """显示工具栏"""
         # 创建工具栏窗口
-        self.toolbar = ScreenshotToolbar(main_object=self.main_object, pixmap=self.captured_pixmap, screenshot_rect=rect, screenshot_overlay=self)
-        self.toolbar.close_signal.connect(self.close_trigger)
-        self.toolbar.show()
+        try:
+            self.toolbar = ScreenshotToolbar(main_object=self.main_object, pixmap=self.captured_pixmap,
+                                             screenshot_rect=rect, screenshot_overlay=self)
+            self.toolbar.close_signal.connect(self.close_trigger)
+            self.toolbar.show()
+        except Exception:
+            pass
 
-    def close_trigger(self, text):
-        self.toolbar.close()
-        self.main_object.cancel_screenshot()
-        self.close()
+    def close_trigger(self, text=None):
+        try:
+            self.toolbar.close()
+        except Exception:
+            pass
+        try:
+            self.main_object.cancel_screenshot()
+        except Exception:
+            pass
+        try:
+            self.close()
+        except Exception:
+            pass
 
     def keyPressEvent(self, event):
         """键盘事件处理"""
         if event.key() == Qt.Key.Key_Escape:
-            self.main_object.cancel_screenshot()
-            self.close()
+            self.close_trigger()
 
 
 class ScreenshotToolbar(QWidget):

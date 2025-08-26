@@ -68,7 +68,9 @@ class SettingThemeWindow(AgileTilesAcrylicWindow, Ui_Form):
                 self.combo_box_mode.setCurrentText("半透明")
         # 设置透明度
         if self.setting_config["themeTransparency"] is not None:
-            self.horizontal_slider_transparency.setValue(int(self.setting_config["themeTransparency"]))
+            value = int(self.setting_config["themeTransparency"])
+            self.horizontal_slider_transparency.setValue(value)
+            self.label_transparency.setText(f"{value}%")
 
     def on_slider_changed(self, value):
         """ 处理滑块值变化事件 """

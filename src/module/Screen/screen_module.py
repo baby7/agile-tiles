@@ -175,6 +175,8 @@ def in_animation(main_window):
         )
     # 通知卡片退出动画
     main_window.notify_card_show_form()
+    # 激活窗口避免丢失窗口焦点
+    main_window.refresh_window_show()
 
 
 def out_animation(main_window):

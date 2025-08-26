@@ -83,6 +83,12 @@ print("正在重命名文件夹 AgileTiles.dist 为 AgileTiles")
 copy_files("static", f"{output_dir}/static")
 print("完成复制 static 文件夹")
 
+# 步骤6.1: 删除特定的文件(如果存在)
+if os.path.exists(f"{output_dir}/static/thirdparty/everything/Everything.db"):
+    os.remove(f"{output_dir}/static/thirdparty/everything/Everything.db")
+if os.path.exists(f"{output_dir}/static/thirdparty/everything/Everything.ini"):
+    os.remove(f"{output_dir}/static/thirdparty/everything/Everything.ini")
+
 # 步骤7: 复制 licenses 文件夹
 copy_files("licenses", f"{output_dir}/licenses")
 print("完成复制 licenses 文件夹")

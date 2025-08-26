@@ -2,6 +2,7 @@ from PySide6.QtCore import QObject
 
 from src.network_manager.FileUploadDownloadManager.FileUploadDownloadManager import FileUploadDownloadManager
 from src.network_manager.HolidayManager.HolidayManager import HolidayManager
+from src.network_manager.PermissionRequestManager.PermissionRequestManager import PermissionRequestManager
 from src.network_manager.WeatherManager.WeatherManager import WeatherManager
 from src.network_manager.TextContentManager.TextContentManager import TextContentManager
 from src.util import file_util, browser_util, time_util, version_util
@@ -42,6 +43,10 @@ class Toolkit(QObject):
     def __init__(self, parent=None, use_parent=None):
         super().__init__(parent)
         self.use_parent = use_parent
+
+    def get_permission_manager(self):
+        # 权限请求类，暂时只用于权限请求
+        return PermissionRequestManager(parent=self, use_parent=self.use_parent)
 
     def get_file_upload_download_manager(self):
         # 文件下载类，暂时只用于图片卡片下载图片

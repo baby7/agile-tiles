@@ -233,6 +233,128 @@ class TopSearchCard(MainCard):
             # 读取并解析数据
             data = reply.readAll().data()
             result = json.loads(data)
+            # result = {
+            #     "code": 0,
+            #     "msg": None,
+            #     "data": [
+            #         {
+            #             "id": 1,
+            #             "company": "weibo",
+            #             "source_url": None,
+            #             "createDateStr": "2025-08-26 13:53:02",
+            #             "updateDateStr": "2025-08-26 13:53:02",
+            #             "content": [
+            #                 {
+            #                     "t": "热搜示例第1条XXXXX",
+            #                     "i": "1",
+            #                     "n": "1250470"
+            #                 },
+            #                 {
+            #                     "c": "new",
+            #                     "t": "热搜示例第2条XXXXXXXXXXXXXXX",
+            #                     "i": "2",
+            #                     "n": "697227"
+            #                 },
+            #                 {
+            #                     "t": "热搜示例第3条XXXXXXXXX",
+            #                     "i": "3",
+            #                     "n": "697126"
+            #                 },
+            #                 {
+            #                     "c": "new",
+            #                     "t": "热搜示例第4条XXXXXXXXXXXXXXXXXXXXX",
+            #                     "i": "4",
+            #                     "n": "697039"
+            #                 },
+            #                 {
+            #                     "t": "热搜示例第5条XXXXXXXXXXXXX",
+            #                     "i": "5",
+            #                     "n": "666968"
+            #                 },
+            #                 {
+            #                     "t": "热搜示例第6条XXXXXXXXX",
+            #                     "i": "6",
+            #                     "n": "363118"
+            #                 },
+            #                 {
+            #                     "t": "热搜示例第7条XXXXXXXXX",
+            #                     "i": "7",
+            #                     "n": "341444"
+            #                 },
+            #                 {
+            #                     "c": "new",
+            #                     "t": "热搜示例第8条XXXXXXXXXXXXXXX",
+            #                     "i": "8",
+            #                     "n": "286066"
+            #                 },
+            #                 {
+            #                     "c": "new",
+            #                     "t": "热搜示例第9条XXXXXXXXXXXXXXX",
+            #                     "i": "9",
+            #                     "n": "248693"
+            #                 },
+            #                 {
+            #                     "t": "热搜示例第10条XXXXXXXXX",
+            #                     "i": "10",
+            #                     "n": "244446"
+            #                 },
+            #                 {
+            #                     "c": "new",
+            #                     "t": "热搜示例第11条XXXXXXXXX",
+            #                     "i": "11",
+            #                     "n": "244366"
+            #                 },
+            #                 {
+            #                     "c": "hot",
+            #                     "t": "热搜示例第12条XXXXXXXXXXXX",
+            #                     "i": "12",
+            #                     "n": "244239"
+            #                 },
+            #                 {
+            #                     "c": "new",
+            #                     "t": "热搜示例第13条XXXXXXXXXXXX",
+            #                     "i": "13",
+            #                     "n": "244089"
+            #                 },
+            #                 {
+            #                     "c": "hot",
+            #                     "t": "热搜示例第14条XXXXXXXXX",
+            #                     "i": "14",
+            #                     "n": "244038"
+            #                 },
+            #                 {
+            #                     "c": "new",
+            #                     "t": "热搜示例第15条XXXXXXXXXXXX",
+            #                     "i": "15",
+            #                     "n": "243899"
+            #                 },
+            #                 {
+            #                     "c": "new",
+            #                     "t": "热搜示例第16条XXXXXXXXXXXXXXX",
+            #                     "i": "16",
+            #                     "n": "243779"
+            #                 },
+            #                 {
+            #                     "c": "new",
+            #                     "t": "热搜示例第17条XXXXXXXXX",
+            #                     "i": "17",
+            #                     "n": "243573"
+            #                 },
+            #                 {
+            #                     "c": "hot",
+            #                     "t": "热搜示例第18条XXXXXXXXXXXX",
+            #                     "i": "18",
+            #                     "n": "243533"
+            #                 },
+            #                 {
+            #                     "t": "热搜示例第19条XXXXXXXXX",
+            #                     "i": "19",
+            #                     "n": "243411"
+            #                 }
+            #             ]
+            #         }
+            #     ]
+            # }
 
             # 处理数据
             self.base_html = ""

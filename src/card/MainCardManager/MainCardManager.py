@@ -582,6 +582,12 @@ class MainCardManager(QObject):
             self.main_object.info_logger.card_info("主程序", "切换搜索完成")
             self.see_card = "search"
             self.show_change()
+            try:
+                for card in self.main_object.main_card_list:
+                    if card.name == "FileSearchCard":
+                        card.show_form()
+            except Exception as e:
+                print(e)
         except Exception as e:
             self.main_object.info_logger.card_error("主程序", "切换搜索失败,错误信息:{}".format(e))
             self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换搜索失败,请稍后重试")
