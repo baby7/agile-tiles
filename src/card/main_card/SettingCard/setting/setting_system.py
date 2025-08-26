@@ -166,8 +166,12 @@ class SettingSystemWindow(AgileTilesAcrylicWindow, Ui_Form):
                                     self.combo_box_search_main_keyboard, self.combo_box_screenshot_main_keyboard,
                                     self.combo_box_search_vice_keyboard, self.combo_box_screenshot_vice_keyboard):
             return
+        if not self.check_box_self_starting.isChecked():
+            start_confirm = message_box_util.box_acknowledgement(self.use_parent, "注意", "确定要取消开机自启动吗？")
+            if not start_confirm:
+                self.check_box_self_starting.setChecked(True)
         # 确认
-        confirm = message_box_util.box_acknowledgement(self.use_parent, "注意", "确定要保存快捷键吗？")
+        confirm = message_box_util.box_acknowledgement(self.use_parent, "注意", "确定要保存吗？")
         if confirm:
             # 开机自启动
             try:
