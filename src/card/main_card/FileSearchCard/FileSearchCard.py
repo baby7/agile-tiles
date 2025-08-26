@@ -48,6 +48,7 @@ class FileSearchCard(MainCard):
     displayed_results = 0
     everything_path = None  # Everything安装路径
     is_ready = False  # Everything是否就绪
+    load_ok = False
 
     def __init__(self, main_object=None, parent=None, theme=None, card=None, cache=None, data=None,
                  toolkit=None, logger=None, save_data_func=None):
@@ -107,9 +108,6 @@ class FileSearchCard(MainCard):
 
         # 初始显示遮罩层
         self.stacked_widget.setCurrentIndex(1)
-
-        # 启动状态检查
-        self.check_everything_status()
 
     def init_main_ui(self):
         """初始化主界面UI"""
@@ -298,8 +296,8 @@ class FileSearchCard(MainCard):
             self.label_ready_status.setStyleSheet("color: orange;")
             # 更新遮罩层文字
             self.mask_label.setText(message)
-            # 重新启动状态检查线程
-            self.check_everything_status()
+            # 重置加载状态
+            self.load_ok = False
 
     def on_status_error(self, error_msg):
         """状态错误处理"""
@@ -546,6 +544,12 @@ class FileSearchCard(MainCard):
     def refresh_data(self, date_time_str):
         """刷新数据"""
         super().refresh_data(date_time_str)
+        if self.load_ok:
+            return
+        self.load_ok = True
+        # 启动状态检查
+        print("启动everything状态检查...")
+        self.check_everything_status()
 
     def refresh_ui(self, date_time_str):
         """刷新UI"""
