@@ -119,6 +119,18 @@ class MyQListWidgetItemWidget(QWidget):
                            f"border-color: {color};background-color: {color};")
         return line
 
+    def update_degree_line(self, line, degree, warn):
+        line.setFixedSize(6, 50 if warn else 40)
+        degree_colors = {
+            "First": "rgba(255, 46, 44, 0.6)",
+            "Second": "rgba(20, 185, 62, 0.6)",
+            "Third": "rgba(243, 207, 19, 0.6)",
+            "Other": "rgba(4, 115, 247, 0.6)"
+        }
+        color = degree_colors.get(degree, degree_colors["Other"])
+        line.setStyleSheet(f"border-style: solid;border-radius: 3px;color: {color};"
+                           f"border-color: {color};background-color: {color};")
+
     def create_separation_line(self):
         line = QFrame(self.parent)
         line.setFixedSize(self.todo_card.card.width() - 20, 1)
@@ -164,7 +176,7 @@ class MyQListWidgetItemWidget(QWidget):
         self.label_title.setText(title)
         self.success = success
         self.degree = degree
-        self.degree_line = self.create_degree_line(degree, warn)
+        self.update_degree_line(self.degree_line, degree, warn)
         if warn:
             if self.blank_label is None:
                 self.blank_label = self.create_label("", 0, 1, 10)

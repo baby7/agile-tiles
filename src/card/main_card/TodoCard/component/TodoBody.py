@@ -1,3 +1,4 @@
+import copy
 import uuid
 from functools import partial
 
@@ -157,7 +158,9 @@ class TodoBody(object):
         self.todo_card.stacked_widget.setCurrentIndex(2)
         # 确保编辑视图的主题是最新的
         self.todo_card.todo_edit_widget.refresh_theme()
-        self.todo_card.todo_edit_widget.set_data(input_data, todo_type)
+        # 深拷贝防止数据改变
+        input_data_copy = copy.deepcopy(input_data)
+        self.todo_card.todo_edit_widget.set_data(input_data_copy, todo_type)
         # 连接编辑完成信号
         try:
             self.todo_card.todo_edit_widget.edit_finished.disconnect()
@@ -218,8 +221,14 @@ class TodoBody(object):
         data_list[checked_index] = input_data
         widget_map[todo_id].set_all(input_data[0], input_data[1], input_data[2],
                                     input_data[3], input_data[4], input_data[5])
-        widget_map[todo_id].delete_button.clicked.disconnect()
-        widget_map[todo_id].check_push_button.clicked.disconnect()
+        try:
+            widget_map[todo_id].delete_button.clicked.disconnect()
+        except Exception:
+            pass
+        try:
+            widget_map[todo_id].check_push_button.clicked.disconnect()
+        except Exception:
+            pass
         if input_data[2]:
             print("编辑待办id:{},添加到待办单机触发:{}".format(input_data[0], self.proceed_data_list))
             widget_map[todo_id].delete_button.clicked.connect(partial(self.delete_click, todo_id, False))
@@ -233,6 +242,7 @@ class TodoBody(object):
         else:
             item_map[input_data[0]].setSizeHint(QSize(self.todo_card.card.width() - 20, 49))
 
+
     def delete_one(self, todo_id, data_list, item_map, widget_map, list_widget):
         delete_index = None
         delete_data = None
@@ -240,8 +250,19 @@ class TodoBody(object):
             if str(todo_id) == str(data_list[todo_data_index][0]):
                 delete_index = todo_data_index
                 delete_data = data_list[todo_data_index]
-        widget_map[todo_id].delete_button.clicked.disconnect()
-        widget_map[todo_id].check_push_button.clicked.disconnect()
+        try:
+            widget_map[todo_id].delete_button.clicked.disconnect()
+        except Exception:
+            pass
+        try:
+            widget_map[todo_id].check_push_button.clicked.disconnect()
+        except Exception:
+            pass
+        try:
+            widget_map[todo_id].degree_line.hide()
+            widget_map[todo_id].degree_line.deleteLater()
+        except Exception:
+            pass
         del data_list[delete_index]
         del item_map[todo_id]
         del widget_map[todo_id]

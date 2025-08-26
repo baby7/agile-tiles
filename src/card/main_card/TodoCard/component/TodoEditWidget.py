@@ -214,7 +214,6 @@ class TodoEditWidget(QtWidgets.QWidget, Ui_Form):
 
         # 获取信息
         self.input_data[1] = self.line_edit_title.text()
-        self.input_data[3] = "First"
         if self.check_box.isChecked():
             self.input_data[4] = True
             self.input_data[5] = self.push_button_date.text() + " " + self.push_button_time.text()
