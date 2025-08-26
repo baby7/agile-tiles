@@ -298,6 +298,8 @@ class FileSearchCard(MainCard):
             self.label_ready_status.setStyleSheet("color: orange;")
             # 更新遮罩层文字
             self.mask_label.setText(message)
+            # 重新启动状态检查线程
+            self.check_everything_status()
 
     def on_status_error(self, error_msg):
         """状态错误处理"""

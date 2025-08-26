@@ -6,6 +6,7 @@ from PySide6 import QtGui
 
 class LoadAnimation(QLabel):
     _angle = 0  # 旋转角度（0-360）
+    animation = None
 
     def __init__(self, parent=None, theme="Light"):
         super().__init__(parent)
@@ -39,6 +40,9 @@ class LoadAnimation(QLabel):
 
     def load(self):
         # 创建动画
+        if self.animation is not None:
+            self.animation.stop()
+            del self.animation
         self.animation = QPropertyAnimation(self, b'angle')
         self.animation.setDuration(2000)  # 2秒完成一圈
         self.animation.setStartValue(0)
