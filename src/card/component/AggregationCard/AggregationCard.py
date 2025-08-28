@@ -569,6 +569,7 @@ class AggregationCard(MainCard):
                     # 将相对URL转换为绝对URL
                     base_url = QtCore.QUrl(original_url)
                     absolute_icon_url = base_url.resolved(QtCore.QUrl(icon_url))
+                    print("加载图标地址: " + absolute_icon_url.toString())
                     self.fetch_icon(absolute_icon_url.toString(), image_label)
                 else:
                     # 如果没有找到图标链接，尝试访问网站首页
@@ -579,6 +580,7 @@ class AggregationCard(MainCard):
                     else:
                         # 如果已经是首页，尝试访问默认的根目录favicon.ico
                         favicon_url = f"{home_url}/favicon.ico"
+                        print("加载图标地址: " + favicon_url)
                         self.fetch_icon(favicon_url, image_label)
             else:
                 print("请求失败: " + reply.errorString())
@@ -586,6 +588,7 @@ class AggregationCard(MainCard):
                 base_url = QtCore.QUrl(original_url)
                 home_url = f"{base_url.scheme()}://{base_url.host()}"
                 favicon_url = f"{home_url}/favicon.ico"
+                print("加载图标地址: " + favicon_url)
                 self.fetch_icon(favicon_url, image_label)
 
         except Exception as e:
@@ -594,13 +597,13 @@ class AggregationCard(MainCard):
             base_url = QtCore.QUrl(original_url)
             home_url = f"{base_url.scheme()}://{base_url.host()}"
             favicon_url = f"{home_url}/favicon.ico"
+            print("加载图标地址: " + favicon_url)
             self.fetch_icon(favicon_url, image_label)
 
         finally:
             reply.deleteLater()
 
     def fetch_icon(self, icon_url, image_label):
-        print("加载图标地址: " + icon_url)
         # 创建新的网络请求获取图标
         icon_network_manager = QtNetwork.QNetworkAccessManager(self)
         icon_network_manager.setCache(self.main_object.network_disk_cache)

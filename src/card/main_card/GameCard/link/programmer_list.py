@@ -4,6 +4,19 @@ programmer_list = [
         "type": "程序员",
         "title": "Ctool",
         "des": "程序员工具箱",
+        "icon": "Brand/github.svg",
+        "content":{
+            "url": "https://github.com/",
+            "size": [1000, 600]
+        },
+        "link": "https://github.com/",
+        "call_back_func": None
+    },
+    {
+        "category": "Browser",
+        "type": "程序员",
+        "title": "Ctool",
+        "des": "程序员工具箱",
         "icon": "png:Actor/Ctool.png",
         "content":{
             "url": "https://ctool.dev/tool.html#/tool/json?category=conversion",

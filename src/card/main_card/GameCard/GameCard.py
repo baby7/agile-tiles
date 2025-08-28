@@ -1,5 +1,5 @@
 from src.card.component.AggregationCard.AggregationCard import AggregationCard
-from src.card.main_card.GameCard.link import game_list, tool_list, draw_list, knowledge_list, programmer_list, interesting_list
+from src.card.main_card.GameCard.link import game_list, tool_list, draw_list, knowledge_list, programmer_list, interesting_list, top_list
 
 
 class GameCard(AggregationCard):
@@ -39,12 +39,13 @@ class GameCard(AggregationCard):
     def init_ui(self):
         super().init_ui()
         # 设置信息条样式和内容
-        self.info_bar.setText("以下为第三方模块，本工具不对其内容负责")
+        self.info_bar.setText("以下为第三方模块，本工具不对其内容负责(分类可滚动鼠标滑轮切换)")
         self.info_bar.setStyleSheet(
             f"background: transparent; border: none; font-weight: bold; font-size: 12px; color: rgba(255, 140, 0, 0.8);"
         )
         self.info_bar.show()
-        self.aggregation_module_list = (game_list.game_list
+        self.aggregation_module_list = (top_list.top_list
+                                        + game_list.game_list
                                         + tool_list.tool_list
                                         + programmer_list.programmer_list
                                         + draw_list.draw_list
