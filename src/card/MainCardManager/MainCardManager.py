@@ -161,7 +161,7 @@ class MainCardManager(QObject):
             "music": [self.main_object.push_button_music, "Music/music-one", self.main_object.music_area, "音乐"],
             "looking": [self.main_object.push_button_looking, "Base/preview-open", self.main_object.looking_area, "信息聚合"],
             "tool": [self.main_object.push_button_tool, "Others/toolkit", self.main_object.tool_area, "工具箱"],
-            "game": [self.main_object.push_button_game, "Game/game-handle", self.main_object.game_area, "游戏"],
+            "game": [self.main_object.push_button_game, "Travel/planet", self.main_object.game_area, "更多"],
         }
         # 初始化卡片位置数据
         self.init_geometry_data(card_data)

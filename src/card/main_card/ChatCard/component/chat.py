@@ -269,12 +269,15 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
             if today_calls >= 1000:
                 text = f"尊敬的会员用户，您今天已使用{today_calls}次，已超限"
                 color = "rgba(255, 140, 0, 0.8)"
+                self.info_bar.show()
             else:
                 text = f"会员用户畅享使用，今天已使用{today_calls}次"
                 color = "rgba(4, 115, 247, 0.8)"
+                self.info_bar.hide()
         else:
             text = f"非会员每天限制5次翻译，今天已使用{today_calls}次"
             color = "rgba(255, 140, 0, 0.8)"
+            self.info_bar.show()
 
         # 设置信息条样式和内容
         self.info_bar.setText(text)

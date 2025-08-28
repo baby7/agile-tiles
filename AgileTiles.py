@@ -28,7 +28,7 @@ import gc
 import tracemalloc
 import faulthandler
 
-from PySide6.QtNetwork import QNetworkProxyFactory, QNetworkProxy, QLocalServer, QLocalSocket
+from PySide6.QtNetwork import QNetworkProxyFactory, QNetworkProxy, QLocalServer, QLocalSocket, QNetworkDiskCache
 
 from src.component.ImageCacheManager.ImageCacheManager import ImageCacheManager
 
@@ -37,7 +37,7 @@ faulthandler.enable()
 from ctypes.wintypes import MSG
 # 基础界面框架
 from PySide6.QtCore import QEvent, Qt, qInstallMessageHandler, QSettings, Signal, QEventLoop, Q_ARG, Slot, \
-    QMetaObject, QTimer
+    QMetaObject, QTimer, QStandardPaths
 from PySide6.QtWidgets import QApplication, QSystemTrayIcon
 # 我的界面内容
 from baby7_desktop_tool_form import Ui_Form
@@ -180,6 +180,10 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         self.toolkit = Toolkit(self, self)
         # 图片缓存管理器
         self.image_cache_manager = ImageCacheManager()
+        # 网络缓存
+        self.network_disk_cache = QNetworkDiskCache(self)
+        self.network_disk_cache.setCacheDirectory(QStandardPaths.writableLocation(QStandardPaths.CacheLocation))
+        self.network_disk_cache.setMaximumCacheSize(100 * 1024 * 1024)    # 设置缓存大小（单位：字节） 例如 100 MB
         # ***************** 更新检测 *****************
         # 创建本地事件循环
         update_loop = QEventLoop()

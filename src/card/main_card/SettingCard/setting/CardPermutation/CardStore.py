@@ -15,12 +15,11 @@ from src.client import card_store_client
 
 class CardStore(QtWidgets.QWidget):
     cardAdded = Signal(dict)  # 新增信号用于传递卡片数据
-    storeClose = Signal(dict)  # 新增信号用于传递卡片数据
     before_plugin_map = []
     card_store_client = None
 
     def __init__(self, parent=None, use_parent=None, is_dark=False):
-        super().__init__(parent)
+        super(CardStore, self).__init__(parent)
         self.card_permutation = parent
         self.use_parent = use_parent
         self.card_widgets = {}  # 新增：用字典存储所有卡片widget {card_name: [widget1, widget2]}
@@ -49,37 +48,17 @@ class CardStore(QtWidgets.QWidget):
         self.view_card_detail_widget = None
 
     def init_ui(self):
-        # 基础样式设置
-        self.setGeometry(QtCore.QRect(0, 0, self.parent().width(), self.parent().height()))
-        # 主容器
-        main_widget = QtWidgets.QWidget(self)
-        main_widget.setGeometry(QtCore.QRect(
-            int(self.width() * 0.1),
-            int(self.height() * 0.05),
-            int(self.width() * 0.8),
-            int(self.height() * 0.9)
-        ))
-        main_widget.setStyleSheet(f"""
-            background-color: {'rgba(34, 34, 34, 255)' if self.is_dark else 'rgba(244, 245, 246, 240)'};
-            border-radius: 15px;
+        self.setStyleSheet(f"""
             color: {'rgba(255, 255, 255, 160)' if self.is_dark else 'rgba(34, 34, 34, 255)'};
         """)
 
         # 主布局
-        main_layout = QtWidgets.QVBoxLayout(main_widget)
-        main_layout.setContentsMargins(10, 10, 10, 10)
-
-        # 顶部工具栏
-        top_layout = QtWidgets.QHBoxLayout()
-        close_btn = self.create_close_button()
-        top_layout.addStretch()
-        top_layout.addWidget(close_btn)
-        main_layout.addLayout(top_layout)
+        main_layout = QtWidgets.QVBoxLayout(self)
+        main_layout.setContentsMargins(0, 0, 0, 0)
 
         # Tab组件
         self.tab_widget = QtWidgets.QTabWidget()
         style_util.set_tab_widget_style(self.tab_widget, self.is_dark)
-        # self.init_store_card_list()
         main_layout.addWidget(self.tab_widget)
 
         # 顶部遮罩层
@@ -110,20 +89,6 @@ class CardStore(QtWidgets.QWidget):
         self.label_top_mask.hide()
         self.load_animation.hide()
 
-    def create_close_button(self):
-        btn = QtWidgets.QPushButton()
-        btn.setIcon(self.get_icon(icon_path="Character/close-one", custom_theme="red"))
-        btn.setIconSize(QSize(20, 20))
-        btn.setStyleSheet("background: transparent;")
-        btn.clicked.connect(self.close_store)
-        btn.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
-        return btn
-
-    def close_store(self):
-        self.card_widgets.clear()
-        self.storeClose.emit("")
-        self.hide()
-
     def get_icon(self, icon_path, custom_theme=None):
         if custom_theme is not None:
             theme = custom_theme
@@ -152,6 +117,7 @@ class CardStore(QtWidgets.QWidget):
 
     def create_scroll_area(self, tab_name):
         scroll_area = QtWidgets.QScrollArea()
+        scroll_area.setContentsMargins(0, 0, 0, 0)
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         scroll_area.setStyleSheet(style_util.scroll_bar_style)
@@ -177,8 +143,8 @@ class CardStore(QtWidgets.QWidget):
             empty_label.setStyleSheet("font-size: 16px; color: gray;")
             content_layout.addWidget(empty_label, 0, 0, 1, 3)
         else:
-            # 三列布局
-            MAX_COLUMNS = 3
+            # 两列布局
+            MAX_COLUMNS = 2
             row, col = 0, 0
             for card_data in filtered_cards:
                 card_widget = self.create_card_widget(card_data)
@@ -257,7 +223,7 @@ class CardStore(QtWidgets.QWidget):
         card_details.setStyleSheet(button_dark_style if self.is_dark else button_light_style)
         card_details.setMaximumHeight(25)
         card_details.setMaximumWidth(25)
-        card_details.setIcon(QIcon(f"./static/img/IconPark/{'light' if self.is_dark else 'dark'}/Base/search.png"))
+        card_details.setIcon(QIcon(f"./static/img/IconPark/{'light' if self.is_dark else 'dark'}/Character/info.png"))
         card_details.setIconSize(QSize(20, 20))
         card_details.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
         card_details.clicked.connect(lambda : self.open_view_card_detail(card_data["id"]))
@@ -487,8 +453,6 @@ class CardStore(QtWidgets.QWidget):
             "data": {},
             "size": size
         })
-        self.storeClose.emit("")
-        self.hide()
 
     def install_or_update_card(self, card_data, widget):
         url = card_data['currentVersion']['url']
@@ -548,6 +512,10 @@ class CardStore(QtWidgets.QWidget):
     def set_main_visible(self, visible: bool):
         """设置主界面可见性"""
         self.setVisible(visible)
+        self.card_permutation.widget_menu_store.setVisible(visible)
+        self.card_permutation.widget_card_store.setVisible(visible)
+        self.card_permutation.widget_menu_manager.setVisible(visible)
+        self.card_permutation.widget.setVisible(visible)
 
 def get_plugin_folder_map():
     """获取插件目录中每个插件的json内容组合成字典"""

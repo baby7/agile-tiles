@@ -24,6 +24,8 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
     menu_width = 160    # 菜单宽度
     spacing_width = 10  # 间隔宽度
     tab_height = 20
+    # 最大宽度
+    max_panel_width = 12
     # 定义卡片盒子的总宽度和总高度的网格数
     box_card_width = 8  # 盒子的总宽度（列数）
     box_card_height = 13  # 盒子的总高度（行数）
@@ -65,7 +67,8 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
                 background-color: rgba(255, 255, 255, 25);
             }"""
             self.widget.setStyleSheet(widget_style)
-            self.widget_menu.setStyleSheet(widget_style)
+            self.widget_menu_manager.setStyleSheet(widget_style)
+            self.widget_menu_store.setStyleSheet(widget_style)
             button_bg_style = """
             QWidget {
                 border-radius: 10px;
@@ -75,15 +78,15 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
             self.widget_left.setStyleSheet(button_bg_style)
             self.widget_middle.setStyleSheet(button_bg_style)
             self.widget_right.setStyleSheet(button_bg_style)
+            # self.widget_store_title.setStyleSheet(button_bg_style)
         # 按钮图标初始化
-        self.add_btn.setIcon(self.get_icon("Build/application"))
         self.delete_btn.setIcon(self.get_icon("Edit/delete"))
         self.push_button_add_box_width.setIcon(self.get_icon("Edit/fullwidth"))
         self.push_button_reduce_box_width.setIcon(self.get_icon("Edit/link-in"))
         self.push_button_ok.setIcon(self.get_icon("Character/check"))
         # 布局初始化
-        self.widget_base.setLayout(self.gridLayout_2)
-        self.gridLayout_2.setContentsMargins(10, 10, 10, 10)
+        self.widget_base.setLayout(self.gridLayout_3)
+        self.gridLayout_3.setContentsMargins(10, 10, 10, 10)
         # 默认禁止右键菜单
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
         self.parent_user_card_data_list = user_card_list
@@ -102,10 +105,14 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.graphicsView.setScene(self.scene)
         self.graphicsView.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.graphicsView.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        # 创建商店
+        self.add_card_widget = CardStore(self, use_parent=self.use_parent, is_dark=self.is_dark)
+        self.add_card_widget.cardAdded.connect(self.auto_add_card)
+        self.layout_card_store.addWidget(self.add_card_widget)
+        # 调整大小
         self.change_size()
         # 按钮点击事件
         self.push_button_ok.clicked.connect(self.push_button_ok_click)
-        self.add_btn.clicked.connect(self.open_add_card_widget)
         self.delete_btn.clicked.connect(self.delete_card)
         self.push_button_add_box_width.clicked.connect(self.push_button_add_box_width_click)
         self.push_button_reduce_box_width.clicked.connect(self.push_button_reduce_box_width_click)
@@ -125,21 +132,6 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
         else:
             theme = "light" if self.is_dark else "dark"
         return QtGui.QIcon(f"./static/img/IconPark/{theme}/{icon_path}.png")
-
-    def set_main_visible(self, visible: bool):
-        """设置主界面可见性"""
-        self.widget_base.setVisible(visible)
-        self.widget_menu.setVisible(visible)
-
-    def open_add_card_widget(self):
-        if self.add_card_widget is None:
-            self.add_card_widget = CardStore(self, use_parent=self.use_parent, is_dark=self.is_dark)
-            self.add_card_widget.cardAdded.connect(self.auto_add_card)
-            # 连接关闭信号
-            self.add_card_widget.storeClose.connect(lambda: self.set_main_visible(True))
-        # 隐藏主界面
-        self.set_main_visible(False)
-        self.add_card_widget.show()
 
     def render_card_list(self):
         """渲染卡片列表"""
@@ -173,10 +165,9 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
                     card_data["y"] = start_row + 1
                     card = self.add_card(card_data, start_col, start_row, cols, rows)
                     self.set_card_select(card)
-                    self.add_card_widget.hide()
                     return
         print(f"找不到可用位置! 需要空间: {cols}x{rows}, 当前网格: {self.box_card_width}x{self.box_card_height}")
-        message_box_util.box_information(self.use_parent, "警告", "没有足够的空间添加卡片")
+        message_box_util.box_information(self.use_parent, "警告", "没有足够的空间添加卡片，您可以尝试在【卡片设计】点击【布局宽度】")
 
     def add_card(self, card_data, start_col, start_row, cols, rows):
         """添加新卡片到场景"""
@@ -402,13 +393,16 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.graphicsView.setMaximumWidth(box_width)
         self.graphicsView.setMinimumHeight(box_height)
         self.graphicsView.setMaximumHeight(box_height)
+        self.add_card_widget.setMinimumHeight(box_height)
+        self.add_card_widget.setMaximumHeight(box_height)
         widget_width = box_width + self.spacing_width * 2
         widget_height = box_height + self.spacing_width * 2
         self.widget.setMinimumWidth(widget_width)
         self.widget.setMaximumWidth(widget_width)
         self.widget.setMinimumHeight(widget_height)
         self.widget.setMaximumHeight(widget_height)
-        self.widget_menu.setMaximumHeight(widget_height)
+        self.widget_menu_manager.setMaximumHeight(widget_height)
+        self.widget_menu_store.setMaximumHeight(widget_height)
 
     # 布局变宽
     def push_button_add_box_width_click(self):
@@ -418,7 +412,7 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
             return
         self.last_click_time = current_time
         # 判断是否超过最大宽度
-        if self.box_card_width >= 26:
+        if self.box_card_width >= self.max_panel_width:
             message_box_util.box_information(self.use_parent, "提示", "布局宽度不能再扩展了")
             return
         self.box_card_width += 1

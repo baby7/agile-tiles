@@ -37,6 +37,8 @@ class InformationCard(AggregationCard):
     # 模块列表
     aggregation_module_list = []
     base_url = common.BASE_URL + "/textContent/normal/random"
+    # 新增：记录已加载的分类
+    loaded_tabs = set()
 
 
     def __init__(self, main_object=None, parent=None, theme=None, card=None, cache=None, data=None,

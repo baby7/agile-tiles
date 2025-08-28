@@ -1,7 +1,61 @@
-from PySide6.QtWidgets import (QLabel, QWidget, QPushButton, QHBoxLayout,
-                               QVBoxLayout, QFileDialog, QApplication)
+from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QHBoxLayout, QFileDialog, QApplication
 from PySide6.QtGui import QPainter, QColor, QPen, QGuiApplication, QPixmap
-from PySide6.QtCore import Qt, QRect, QPoint, QTimer, Signal
+from PySide6.QtCore import Qt, QRect, QPoint, Signal
+
+
+def get_virtual_geo():
+    # 获取所有屏幕计算最大的宽度和高度
+    screens = QGuiApplication.screens()
+    desktop_width = 0
+    desktop_height = 0
+    for screen in screens:
+        # 获取屏幕的几何信息（逻辑像素）
+        geometry = screen.geometry()
+        # 获取设备像素比（缩放因子）
+        device_pixel_ratio = screen.devicePixelRatio()
+        # 计算物理分辨率
+        physical_x = round(geometry.x() * device_pixel_ratio)
+        physical_y = round(geometry.y() * device_pixel_ratio)
+        physical_width = round(geometry.width() * device_pixel_ratio)
+        physical_height = round(geometry.height() * device_pixel_ratio)
+        # 计算相对于0坐标的顶点坐标
+        screen_width = physical_x + physical_width
+        screen_height = physical_y + physical_height
+        # 更新最大宽高
+        if screen_width > desktop_width:
+            desktop_width = screen_width
+        if screen_height > desktop_height:
+            desktop_height = screen_height
+    return QRect(0, 0, desktop_width, desktop_height)
+
+
+def grab_screens():
+    """截取所有屏幕，并拼接成一张大图"""
+    screens = QGuiApplication.screens()
+    virtual_geo = get_virtual_geo()
+    result = QPixmap(virtual_geo.size())
+    result.fill(Qt.GlobalColor.transparent)
+
+    painter = QPainter(result)
+    for screen in screens:
+        # 获取屏幕的几何信息（逻辑像素）
+        geometry = screen.geometry()
+        # 获取设备像素比（缩放因子）
+        device_pixel_ratio = screen.devicePixelRatio()
+        # 计算物理分辨率
+        physical_x = round(geometry.x() * device_pixel_ratio)
+        physical_y = round(geometry.y() * device_pixel_ratio)
+        physical_width = round(geometry.width() * device_pixel_ratio)
+        physical_height = round(geometry.height() * device_pixel_ratio)
+        physical_geometry = QRect(physical_x, physical_y, physical_width, physical_height)
+        # 获取屏幕的像素
+        pix = screen.grabWindow(0)
+        pix.setDevicePixelRatio(1)
+        # pix 已经是逻辑大小（Qt 会自动考虑 DPR）
+        target_rect = physical_geometry.topLeft() - virtual_geo.topLeft()
+        painter.drawPixmap(target_rect, pix)
+    painter.end()
+    return result, virtual_geo
 
 
 class ScreenshotOverlay(QWidget):
@@ -19,8 +73,8 @@ class ScreenshotOverlay(QWidget):
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)  # 允许接收键盘事件
         self.setMouseTracking(True)
 
-        # 获取所有屏幕的总体矩形
-        screen_geometry = QGuiApplication.primaryScreen().virtualGeometry()
+        # 获取所有屏幕的总体矩形 + 截图
+        self.fullscreen_pixmap, screen_geometry = grab_screens()
         self.setGeometry(screen_geometry)
 
         # 截图相关变量
@@ -28,10 +82,6 @@ class ScreenshotOverlay(QWidget):
         self.end_point = QPoint()
         self.dragging = False
         self.captured_pixmap = None
-
-        # 截取整个屏幕作为背景
-        self.fullscreen_pixmap = QGuiApplication.primaryScreen().grabWindow(0)
-        self.dpr = self.devicePixelRatioF()  # 获取设备像素比
 
         # 提示文本
         self.tip_label = QLabel("拖动鼠标选择区域 | ESC取消", self)
@@ -61,33 +111,18 @@ class ScreenshotOverlay(QWidget):
         self.size_label.hide()
 
     def paintEvent(self, event):
-        """绘制遮罩层和选区 - 修复模糊问题"""
         painter = QPainter(self)
+        painter.drawPixmap(0, 0, self.fullscreen_pixmap)  # 背景
 
-        # 获取窗口大小
-        win_size = self.size()
-
-        # 绘制屏幕截图背景（考虑DPI缩放）
-        scaled_pixmap = self.fullscreen_pixmap.scaled(
-            win_size * self.dpr,
-            Qt.AspectRatioMode.IgnoreAspectRatio,
-            Qt.TransformationMode.SmoothTransformation
-        )
-        painter.drawPixmap(0, 0, win_size.width(), win_size.height(), scaled_pixmap)
-
-        # 绘制半透明遮罩层
+        # 半透明遮罩
         painter.fillRect(self.rect(), QColor(0, 0, 0, 120))
 
         if self.dragging:
             # 计算选区矩形
             rect = QRect(self.start_point, self.end_point).normalized()
 
-            # 修复：从原始图像中拷贝区域（不缩放）
-            dpr_rect = QRect(
-                rect.topLeft() * self.dpr,
-                rect.size() * self.dpr
-            )
-            selected_pix = self.fullscreen_pixmap.copy(dpr_rect)
+            # 从截图中裁剪区域
+            selected_pix = self.fullscreen_pixmap.copy(rect)
 
             # 绘制选区
             painter.drawPixmap(rect.topLeft(), selected_pix)
@@ -132,14 +167,7 @@ class ScreenshotOverlay(QWidget):
 
             # 确保选区有效
             if rect.width() > 10 and rect.height() > 10:
-                # 考虑设备像素比调整选区
-                dpr_rect = QRect(
-                    rect.topLeft() * self.dpr,
-                    rect.size() * self.dpr
-                )
-
-                # 从全屏截图中裁剪选区
-                self.captured_pixmap = self.fullscreen_pixmap.copy(dpr_rect)
+                self.captured_pixmap = self.fullscreen_pixmap.copy(rect)
                 self.show_toolbar(rect)
             else:
                 self.close_trigger()
@@ -148,22 +176,22 @@ class ScreenshotOverlay(QWidget):
         elif event.button() == Qt.MouseButton.RightButton and self.dragging:
             self.end_point = event.position().toPoint()
             self.dragging = False
-
             rect = QRect(self.start_point, self.end_point).normalized()
+
             if rect.width() > 10 and rect.height() > 10:
-                dpr_rect = QRect(
-                    rect.topLeft() * self.dpr,
-                    rect.size() * self.dpr
-                )
-                self.captured_pixmap = self.fullscreen_pixmap.copy(dpr_rect)
+                self.captured_pixmap = self.fullscreen_pixmap.copy(rect)
                 self.show_toolbar(rect)
 
     def show_toolbar(self, rect):
         """显示工具栏"""
         # 创建工具栏窗口
         try:
-            self.toolbar = ScreenshotToolbar(main_object=self.main_object, pixmap=self.captured_pixmap,
-                                             screenshot_rect=rect, screenshot_overlay=self)
+            self.toolbar = ScreenshotToolbar(
+                main_object=self.main_object,
+                pixmap=self.captured_pixmap,
+                screenshot_rect=rect,
+                screenshot_overlay=self
+            )
             self.toolbar.close_signal.connect(self.close_trigger)
             self.toolbar.show()
         except Exception:
@@ -252,9 +280,7 @@ class ScreenshotToolbar(QWidget):
         self.position_toolbar(screenshot_rect)
 
     def position_toolbar(self, rect):
-        """定位工具栏到截图区域附近"""
-        # 获取屏幕几何信息
-        screen_geometry = QGuiApplication.primaryScreen().geometry()
+        screen_geometry = QGuiApplication.primaryScreen().virtualGeometry()
 
         # 计算工具栏位置
         x = rect.center().x() - self.width() // 2
@@ -264,9 +290,8 @@ class ScreenshotToolbar(QWidget):
         if y + self.height() > screen_geometry.bottom():
             y = rect.top() - self.height() - 10
 
-        # 确保工具栏不会超出屏幕边界
-        x = max(0, min(x, screen_geometry.width() - self.width()))
-        y = max(0, min(y, screen_geometry.height() - self.height()))
+        x = max(screen_geometry.left(), min(x, screen_geometry.right() - self.width()))
+        y = max(screen_geometry.top(), min(y, screen_geometry.bottom() - self.height()))
 
         self.move(x, y)
 

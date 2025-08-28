@@ -1,9 +1,7 @@
 from PySide6.QtWidgets import QVBoxLayout
 
 from src.card.component.AggregationCard.AggregationCard import AggregationCard
-from src.card.main_card.ToolCard.bmi_calculator import bmi_calculator_util
 from src.card.main_card.ToolCard.bmi_calculator.bmi_calculator_util import BMICalculatorPopup
-from src.card.main_card.ToolCard.hold_grudges_gen import hold_grudges_gen_util
 from src.card.main_card.ToolCard.hold_grudges_gen.hold_grudges_gen_util import HoldGrudgesGenPopup
 from src.card.main_card.ToolCard.housing_loan_rates import housing_loan_rates_util
 from src.card.main_card.ToolCard.json_formatter import json_formatter_util
@@ -39,6 +37,8 @@ class ToolCard(AggregationCard):
     need_refresh_ui = False
     # 模块列表
     aggregation_module_list = []
+    # 新增：记录已加载的分类
+    loaded_tabs = set()
 
 
     def __init__(self, main_object=None, parent=None, theme=None, card=None, cache=None, data=None,
@@ -79,32 +79,6 @@ class ToolCard(AggregationCard):
                 "content": None,
                 "link": "https://github.com/mumuy/relationship",
                 "call_back_func": self.relationship_calculator
-            },
-            {
-                "category": self.module_category_browser,
-                "type": "趣味",
-                "title": "中国制霸生成器",
-                "des": "看看你都去过哪些省",
-                "icon": "png:Actor/ChinaWorldEX.png",
-                "content":{
-                    "url": "https://lab.magiconch.com/china-ex/",
-                    "size": [600, 800]
-                },
-                "link": "https://github.com/itorr/china-ex",
-                "call_back_func": None
-            },
-            {
-                "category": self.module_category_browser,
-                "type": "趣味",
-                "title": "全球制霸生成器",
-                "des": "看看你都去过哪些国家",
-                "icon": "png:Actor/ChinaWorldEX.png",
-                "content":{
-                    "url": "https://lab.magiconch.com/world-ex/",
-                    "size": [600, 800]
-                },
-                "link": "https://github.com/itorr/world-ex",
-                "call_back_func": None
             },
             # 工具
             {
@@ -167,111 +141,6 @@ class ToolCard(AggregationCard):
                 "content": None,
                 "link": None,
                 "call_back_func": lambda : self.time_calculator("时间计算器")
-            },
-            {
-                "category": self.module_category_browser,
-                "type": "程序员",
-                "title": "Ctool",
-                "des": "程序员工具箱",
-                "icon": "png:Actor/Ctool.png",
-                "content":{
-                    "url": "https://ctool.dev/tool.html#/tool/json?category=conversion",
-                    "size": [1000, 600]
-                },
-                "link": "https://github.com/baiy/ctool",
-                "call_back_func": None
-            },
-            {
-                "category": self.module_category_browser,
-                "type": "程序员",
-                "title": "Quick Reference",
-                "des": "程序员速查表",
-                "icon": "png:Actor/QuickReference.png",
-                "content":{
-                    "url": "https://wangchujiang.com/reference/",
-                    "size": [1200, 950]
-                },
-                "link": "https://github.com/jaywcjlove/reference",
-                "call_back_func": None
-            },
-            # {
-            #     "category": self.module_category_browser,
-            #     "type": "程序员",
-            #     "title": "Hoppscotch",
-            #     "des": "API调试工具",
-            #     "icon": "png:Actor/Hoppscotch.png",
-            #     "content":{
-            #         "url": "https://hoppscotch.io/",
-            #         "size": [1200, 950]
-            #     },
-            #     "link": "https://github.com/hoppscotch/hoppscotch",
-            #     "call_back_func": None
-            # },
-            # 作图
-            {
-                "category": self.module_category_browser,
-                "type": "作图",
-                "title": "Excalidraw",
-                "des": "手绘风格的绘图工具",
-                "icon": "png:Actor/Excalidraw.png",
-                "content":{
-                    "url": "https://excalidraw.com/",
-                    "size": [1000, 800]
-                },
-                "link": "https://github.com/excalidraw/excalidraw",
-                "call_back_func": None
-            },
-            {
-                "category": self.module_category_browser,
-                "type": "作图",
-                "title": "Draw.io",
-                "des": "经典作图工具",
-                "icon": "png:Actor/DrawIO.png",
-                "content":{
-                    "url": "https://app.diagrams.net/index.html",
-                    "size": [1000, 800]
-                },
-                "link": "https://github.com/jgraph/drawio",
-                "call_back_func": None
-            },
-            {
-                "category": self.module_category_browser,
-                "type": "作图",
-                "title": "piskel",
-                "des": "像素绘图工具",
-                "icon": "png:Actor/Piskel.png",
-                "content":{
-                    "url": "https://www.piskelapp.com/p/create/sprite",
-                    "size": [1000, 800]
-                },
-                "link": "https://github.com/piskelapp/piskel",
-                "call_back_func": None
-            },
-            {
-                "category": self.module_category_browser,
-                "type": "作图",
-                "title": "SvgPathEditor",
-                "des": "Svg编辑工具",
-                "icon": "png:Actor/SvgPathEditor.png",
-                "content":{
-                    "url": "https://yqnn.github.io/svg-path-editor/",
-                    "size": [1000, 800]
-                },
-                "link": "https://github.com/Yqnn/svg-path-editor",
-                "call_back_func": None
-            },
-            {
-                "category": self.module_category_browser,
-                "type": "作图",
-                "title": "ASCIIFlow",
-                "des": "Ascii作图工具",
-                "icon": "png:Actor/AsciiFlow.png",
-                "content":{
-                    "url": "https://asciiflow.com/#/",
-                    "size": [1200, 950]
-                },
-                "link": "https://github.com/lewish/asciiflow",
-                "call_back_func": None
             },
         ]
         self.init_tab_widget()
