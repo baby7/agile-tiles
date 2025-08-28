@@ -101,6 +101,9 @@ update_map_info = {
         "部分工具和游戏合并到浏览器功能中",
         "VIP用户隐藏智能对话和翻译的使用次数展示",
     ],
+    "v1.2.3": [
+        "修复相同卡片修改数据问题",
+    ],
 }
 
 update_map_date = {
@@ -120,6 +123,7 @@ update_map_date = {
     "v1.2.0": "2025-08-25",
     "v1.2.1": "2025-08-26",
     "v1.2.2": "2025-08-28",
+    "v1.2.3": "2025-08-29",
 }
 
 
@@ -188,4 +192,4 @@ def compare_version(version_1, version_2):
     else:
         return -1
 
-# print(gen_download_history_md())
+print(gen_download_history_md())

@@ -148,7 +148,9 @@ class NormalCard(QObject):
                             in_data=data,
                             data_type=data_type,
                             card_type=data_save_constant.CARD_TYPE_NORMAL,
-                            card_name=self.name)
+                            card_name=self.name,
+                            x=self.x,
+                            y=self.y)
 
     def refresh_data(self, date_time_str):
         """

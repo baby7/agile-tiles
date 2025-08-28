@@ -800,7 +800,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         print("server_trigger_data_update - 保存到本地数据库")
         self.save_local_data(data_save_constant.TRIGGER_TYPE_DATA_SYNC)
 
-    def local_trigger_data_update(self, trigger_type=None, need_upload=True, in_data=None, data_type=None, card_type=None, card_name=None):
+    def local_trigger_data_update(self, trigger_type=None, need_upload=True, in_data=None, data_type=None, card_type=None, card_name=None, x=None, y=None):
         """
         本地触发的数据更新
         :param trigger_type: 触发类型
@@ -809,6 +809,8 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         :param data_type: 数据类型
         :param card_type: 卡片类型
         :param card_name: 卡片名称
+        :param x: 卡片位置横坐标
+        :param y: 卡片位置纵坐标
         """
         # 首次启动不做界面修改
         if self.is_first:
@@ -837,7 +839,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             if data_type == data_save_constant.DATA_TYPE_CACHE:
                 if card_type == data_save_constant.CARD_TYPE_NORMAL:
                     for card in self.main_data["card"]:
-                        if card["name"] == card_name:
+                        if card["name"] == card_name and card["x"] == x and card["y"] == y:
                             card["data"] = in_data
                             self.info_logger.info(f"成功修改普通卡片:{card_name}缓存数据")
                             break
