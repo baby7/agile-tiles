@@ -898,7 +898,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.tab_widget_login.setCurrentIndex(1)
+        self.tab_widget_login.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Form)
