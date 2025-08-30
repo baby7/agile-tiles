@@ -1048,4 +1048,12 @@ class MainCardManager(QObject):
         for card in self.main_object.main_card_list:
             if hasattr(card, 'screenshot_captured'):
                 self.push_button_translate_click()
-                card.screenshot_captured(pixmap)
+                card.screenshot_captured(pixmap, do_job="translate")
+
+    def on_ocr(self, pixmap):
+        """
+        ocr
+        """
+        for card in self.main_object.main_card_list:
+            if hasattr(card, 'screenshot_captured'):
+                card.screenshot_captured(pixmap, do_job="ocr")

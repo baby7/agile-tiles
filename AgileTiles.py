@@ -6,7 +6,7 @@ import os, sys
 import ctypes
 import time, datetime
 
-from src.module.Screenshot.ScreenshotOverlay import ScreenshotOverlay
+from src.module.Screenshot.ScreenshotWidget import ScreenshotWidget
 from src.util import main_data_compare, hardware_id_util
 
 
@@ -1254,18 +1254,26 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         self.show_overlay_status = True
 
     def _show_overlay(self):
-        self.overlay = ScreenshotOverlay(self, self)
+        self.overlay = ScreenshotWidget(self, self)
         self.overlay.show()
         self.overlay.setFocus(Qt.FocusReason.ActiveWindowFocusReason)  # 强制获取焦点
 
-    def screenshot_captured(self, pixmap):
-        """截图完成处理"""
+    def screenshot_captured_to_translate(self, pixmap):
+        """截图完成进行翻译"""
         self.show_overlay_status = False
         # 显示主窗口
         self.show()
         self.toolkit.resolution_util.in_animation(self)
         # 进行翻译
         self.main_card_manager.on_translate(pixmap)
+
+    def screenshot_captured_to_ocr(self, pixmap):
+        """截图完成进行识别"""
+        self.show_overlay_status = False
+        # 显示主窗口
+        self.show()
+        # 进行翻译
+        self.main_card_manager.on_ocr(pixmap)
 
     def cancel_screenshot(self):
         """取消截图"""

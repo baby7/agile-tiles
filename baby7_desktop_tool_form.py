@@ -1181,7 +1181,7 @@ class Ui_Form(object):
         self.label_area_user_invite_icon.setText("")
         self.label_user_login_invite_title.setText(QCoreApplication.translate("Form", u" \u9080\u8bf7\u7528\u6237", None))
         self.push_button_area_user_invite_code.setText(QCoreApplication.translate("Form", u"\u590d\u5236\u9080\u8bf7\u7801", None))
-        self.label_area_user_invite_info.setText(QCoreApplication.translate("Form", u"\u9080\u8bf7\u65b0\u7528\u6237\u53cc\u65b9\u5747\u53ef\u83b7\u5f97\u4e03\u5929\u5468\u5361\u4f1a\u5458\u54e6~", None))
+        self.label_area_user_invite_info.setText(QCoreApplication.translate("Form", u"\u9080\u8bf7\u65b0\u7528\u6237\u53cc\u65b9\u5747\u53ef\u83b7\u5f9730\u5929\u6708\u5361\u4f1a\u5458\u54e6~", None))
         self.push_button_area_user_message_logout.setText("")
         self.label_area_user_message_logout.setText(QCoreApplication.translate("Form", u"\u9000\u51fa\u767b\u5f55", None))
         self.tab_widget_user.setTabText(self.tab_widget_user.indexOf(self.tab_11), QCoreApplication.translate("Form", u"\u8d26\u53f7", None))

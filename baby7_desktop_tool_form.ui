@@ -1589,7 +1589,7 @@ background-color: rgba(0, 0, 0, 0);
 color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 rgb(255, 178, 0), stop:1 rgb(254, 232, 67));</string>
                   </property>
                   <property name="text">
-                   <string>邀请新用户双方均可获得七天周卡会员哦~</string>
+                   <string>邀请新用户双方均可获得30天月卡会员哦~</string>
                   </property>
                  </widget>
                 </item>

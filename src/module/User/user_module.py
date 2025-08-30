@@ -174,7 +174,7 @@ def push_button_area_user_invite_code_click(main_object):
         invite_code = main_object.current_user["inviteCode"]
         main_object.toolkit.text_box_util.show_text_dialog(
             main_object, "邀请码",
-            {"content": f"欢迎您体验使用灵卡面板，官网: {common.index_url}，下载后，在注册时填写邀请码 {invite_code} 即可获得七天会员权益哦~", "size": [300, 200]}
+            {"content": f"欢迎您体验使用灵卡面板，官网: {common.index_url}，下载后，在注册时填写邀请码 {invite_code} 即可获得30天月卡会员哦~", "size": [300, 200]}
         )
     except Exception as e:
         main_object.info_logger.card_error("主程序", "复制邀请码失败,错误信息:{}".format(e))

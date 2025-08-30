@@ -7,7 +7,7 @@ from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequ
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QMenu, QPlainTextEdit
 
 from src.card.MainCardManager.MainCard import MainCard
-from src.module.Screenshot.ScreenshotOverlay import ScreenshotOverlay
+from src.module.Box import text_box_util
 from src.client import common
 from src.ui import style_util
 
@@ -430,7 +430,7 @@ class TranslateCard(MainCard):
             # 显示提示信息
             self.status_label.setText(f"文本长度超过{MAX_LENGTH}字符，已自动截断")
 
-    def screenshot_captured(self, pixmap):
+    def screenshot_captured(self, pixmap, do_job="translate"):
         # 保存截图
         self.captured_pixmap = pixmap
         # 更新状态
@@ -444,9 +444,9 @@ class TranslateCard(MainCard):
             return
         self.status_label.setText("压缩完成,正在识图...")
         # 发送ocr请求
-        self.ocr(base64_data)
+        self.ocr(base64_data, do_job)
 
-    def ocr(self, base64_data: str):
+    def ocr(self, base64_data: str, do_job: str):
         # 准备请求数据
         engine = "baidu"
         data = {
@@ -461,21 +461,24 @@ class TranslateCard(MainCard):
         request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")
 
         # 发送POST请求
-        self.status_label.setText("识图中...")
+        if do_job == "translate":
+            self.status_label.setText("识图中...")
         self.translate_button.setEnabled(False)
 
         reply = self.network_manager.post(
             request,
             json.dumps(data).encode('utf-8')
         )
-        reply.finished.connect(lambda: self.handle_ocr_response(reply))
+        reply.finished.connect(lambda: self.handle_ocr_response(reply, do_job))
+        reply.errorOccurred.connect(lambda: self.handle_ocr_error(reply))
 
     @Slot()
-    def handle_ocr_response(self, ocr_reply):
+    def handle_ocr_response(self, ocr_reply, do_job):
         # 检查错误
         if ocr_reply.error() != QNetworkReply.NoError:
-            self.target_text.setPlainText(f"网络错误: {ocr_reply.errorString()}")
-            self.status_label.setText("网络错误")
+            if do_job == "translate":
+                self.target_text.setPlainText(f"网络错误: {ocr_reply.errorString()}")
+                self.status_label.setText("网络错误")
             ocr_reply.deleteLater()
             return
         # 解析响应
@@ -484,19 +487,45 @@ class TranslateCard(MainCard):
             response = json.loads(data)
             if response.get("code") == 0:
                 result = response.get("data", {}).get("text", "")
-                self.source_text.setPlainText(result)
-                self.status_label.setText("识图完成")
-                # 然后再进行翻译
-                self.translate_text()
+                if do_job == "translate":
+                    self.source_text.setPlainText(result)
+                    self.status_label.setText("识图完成")
+                    # 然后再进行翻译
+                    self.translate_text()
+                else:
+                    text_box_util.show_text_dialog(self.main_object, "识图完成", {
+                        "content": result,
+                        "size": [600, 600],
+                        "longText": True,
+                        "markdown": True
+                    })
             else:
                 error_msg = response.get("msg", "未知错误")
-                self.source_text.setPlainText("")
-                self.status_label.setText(error_msg)
-                self.translate_button.setEnabled(True)
+                if do_job == "translate":
+                    self.source_text.setPlainText("")
+                    self.status_label.setText(error_msg)
+                    self.translate_button.setEnabled(True)
+                else:
+                    self.main_object.toolkit.message_box_util.box_information(
+                        self.main_object, "失败", "未知错误")
         except json.JSONDecodeError:
-            self.source_text.setPlainText("")
-            self.status_label.setText("解析错误")
-            self.translate_button.setEnabled(True)
+            if do_job == "translate":
+                self.source_text.setPlainText("")
+                self.status_label.setText("解析错误")
+                self.translate_button.setEnabled(True)
+            else:
+                self.main_object.toolkit.message_box_util.box_information(
+                    self.main_object, "失败", "解析错误")
+        ocr_reply.deleteLater()
+
+    @Slot()
+    def handle_ocr_error(self, ocr_reply, do_job):
+        if do_job == "translate":
+            self.target_text.setPlainText("")
+            self.status_label.setText("网络错误")
+        else:
+            self.main_object.toolkit.message_box_util.box_information(
+                self.main_object, "失败", "网络错误")
         ocr_reply.deleteLater()
 
     def translate_text(self):

@@ -314,11 +314,11 @@ class CardStore(QtWidgets.QWidget):
         btn_layout = QtWidgets.QHBoxLayout(btn_container)
         btn_layout.setContentsMargins(0, 0, 0, 0)
         btn_layout.addStretch()
-        widget.action_btn = QtWidgets.QPushButton()
-        widget.action_btn.setFixedSize(80, 25)
-        widget.action_btn.setStyleSheet(f"background: transparent; border: 1px solid rgba({'255, 255, 255, 50' if self.is_dark else '0, 0, 0, 50'});")
-        widget.action_btn.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
-        self.update_action_btn(widget)
+        if not hasattr(widget, 'action_btn'):
+            widget.action_btn = QtWidgets.QPushButton()
+            widget.action_btn.setFixedSize(80, 25)
+            widget.action_btn.setStyleSheet(f"background: transparent; border: 1px solid rgba({'255, 255, 255, 50' if self.is_dark else '0, 0, 0, 50'});")
+            widget.action_btn.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
         btn_layout.addWidget(widget.action_btn)
         btn_layout.addStretch()
         layout.addWidget(btn_container)
@@ -326,6 +326,11 @@ class CardStore(QtWidgets.QWidget):
         self.update_image(widget)
         self.update_dots(widget)
         self.update_indicate(widget)
+
+        # 修改：只在第一次创建时更新按钮状态
+        if not hasattr(widget, 'action_btn_initialized') or not widget.action_btn_initialized:
+            self.update_action_btn(widget)
+            widget.action_btn_initialized = True
 
         widget.setMinimumHeight(350)
         widget.setMaximumHeight(350)

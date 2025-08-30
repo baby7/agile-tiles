@@ -898,7 +898,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.tab_widget_login.setCurrentIndex(0)
+        self.tab_widget_login.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(Form)
@@ -934,7 +934,7 @@ class Ui_Form(object):
         self.label_user_login_title_9.setText(QCoreApplication.translate("Form", u"*\u786e\u8ba4\u5bc6\u7801\uff1a", None))
         self.push_button_user_register_password_check_view_control.setText("")
         self.label_user_register_password_check_prompt.setText("")
-        self.label_user_login_title_12.setText(QCoreApplication.translate("Form", u"\u9080\u8bf7\u7801(\u586b\u5199\u9080\u8bf7\u7801\u53cc\u65b9\u5747\u53ef\u83b7\u5f97\u4e03\u5929\u5468\u5361\u54e6~)\uff1a", None))
+        self.label_user_login_title_12.setText(QCoreApplication.translate("Form", u"\u9080\u8bf7\u7801(\u586b\u5199\u9080\u8bf7\u7801\u53cc\u65b9\u5747\u53ef\u83b7\u5f9730\u5929\u6708\u5361\u54e6~)\uff1a", None))
         self.label_user_register_invite_code_prompt.setText("")
         self.check_box_user_area_agree_protocol.setText("")
         self.label_2.setText(QCoreApplication.translate("Form", u"\u6211\u5df2\u9605\u8bfb\u5e76\u63a5\u53d7", None))
