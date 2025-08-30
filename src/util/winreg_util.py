@@ -31,37 +31,18 @@ def get_shortcut_path():
 
 def is_auto_start_enabled():
     """检查是否已启用自启动"""
-    # 先检查快捷方式是否存在
     shortcut_path = get_shortcut_path()
-    if os.path.exists(shortcut_path):
-        try:
-            # 检查快捷方式指向的路径是否正确
-            shell = win32com.client.Dispatch("WScript.Shell")
-            shortcut = shell.CreateShortCut(shortcut_path)
-            current_path = get_exe_path()
-            return os.path.normpath(shortcut.Targetpath) == os.path.normpath(current_path)
-        except Exception as e:
-            print(f"Error checking shortcut: {e}")
-
-    # 如果没有快捷方式，检查是否有旧的注册表项（兼容旧版本）
-    # try:
-    #     key = winreg.OpenKey(
-    #         winreg.HKEY_CURRENT_USER,
-    #         WINREG_KEY,
-    #         0, winreg.KEY_READ
-    #     )
-    #     reg_value, _ = winreg.QueryValueEx(key, WINREG_NAME)
-    #     key.Close()
-    #     current_path = get_exe_path()
-    #     # 处理可能被引号包裹的路径
-    #     reg_value = reg_value.strip('"')
-    #     return os.path.normpath(reg_value) == os.path.normpath(current_path)
-    # except FileNotFoundError:
-    #     return False
-    # except Exception as e:
-    #     print(f"Error checking registry: {e}")
-    #     return False
-
+    if not os.path.exists(shortcut_path):
+        return False
+    try:
+        # 检查快捷方式指向的路径是否正确
+        shell = win32com.client.Dispatch("WScript.Shell")
+        shortcut = shell.CreateShortCut(shortcut_path)
+        current_path = get_exe_path()
+        return os.path.normpath(shortcut.Targetpath) == os.path.normpath(current_path)
+    except Exception as e:
+        print(f"Error checking shortcut: {e}")
+        return False
 
 def cleanup_old_registry_entry():
     """清理旧的注册表项"""
