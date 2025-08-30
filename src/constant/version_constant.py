@@ -111,6 +111,7 @@ update_map_info = {
         "截屏功能增加矩形、椭圆、直线、箭头等绘制功能",
         "修复软件登录界面安装新版本可能失败的问题",
         "修复卡片商店不同尺寸安装状态不一致的问题",
+        "修复开机自启动在部分电脑可能失效的问题",
     ],
     # "v1.3.0": [
     #     "优化软件升级逻辑，新增热补丁升级方式",
@@ -212,4 +213,4 @@ def compare_version(version_1, version_2):
     else:
         return -1
 
-print(gen_download_history_md())
+# print(gen_download_history_md())
