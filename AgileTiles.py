@@ -1380,17 +1380,21 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
 
     def stop_thread_list(self):
         """结束线程列表"""
-        card_thread_object_list = self.normal_card_thread_object_list + self.main_card_thread_object_list
-        for i, card_thread_object in enumerate(card_thread_object_list):
-            # print(f"正在停止线程{i}: {card_thread_object.objectName()}")
-            card_thread_object.stop()
-        self.normal_card_thread_object_list = []
-        self.main_card_thread_object_list = []
-        # 卸载快捷键
-        self.remove_keyboard_shortcut()
-        # 取消主线程
-        if self.main_thread_object:
-            self.main_thread_object.stop()
+        try:
+            card_thread_object_list = self.normal_card_thread_object_list + self.main_card_thread_object_list
+            for i, card_thread_object in enumerate(card_thread_object_list):
+                # print(f"正在停止线程{i}: {card_thread_object.objectName()}")
+                card_thread_object.stop()
+            self.normal_card_thread_object_list = []
+            self.main_card_thread_object_list = []
+            # 卸载快捷键
+            self.remove_keyboard_shortcut()
+            # 取消主线程
+            if self.main_thread_object:
+                self.main_thread_object.stop()
+        except Exception as e:
+            print(e)
+            traceback.print_exc()
 
     def change_theme(self):
         # 修改主题

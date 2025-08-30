@@ -1,4 +1,5 @@
 import os
+import subprocess
 import webbrowser
 from urllib.parse import unquote, quote
 from PySide6.QtCore import QRect, Qt
@@ -59,14 +60,20 @@ class FileSearchCard(MainCard):
     def clear(self):
         """清理资源"""
         try:
+            # 停止everything
+            self.shutdown_everything()
             # 停止状态线程
-            if self.status_thread and self.status_thread.isRunning():
-                self.status_thread.stop()
-
+            try:
+                if self.status_thread and self.status_thread.isRunning():
+                    self.status_thread.stop()
+            except Exception as e:
+                print(e)
             # 停止搜索线程
-            if self.search_thread and self.search_thread.isRunning():
-                self.search_thread.stop()
-
+            try:
+                if self.search_thread and self.search_thread.isRunning():
+                    self.search_thread.stop()
+            except Exception as e:
+                print(e)
             # 清理UI元素
             self.line_edit_search.setVisible(False)
             self.line_edit_search.deleteLater()
@@ -87,6 +94,44 @@ class FileSearchCard(MainCard):
         except Exception as e:
             print(e)
         super().clear()
+
+    def shutdown_everything(self):
+        """
+        关闭由本程序启动的Everything实例
+        """
+        try:
+            # 如果有搜索器实例且启动了Everything进程，则关闭它
+            if (hasattr(self, 'search_thread') and
+                    self.search_thread and
+                    hasattr(self.search_thread.searcher, 'everything_process') and
+                    self.search_thread.searcher.everything_process):
+
+                process = self.search_thread.searcher.everything_process
+                if process.poll() is None:  # 检查进程是否仍在运行
+                    process.terminate()  # 终止进程
+                    try:
+                        process.wait(timeout=3)  # 等待最多3秒
+                    except subprocess.TimeoutExpired:
+                        process.kill()  # 如果未能正常终止，则强制杀死进程
+
+            # 同样检查状态线程中的搜索器
+            if (hasattr(self, 'status_thread') and
+                    self.status_thread and
+                    hasattr(self.status_thread, 'searcher') and
+                    self.status_thread.searcher and
+                    hasattr(self.status_thread.searcher, 'everything_process') and
+                    self.status_thread.searcher.everything_process):
+
+                process = self.status_thread.searcher.everything_process
+                if process.poll() is None:  # 检查进程是否仍在运行
+                    process.terminate()
+                    try:
+                        process.wait(timeout=3)
+                    except subprocess.TimeoutExpired:
+                        process.kill()
+
+        except Exception as e:
+            self.logger.card_error("文件搜索", f"关闭Everything时出错: {str(e)}")
 
     def init_ui(self):
         """初始化UI"""

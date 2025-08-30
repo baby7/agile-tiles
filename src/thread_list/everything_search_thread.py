@@ -195,7 +195,8 @@ class EverythingSearcher:
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
             startupinfo.wShowWindow = 0  # SW_HIDE
 
-            subprocess.Popen(
+            # 保存进程引用
+            self.everything_process = subprocess.Popen(
                 [exe_path, "-startup"],
                 startupinfo=startupinfo,
                 stdout=subprocess.DEVNULL,
@@ -374,14 +375,15 @@ class EverythingStatusThread(QThread):
         super().__init__(parent)
         self.everything_path = everything_path
         self._is_running = True
+        self.searcher = None
 
     def run(self):
         try:
             # 创建Everything搜索器
-            searcher = EverythingSearcher(self.everything_path)
+            self.searcher = EverythingSearcher(self.everything_path)
 
             # 检查数据库是否已加载
-            if not searcher.is_db_loaded():
+            if not self.searcher.is_db_loaded():
                 self.status_updated.emit("Everything正在索引文件，请稍候...", False)
 
                 # 等待数据库加载完成
@@ -389,7 +391,7 @@ class EverythingStatusThread(QThread):
                     if not self._is_running:
                         return
                     time.sleep(0.5)
-                    if searcher.is_db_loaded():
+                    if self.searcher.is_db_loaded():
                         self.status_updated.emit("Everything已就绪", True)
                         return
 
@@ -418,21 +420,22 @@ class EverythingSearchThread(QThread):
         self.offset = offset
         self.limit = limit
         self._is_running = True
+        self.searcher = None
 
     def run(self):
         try:
             # 创建Everything搜索器
-            searcher = EverythingSearcher(self.everything_path)
+            self.searcher = EverythingSearcher(self.everything_path)
 
             # 检查数据库是否已加载
-            if not searcher.is_db_loaded():
+            if not self.searcher.is_db_loaded():
                 self.indexing_status.emit(True)
                 # 等待数据库加载完成
                 for _ in range(30):  # 最多等待15秒
                     if not self._is_running:
                         return
                     time.sleep(0.5)
-                    if searcher.is_db_loaded():
+                    if self.searcher.is_db_loaded():
                         break
                 self.indexing_status.emit(False)
 
@@ -440,7 +443,7 @@ class EverythingSearchThread(QThread):
                 return
 
             # 执行搜索
-            results, total_results, has_more = searcher.search(
+            results, total_results, has_more = self.searcher.search(
                 self.search_text,
                 offset=self.offset,
                 max_results=self.limit
