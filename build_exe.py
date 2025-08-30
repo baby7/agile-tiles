@@ -86,6 +86,8 @@ print("完成复制 static 文件夹")
 # 步骤6.1: 删除特定的文件(如果存在)
 if os.path.exists(f"{output_dir}/static/thirdparty/everything/Everything.db"):
     os.remove(f"{output_dir}/static/thirdparty/everything/Everything.db")
+if os.path.exists(f"{output_dir}/static/thirdparty/everything/Everything.db.tmp"):
+    os.remove(f"{output_dir}/static/thirdparty/everything/Everything.db.tmp")
 if os.path.exists(f"{output_dir}/static/thirdparty/everything/Everything.ini"):
     os.remove(f"{output_dir}/static/thirdparty/everything/Everything.ini")
 
