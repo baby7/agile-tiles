@@ -28,7 +28,7 @@ class AgileTilesFramelessDialog(AcrylicDialog):
         # 窗口设置
         self.standard_title_bar = AgileTilesTitleBar(self, self.is_dark)
         self.setTitleBar(self.standard_title_bar)
-        self.setWindowIcon(QIcon("./static/img/icon/icon.png"))
+        self.setWindowIcon(QIcon(":static/img/icon/icon.png"))
         self.titleBar.minBtn.close()
         self.titleBar.maxBtn.close()
         self.titleBar.raise_()
@@ -61,7 +61,10 @@ class AgileTilesFramelessDialog(AcrylicDialog):
             }
             QLabel {
                 background-color: transparent;
-            }""")
+            }
+            QTextBrowser {
+                background-color: transparent;
+            }""" + style_util.scroll_bar_style)
         else:
             self.widget_base.setStyleSheet("""
             QWidget {
@@ -72,7 +75,10 @@ class AgileTilesFramelessDialog(AcrylicDialog):
             }
             QLabel {
                 background-color: transparent;
-            }""")
+            }
+            QTextBrowser {
+                background-color: transparent;
+            }""" + style_util.scroll_bar_style)
         self.base_layout.addWidget(self.widget_base)
         print("初始化布局完成")
 

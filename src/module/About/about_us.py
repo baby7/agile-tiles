@@ -50,7 +50,7 @@ class AboutUsWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.label_copyright.setStyleSheet(background)
         self.label_company.setStyleSheet(background)
         # 设置图标
-        self.label_icon.setPixmap(QPixmap("./static/img/icon/icon_title.png"))
+        self.label_icon.setPixmap(QPixmap(":static/img/icon/icon_title.png"))
         self.label_icon.setFixedSize(128, 165)
         self.label_icon.setScaledContents(True)
 

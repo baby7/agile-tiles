@@ -5,6 +5,8 @@ import traceback
 from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 from PySide6.QtCore import QUrl, QCoreApplication, QSize
 
+from src.ui import style_util
+
 
 def init_player(music_card):
     music_card.player = QMediaPlayer()
@@ -32,7 +34,8 @@ def play_song(music_card, item):
                 QCoreApplication.processEvents()
                 music_card.player.setSource(QUrl.fromLocalFile(song))
                 music_card.player.play()
-                play_pause_button.setIcon(music_card.get_icon_park_path("Music/pause-one"))
+                style_util.set_button_style(play_pause_button, icon_path="Music/pause-one", is_dark=music_card.is_dark(),
+                                            style_change=False)
                 music_card.update_song_info(song)
                 break
         # 重置时间显示
@@ -94,10 +97,10 @@ def toggle_play_pause(music_card):
     play_pause_button = music_card.button_list[2]
     if music_card.player.playbackState() == QMediaPlayer.PlayingState:
         music_card.player.pause()
-        play_pause_button.setIcon(music_card.get_icon_park_path("Music/play"))
+        style_util.set_button_style(play_pause_button, icon_path="Music/play", is_dark=music_card.is_dark(), style_change=False)
     else:
         music_card.player.play()
-        play_pause_button.setIcon(music_card.get_icon_park_path("Music/pause-one"))
+        style_util.set_button_style(play_pause_button, icon_path="Music/pause-one", is_dark=music_card.is_dark(), style_change=False)
 
 def play_current_song(music_card):
     if music_card.current_playlist is not None and music_card.current_song_index >= 0:
@@ -108,44 +111,45 @@ def play_current_song(music_card):
         music_card.player.setSource(QUrl.fromLocalFile(song_path))
         music_card.player.play()
         play_pause_button = music_card.button_list[2]
-        play_pause_button.setIcon(music_card.get_icon_park_path("Music/pause-one"))
+        style_util.set_button_style(play_pause_button, icon_path="Music/pause-one", is_dark=music_card.is_dark(), style_change=False)
         music_card.update_song_info(song_path)
         # 新增：设置当前选中行
         music_card.songs_list.setCurrentRow(music_card.current_song_index)
 
 def update_mode_icon(music_card):
+    is_dark = music_card.is_dark()
     # 播放模式图标
     mode = music_card.playback_modes[music_card.current_mode_index]
     mode_button = music_card.button_list[0]
     if mode == 'playlist':
-        mode_button.setIcon(music_card.get_icon_park_path("Arrows/play-cycle"))
+        style_util.set_button_style(mode_button, icon_path="Arrows/play-cycle", is_dark=is_dark, style_change=False)
     elif mode == 'single':
-        mode_button.setIcon(music_card.get_icon_park_path("Arrows/play-once"))
+        style_util.set_button_style(mode_button, icon_path="Arrows/play-once", is_dark=is_dark, style_change=False)
     elif mode == 'random':
-        mode_button.setIcon(music_card.get_icon_park_path("Arrows/shuffle-one"))
+        style_util.set_button_style(mode_button, icon_path="Arrows/shuffle-one", is_dark=is_dark, style_change=False)
     # 播放/暂停图标
     play_pause_button = music_card.button_list[2]
     if music_card.player.playbackState() == QMediaPlayer.PlayingState:
-        play_pause_button.setIcon(music_card.get_icon_park_path("Music/pause-one"))
+        style_util.set_button_style(play_pause_button, icon_path="Music/pause-one", is_dark=is_dark, style_change=False)
     else:
-        play_pause_button.setIcon(music_card.get_icon_park_path("Music/play"))
+        style_util.set_button_style(play_pause_button, icon_path="Music/play", is_dark=is_dark, style_change=False)
     # 上一首、下一首图标
     prev_button = music_card.button_list[1]
     next_button = music_card.button_list[3]
-    prev_button.setIcon(music_card.get_icon_park_path("Arrows/double-left"))
-    next_button.setIcon(music_card.get_icon_park_path("Arrows/double-right"))
+    style_util.set_button_style(prev_button, icon_path="Arrows/double-left", is_dark=is_dark, style_change=False)
+    style_util.set_button_style(next_button, icon_path="Arrows/double-right", is_dark=is_dark, style_change=False)
     # 主页顶部图标
-    music_card.playlist_button.setIcon(music_card.get_icon_park_path("Music/music-list"))
-    music_card.song_list_button.setIcon(music_card.get_icon_park_path("Music/music-one"))
+    style_util.set_button_style(music_card.playlist_button, icon_path="Music/music-list", is_dark=is_dark, style_change=False)
+    style_util.set_button_style(music_card.song_list_button, icon_path="Music/music-one", is_dark=is_dark, style_change=False)
     # 歌单页顶部图标
-    music_card.close_playlist_button.setIcon(music_card.get_icon_park_path("Edit/return"))
-    music_card.edit_playlist_button.setIcon(music_card.get_icon_park_path("Edit/edit"))
-    music_card.delete_playlist_button.setIcon(music_card.get_icon_park_path("Edit/delete"))
-    music_card.add_playlist_button.setIcon(music_card.get_icon_park_path("Music/list-add"))
+    style_util.set_button_style(music_card.close_playlist_button, icon_path="Edit/next", is_dark=is_dark, style_change=False)
+    style_util.set_button_style(music_card.edit_playlist_button, icon_path="Edit/edit", is_dark=is_dark, style_change=False)
+    style_util.set_button_style(music_card.delete_playlist_button, icon_path="Edit/delete", is_dark=is_dark, style_change=False)
+    style_util.set_button_style(music_card.add_playlist_button, icon_path="Music/list-add", is_dark=is_dark, style_change=False)
     # 歌曲列表页顶部图标
-    music_card.close_song_list_button.setIcon(music_card.get_icon_park_path("Edit/return"))
-    music_card.delete_song_button.setIcon(music_card.get_icon_park_path("Edit/delete"))
-    music_card.import_button.setIcon(music_card.get_icon_park_path("Arrows/afferent-three"))
+    style_util.set_button_style(music_card.close_song_list_button, icon_path="Edit/return", is_dark=is_dark, style_change=False)
+    style_util.set_button_style(music_card.delete_song_button, icon_path="Edit/delete", is_dark=is_dark, style_change=False)
+    style_util.set_button_style(music_card.import_button, icon_path="Arrows/afferent-three", is_dark=is_dark, style_change=False)
     # 歌曲控制模块背景
     music_card.progress_controls.setStyleSheet("background: transparent;")
     # if music_card.is_dark:

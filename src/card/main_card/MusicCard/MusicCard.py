@@ -6,6 +6,7 @@ from PySide6.QtCore import Qt, QRect, QPoint
 from src.card.MainCardManager.MainCard import MainCard
 from src.constant import data_save_constant
 from src.module import dialog_module
+from src.ui import style_util
 
 from . import music_style, music_analysis
 from .ui_components import init_base_ui, init_playlist_ui, init_songlist_ui, init_other_ui, delete_current_playlist
@@ -335,7 +336,7 @@ class MusicCard(MainCard):
         else:
             icon_name = "Music/volume-notice"
         volume_button = self.button_list[4]
-        volume_button.setIcon(self.get_icon_park_path(icon_name))
+        volume_button.setIcon(style_util.get_icon_by_path(icon_name, is_dark=self.is_dark()))
         if self.loading_ok:
             self.save_settings()
 

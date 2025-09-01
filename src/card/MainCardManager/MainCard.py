@@ -167,18 +167,6 @@ class MainCard(QObject):
         else:
             return True
 
-    def get_park_path(self, icon_position):
-        icon_theme_folder = "light" if self.is_dark() else "dark"
-        return "./static/img/IconPark/" + icon_theme_folder + "/" + icon_position + ".png"
-
-    def get_icon_park_path(self, icon_position):
-        icon_theme_folder = "light" if self.is_dark() else "dark"
-        return QIcon("./static/img/IconPark/" + icon_theme_folder + "/" + icon_position + ".png")
-
-    def get_pixmap_park_path(self, icon_position):
-        icon_theme_folder = "light" if self.is_dark() else "dark"
-        return QPixmap("./static/img/IconPark/" + icon_theme_folder + "/" + icon_position + ".png")
-
     def get_prospect_color(self, rgb=False, rgba=False, hex=False, hexa=False, qt_type=False):
         return my_color.get_prospect_color(self.is_dark(), rgb, rgba, hex, hexa, qt_type)
 

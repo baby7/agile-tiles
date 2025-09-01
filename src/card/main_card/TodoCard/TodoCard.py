@@ -461,11 +461,11 @@ class TodoCard(MainCard):
             background-color: rgba(125, 125, 125, 80);
         }"""
         self.add_button.setStyleSheet(push_button_style)
-        self.add_button.setIcon(self.get_icon_park_path("Character/add-one"))
         self.push_button_todo_add.setStyleSheet(push_button_style)
-        self.push_button_todo_add.setIcon(self.get_icon_park_path("Character/add-one"))
         self.push_button_todo_back.setStyleSheet(push_button_style)
-        self.push_button_todo_back.setIcon(self.get_icon_park_path("Edit/return"))
+        style_util.set_button_style(self.add_button, icon_path="Character/add-one", is_dark=self.is_dark(), style_change=False)
+        style_util.set_button_style(self.push_button_todo_add, icon_path="Character/add-one", is_dark=self.is_dark(), style_change=False)
+        style_util.set_button_style(self.push_button_todo_back, icon_path="Edit/return", is_dark=self.is_dark(), style_change=False)
         # 其他
         if self.is_dark():
             line_style = "border: 1px solid white;"

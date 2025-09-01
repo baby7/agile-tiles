@@ -1,6 +1,5 @@
-from PySide6.QtWidgets import *
-from PySide6.QtCore import *
-from PySide6.QtGui import *
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QTextBrowser, QSizePolicy, QMenu
 
 
 class ChatBubble(QTextBrowser):
@@ -12,7 +11,7 @@ class ChatBubble(QTextBrowser):
 
         # 尺寸策略
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
         # 连接文档大小变化信号
         self.document().documentLayout().documentSizeChanged.connect(self.adjustSize)

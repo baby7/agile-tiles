@@ -112,7 +112,7 @@ class InformationCard(AggregationCard):
                 "type": "瞅瞅图",
                 "title": "显卡天梯图",
                 "des": "桌面端显卡性能天梯图",
-                "icon": "Hardware/chip.svg",
+                "icon": "Hardware/chip",
                 "content": "https://server.agiletiles.com/file_cdn/gpu_top_qiudaoyu/Gpu-2025-08.jpg",
                 "link": "https://tieba.baidu.com/p/6133450546?pn=1",
                 "call_back_func": None
@@ -122,7 +122,7 @@ class InformationCard(AggregationCard):
                 "type": "瞅瞅图",
                 "title": "处理器天梯图",
                 "des": "桌面端处理器性能天梯图",
-                "icon": "Hardware/cpu.svg",
+                "icon": "Hardware/cpu",
                 "content": "https://server.agiletiles.com/file_cdn/gpu_top_qiudaoyu/Cpu-2025-08.jpg",
                 "link": "https://tieba.baidu.com/p/5005825360?pn=1",
                 "call_back_func": None
@@ -133,7 +133,7 @@ class InformationCard(AggregationCard):
                 "type": "看看字",
                 "title": "历史上的今天",
                 "des": "看看历史上的今天有啥事",
-                "icon": "Edit/calendar.svg",
+                "icon": "Edit/calendar",
                 "content": None,
                 "call_back_func": self.push_button_reading_history_click
             },
@@ -142,7 +142,7 @@ class InformationCard(AggregationCard):
                 "type": "看看字",
                 "title": "随机KFC星期四文案",
                 "des": "肯德基疯狂星期四文案",
-                "icon": "Foods/chicken-leg.svg",
+                "icon": "Foods/chicken-leg",
                 "content": None,
                 "call_back_func": self.push_button_reading_kfc_click
             },
@@ -151,7 +151,7 @@ class InformationCard(AggregationCard):
                 "type": "看看字",
                 "title": "随机生活小妙招",
                 "des": "简单又实用,送给大家",
-                "icon": "Life/hanger.svg",
+                "icon": "Life/hanger",
                 "content": None,
                 "call_back_func": self.push_button_reading_life_click
             },
@@ -160,7 +160,7 @@ class InformationCard(AggregationCard):
             #     "type": "看看字",
             #     "title": "脑筋急转弯",
             #     "des": "打什么东西,不必花力气?",
-            #     "icon": "Health/brain.svg",
+            #     "icon": "Health/brain",
             #     "content": None,
             #     "call_back_func": self.push_button_reading_riddle_click
             # },
@@ -169,7 +169,7 @@ class InformationCard(AggregationCard):
                 "type": "看看字",
                 "title": "随机彩虹屁",
                 "des": "这是什么绝世小可爱",
-                "icon": "Life/beach-umbrella.svg",
+                "icon": "Life/beach-umbrella",
                 "content": None,
                 "call_back_func": self.push_button_reading_rainbow_click
             },
@@ -178,7 +178,7 @@ class InformationCard(AggregationCard):
                 "type": "看看字",
                 "title": "随机早安心语",
                 "des": "早上好!祝你有个好心情",
-                "icon": "Weather/sun-one.svg",
+                "icon": "Weather/sun-one",
                 "content": None,
                 "call_back_func": self.push_button_reading_morning_click
             },
@@ -187,7 +187,7 @@ class InformationCard(AggregationCard):
                 "type": "看看字",
                 "title": "随机晚安心语",
                 "des": "晚安,愿你今晚有个好梦",
-                "icon": "Weather/moon.svg",
+                "icon": "Weather/moon",
                 "content": None,
                 "call_back_func": self.push_button_reading_night_click
             },
@@ -196,7 +196,7 @@ class InformationCard(AggregationCard):
                 "type": "看看字",
                 "title": "随机毒鸡汤",
                 "des": "猛士,干了碗毒鸡汤",
-                "icon": "Animals/chicken-zodiac.svg",
+                "icon": "Animals/chicken-zodiac",
                 "content": None,
                 "call_back_func": self.push_button_reading_chicken_1_click
             },
@@ -205,7 +205,7 @@ class InformationCard(AggregationCard):
                 "type": "看看字",
                 "title": "随机土味情话",
                 "des": "我有超能力,超喜欢你",
-                "icon": "Base/like.svg",
+                "icon": "Base/like",
                 "content": None,
                 "call_back_func": self.push_button_reading_cheesy_love_click
             },

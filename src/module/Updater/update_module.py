@@ -8,6 +8,8 @@ from src.constant import version_constant
 from src.module.Updater.Updater import Updater
 from src.module.Box import message_box_util
 
+# 添加全局变量，存储更新信息
+current_update_info = None
 
 def check_update_on_start(main_object, tag=None):
     """启动时静默检查更新"""
@@ -24,6 +26,9 @@ def check_update_on_start(main_object, tag=None):
 
 def handle_silent_update_result(main_object, success, update_info, tag):
     """静默更新检查回调"""
+    global current_update_info
+    current_update_info = update_info
+
     if not success or update_info is None:
         message_box_util.box_information(
             main_object,
@@ -43,11 +48,11 @@ def handle_silent_update_result(main_object, success, update_info, tag):
     # 有更新
     if version_constant.compare_version(main_object.silent_updater.app_version, update_info["version"]) < 0:
         if tag == "Login":
+            markdown_content = update_info["title"] + "\n" + update_info["message"]
             result = message_box_util.box_acknowledgement(main_object,
-                                                          title="更新提醒",
-                                                          content=f'可以进行更新，当前版本: {main_object.silent_updater.app_version}，新版本: {update_info["version"]}',
-                                                          button_ok_text="确定更新", button_no_text="以后再说"
-                                                          )
+                                                          title="可以进行更新",
+                                                          markdown_content=markdown_content,
+                                                          button_ok_text="确定更新", button_no_text="以后再说")
             if result:
                 main_object.agree_update = True
                 start_update_process(main_object, update_info)
@@ -75,10 +80,10 @@ def handle_silent_update_result(main_object, success, update_info, tag):
 
 def show_force_update_dialog(main_object, update_info):
     """强制更新弹窗"""
+    markdown_content = update_info["title"] + "\n" + update_info["message"]
     result = message_box_util.box_acknowledgement(main_object,
-                                                  title="强制更新", content=f"必须升级到最新版本才能继续使用，新版本: {update_info['version']}",
-                                                  button_ok_text="确定更新", button_no_text="退出应用"
-                                                  )
+                                                  title="必须升级到最新版本才能继续使用", markdown_content=markdown_content,
+                                                  button_ok_text="确定更新", button_no_text="退出应用")
     if result:
         main_object.agree_update = True
         start_update_process(main_object, update_info)
@@ -122,8 +127,16 @@ def start_update_process(main_object, update_info):
     # 取消按钮事件
     cancel_button.clicked.connect(lambda: handle_cancel_download(main_object))
 
+    # 根据updateTag决定下载内容
+    if update_info.get("updateTag"):
+        # 大版本更新，下载完整安装包
+        download_url = update_info["url"]
+    else:
+        # 小版本更新，只下载exe文件
+        download_url = update_info["exeUrl"]
+
     # 开始下载
-    main_object.downloader.download_package(update_info["url"])
+    main_object.downloader.download_package(download_url)
 
 
 def handle_cancel_download(main_object):
@@ -141,9 +154,12 @@ def handle_download_finished(main_object, success, update_info):
     if success:
         # 获取下载的文件路径
         download_path = main_object.downloader.downloaded_file_path
-
-        # 运行安装包并退出程序
-        run_installer_and_exit(main_object, download_path)
+        if update_info.get("updateTag"):
+            # 大版本更新：运行安装包并退出
+            run_installer_and_exit(main_object, download_path)
+        else:
+            # 小版本更新：替换exe文件
+            replace_exe_and_restart(main_object, download_path, update_info)
     else:
         message_box_util.box_information(
             main_object,
@@ -152,6 +168,35 @@ def handle_download_finished(main_object, success, update_info):
         )
         main_object.agree_update = False
         main_object.update_ready.emit()
+
+def replace_exe_and_restart(main_object, new_exe_path, update_info):
+    """替换exe文件并重启应用"""
+    # 获取当前exe的路径
+    current_exe_path = os.path.abspath(sys.argv[0])
+
+    # 获取updater_helper的路径（假设在同一目录下）
+    helper_path = os.path.join(os.path.dirname(current_exe_path), "patch_updater.exe")
+
+    if not os.path.exists(helper_path):
+        message_box_util.box_information(
+            main_object,
+            "错误",
+            "找不到更新助手程序，无法完成更新。"
+        )
+        main_object.agree_update = False
+        main_object.update_ready.emit()
+        return
+
+    # 关闭主程序
+    main_object.quit_before_do()
+
+    # 启动替换程序
+    try:
+        subprocess.Popen([helper_path])
+    except Exception as e:
+        QApplication.quit()
+    # 退出应用
+    QApplication.quit()
 
 
 def run_installer_and_exit(main_object, exe_path):

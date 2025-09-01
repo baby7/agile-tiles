@@ -392,51 +392,51 @@ class ScreenshotWidget(QWidget):
         self.rect_btn = QPushButton("", self.toolbar)
         self.rect_btn.setToolTip("绘制矩形")
         self.rect_btn.setCheckable(True)  # 设置为可选中状态
-        self.rect_btn.setStyleSheet(style_util.card_button_style.replace("{image}", "Graphics/rectangle-one"))
+        style_util.set_card_button_style(self.rect_btn, "Graphics/rectangle-one", is_dark=False)
 
         self.ellipse_btn = QPushButton("", self.toolbar)
         self.ellipse_btn.setToolTip("绘制椭圆")
         self.ellipse_btn.setCheckable(True)
-        self.ellipse_btn.setStyleSheet(style_util.card_button_style.replace("{image}", "Graphics/round"))
+        style_util.set_card_button_style(self.ellipse_btn, "Graphics/round", is_dark=False)
 
         self.line_btn = QPushButton("", self.toolbar)
         self.line_btn.setToolTip("绘制直线")
         self.line_btn.setCheckable(True)
-        self.line_btn.setStyleSheet(style_util.card_button_style.replace("{image}", "Character/minus"))
+        style_util.set_card_button_style(self.line_btn, "Character/minus", is_dark=False)
 
         self.arrow_btn = QPushButton("", self.toolbar)
         self.arrow_btn.setToolTip("绘制箭头")
         self.arrow_btn.setCheckable(True)
-        self.arrow_btn.setStyleSheet(style_util.card_button_style.replace("{image}", "Arrows/arrow-left-up"))
+        style_util.set_card_button_style(self.arrow_btn, "Arrows/arrow-left-up", is_dark=False)
 
         # 添加撤销和重做按钮
         self.undo_btn = QPushButton("", self.toolbar)
         self.undo_btn.setToolTip("撤销")
-        self.undo_btn.setStyleSheet(style_util.card_button_style.replace("{image}", "Edit/back").replace("border-radius: 16px;", "border-radius: 12px;"))
+        style_util.set_card_button_style(self.undo_btn, "Edit/back", is_dark=False)
         self.undo_btn.clicked.connect(self.undo)
         self.undo_btn.setEnabled(False)  # 初始状态禁用
 
         self.redo_btn = QPushButton("", self.toolbar)
         self.redo_btn.setToolTip("重做")
-        self.redo_btn.setStyleSheet(style_util.card_button_style.replace("{image}", "Edit/next").replace("border-radius: 16px;", "border-radius: 12px;"))
+        style_util.set_card_button_style(self.redo_btn, "Edit/next", is_dark=False)
         self.redo_btn.clicked.connect(self.redo)
         self.redo_btn.setEnabled(False)  # 初始状态禁用
 
         self.translate_btn = QPushButton("", self.toolbar)
         self.translate_btn.setToolTip("识别文字并翻译")
-        self.translate_btn.setStyleSheet(style_util.card_button_style.replace("{image}", "Base/translate"))
+        style_util.set_card_button_style(self.translate_btn, "Base/translate", is_dark=False)
         self.ocr_btn = QPushButton("", self.toolbar)
         self.ocr_btn.setToolTip("识别文字")
-        self.ocr_btn.setStyleSheet(style_util.card_button_style.replace("{image}", "Office/text-recognition"))
+        style_util.set_card_button_style(self.ocr_btn, "Office/text-recognition", is_dark=False)
         self.save_btn = QPushButton("", self.toolbar)
         self.save_btn.setToolTip("另存为图片")
-        self.save_btn.setStyleSheet(style_util.card_button_style.replace("{image}", "Hardware/memory-card-one"))
+        style_util.set_card_button_style(self.save_btn, "Hardware/memory-card-one", is_dark=False)
         self.copy_btn = QPushButton("", self.toolbar)
         self.copy_btn.setToolTip("复制截图到剪贴板")
-        self.copy_btn.setStyleSheet(style_util.card_button_style.replace("{image}", "Edit/copy"))
+        style_util.set_card_button_style(self.copy_btn, "Edit/copy", is_dark=False)
         self.close_btn = QPushButton("", self.toolbar)
         self.close_btn.setToolTip("关闭")
-        self.close_btn.setStyleSheet(style_util.card_button_style.replace("{image}", "Character/close"))
+        style_util.set_card_button_style(self.close_btn, "Character/close", is_dark=False)
 
         # 连接信号
         self.rect_btn.clicked.connect(lambda: self.toggle_drawing_mode("rectangle"))

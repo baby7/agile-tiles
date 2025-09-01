@@ -9,8 +9,7 @@ from src.util import browser_util
 
 # 设置图标
 def set_icon(main_object):
-    icon_path = str(os.getcwd()) + r"\static\img\icon\icon.ico"
-    main_object.sys_icon = QIcon(icon_path)
+    main_object.sys_icon = QIcon(":static/img/icon/icon.ico")
     main_object.setWindowIcon(main_object.sys_icon)
 
 

@@ -5,6 +5,8 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QPainter, QColor
 from PySide6 import QtGui, QtWidgets
 
+from src.ui import style_util
+
 
 class ENUM_TimeMode(enum.Enum):
     TimeMode_Year = "TimeMode_Year"         # 年
@@ -32,14 +34,12 @@ class QSingleSelectTimeWidget(QWidget):
         self.btnUp = QtWidgets.QPushButton(self)
         self.btnUp.setGeometry(20, 7, 20, 20)
         self.btnUp.setStyleSheet(qsBtnUpStyle)
-        self.btnUp.setIcon(QtGui.QPixmap("static/img/IconPark/dark/up.png"))
         self.btnUp.setText("∧")
         # < button > 下一个
         qsBtnDownStyle = "QPushButton{border: none; outline:none;}"
         self.btnDown = QtWidgets.QPushButton(self)
         self.btnDown.setGeometry(20, 173, 20, 20)
         self.btnDown.setStyleSheet(qsBtnDownStyle)
-        self.btnDown.setIcon(QtGui.QPixmap("static/img/IconPark/dark/down.png"))
         self.btnDown.setText("∨")
         # < label > 上一个时间
         qsPreviousStyle = "QLabel{border: none; font-size:16px;color:#999999;background-color: transparent;}"
@@ -65,12 +65,8 @@ class QSingleSelectTimeWidget(QWidget):
 
     def refresh_theme(self, is_dark):
         if is_dark:
-            self.btnUp.setIcon(QtGui.QPixmap("static/img/IconPark/light/up.png"))
-            self.btnDown.setIcon(QtGui.QPixmap("static/img/IconPark/light/down.png"))
             qsCurrent = "QLabel{border: none; font-size:16px; font:blod; color:rgb(255, 255, 255);background-color: transparent;}"
         else:
-            self.btnUp.setIcon(QtGui.QPixmap("static/img/IconPark/dark/up.png"))
-            self.btnDown.setIcon(QtGui.QPixmap("static/img/IconPark/dark/down.png"))
             qsCurrent = "QLabel{border: none; font-size:16px; font:blod; color:rgb(0, 0, 0);background-color: transparent;}"
         self.labCurrent.setStyleSheet(qsCurrent)
 

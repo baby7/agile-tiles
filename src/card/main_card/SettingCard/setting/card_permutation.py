@@ -9,6 +9,7 @@ from src.card.main_card.SettingCard.setting.card_permutation_form import Ui_Form
 from src.card.main_card.SettingCard.setting.CardPermutation.CardItemSignals import CardDesignItem
 from src.card.main_card.SettingCard.setting.CardPermutation.GridScene import GridScene
 from src.module.Box import message_box_util
+from src.ui import style_util
 
 
 class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
@@ -70,7 +71,7 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
             self.widget_menu_manager.setStyleSheet(widget_style)
             self.widget_menu_store.setStyleSheet(widget_style)
             button_bg_style = """
-            QWidget {
+            QWidget {`
                 border-radius: 10px;
                 border: 1px solid black;
                 background-color:rgba(0, 0, 0, 200);
@@ -80,10 +81,10 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
             self.widget_right.setStyleSheet(button_bg_style)
             # self.widget_store_title.setStyleSheet(button_bg_style)
         # 按钮图标初始化
-        self.delete_btn.setIcon(self.get_icon("Edit/delete"))
-        self.push_button_add_box_width.setIcon(self.get_icon("Edit/fullwidth"))
-        self.push_button_reduce_box_width.setIcon(self.get_icon("Edit/link-in"))
-        self.push_button_ok.setIcon(self.get_icon("Character/check"))
+        style_util.set_card_button_style(self.delete_btn, "Edit/delete", is_dark=self.is_dark, style_change=False)
+        style_util.set_card_button_style(self.push_button_add_box_width, "Edit/fullwidth", is_dark=self.is_dark, style_change=False)
+        style_util.set_card_button_style(self.push_button_reduce_box_width, "Edit/link-in", is_dark=self.is_dark, style_change=False)
+        style_util.set_card_button_style(self.push_button_ok, "Character/check", is_dark=self.is_dark, style_change=False)
         # 布局初始化
         self.widget_base.setLayout(self.gridLayout_3)
         self.gridLayout_3.setContentsMargins(10, 10, 10, 10)
@@ -125,13 +126,6 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
         # 按钮防抖机制
         self.last_click_time = 0  # 上次点击时间戳
         self.click_delay = 500    # 防抖延迟(毫秒)
-
-    def get_icon(self, icon_path, custom_theme=None):
-        if custom_theme is not None:
-            theme = custom_theme
-        else:
-            theme = "light" if self.is_dark else "dark"
-        return QtGui.QIcon(f"./static/img/IconPark/{theme}/{icon_path}.png")
 
     def render_card_list(self):
         """渲染卡片列表"""
@@ -588,7 +582,3 @@ def is_overlap(box1, box2):
         return True
     else:
         return False
-
-def get_icon_park_path(icon_position, is_dark):
-    icon_theme_folder = "light" if is_dark else "dark"
-    return QIcon("./static/img/IconPark/" + icon_theme_folder + "/" + icon_position + ".png")

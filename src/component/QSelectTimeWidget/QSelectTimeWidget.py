@@ -117,3 +117,8 @@ class QSelectTimeWidget(QWidget):
         self.btnOK.clicked.connect(self.OnBnClickedOK)
         # < button > 取消
         self.btnCancel.clicked.connect(self.OnBnClickedCanel)
+
+    def refresh_theme(self, is_dark):
+        self.m_widgetHour.refresh_theme(is_dark)
+        self.m_widgetMinute.refresh_theme(is_dark)
+        self.m_widgetSecond.refresh_theme(is_dark)

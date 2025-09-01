@@ -4,7 +4,10 @@ import copy
 import json
 import os, sys
 import ctypes
+import subprocess
 import time, datetime
+# 资源包
+import compiled_resources
 
 from src.module.Screenshot.ScreenshotWidget import ScreenshotWidget
 from src.util import main_data_compare, hardware_id_util
@@ -628,34 +631,57 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         confirm = self.toolkit.message_box_util.box_acknowledgement(self, "退出", f"确定要退出登录吗？")
         if not confirm:
             return
-        try:
-            # 隐藏窗口
-            self.hide()
-            # 消除登录状态
-            self.user_data_status = "logout"
-            self.is_login = False
-            self.is_vip = None
-            self.vip_expire_time = None
-            self.access_token = None
-            self.refresh_token = None
-            self.refresh_token_datetime = None
-            self.main_data = None
-            self.current_user = None
-            # 登出前的操作
-            self.do_logout()
-            # 启动登录窗口
-            self.show_start_login_window()
-        except Exception as e:
-            traceback.print_exc()
-            exit()
-        # 判断用户是否登录，未登录则退出程序
-        if self.current_user is None:
-            self.quit_before(is_hide_dialog=True)
-            exit()
-        # 展示窗口
-        self.show()
-        # 执行登录后的操作
-        self.do_login()
+        # 获取login_helper的路径（假设在同一目录下）
+        current_exe_path = os.path.abspath(sys.argv[0])
+        login_helper_path = os.path.join(os.path.dirname(current_exe_path), "login_helper.exe")
+        # 找不到就进行旧的更新逻辑
+        if not os.path.exists(login_helper_path):
+            try:
+                # 隐藏窗口
+                self.hide()
+                # 消除登录状态
+                self.user_data_status = "logout"
+                self.is_login = False
+                self.is_vip = None
+                self.vip_expire_time = None
+                self.access_token = None
+                self.refresh_token = None
+                self.refresh_token_datetime = None
+                self.main_data = None
+                self.current_user = None
+                # 登出前的操作
+                self.do_logout()
+                # 启动登录窗口
+                self.show_start_login_window()
+            except Exception as e:
+                traceback.print_exc()
+                exit()
+            # 判断用户是否登录，未登录则退出程序
+            if self.current_user is None:
+                self.quit_before(is_hide_dialog=True)
+                exit()
+            # 展示窗口
+            self.show()
+            # 执行登录后的操作
+            self.do_login()
+        else:
+            # 否则执行新的逻辑
+            # 注销云端登录
+            if self.current_user is not None and "id" in self.current_user:
+                self.user_info_client.logout(self.current_user["id"], self.hardware_id)
+                print("云端注销登录成功")
+            # 注销本地登录
+            self.database_manager.logout_user()
+            print("本地注销登录成功")
+            # 关闭主程序
+            self.quit_before_do()
+            # 启动替换程序
+            try:
+                subprocess.Popen([login_helper_path])
+            except Exception as e:
+                QApplication.quit()
+            # 退出应用
+            QApplication.quit()
 
     def do_logout(self):
         # 注销云端登录
@@ -976,9 +1002,9 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
     def show_tutorial(self):
         self.tutorial = TutorialWindow()
         # 添加引导步骤图片（替换为实际路径）
-        self.tutorial.add_step("./static/img/tutorial/tutorial_1.png")
-        self.tutorial.add_step("./static/img/tutorial/tutorial_2.png")
-        self.tutorial.add_step("./static/img/tutorial/tutorial_3.png")
+        self.tutorial.add_step(":static/img/tutorial/tutorial_1.png")
+        self.tutorial.add_step(":static/img/tutorial/tutorial_2.png")
+        self.tutorial.add_step(":static/img/tutorial/tutorial_3.png")
         self.tutorial.start()
 
     ''' **********************************更新程序*************************************** '''
@@ -1422,11 +1448,13 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         """退出前置处理"""
         if self.app_title is None:
             self.quit_before_do()
+            self.run_exit_helper()
             QApplication.instance().quit()
             exit()
         if is_hide_dialog:
             # 如果不显示对话框，则直接退出
             self.quit_before_do()
+            self.run_exit_helper()
             QApplication.instance().quit()
             exit()
         else:
@@ -1434,8 +1462,22 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             confirm = self.toolkit.message_box_util.box_acknowledgement(self, "退出", f"确定要退出{self.app_title}吗？")
             if confirm:
                 self.quit_before_do()
+                self.run_exit_helper()
                 QApplication.instance().quit()
                 exit()
+
+    def run_exit_helper(self):
+        # 获取exit_helper的路径（假设在同一目录下）
+        current_exe_path = os.path.abspath(sys.argv[0])
+        exit_helper_path = os.path.join(os.path.dirname(current_exe_path), "exit_helper.exe")
+        # 找不到就不运行exit助手
+        if not os.path.exists(exit_helper_path):
+            return
+        # 启动exit程序
+        try:
+            subprocess.Popen([exit_helper_path])
+        except Exception as e:
+            pass
 
     def quit_before_do(self):
         """退出前置处理"""

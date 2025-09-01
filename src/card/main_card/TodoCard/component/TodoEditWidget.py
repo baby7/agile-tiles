@@ -78,12 +78,14 @@ class TodoEditWidget(QtWidgets.QWidget, Ui_Form):
         self.time_choice.setObjectName(u"time_choice")
         self.time_choice.setFixedSize(QtCore.QSize(240, 320))
         self.time_choice.setStyleSheet(group_box_style if not self.todo_card.is_dark() else group_box_dark_style)
+        self.time_choice.move(self.width() // 2 - 160, self.height() // 2 - 200)
         self.time_choice.hide()
 
         self.date_choice = QtWidgets.QGroupBox(self)
         self.date_choice.setObjectName(u"time_choice")
         self.date_choice.setFixedSize(QtCore.QSize(240, 320))
         self.date_choice.setStyleSheet(group_box_style if not self.todo_card.is_dark() else group_box_dark_style)
+        self.date_choice.move(self.width() // 2 - 160, self.height() // 2 - 200)
         self.date_choice.hide()
 
         # 初始化时间选择
@@ -137,7 +139,7 @@ class TodoEditWidget(QtWidgets.QWidget, Ui_Form):
             """
 
         # 应用主背景样式
-        self.setStyleSheet(f"TodoEditWidget {{ {background_style} }}")
+        self.setStyleSheet(background_style)
 
         # 应用顶部和底部小部件样式
         self.top_widget.setStyleSheet(widget_style)
@@ -293,10 +295,10 @@ class TodoEditWidget(QtWidgets.QWidget, Ui_Form):
         self.set_background_style()
 
         # 刷新时间选择器和日期选择器的主题
-        # if hasattr(self, 'm_pTimeWidget'):
-        #     self.m_pTimeWidget.refresh_theme(self.todo_card.is_dark())
-        # if hasattr(self, 'm_pDateWidget'):
-        #     self.m_pDateWidget.refresh_theme(self.todo_card.is_dark())
+        self.m_pTimeWidget.refresh_theme(self.todo_card.is_dark())
+        self.m_pDateWidget.refresh_theme(self.todo_card.is_dark())
+        self.time_choice.setStyleSheet(group_box_style if not self.todo_card.is_dark() else group_box_dark_style)
+        self.date_choice.setStyleSheet(group_box_style if not self.todo_card.is_dark() else group_box_dark_style)
 
         # 刷新其他控件的样式
         style_util.set_dialog_control_style(self, self.todo_card.is_dark())

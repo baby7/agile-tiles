@@ -83,10 +83,9 @@ class CardDetailWidget(QWidget):
 
     def get_icon(self, icon_path, custom_theme=None):
         if custom_theme is not None:
-            theme = custom_theme
+            return style_util.get_icon_by_path(icon_path, custom_color="#FF0000")
         else:
-            theme = "dark" if self.is_dark else "light"
-        return QtGui.QIcon(f"./static/img/IconPark/{theme}/{icon_path}.png")
+            return style_util.get_icon_by_path(icon_path, is_dark=self.is_dark)
 
     def init_ui(self):
         # 主题颜色定义
@@ -390,8 +389,7 @@ class CardDetailWidget(QWidget):
         """)
 
         # 设置默认图标
-        default_icon = QPixmap(
-            f"./static/img/IconPark/{'light' if self.is_dark else 'dark'}/Abstract/application-one.png")
+        default_icon = style_util.get_pixmap_by_path("Abstract/application-one", is_dark=self.is_dark)
         self.icon_label.setPixmap(default_icon.scaled(80, 80, Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
         # 如果有自定义图标URL则加载

@@ -11,6 +11,7 @@ from src.card.main_card.SettingCard.setting.CardPermutation.CardDetailWidget imp
 from src.component.LoadAnimation.LoadAnimation import LoadAnimation
 from src.ui import style_util
 from src.client import card_store_client
+from src.ui.style_util import get_icon_by_path
 
 
 class CardStore(QtWidgets.QWidget):
@@ -88,13 +89,6 @@ class CardStore(QtWidgets.QWidget):
     def load_animation_end_call_back(self):
         self.label_top_mask.hide()
         self.load_animation.hide()
-
-    def get_icon(self, icon_path, custom_theme=None):
-        if custom_theme is not None:
-            theme = custom_theme
-        else:
-            theme = "light" if self.is_dark else "dark"
-        return QtGui.QIcon(f"./static/img/IconPark/{theme}/{icon_path}.png")
 
     def init_store_card_list(self):
         # 收集所有分类（排除"全部"）
@@ -223,7 +217,7 @@ class CardStore(QtWidgets.QWidget):
         card_details.setStyleSheet(button_dark_style if self.is_dark else button_light_style)
         card_details.setMaximumHeight(25)
         card_details.setMaximumWidth(25)
-        card_details.setIcon(QIcon(f"./static/img/IconPark/{'light' if self.is_dark else 'dark'}/Character/info.png"))
+        card_details.setIcon(get_icon_by_path(icon_path="Character/info", is_dark=self.is_dark))
         card_details.setIconSize(QSize(20, 20))
         card_details.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
         card_details.clicked.connect(lambda : self.open_view_card_detail(card_data["id"]))
@@ -250,7 +244,7 @@ class CardStore(QtWidgets.QWidget):
         # 左切换按钮
         btn_icon_size = 30
         self.left_btn = QtWidgets.QPushButton()             # 左切换按钮
-        self.left_btn.setIcon(self.get_icon("Arrows/left-c"))
+        style_util.set_button_style(self.left_btn, icon_path="Arrows/left-c", is_dark=self.is_dark, style_change=False)
         self.left_btn.setFlat(True)
         self.left_btn.setFixedSize(btn_icon_size, btn_icon_size)
         self.left_btn.setIconSize(QSize(btn_icon_size, btn_icon_size))
@@ -268,7 +262,7 @@ class CardStore(QtWidgets.QWidget):
         image_layout.addStretch()
         # 右切换按钮
         self.right_btn = QtWidgets.QPushButton()            # 右切换按钮
-        self.right_btn.setIcon(self.get_icon("Arrows/right-c"))
+        style_util.set_button_style(self.right_btn, icon_path="Arrows/right-c", is_dark=self.is_dark, style_change=False)
         self.right_btn.setFlat(True)
         self.right_btn.setFixedSize(btn_icon_size, btn_icon_size)
         self.right_btn.setIconSize(QSize(btn_icon_size, btn_icon_size))

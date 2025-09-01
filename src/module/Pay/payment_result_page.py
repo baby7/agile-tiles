@@ -2,6 +2,8 @@ from PySide6.QtGui import Qt, QFont, QPixmap
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QPushButton, QWidget
 
+from src.ui import style_util
+
 
 class PaymentResultPage(QWidget):
     """支付结果页面组件"""
@@ -82,7 +84,7 @@ class PaymentResultPage(QWidget):
             )
             self.result_description.setText(message or "您的订阅已成功开通，感谢您的支持！")
             # 加载成功图标
-            success_icon = QPixmap("./static/img/IconPark/green/Character/check-one.png")  # 使用资源文件中的图标
+            success_icon = style_util.get_pixmap_by_path("Character/check-one", custom_color="#20D62A")
             if success_icon.isNull():
                 success_icon = QPixmap(100, 100)
                 success_icon.fill(Qt.GlobalColor.transparent)
@@ -97,7 +99,7 @@ class PaymentResultPage(QWidget):
             )
             self.result_description.setText(message or "支付未完成，请检查支付状态或重试")
             # 加载失败图标
-            failed_icon = QPixmap("./static/img/IconPark/green/Character/close-one.png")  # 使用资源文件中的图标
+            failed_icon = style_util.get_pixmap_by_path("Character/close-one", custom_color="#FF0000")
             if failed_icon.isNull():
                 failed_icon = QPixmap(100, 100)
                 failed_icon.fill(Qt.GlobalColor.transparent)

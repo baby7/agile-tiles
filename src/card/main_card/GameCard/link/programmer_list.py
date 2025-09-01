@@ -4,7 +4,7 @@ programmer_list = [
         "type": "程序员",
         "title": "Ctool",
         "des": "程序员工具箱",
-        "icon": "Brand/github.svg",
+        "icon": "Brand/github",
         "content":{
             "url": "https://github.com/",
             "size": [1000, 600]

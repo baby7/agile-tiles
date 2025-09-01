@@ -37,7 +37,7 @@ nuitka_command = [
     "--include-package=win32com",                                           # pywin32的核心包
     "--include-package=pywintypes",                                         # pywin32的核心包
 
-    "--windows-icon-from-ico=static/img/icon/icon.ico",                     # 图标路径
+    "--windows-icon-from-ico=resources/img/icon/icon.ico",                     # 图标路径
     "--output-dir=out",                                                     # 输出目录
 
     "--windows-company-name=杭州市拱墅区启杭灵卡软件开发工作室",                  # Windows下软件公司信息
@@ -99,9 +99,20 @@ print("完成复制 licenses 文件夹")
 copy_files("doc", f"{output_dir}/doc")
 print("完成复制 doc 文件夹")
 
-# 步骤0: 删除"out/AgileTiles.dist"文件夹
+# 步骤9: 复制 run_util 文件夹
+shutil.copyfile("run_util/login_helper.exe", f"{output_dir}/login_helper.exe")
+shutil.copyfile("run_util/patch_updater.exe", f"{output_dir}/patch_updater.exe")
+shutil.copyfile("run_util/exit_updater.exe", f"{output_dir}/exit_updater.exe")
+print("完成复制 run_util 文件夹")
+
+# 步骤10: 删除"out/AgileTiles.dist"文件夹
 if os.path.exists("out/AgileTiles.dist"):
     shutil.rmtree("out/AgileTiles.dist")
     print("完成删除 out/AgileTiles.dist 文件夹")
+
+# 步骤11: 删除"out/AgileTiles.build"文件夹
+if os.path.exists("out/AgileTiles.build"):
+    shutil.rmtree("out/AgileTiles.build")
+    print("完成删除 out/AgileTiles.build 文件夹")
 
 print("所有步骤已完成！")

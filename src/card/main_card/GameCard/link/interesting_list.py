@@ -56,7 +56,7 @@ interesting_list = [
         "type": "趣味",
         "title": "无限放大的插画",
         "des": "点击画面可切换插画",
-        "icon": "Travel/planet.svg",
+        "icon": "Travel/planet",
         "content":{
             "url": "https://zzz.zoomquilt.org/",
             "size": [600, 800]
@@ -95,7 +95,7 @@ interesting_list = [
         "type": "趣味",
         "title": "极限色差挑战",
         "des": "考验的可能不是眼睛而是屏幕",
-        "icon": "Travel/planet.svg",
+        "icon": "Travel/planet",
         "content":{
             "url": "https://kuku-kube.com/",
             "size": [600, 800]
@@ -108,7 +108,7 @@ interesting_list = [
         "type": "趣味",
         "title": "无限山水画",
         "des": "无限生成的中国山水画",
-        "icon": "Travel/planet.svg",
+        "icon": "Travel/planet",
         "content":{
             "url": "https://shan-shui-inf.lingdong.works/",
             "size": [600, 800]

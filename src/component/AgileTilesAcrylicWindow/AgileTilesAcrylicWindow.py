@@ -31,7 +31,7 @@ class AgileTilesAcrylicWindow(BaseAcrylicWindow):
             self.message_box_util = message_box_util
             self.standard_title_bar = AgileTilesTitleBar(self, self.is_dark)
             self.setTitleBar(self.standard_title_bar)
-            self.setWindowIcon(QIcon("./static/img/icon/icon.png"))
+            self.setWindowIcon(QIcon(":static/img/icon/icon.png"))
             self.titleBar.raise_()
             # 布局设置
             self.widget_base = None
@@ -61,7 +61,10 @@ class AgileTilesAcrylicWindow(BaseAcrylicWindow):
                 border: none;
                 background-color: rgba(34, 34, 34, 255);
                 color: rgba(255, 255, 255, 200);
-            }""")
+            }
+            QTextBrowser {
+                background-color: transparent;
+            }""" + style_util.scroll_bar_style)
         else:
             self.widget_base.setStyleSheet("""
             QWidget {
@@ -69,7 +72,10 @@ class AgileTilesAcrylicWindow(BaseAcrylicWindow):
                 border: none;
                 background-color: rgba(255, 255, 255, 160);
                 color: #000000;
-            }""")
+            }
+            QTextBrowser {
+                background-color: transparent;
+            }""" + style_util.scroll_bar_style)
         self.base_layout.addWidget(self.widget_base)
         print("初始化布局完成")
 

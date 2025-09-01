@@ -4,6 +4,7 @@ from PySide6.QtGui import QIcon, QCursor, QColor
 from PySide6.QtWidgets import QLabel, QPushButton
 from qframelesswindow import TitleBar
 
+from src.ui import style_util
 from src.util import browser_util
 
 
@@ -62,7 +63,6 @@ class AgileTilesTitleBar(TitleBar):
                     background: transparent;
                     padding: 0 4px;
                 }""")
-            self.questionPushButton.setIcon(QIcon("./static/img/IconPark/light/Character/help.png"))
         else:
             self.questionPushButton.setStyleSheet("""
                 QPushButton {
@@ -70,9 +70,9 @@ class AgileTilesTitleBar(TitleBar):
                     background: transparent;
                     padding: 0 4px;
                 }""")
-            self.questionPushButton.setIcon(QIcon("./static/img/IconPark/dark/Character/help.png"))
+        self.questionPushButton.setIcon(style_util.get_icon_by_path("Character/help", is_dark=self.is_dark))
         self.questionPushButton.clicked.connect(self.push_button_question_click)
-        self.questionPushButton.setToolTip("这是第三方模块，可以点击左边的标题按钮访问模块主页哦~该模块不进行数据同步)")
+        self.questionPushButton.setToolTip("该内容为第三方内容或参考第三方的内容，可以点击左边的标题按钮访问模块来源哦~该模块不进行数据同步)")
         self.questionPushButton.hide()
 
         # # 鼠标手形

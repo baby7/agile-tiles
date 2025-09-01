@@ -644,12 +644,7 @@ class TranslateCard(MainCard):
         style_util.set_button_style(self.copy_button, is_dark)
         style_util.set_button_style(self.clear_button, is_dark)
         # 调整交换按钮样式
-        image_path = "static/img/IconPark/svg/Arrows/switch.svg"
-        if is_dark:
-            pixmap = self.toolkit.image_util.load_light_svg(image_path)
-        else:
-            pixmap = self.toolkit.image_util.load_dark_svg(image_path)
-        self.swap_button.setIcon(QIcon(pixmap))
+        style_util.set_button_style(self.swap_button, icon_path="Arrows/switch", is_dark=is_dark, style_change=False)
         # 字符串过滤区域样式调整
         if is_dark:
             text_edit_style = """

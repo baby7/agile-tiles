@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 from PySide6 import QtCore, QtGui, QtWidgets
-from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QWidget, QFrame
 from PySide6.QtCore import Qt
+
+from src.ui import style_util
 
 
 def get_font(size):
     font = QtGui.QFont()
     font.setPointSize(size)
     return font
-
-def get_icon_park_path(icon_position, is_dark):
-    icon_theme_folder = "light" if is_dark else "dark"
-    return QIcon("./static/img/IconPark/" + icon_theme_folder + "/" + icon_position + ".png")
 
 
 class MyQListWidgetItemWidget(QWidget):
@@ -93,9 +90,9 @@ class MyQListWidgetItemWidget(QWidget):
         }"""
         button.setStyleSheet(push_button_style)
         if success:
-            button.setIcon(get_icon_park_path("Character/check-one", self.is_dark))
+            button.setIcon(style_util.get_icon_by_path("Character/check-one", is_dark=self.is_dark))
         else:
-            button.setIcon(get_icon_park_path("Graphics/round", self.is_dark))
+            button.setIcon(style_util.get_icon_by_path("Graphics/round", is_dark=self.is_dark))
         return button
 
     def create_delete_button(self):
@@ -230,12 +227,12 @@ class MyQListWidgetItemWidget(QWidget):
         }"""
         self.check_push_button.setStyleSheet(push_button_style)
         if self.success:
-            self.check_push_button.setIcon(get_icon_park_path("Character/check-one", self.is_dark))
+            self.check_push_button.setIcon(style_util.get_icon_by_path("Character/check-one", is_dark=self.is_dark))
         else:
-            self.check_push_button.setIcon(get_icon_park_path("Graphics/round", self.is_dark))
+            self.check_push_button.setIcon(style_util.get_icon_by_path("Graphics/round", is_dark=self.is_dark))
         # 更新删除按钮样式
         self.delete_button.setStyleSheet(push_button_style)
-        self.delete_button.setIcon(QIcon("./static/img/IconPark/red/Character/close-one.png"))
+        self.delete_button.setIcon(style_util.get_icon_by_path("Character/close-one", custom_color="#FF0000"))
         # 更新程度条样式
         degree_color = degree_colors.get(self.degree, degree_colors["Other"])
         self.degree_line.setStyleSheet(

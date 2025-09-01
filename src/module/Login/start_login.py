@@ -10,7 +10,7 @@ from PySide6.QtWidgets import QLineEdit
 
 from src.client import common
 from src.module.Login import login_common
-from src.module.Login.login_common import refresh_theme, get_icon_park_path
+from src.module.Login.login_common import refresh_theme
 from src.module.Login.start_login_form import Ui_Form
 from src.module.User.user_client import UserClient
 from src.module.UserData.Sync.data_client import DataClient
@@ -173,7 +173,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             background-color: rgba(125, 125, 125, 80);
         }"""
         control.setStyleSheet(push_button_style)
-        control.setIcon(get_icon_park_path("Base/preview-close-one", self.is_dark))
+        control.setIcon(style_util.get_icon_by_path("Base/preview-close-one", is_dark=self.is_dark))
 
     def end_login_logic(self):
         current_user = self.use_parent.get_current_user()

@@ -3,7 +3,7 @@ import os
 import subprocess
 import sys
 
-from PySide6.QtGui import QCursor, QPixmap
+from PySide6.QtGui import QCursor
 
 from src.card.MainCardManager.MainCard import MainCard
 from PySide6.QtCore import Qt
@@ -21,16 +21,17 @@ from src.module.Feedback import feedback_box_util
 from src.module.Ticket import ticket_box_util
 from src.module.Updater.Updater import Updater
 from src.module.UserData.DataBase import user_data_common
+from src.ui import style_util
 # 获取信息
 from src.util import browser_util
 from src.module.Box import text_box_util
 
 
 def get_pixmap_park_path(icon_position, is_dark, is_yellow=False):
-    icon_theme_folder = "light" if is_dark else "dark"
     if is_yellow:
-        icon_theme_folder = "yellow"
-    return QPixmap("./static/img/IconPark/" + icon_theme_folder + "/" + icon_position + ".png")
+        return style_util.get_pixmap_by_path(icon_position, custom_color="#FFC900")
+    else:
+        return style_util.get_pixmap_by_path(icon_position, is_dark=is_dark)
 
 def add_red_dot_in_button(button):
     # 创建红点Label（确保按钮有父对象）
@@ -226,9 +227,8 @@ class SettingCard(MainCard):
             icon_name = setting_card_button[3]
             icon_label = setting_card_button[4]
             text_label = setting_card_button[5]
+            icon_label.setPixmap(style_util.get_pixmap_by_path(icon_type + '/' + icon_name, is_dark=not self.is_light()))
             if self.is_light():
-                icon_label.setPixmap(self.toolkit.image_util.load_dark_svg(
-                    './static/img/IconPark/svg/' + icon_type + '/' + icon_name + '.svg'))
                 text_label.setStyleSheet("color:rgb(0,0,0);border: 0px solid black;background: transparent;")
                 button.setStyleSheet("""
                 QPushButton {
@@ -243,8 +243,6 @@ class SettingCard(MainCard):
                 }
                 """)
             else:
-                icon_label.setPixmap(self.toolkit.image_util.load_light_svg(
-                    './static/img/IconPark/svg/' + icon_type + '/' + icon_name + '.svg'))
                 text_label.setStyleSheet("color:rgb(239, 240, 241);border: 0px solid black;background: transparent;")
                 button.setStyleSheet("""
                 QPushButton {
@@ -327,7 +325,7 @@ class SettingCard(MainCard):
         self.toolkit.resolution_util.out_animation(self.main_object)
         text_box_util.show_text_dialog(self.main_object, "版本信息", {
             "content": version_constant.get_update_info(),
-            "size": [600, 600],
+            "size": [450, 500],
             "longText": True,
             "markdown": True
         })
@@ -392,14 +390,11 @@ class SettingCard(MainCard):
             self.main_object.update_red_dot.move(button_width * 2 + button_interval * 1 - red_dot_padding, red_dot_padding)
         else:
             self.main_object.update_red_dot.show()
-        # 询问用户是否更新
-        reply = self.toolkit.message_box_util.box_acknowledgement(
-            self.main_object,
-            "发现新版本",
-            f"发现新版本 {update_info.get('version')}，是否立即更新？",
-            button_ok_text="更新",
-            button_no_text="取消"
-        )
+        markdown_content = update_info["title"] + "\n" + update_info["message"]
+        reply = self.toolkit.message_box_util.box_acknowledgement(self.main_object,
+                                                      title="发现新版本",
+                                                      markdown_content=markdown_content,
+                                                      button_ok_text="确定更新", button_no_text="取消")
         if not reply:
             return
 

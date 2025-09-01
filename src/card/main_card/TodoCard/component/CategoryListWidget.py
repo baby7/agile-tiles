@@ -7,6 +7,7 @@ from PySide6.QtWidgets import QListWidget, QListWidgetItem, QLabel, QRubberBand,
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from src.constant.list_widget_constant import scroll_bar_style
+from src.ui import style_util
 
 
 class CategoryListWidget(QListWidget):
@@ -138,7 +139,7 @@ class CategoryListWidget(QListWidget):
         QPushButton:hover {
             background-color: rgba(125, 125, 125, 80);
         }""")
-        delete_button.setIcon(QIcon("./static/img/IconPark/red/Character/close-one.png"))
+        delete_button.setIcon(style_util.get_icon_by_path("Character/close-one", custom_color="#FF0000"))
         delete_button.setText("")
         delete_button.setObjectName("setting_button")
         self.setItemWidget(item, background_label)
@@ -257,4 +258,4 @@ class CategoryListWidget(QListWidget):
             QPushButton:hover {
                 background-color: rgba(125, 125, 125, 80);
             }""")
-            delete_button.setIcon(QIcon("./static/img/IconPark/red/Character/close-one.png"))
+            delete_button.setIcon(style_util.get_icon_by_path("Character/close-one", custom_color="#FF0000"))

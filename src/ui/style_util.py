@@ -1,17 +1,70 @@
-from PySide6.QtCore import Qt, QLine
-from PySide6.QtGui import QFont, QPalette, QColor
+from PySide6.QtCore import Qt, QByteArray, QSize
+from PySide6.QtGui import QFont, QPalette, QColor, QPixmap, QPainter, QIcon
+from PySide6.QtSvg import QSvgRenderer
 from PySide6.QtWidgets import QComboBox, QPushButton, QCheckBox, QLineEdit, QSpinBox, QTextEdit, QRadioButton, \
     QFontComboBox, QFrame, QBoxLayout, QWidget, QToolTip, QDateEdit, QTabWidget, QTableWidget, QDoubleSpinBox
 from qframelesswindow import TitleBar
 from qframelesswindow.titlebar import MinimizeButton, MaximizeButton, CloseButton
 
 from src.card.main_card.ChatCard.component.EnterTextEdit.EnterTextEdit import EnterTextEdit
+from src.ui.svg_dict import svg_dict
+
+'''
+**********************************svg工具 · 开始***************************************
+↓                                                                                 ↓
+'''
+def get_icon_by_path(icon_path: str, size=None, is_dark=False, custom_color=None):
+    icon_type = icon_path.split("/")[0]
+    icon_name = icon_path.split("/")[1]
+    svg_data = svg_dict[icon_type][icon_name]
+    return get_icon_by_svg(svg_data=svg_data, size=size, is_dark=is_dark, custom_color=custom_color)
+
+def get_icon_by_svg(svg_data: str, size=None, is_dark=False, custom_color=None):
+    """根据svg获取QIcon"""
+    return QIcon(get_pixmap_by_svg(svg_data=svg_data, size=size, is_dark=is_dark, custom_color=custom_color))
+
+def get_svg_by_path(icon_path: str, is_dark=False):
+    icon_type = icon_path.split("/")[0]
+    icon_name = icon_path.split("/")[1]
+    svg_data = svg_dict[icon_type][icon_name]
+    if is_dark:
+        svg_data = svg_data.replace("black", "white")
+    return svg_data
+
+def get_pixmap_by_path(icon_path: str, size=None, is_dark=False, custom_color=None):
+    icon_type = icon_path.split("/")[0]
+    icon_name = icon_path.split("/")[1]
+    svg_data = svg_dict[icon_type][icon_name]
+    return get_pixmap_by_svg(svg_data=svg_data, size=size, is_dark=is_dark, custom_color=custom_color)
+
+def get_pixmap_by_svg(svg_data: str, size=None, is_dark=False, custom_color=None):
+    """根据svg获取QPixmap"""
+    if custom_color is not None:
+        svg_data = svg_data.replace("black", custom_color)
+    else:
+        if is_dark:
+            svg_data = svg_data.replace("black", "white")
+    renderer = QSvgRenderer(QByteArray(svg_data.encode()))
+    if size is not None:
+        pixmap_size = QSize(size, size)
+    else:
+        pixmap_size = renderer.defaultSize()
+    pixmap = QPixmap(pixmap_size)
+    pixmap.fill(Qt.transparent)
+    painter = QPainter(pixmap)
+    renderer.render(painter)
+    painter.end()
+    return pixmap
+'''
+↑                                                                                ↑
+**********************************svg工具 · 结束***************************************
+'''
 
 '''
 **********************************通用 · 开始***************************************
 ↓                                                                                 ↓
 '''
-transparent_style = "background-color: transparent; border: none;"
+transparent_style = "background: transparent; border: none;"
 
 scroll_bar_style = """
 /******** 滚动条  *********/
@@ -249,14 +302,12 @@ QPushButton {
     color: rgb(0, 0, 0);
     border:0px solid rgb(0,0,0);
     border-radius: 16px;
-    image: url(./static/img/IconPark/dark/{image}.png);
     padding: 7px;
 }
 QPushButton:hover {
     background: rgba(0, 0, 0, 0.3);
     color: #FFFFFF;
     border: 0px solid black;
-    image: url(./static/img/IconPark/light/{image}.png);
 }
 QPushButton:disabled {
     background: rgba(125, 125, 125, 125);
@@ -270,14 +321,12 @@ QPushButton {
     color: rgb(0, 0, 0);
     border:0px solid rgb(0,0,0);
     border-radius: 16px;
-    image: url(./static/img/IconPark/light/{image}.png);
     padding: 7px;
 }
 QPushButton:hover {
     background: rgba(0, 0, 0, 0.3);
     color: #FFFFFF;
     border: 0px solid black;
-    image: url(./static/img/IconPark/dark/{image}.png);
 }
 QPushButton:disabled {
     background: rgba(125, 125, 125, 125);
@@ -319,11 +368,23 @@ QPushButton:disabled {
     border: none;
 }
 """
-def set_button_style(button, is_dark=False):
-    if is_dark:
-        button.setStyleSheet(button_dark_style)
-    else:
-        button.setStyleSheet(button_light_style)
+def set_button_style(button, is_dark=False, icon_path=None, size=None, style_change=True):
+    if style_change:
+        if is_dark:
+            button.setStyleSheet(button_dark_style)
+        else:
+            button.setStyleSheet(button_light_style)
+    if icon_path is not None and icon_path != "":
+        button.setIcon(get_icon_by_path(icon_path=icon_path, size=size, is_dark=is_dark))
+    button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+
+def set_card_button_style(button: QPushButton, icon_path: str, size=None, is_dark=False, style_change=True):
+    if style_change:
+        if is_dark:
+            button.setStyleSheet(card_button_dark_style)
+        else:
+            button.setStyleSheet(card_button_style)
+    button.setIcon(get_icon_by_path(icon_path=icon_path, size=size, is_dark=is_dark))
     button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 '''
 ↑                                                                                ↑
@@ -347,22 +408,22 @@ QRadioButton::indicator{/*选择框尺寸*/
     margin-left: 0px;
 }
 QRadioButton::indicator:unchecked {
-    image: url(./static/img/IconPark/dark/Graphics/round.png);
+    image: url(:static/img/IconPark/dark/Graphics/round.png);
 }
 QRadioButton::indicator:unchecked:hover {
-    image: url(./static/img/IconPark/dark/Character/check-one.png);
+    image: url(:static/img/IconPark/dark/Character/check-one.png);
 }
 QRadioButton::indicator:unchecked:pressed {
-    image: url(./static/img/IconPark/dark/Graphics/round.png);
+    image: url(:static/img/IconPark/dark/Graphics/round.png);
 }
 QRadioButton::indicator:checked {
-    image: url(./static/img/IconPark/dark/Character/check-one.png);
+    image: url(:static/img/IconPark/dark/Character/check-one.png);
 }
 QRadioButton::indicator:checked:hover {
-    image: url(./static/img/IconPark/dark/Character/check-one.png);
+    image: url(:static/img/IconPark/dark/Character/check-one.png);
 }
 QRadioButton::indicator:checked:pressed {
-    image: url(./static/img/IconPark/dark/Character/check-one.png);
+    image: url(:static/img/IconPark/dark/Character/check-one.png);
 }
 """
 check_box_style = """
@@ -377,22 +438,22 @@ QCheckBox::indicator{/*选择框尺寸*/
     height: 20px;
 }
 QCheckBox::indicator:unchecked {            /* 未选中时状态 */
-    image: url(./static/img/IconPark/dark/Graphics/round.png);
+    image: url(:static/img/IconPark/dark/Graphics/round.png);
 }
 QCheckBox::indicator:unchecked:hover {      /* 未选中时，鼠标悬停时的状态 */
-    image: url(./static/img/IconPark/dark/Character/check-one.png);
+    image: url(:static/img/IconPark/dark/Character/check-one.png);
 }
 QCheckBox::indicator:unchecked:pressed {    /* 未选中时，按钮下按时的状态 */
-    image: url(./static/img/IconPark/dark/Graphics/round.png);
+    image: url(:static/img/IconPark/dark/Graphics/round.png);
 }
 QCheckBox::indicator:checked {              /* 按钮选中时的状态 */
-    image: url(./static/img/IconPark/dark/Character/check-one.png);
+    image: url(:static/img/IconPark/dark/Character/check-one.png);
 }
 QCheckBox::indicator:checked:hover {        /* 按钮选中时，鼠标悬停状态 */
-    image: url(./static/img/IconPark/dark/Character/check-one.png);
+    image: url(:static/img/IconPark/dark/Character/check-one.png);
 }
 QCheckBox::indicator:checked:pressed {      /* 按钮选中时，鼠标下按时的状态 */
-    image: url(./static/img/IconPark/dark/Character/check-one.png);
+    image: url(:static/img/IconPark/dark/Character/check-one.png);
 }
 """
 def set_radio_button_style(radio_button, is_dark=False):
@@ -471,34 +532,34 @@ QSpinBox:hover { }
 QSpinBox:up-button {
     subcontrol-origin:border;
     subcontrol-position:right;
-    image: url(./static/img/IconPark/dark/Arrows/right-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/right-one.png);
     width: 20px;
     height: 20px;
 }
 QSpinBox:up-button:hover {
 	subcontrol-origin:border;
     subcontrol-position:right;
-    image: url(./static/img/IconPark/dark/Arrows/right-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/right-one.png);
 }
 QSpinBox:up-button:pressed {
 	subcontrol-origin:border;
     subcontrol-position:right;
-    image: url(./static/img/IconPark/dark/Arrows/right-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/right-one.png);
 }
 QSpinBox:down-button {
     subcontrol-origin:border;
     subcontrol-position:left;
-    image: url(./static/img/IconPark/dark/Arrows/left-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/left-one.png);
     width: 20px;
     height: 20px;
 }
 QSpinBox:down-button:hover {
     subcontrol-position:left;
-    image: url(./static/img/IconPark/dark/Arrows/left-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/left-one.png);
 }
 QSpinBox:down-button:pressed {
     subcontrol-position:left;
-    image: url(./static/img/IconPark/dark/Arrows/left-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/left-one.png);
 }
 """
 double_spin_box_style = """
@@ -512,34 +573,34 @@ QDoubleSpinBox:hover { }
 QDoubleSpinBox:up-button {
     subcontrol-origin:border;
     subcontrol-position:right;
-    image: url(./static/img/IconPark/dark/Arrows/right-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/right-one.png);
     width: 20px;
     height: 20px;
 }
 QDoubleSpinBox:up-button:hover {
 	subcontrol-origin:border;
     subcontrol-position:right;
-    image: url(./static/img/IconPark/dark/Arrows/right-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/right-one.png);
 }
 QDoubleSpinBox:up-button:pressed {
 	subcontrol-origin:border;
     subcontrol-position:right;
-    image: url(./static/img/IconPark/dark/Arrows/right-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/right-one.png);
 }
 QDoubleSpinBox:down-button {
     subcontrol-origin:border;
     subcontrol-position:left;
-    image: url(./static/img/IconPark/dark/Arrows/left-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/left-one.png);
     width: 20px;
     height: 20px;
 }
 QDoubleSpinBox:down-button:hover {
     subcontrol-position:left;
-    image: url(./static/img/IconPark/dark/Arrows/left-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/left-one.png);
 }
 QDoubleSpinBox:down-button:pressed {
     subcontrol-position:left;
-    image: url(./static/img/IconPark/dark/Arrows/left-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/left-one.png);
 }
 """
 def set_line_edit_style(line_edit, is_dark=False):
@@ -605,34 +666,34 @@ QDateEdit:hover { }
 QDateEdit:up-button {
     subcontrol-origin:border;
     subcontrol-position:right;
-    image: url(./static/img/IconPark/dark/Arrows/right-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/right-one.png);
     width: 20px;
     height: 20px;
 }
 QDateEdit:up-button:hover {
 	subcontrol-origin:border;
     subcontrol-position:right;
-    image: url(./static/img/IconPark/dark/Arrows/right-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/right-one.png);
 }
 QDateEdit:up-button:pressed {
 	subcontrol-origin:border;
     subcontrol-position:right;
-    image: url(./static/img/IconPark/dark/Arrows/right-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/right-one.png);
 }
 QDateEdit:down-button {
     subcontrol-origin:border;
     subcontrol-position:left;
-    image: url(./static/img/IconPark/dark/Arrows/left-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/left-one.png);
     width: 20px;
     height: 20px;
 }
 QDateEdit:down-button:hover {
     subcontrol-position:left;
-    image: url(./static/img/IconPark/dark/Arrows/left-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/left-one.png);
 }
 QDateEdit:down-button:pressed {
     subcontrol-position:left;
-    image: url(./static/img/IconPark/dark/Arrows/left-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/left-one.png);
 }
 """
 
@@ -714,14 +775,14 @@ QComboBox::drop-down {
 }
 /*下拉箭头样式*/
 QComboBox::down-arrow {
-    image: url(./static/img/IconPark/dark/Arrows/down-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/down-one.png);
     padding-right: 2px;
     width: 20px;
     height: 20px;
 }
 /*下拉箭头点击样式*/
 QComboBox::down-arrow:on {
-    image: url(./static/img/IconPark/dark/Arrows/down-one.png);
+    image: url(:static/img/IconPark/dark/Arrows/down-one.png);
     padding-right: 2px;
     width: 20px;
     height: 20px;

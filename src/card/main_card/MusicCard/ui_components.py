@@ -5,7 +5,7 @@ from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Qt, QSize
 import src.card.main_card.MusicCard.music_style as music_style
 from src.module import dialog_module
-from src.ui import image_util
+from src.ui import image_util, style_util
 
 
 def init_base_ui(music_card):
@@ -31,7 +31,7 @@ def init_base_ui(music_card):
     # Cover Art
     music_card.base_layout.addStretch()
     music_card.cover_label = QLabel()
-    music_card.default_pixmap = QPixmap("./static/img/music/cover.png").scaled(
+    music_card.default_pixmap = QPixmap(":static/img/music/cover.png").scaled(
         270, 270, Qt.KeepAspectRatio, Qt.SmoothTransformation)
     music_card.default_pixmap = image_util.create_rounded_pixmap(music_card.default_pixmap, 0.06)
     music_card.cover_label.setPixmap(music_card.default_pixmap)
@@ -101,7 +101,7 @@ def _setup_progress_controls(music_card):
 
 def _create_icon_button(music_card, icon_name, size):
     btn = QPushButton()
-    btn.setIcon(music_card.get_icon_park_path(icon_name))
+    style_util.set_button_style(btn, icon_path=icon_name, is_dark=music_card.is_dark(), style_change=False)
     btn.setIconSize(QSize(size, size))
     btn.setStyleSheet("background-color: transparent; border: none;")
     return btn

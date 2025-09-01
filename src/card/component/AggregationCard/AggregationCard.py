@@ -462,9 +462,12 @@ class AggregationCard(MainCard):
             # 样式
             style_util.set_tab_widget_style(self.aggregation_tab_widget, self.is_dark())
         # 展示面板左上角按钮图标
-        self.show_panel_back_button.setIcon(self.get_icon_park_path("Edit/return"))
-        self.show_panel_hide_button.setIcon(self.get_icon_park_path("Base/preview-open"))
-        self.show_panel_hide_button_2.setIcon(self.get_icon_park_path("Office/copy-one"))
+        style_util.set_button_style(self.show_panel_back_button, icon_path="Edit/return",
+                                    is_dark=self.is_dark(), style_change=False)
+        style_util.set_button_style(self.show_panel_hide_button, icon_path="Base/preview-open",
+                                    is_dark=self.is_dark(), style_change=False)
+        style_util.set_button_style(self.show_panel_hide_button_2, icon_path="Office/copy-one",
+                                    is_dark=self.is_dark(), style_change=False)
         # 显示面板背景
         if self.is_dark():
             self.show_panel_content_panel.setStyleSheet(
@@ -482,21 +485,12 @@ class AggregationCard(MainCard):
             elif "png:" in icon_path:
                 # 加载png图片
                 image_end_path = icon_path.replace("png:", "")
-                image_label.setPixmap(QPixmap("static/img/IconPark/png/" + image_end_path))
+                image_label.setPixmap(QPixmap(":static/img/IconPark/png/" + image_end_path))
             else:
-                # 加载svg主题图片
-                image_path = "static/img/IconPark/svg/" + icon_path
-                if self.is_dark():
-                    image_label.setPixmap(self.toolkit.image_util.load_light_svg(image_path))
-                else:
-                    image_label.setPixmap(self.toolkit.image_util.load_dark_svg(image_path))
+                image_label.setPixmap(style_util.get_pixmap_by_path(icon_path, is_dark=self.is_dark()))
         else:
             # 图标路径不存在，首先加载默认图标
-            default_path = "static/img/IconPark/svg/Travel/planet.svg"
-            if self.is_dark():
-                image_label.setPixmap(self.toolkit.image_util.load_light_svg(default_path))
-            else:
-                image_label.setPixmap(self.toolkit.image_util.load_dark_svg(default_path))
+            image_label.setPixmap(style_util.get_pixmap_by_path("Travel/planet", is_dark=self.is_dark()))
             # 然后根据网页地址加载图片
             if "content" in aggregation_module and "url" in aggregation_module["content"]:
                 url = aggregation_module["content"]["url"]
@@ -642,8 +636,4 @@ class AggregationCard(MainCard):
 
     def set_default_icon(self, image_label):
         # 设置默认图标
-        default_path = "static/img/IconPark/svg/Travel/planet.svg"
-        if self.is_dark():
-            image_label.setPixmap(self.toolkit.image_util.load_light_svg(default_path))
-        else:
-            image_label.setPixmap(self.toolkit.image_util.load_dark_svg(default_path))
+        image_label.setPixmap(style_util.get_pixmap_by_path("Travel/planet", is_dark=self.is_dark()))

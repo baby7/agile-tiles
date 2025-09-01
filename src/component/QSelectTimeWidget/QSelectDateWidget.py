@@ -117,3 +117,8 @@ class QSelectDateWidget(QWidget):
         self.btnOK.clicked.connect(self.OnBnClickedOK)
         # < button > 取消
         self.btnCancel.clicked.connect(self.OnBnClickedCanel)
+
+    def refresh_theme(self, is_dark):
+        self.m_widgetYear.refresh_theme(is_dark)
+        self.m_widgetMonth.refresh_theme(is_dark)
+        self.m_widgetDay.refresh_theme(is_dark)

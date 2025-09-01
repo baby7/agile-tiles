@@ -104,7 +104,7 @@ class HoldGrudgesGenPopup(QWidget):
         container_layout.addWidget(self.image_label, 0, Qt.AlignCenter)
 
         # 加载顶部图片
-        self.top_image = QPixmap("./static/img/card/ToolCard/HoldGrudges/HoldGrudges.jpg")
+        self.top_image = QPixmap(":static/img/card/ToolCard/HoldGrudges/HoldGrudges.jpg")
         if self.top_image.isNull():
             print("警告：无法加载HoldGrudges.jpg图片！")
             # 创建默认图片

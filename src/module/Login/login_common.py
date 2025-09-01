@@ -27,23 +27,13 @@ def refresh_theme(main_object, is_dark=False):
         style_util.set_line_edit_style(line_edit, is_dark)
     # 选项卡样式
     style_util.set_tab_widget_style(main_object.tab_widget_login, is_dark)
-    icon = "./static/img/icon/icon.png"
+    icon = ":static/img/icon/icon.png"
     # 复选框
     style_util.set_check_box_style(main_object.check_box_user_area_agree_protocol, is_dark)
     # logo
     main_object.label_user_login_logo.setPixmap(QPixmap(icon))
     main_object.label_user_register_logo.setPixmap(QPixmap(icon))
     main_object.label_user_forget_logo.setPixmap(QPixmap(icon))
-
-def get_icon_park_path(icon_position, is_dark):
-    icon_theme_folder = "light" if is_dark else "dark"
-    return QIcon("./static/img/IconPark/" + icon_theme_folder + "/" + icon_position + ".png")
-
-def get_pixmap_park_path(icon_position, is_dark, is_yellow=False):
-    icon_theme_folder = "light" if is_dark else "dark"
-    if is_yellow:
-        icon_theme_folder = "yellow"
-    return QPixmap("./static/img/IconPark/" + icon_theme_folder + "/" + icon_position + ".png")
 
 def validate_phone(line_edit, label_prompt):
     """

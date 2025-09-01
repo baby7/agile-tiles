@@ -1,5 +1,7 @@
 from PySide6.QtCore import QSettings, QTimer, Qt
-from PySide6.QtWidgets import QLineEdit, QPushButton, QWidget, QHBoxLayout, QLabel, QVBoxLayout, QDialog, QProgressBar
+from PySide6.QtGui import QFont
+from PySide6.QtWidgets import QLineEdit, QPushButton, QWidget, QHBoxLayout, QLabel, QVBoxLayout, QDialog, QProgressBar, \
+    QTextBrowser, QSizePolicy
 import src.ui.style_util as style_util
 
 from src.component.AgileTilesFramelessDialog.AgileTilesFramelessDialog import AgileTilesFramelessDialog
@@ -78,7 +80,7 @@ def box_information(widget, title, content, button_ok_text="确定", close_secon
     dialog.exec()
 
 
-def box_acknowledgement(widget, title, content, button_ok_text="确定", button_no_text="取消"):
+def box_acknowledgement(widget, title, content=None, button_ok_text="确定", button_no_text="取消", markdown_content=None):
     """
     消息确认弹窗
     :param widget: 需要绑定的widget
@@ -86,6 +88,7 @@ def box_acknowledgement(widget, title, content, button_ok_text="确定", button_
     :param content: 内容
     :param button_ok_text: 确认按钮文本
     :param button_no_text:  取消按钮文本
+    :param markdown_content:  markdown内容
     :return: 是否按了确定
     """
     # 获取窗口构建信息
@@ -112,13 +115,22 @@ def box_acknowledgement(widget, title, content, button_ok_text="确定", button_
     layout.setSpacing(15)
 
     # 内容标签
-    content_label = QLabel(content)
-    content_label.setWordWrap(True)
-    content_label.setStyleSheet("""QLabel {
-        font-size: 14px;
-        background-color: transparent;
-    }""")
-    layout.addWidget(content_label)
+    if markdown_content is None:
+        content_label = QLabel(content)
+        content_label.setWordWrap(True)
+        content_label.setStyleSheet("""QLabel {
+            font-size: 14px;
+            background-color: transparent;
+        }""")
+        layout.addWidget(content_label)
+    else:
+        browser = QTextBrowser()
+        browser.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        font = QFont()
+        font.setPointSize(10)
+        browser.setFont(font)
+        browser.setMarkdown(markdown_content)
+        layout.addWidget(browser)
 
     # 双按钮布局
     btn_container = QWidget()
@@ -144,7 +156,10 @@ def box_acknowledgement(widget, title, content, button_ok_text="确定", button_
 
     # 尺寸设置
     dialog.setMinimumSize(300, 200)
-    dialog.resize(360, 200)
+    if markdown_content is None:
+        dialog.resize(360, 200)
+    else:
+        dialog.resize(450, 400)
     dialog.refresh_geometry(widget.toolkit.resolution_util.get_screen(widget))
 
     return dialog.exec() == QDialog.Accepted

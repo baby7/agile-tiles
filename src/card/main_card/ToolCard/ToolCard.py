@@ -55,7 +55,7 @@ class ToolCard(AggregationCard):
                 "type": "趣味",
                 "title": "这班上得值不值",
                 "des": "测算版",
-                "icon": "Game/handle-triangle.svg",
+                "icon": "Game/handle-triangle",
                 "content": None,
                 "link": "https://github.com/Zippland/worth-calculator/",
                 "call_back_func": self.salary_calculator
@@ -65,7 +65,7 @@ class ToolCard(AggregationCard):
                 "type": "趣味",
                 "title": "记仇生成器",
                 "des": "这个仇我记下了",
-                "icon": "Emoji/angry-face.svg",
+                "icon": "Emoji/angry-face",
                 "content": None,
                 "link": None,
                 "call_back_func": lambda : self.hold_grudges_gen("记仇生成器")
@@ -86,7 +86,7 @@ class ToolCard(AggregationCard):
                 "type": "工具",
                 "title": "视频进度条生成器",
                 "des": "为视频底部增加进度条",
-                "icon": "Music/playback-progress.svg",
+                "icon": "Music/playback-progress",
                 "content": None,
                 "link": None,
                 "call_back_func": self.progress_bar_generator
@@ -96,7 +96,7 @@ class ToolCard(AggregationCard):
                 "type": "工具",
                 "title": "笔记本电池健康曲线",
                 "des": "查看你的电池健康报告",
-                "icon": "Hardware/battery-storage.svg",
+                "icon": "Hardware/battery-storage",
                 "content": None,
                 "link": None,
                 "call_back_func": self.notebook_battery_graph
@@ -106,7 +106,7 @@ class ToolCard(AggregationCard):
                 "type": "工具",
                 "title": "中国房贷计算器",
                 "des": "混合、商贷、混合贷计算",
-                "icon": "Base/home.svg",
+                "icon": "Base/home",
                 "content": None,
                 "link": None,
                 "call_back_func": self.housing_loan_rates
@@ -116,7 +116,7 @@ class ToolCard(AggregationCard):
                 "type": "工具",
                 "title": "BMI计算器",
                 "des": "身体质量指数计算",
-                "icon": "Sports/muscle.svg",
+                "icon": "Sports/muscle",
                 "content": None,
                 "link": None,
                 "call_back_func": lambda : self.bmi_calculator("BMI计算器")
@@ -127,7 +127,7 @@ class ToolCard(AggregationCard):
                 "type": "程序员",
                 "title": "Json格式化工具",
                 "des": "经典Json格式化工具",
-                "icon": "Edit/code-brackets.svg",
+                "icon": "Edit/code-brackets",
                 "content": None,
                 "link": None,
                 "call_back_func": self.json_formatter
@@ -137,7 +137,7 @@ class ToolCard(AggregationCard):
                 "type": "程序员",
                 "title": "时间计算器",
                 "des": "时间、时区、时间戳的计算器",
-                "icon": "Time/stopwatch-start.svg",
+                "icon": "Time/stopwatch-start",
                 "content": None,
                 "link": None,
                 "call_back_func": lambda : self.time_calculator("时间计算器")

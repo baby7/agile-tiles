@@ -568,7 +568,7 @@ user@deepseek-terminal:~/Documents$
 #                 "type": "智能体",
 #                 "title": "健身教练",
 #                 "des": "嘿！我是你的AI健身搭档",
-#                 "icon": "Custom/doubao.svg",
+#                 "icon": "Custom/doubao",
 #                 "content": {
 #                     "prologue": "嘿！我是你的AI健身搭档。想了解哪方面的计划？(比如：增肌、减脂、塑形、提升力量/耐力？ 或者针对某个部位：胸、背、腿、核心？) 你的健身基础如何？目标是什么？",
 #                     "persona": """
@@ -609,7 +609,7 @@ user@deepseek-terminal:~/Documents$
 #                 "type": "智能体",
 #                 "title": "瑜伽师",
 #                 "des": "我是您的瑜伽引导者。今天想练习什么？",
-#                 "icon": "Custom/doubao.svg",
+#                 "icon": "Custom/doubao",
 #                 "content": {
 #                     "prologue": "我是您的瑜伽引导者。今天想练习什么？（放松减压？提升柔韧？力量平衡？晨间唤醒？晚间舒缓？）或者想学习某个特定体式？",
 #                     "persona": """
@@ -653,7 +653,7 @@ user@deepseek-terminal:~/Documents$
 #                 "type": "智能体",
 #                 "title": "营养师",
 #                 "des": "想了解哪方面的饮食建议？",
-#                 "icon": "Custom/doubao.svg",
+#                 "icon": "Custom/doubao",
 #                 "content": {
 #                     "prologue": "您好，我是您的营养顾问。想了解哪方面的饮食建议？（比如：均衡饮食搭配？减脂/增肌餐单？特定营养素补充？健康零食选择？应对某种轻微不适？）您的日常饮食习惯如何？",
 #                     "persona": """
@@ -697,7 +697,7 @@ user@deepseek-terminal:~/Documents$
 #                 "type": "智能体",
 #                 "title": "文章续写",
 #                 "des": "创意写作伙伴就绪！",
-#                 "icon": "Custom/doubao.svg",
+#                 "icon": "Custom/doubao",
 #                 "content": {
 #                     "prologue": "创意写作伙伴就绪！请提供您已有的文章开头/段落（至少2-3句），以及您希望续写的方向、风格或要求（比如：保持悬疑/增加浪漫/转换视角/限定字数...）。",
 #                     "persona": """
@@ -732,7 +732,7 @@ user@deepseek-terminal:~/Documents$
                 "type": "通用",
                 "title": "DeepSeek",
                 "des": "近期最火的大模型",
-                "icon": "Custom/deepseek.svg",
+                "icon": "Custom/deepseek",
                 "content": None,
                 "call_back_func": lambda: self.push_button_chat_click("DeepSeek")
             },
@@ -741,7 +741,7 @@ user@deepseek-terminal:~/Documents$
                 "type": "通用",
                 "title": "通义千问",
                 "des": "阿里的大模型",
-                "icon": "Custom/qwen.svg",
+                "icon": "Custom/qwen",
                 "content": None,
                 "call_back_func": lambda: self.push_button_chat_click("通义千问")
             },
@@ -750,7 +750,7 @@ user@deepseek-terminal:~/Documents$
                 "type": "通用",
                 "title": "文心一言",
                 "des": "百度的大模型",
-                "icon": "Custom/ernie.svg",
+                "icon": "Custom/ernie",
                 "content": None,
                 "call_back_func": lambda: self.push_button_chat_click("文心一言")
             },
@@ -759,7 +759,7 @@ user@deepseek-terminal:~/Documents$
                 "type": "通用",
                 "title": "混元",
                 "des": "腾讯的大模型",
-                "icon": "Custom/hunyuan.svg",
+                "icon": "Custom/hunyuan",
                 "content": None,
                 "call_back_func": lambda: self.push_button_chat_click("混元")
             },
@@ -768,7 +768,7 @@ user@deepseek-terminal:~/Documents$
                 "type": "通用",
                 "title": "讯飞星火",
                 "des": "讯飞的大模型",
-                "icon": "Custom/spark.svg",
+                "icon": "Custom/spark",
                 "content": None,
                 "call_back_func": lambda: self.push_button_chat_click("讯飞星火")
             },
@@ -777,7 +777,7 @@ user@deepseek-terminal:~/Documents$
                 "type": "通用",
                 "title": "豆包",
                 "des": "字节跳动的大模型",
-                "icon": "Custom/doubao.svg",
+                "icon": "Custom/doubao",
                 "content": None,
                 "call_back_func": lambda: self.push_button_chat_click("豆包")
             },

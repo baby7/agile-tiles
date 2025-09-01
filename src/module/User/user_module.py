@@ -59,12 +59,6 @@ def init_click_connect(main_object):
     main_object.push_button_area_user_data_backup.clicked.connect(partial(push_button_area_user_data_backup_click, main_object))
     main_object.push_button_area_user_invite_code.clicked.connect(partial(push_button_area_user_invite_code_click, main_object))
     # vip权益提示
-    # main_object.push_button_area_user_vip_power_1.clicked.connect(partial(push_button_area_user_vip_power_1_click, main_object))
-    # main_object.push_button_area_user_vip_power_2.clicked.connect(partial(push_button_area_user_vip_power_2_click, main_object))
-    # main_object.push_button_area_user_vip_power_3.clicked.connect(partial(push_button_area_user_vip_power_3_click, main_object))
-    # main_object.push_button_area_user_vip_power_4.clicked.connect(partial(push_button_area_user_vip_power_4_click, main_object))
-    # main_object.push_button_area_user_vip_power_5.clicked.connect(partial(push_button_area_user_vip_power_5_click, main_object))
-    # main_object.push_button_area_user_vip_power_6.clicked.connect(partial(push_button_area_user_vip_power_6_click, main_object))
     main_object.push_button_area_user_vip_power_1.clicked.connect(partial(push_button_area_user_vip_info_click, main_object))
     main_object.push_button_area_user_vip_power_2.clicked.connect(partial(push_button_area_user_vip_info_click, main_object))
     main_object.push_button_area_user_vip_power_3.clicked.connect(partial(push_button_area_user_vip_info_click, main_object))
@@ -72,56 +66,7 @@ def init_click_connect(main_object):
     main_object.push_button_area_user_vip_power_5.clicked.connect(partial(push_button_area_user_vip_info_click, main_object))
     main_object.push_button_area_user_vip_power_6.clicked.connect(partial(push_button_area_user_vip_info_click, main_object))
     main_object.push_button_area_user_vip_info.hide()
-    # main_object.push_button_area_user_vip_info.clicked.connect(partial(push_button_area_user_vip_info_click, main_object))
     main_object.push_button_area_user_vip_subscription_history.clicked.connect(partial(push_button_area_user_vip_subscription_history_click, main_object))
-
-# def push_button_area_user_vip_power_1_click(main_object):
-#     try:
-#         content = "用户可将数据备份至服务器，实现数据备份与恢复。\n功能在菜单->用户->数据页面处哦~"
-#         main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-云端数据备份", {"content": content, "size": [300, 200]})
-#     except Exception as e:
-#         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
-#         dialog_module.box_information(main_object, "错误信息", "查看会员权益失败")
-#
-# def push_button_area_user_vip_power_2_click(main_object):
-#     try:
-#         content = "用户可在多台设备上使用，且数据可在多台设备上同步。\n功能在菜单->用户->数据页面处哦~"
-#         main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-数据多端同步", {"content": content, "size": [300, 200]})
-#     except Exception as e:
-#         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
-#         dialog_module.box_information(main_object, "错误信息", "查看会员权益失败")
-#
-# def push_button_area_user_vip_power_3_click(main_object):
-#     try:
-#         content = "非会员用户可以每天使用5次AI大模型对话，会员用户每天1000次AI大模型对话。未来会开放更多智能体。\n用户可以在菜单->智能对话处进行对话哦~"
-#         main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-AI大模型对话", {"content": content, "size": [300, 200]})
-#     except Exception as e:
-#         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
-#         dialog_module.box_information(main_object, "错误信息", "查看会员权益失败")
-#
-# def push_button_area_user_vip_power_4_click(main_object):
-#     try:
-#         content = "非会员用户可以每天使用10次翻译功能，会员用户每天1000次翻译功能。\n用户可以在菜单->翻译处进行翻译哦~"
-#         main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-翻译", {"content": content, "size": [300, 200]})
-#     except Exception as e:
-#         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
-#         dialog_module.box_information(main_object, "错误信息", "查看会员权益失败")
-#
-# def push_button_area_user_vip_power_5_click(main_object):
-#     try:
-#         content = "会员用户可在有问题或意见时，使用设置->会员工单处进行工单提交。我们会在第一时间处理工单。\n会员可以在菜单->设置->会员工单处提交工单哦~"
-#         main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-专属工单系统", {"content": content, "size": [300, 200]})
-#     except Exception as e:
-#         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
-#         dialog_module.box_information(main_object, "错误信息", "查看会员权益失败")
-#
-# def push_button_area_user_vip_power_6_click(main_object):
-#     try:
-#         content = "用户可在多处中看到专属会员头像哦~"
-#         main_object.toolkit.text_box_util.show_text_dialog(main_object, "会员权益-会员尊享标识", {"content": content, "size": [300, 200]})
-#     except Exception as e:
-#         main_object.info_logger.card_error("主程序", "查看会员权益失败,错误信息:{}".format(e))
-#         dialog_module.box_information(main_object, "错误信息", "查看会员权益失败")
 
 def push_button_area_user_vip_info_click(main_object):
     try:
@@ -284,7 +229,7 @@ def refresh_theme(main_object):
     # 选项卡样式
     style_util.set_tab_widget_style(main_object.tab_widget_user, is_dark)
     # 注销按钮样式
-    main_object.push_button_area_user_message_logout.setIcon(get_icon_park_path("Arrows/logout", is_dark))
+    main_object.push_button_area_user_message_logout.setIcon(style_util.get_icon_by_path("Arrows/logout", is_dark=is_dark))
     if is_dark:
         main_object.push_button_area_user_message_logout.setStyleSheet("""
             QPushButton {
@@ -347,7 +292,8 @@ def refresh_theme(main_object):
     ]
     # button_linear_gradient = "border: 0px solid white; border-radius: 20px;" + vip_linear_gradient
     for push_button_area_user_vip_power in push_button_area_user_vip_power_list:
-        push_button_area_user_vip_power[0].setIcon(get_icon_park_path(push_button_area_user_vip_power[1], is_dark))
+        style_util.set_button_style(push_button_area_user_vip_power[0], icon_path=push_button_area_user_vip_power[1],
+                                    is_dark=main_object.is_dark, style_change=False)
         push_button_area_user_vip_power[0].setStyleSheet("""
         QPushButton {
             border: 0px solid white;
@@ -359,7 +305,7 @@ def refresh_theme(main_object):
         }""".replace("{background-color}", vip_linear_gradient_top)
          .replace("{background-color-hover}", vip_linear_gradient_bottom))
     # vip按钮图标2
-    vip_one_icon = get_icon_park_path("Others/vip-one", is_dark, is_yellow=True)
+    vip_one_icon = QIcon(":static/img/IconPark/yellow/Others/vip-one.png")
     main_object.push_button_area_user_data_synchronization.setIcon(vip_one_icon)
     main_object.push_button_area_user_data_backup.setIcon(vip_one_icon)
     main_object.push_button_area_user_data_recover.setIcon(vip_one_icon)
@@ -368,23 +314,10 @@ def refresh_theme(main_object):
     main_object.widget_area_user_data_server.setStyleSheet(user_data_style)
     main_object.widget_area_user_data_local.setStyleSheet(user_data_style)
     # logo
-    main_object.label_area_user_vip_icon.setPixmap(get_pixmap_park_path("Others/vip-one", is_dark, is_yellow=True))
-    main_object.label_area_user_invite_icon.setPixmap(get_pixmap_park_path("Baby/holding-hands", is_dark))
+    main_object.label_area_user_vip_icon.setPixmap(QPixmap(":static/img/IconPark/yellow/Others/vip-one.png"))
+    main_object.label_area_user_invite_icon.setPixmap(style_util.get_pixmap_by_path("Baby/holding-hands", is_dark=is_dark))
     # 弹出框
     dialog_module.refresh_theme(main_object)
-
-def get_icon_park_path(icon_position, is_dark, is_yellow=False):
-    icon_theme_folder = "light" if is_dark else "dark"
-    if is_yellow:
-        icon_theme_folder = "yellow"
-    return QIcon("./static/img/IconPark/" + icon_theme_folder + "/" + icon_position + ".png")
-
-def get_pixmap_park_path(icon_position, is_dark, is_yellow=False):
-    icon_theme_folder = "light" if is_dark else "dark"
-    if is_yellow:
-        icon_theme_folder = "yellow"
-    return QPixmap("./static/img/IconPark/" + icon_theme_folder + "/" + icon_position + ".png")
-
 
 def update_user_view(main_object):
     # 判断是否登录
@@ -397,8 +330,8 @@ def update_user_view(main_object):
         vip_expire_time = str(main_object.current_user['vipExpireTime'])
         vip_expire_data = vip_expire_time[0:10]
         main_object.label_area_user_vip_info.setText("有效期:" + vip_expire_data)
-        main_object.label_user_avatar.setPixmap(QPixmap("./static/img/user/head_vip.png"))
+        main_object.label_user_avatar.setPixmap(QPixmap(":static/img/user/head_vip.png"))
     else:
         main_object.push_button_area_user_vip_subscription.setText("开通会员")
         main_object.label_area_user_vip_info.setText("开通会员享受服务")
-        main_object.label_user_avatar.setPixmap(QPixmap("./static/img/user/head_normal.png"))
+        main_object.label_user_avatar.setPixmap(QPixmap(":static/img/user/head_normal.png"))

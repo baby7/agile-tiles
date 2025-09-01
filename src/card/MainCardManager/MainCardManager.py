@@ -449,7 +449,6 @@ class MainCardManager(QObject):
     def set_menu_style(self, button, state, is_init, icon_path):
         """设置菜单按钮样式"""
         font = QtGui.QFont()
-        icon = QIcon()
         if state:
             font.setPointSize(11)
             if not is_init:
@@ -460,11 +459,7 @@ class MainCardManager(QObject):
         font.setBold(state)
         font.setKerning(state)
         button.setStyleSheet(self.main_object.toolkit.style_util.get_menu_button_style(state))
-        if self.main_object.is_dark:
-            icon.addFile(u"static/img/IconPark/light/" + icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        else:
-            icon.addFile(u"static/img/IconPark/dark/" + icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        button.setIcon(icon)
+        style_util.set_card_button_style(button, icon_path, is_dark=self.main_object.is_dark, style_change=False)
         button.setFont(font)
         button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
@@ -750,18 +745,11 @@ class MainCardManager(QObject):
             self.main_object.pin_form = False
         else:
             self.main_object.pin_form = True
-        card_pin_icon = QIcon()
         card_pin_icon_path = "Edit/pin"
-        if self.main_object.is_dark:
-            if self.main_object.pin_form:
-                card_pin_icon.addFile(u"static/img/IconPark/blue/" + card_pin_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-            else:
-                card_pin_icon.addFile(u"static/img/IconPark/light/" + card_pin_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        if self.main_object.pin_form:
+            card_pin_icon = style_util.get_icon_by_path(card_pin_icon_path, custom_color="#6496F3")
         else:
-            if self.main_object.pin_form:
-                card_pin_icon.addFile(u"static/img/IconPark/blue/" + card_pin_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-            else:
-                card_pin_icon.addFile(u"static/img/IconPark/dark/" + card_pin_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+            card_pin_icon = style_util.get_icon_by_path(card_pin_icon_path, is_dark=self.main_object.is_dark)
         self.main_object.push_button_pin.setIcon(card_pin_icon)
 
     # 退出
@@ -905,51 +893,33 @@ class MainCardManager(QObject):
 
     def set_header_button_theme(self):
         self.main_object.widget_header.resize(QSize(self.main_object.width(), self.HEADER_VIEW_HEIGHT))
-        # 标题栏图标
+        # 标题栏按钮
         header_title_icon = QIcon()
-        # header_exit_icon = QIcon()
-        # screenshot_icon = QIcon()
-        card_pin_icon = QIcon()
-        card_design_icon = QIcon()
-        card_screenshot_icon = QIcon()
-        hide_window_icon = QIcon()
-        # header_exit_icon_path = "Base/power"
-        # screenshot_icon_path = "Edit/screenshot"
-        card_pin_icon_path = "Edit/pin"
-        card_screenshot_icon_path = "Edit/screenshot"
-        card_design_icon_path = "Base/waterfalls-h"
+        header_title_icon.addFile(":static/img/icon/icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.main_object.push_button_header_title.setIcon(header_title_icon)
+        # 退出按钮
+        # style_util.set_card_button_style(self.main_object.push_button_header_exit, "Base/power",
+        #                                  is_dark=self.main_object.is_dark, style_change=False)
+        # 截图按钮
+        style_util.set_card_button_style(self.main_object.push_button_screenshot, "Edit/screenshot",
+                                         is_dark=self.main_object.is_dark, style_change=False)
+        # 卡片设计按钮
+        style_util.set_card_button_style(self.main_object.push_button_card_design, "Base/waterfalls-h",
+                                         is_dark=self.main_object.is_dark, style_change=False)
+        # 隐藏窗口按钮
         if self.main_object.form_locate == card_constant.MENU_POSITION_RIGHT:
             hide_window_icon_path = "Arrows/to-right"
         else:
             hide_window_icon_path = "Arrows/to-left"
-        if self.main_object.is_dark:
-            # header_exit_icon.addFile(u"static/img/IconPark/light/" + header_exit_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-            # screenshot_icon.addFile(u"static/img/IconPark/light/" + screenshot_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-            card_screenshot_icon.addFile(u"static/img/IconPark/light/" + card_screenshot_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-            card_design_icon.addFile(u"static/img/IconPark/light/" + card_design_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-            hide_window_icon.addFile(u"static/img/IconPark/light/" + hide_window_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-            if self.main_object.pin_form:
-                card_pin_icon.addFile(u"static/img/IconPark/green/" + card_pin_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-            else:
-                card_pin_icon.addFile(u"static/img/IconPark/light/" + card_pin_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        style_util.set_card_button_style(self.main_object.push_button_hide_window, hide_window_icon_path,
+                                         is_dark=self.main_object.is_dark, style_change=False)
+        # 钉住按钮
+        card_pin_icon_path = "Edit/pin"
+        if self.main_object.pin_form:
+            card_pin_icon = style_util.get_icon_by_path(card_pin_icon_path, custom_color="#6496F3")
         else:
-            # header_exit_icon.addFile(u"static/img/IconPark/dark/" + header_exit_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-            # screenshot_icon.addFile(u"static/img/IconPark/dark/" + screenshot_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-            card_screenshot_icon.addFile(u"static/img/IconPark/dark/" + card_screenshot_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-            card_design_icon.addFile(u"static/img/IconPark/dark/" + card_design_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-            hide_window_icon.addFile(u"static/img/IconPark/dark/" + hide_window_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-            if self.main_object.pin_form:
-                card_pin_icon.addFile(u"static/img/IconPark/green/" + card_pin_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-            else:
-                card_pin_icon.addFile(u"static/img/IconPark/dark/" + card_pin_icon_path + ".png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        header_title_icon.addFile("./static/img/icon/icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.main_object.push_button_header_title.setIcon(header_title_icon)
-        # self.main_object.push_button_header_exit.setIcon(header_exit_icon)
-        # self.main_object.push_button_screenshot.setIcon(screenshot_icon)
+            card_pin_icon = style_util.get_icon_by_path(card_pin_icon_path, is_dark=self.main_object.is_dark)
         self.main_object.push_button_pin.setIcon(card_pin_icon)
-        self.main_object.push_button_screenshot.setIcon(card_screenshot_icon)
-        self.main_object.push_button_card_design.setIcon(card_design_icon)
-        self.main_object.push_button_hide_window.setIcon(hide_window_icon)
         if self.main_object.is_dark:
             self.main_object.push_button_header_title.setStyleSheet(self.main_object.toolkit.style_util.header_button_dark_style)
             # self.main_object.push_button_header_exit.setStyleSheet(self.main_object.toolkit.style_util.header_button_dark_style)

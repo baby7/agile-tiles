@@ -1,9 +1,6 @@
-# 基础包
-import os
-
 from PySide6.QtCore import QEventLoop
-from PySide6.QtGui import QPixmap, QIcon
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QLineEdit, QApplication
+from PySide6.QtGui import QPixmap
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QLineEdit
 
 from src.ui import style_util
 
@@ -11,21 +8,6 @@ dialog_close_button_style = """
 QPushButton {
     background: transparent;
     border: none;
-    image: url(./static/img/IconPark/dark/Character/close-one.png);
-}
-QPushButton:hover {
-    image: url(./static/img/IconPark/red/Character/close-one.png);
-}
-"""
-
-dialog_close_button_dark_style = """
-QPushButton {
-    background: transparent;
-    border: none;
-    image: url(./static/img/IconPark/light/Character/close-one.png);
-}
-QPushButton:hover {
-    image: url(./static/img/IconPark/red/Character/close-one.png);
 }
 """
 
@@ -36,14 +18,15 @@ def set_dialog(main_object):
     main_object.widget_dialog_base.move(0, 0)
     main_object.widget_dialog_base.hide()
     # 弹窗图标
-    icon_path = str(os.getcwd()) + r"\static\img\icon\icon.ico"
+    icon_path = ":static/img/icon/icon.ico"
     main_object.label_dialog_icon.setPixmap(QPixmap(icon_path))
     main_object.label_dialog_icon.setFixedSize(20, 20)
     main_object.label_dialog_icon.setScaledContents(True)
     # 弹窗标题
     main_object.label_dialog_title.setText(main_object.app_title)
     # 弹窗关闭按钮
-    main_object.push_button_dialog_close.setStyleSheet(dialog_close_button_style if not main_object.is_dark else dialog_close_button_dark_style)
+    main_object.push_button_dialog_close.setStyleSheet(dialog_close_button_style)
+    main_object.push_button_dialog_close.setIcon(style_util.get_icon_by_path("Character/close-one", custom_color="#FF0000"))
     # 关闭事件
     main_object.push_button_dialog_close.clicked.connect(lambda: dialog_close_click(main_object))
 
@@ -98,12 +81,6 @@ def _clear_layout(layout):
             child_layout = item.layout()
             if child_layout is not None:
                 _clear_layout(child_layout)
-
-
-def get_icon_park_path(icon_position, is_dark):
-    icon_theme_folder = "light" if is_dark else "dark"
-    return QIcon("./static/img/IconPark/" + icon_theme_folder + "/" + icon_position + ".png")
-
 
 def box_information(main_object, title, content, button_ok_text="确定"):
     """

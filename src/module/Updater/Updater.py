@@ -1,9 +1,9 @@
 import os
+import json
 import shutil
 import traceback
 from PySide6.QtCore import QObject, Signal, QFile, QSaveFile, QIODevice
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
-import json
 
 
 class Updater(QObject):
@@ -49,8 +49,6 @@ class Updater(QObject):
                             shutil.rmtree(file_path)
                     except Exception as e:
                         print(f"清理文件失败: {file_path}, 错误: {e}")
-                        # 可以记录日志或发送错误信号
-                        # self.message.emit(f"清理失败: {file_path}")
 
             # 确保目录存在
             if not os.path.exists(temp_dir):
@@ -58,6 +56,10 @@ class Updater(QObject):
 
             # 提取文件名
             file_name = os.path.basename(url)
+            # 如果是exe更新，确保文件名固定为AgileTiles.exe
+            if "exeUrl" in url or url.endswith(".exe"):
+                file_name = "AgileTiles.exe"
+
             download_path = os.path.join(temp_dir, file_name)
 
             # 创建文件

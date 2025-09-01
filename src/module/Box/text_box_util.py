@@ -175,7 +175,6 @@ class TextPopup(AgileTilesAcrylicWindow):
         """创建富文本浏览器"""
         browser = QTextBrowser()
         browser.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        browser.setStyleSheet(style_util.scroll_bar_style)
         self._setup_browser_font(browser)
         content = str(self.content.get('content', ''))
         {
@@ -232,7 +231,7 @@ class TextPopup(AgileTilesAcrylicWindow):
     def _setup_browser_font(self, browser):
         """设置浏览器字体"""
         font = QFont()
-        font.setPointSize(11)
+        font.setPointSize(10)
         browser.setFont(font)
 
     def _set_button_style(self, button):

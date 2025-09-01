@@ -402,15 +402,10 @@ class TopSearchCard(MainCard):
         if not super().refresh_theme():
             return False
         if self.is_light():
-            self.push_button_search_refresh.setStyleSheet(
-                style_util.card_button_style.replace("{image}", "Arrows/redo"))
-            # self.label_top_mask.setStyleSheet(u"background-color: rgba(255, 255, 255, 160);")
             text_color = "background-color: rgba(0, 0, 0, 0);color: rgba(0, 0, 0, 0.4);"
         else:
-            self.push_button_search_refresh.setStyleSheet(
-                style_util.card_button_dark_style.replace("{image}", "Arrows/redo"))
-            # self.label_top_mask.setStyleSheet(u"background-color: rgba(0, 0, 0, 160);")
             text_color = "background-color: rgba(0, 0, 0, 0);color: rgba(255, 255, 255, 0.4);"
+        style_util.set_card_button_style(self.push_button_search_refresh, "Arrows/redo", is_dark=not self.is_light())
         self.label_top_mask.setStyleSheet(u"background-color: transparent;")
         self.label_top_area_number.setStyleSheet(text_color)
         self.label_top_area_title.setStyleSheet(text_color)

@@ -348,19 +348,15 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
     def create_avatar(self, is_user=False, is_vip=False, provider="deepseek"):
         if is_user:
             if is_vip:
-                return QPixmap("./static/img/user/head_vip.png")
+                return QPixmap(":static/img/user/head_vip.png")
             else:
-                return QPixmap("./static/img/user/head_normal.png")
+                return QPixmap(":static/img/user/head_normal.png")
         else:
             # 判断是否有自定义图标
             if self.icon is not None and "png:" in self.icon:
                 image_end_path = self.icon.replace("png:", "")
-                return QPixmap("static/img/IconPark/png/" + image_end_path)
-            image_path = "./static/img/IconPark/svg/Custom/" + provider + ".svg"
-            if self.is_dark:
-                return self.use_parent.toolkit.image_util.load_light_svg(image_path)
-            else:
-                return self.use_parent.toolkit.image_util.load_dark_svg(image_path)
+                return QPixmap(":static/img/IconPark/png/" + image_end_path)
+            return self.use_parent.toolkit.style_util.get_pixmap_by_path("Custom/" + provider, is_dark=self.is_dark)
 
     def create_transparent_avatar(self):
         """创建透明占位头像"""
@@ -458,7 +454,7 @@ class ChatWindow(AgileTilesAcrylicWindow, Ui_Form):
 
             # 结束对话按钮
             self.stop_button = QPushButton()
-            self.stop_button.setIcon(QIcon("./static/img/IconPark/red/Character/close-one.png"))
+            self.stop_button.setIcon(style_util.get_icon_by_path("Character/close-one", custom_color="#FF0000"))
             self.stop_button.setText("结束对话")
             self.stop_button.setToolTip("结束回答")
             self.stop_button.setFixedHeight(24)

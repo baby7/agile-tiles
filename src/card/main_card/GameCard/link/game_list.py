@@ -83,7 +83,7 @@ game_list = [
         "type": "游戏",
         "title": "Evolve",
         "des": "从单细胞进化至宇宙文明",
-        "icon": "Edit/calendar.svg",
+        "icon": "Edit/calendar",
         "content": {
             "url": "https://pmotschmann.github.io/Evolve/",
             "size": [1200, 800]
@@ -189,7 +189,7 @@ game_list = [
     #     "type": "经典",
     #     "title": "数独",
     #     "des": "填数趣味游戏",
-    #     "icon": "Hardware/nine-key.svg",
+    #     "icon": "Hardware/nine-key",
     #     "content": {
     #         "url": "/static/html/Game/Sudoku/index.html",
     #         "size": [400, 450]
@@ -201,7 +201,7 @@ game_list = [
     #     "type": "经典",
     #     "title": "俄罗斯方块",
     #     "des": "经典的俄罗斯方块",
-    #     "icon": "Game/block-nine.svg",
+    #     "icon": "Game/block-nine",
     #     "content": {
     #         "url": "/static/html/Game/Tetris/index.html",
     #         "size": [300, 550]

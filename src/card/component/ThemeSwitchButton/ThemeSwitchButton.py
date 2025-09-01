@@ -5,6 +5,8 @@ from PySide6.QtCore import Qt, Signal, Property
 from PySide6.QtGui import QPainter, QPainterPath, QColor, QMouseEvent, QPaintEvent, QPen, QPixmap
 from PySide6.QtWidgets import QWidget, QApplication, QLabel, QGraphicsOpacityEffect
 
+from src.ui import style_util
+
 
 class ThemeSwitchButton(QWidget):
     clicked = Signal(bool)
@@ -32,16 +34,10 @@ class ThemeSwitchButton(QWidget):
         self.stop_paint = False
         # 图片标签
         self.sun_label = QLabel(self)
-        if not self.is_test:
-            self.sun_label.setPixmap(QPixmap("./static/img/IconPark/dark/Weather/sun-one.png"))
-        else:
-            self.sun_label.setPixmap(QPixmap("../../../../static/img/IconPark/dark/Weather/sun-one.png"))
+        self.sun_label.setPixmap(style_util.get_pixmap_by_path("Weather/sun-one", is_dark=False))
         self.sun_label.setScaledContents(True)
         self.moon_label = QLabel(self)
-        if not self.is_test:
-            self.moon_label.setPixmap(QPixmap("./static/img/IconPark/light/Weather/moon.png"))
-        else:
-            self.moon_label.setPixmap(QPixmap("../../../../static/img/IconPark/light/Weather/moon.png"))
+        self.moon_label.setPixmap(style_util.get_pixmap_by_path("Weather/moon", is_dark=True))
         self.moon_label.setScaledContents(True)
         # 动画
         self.animation = QtCore.QPropertyAnimation(self, b"sliderPosition")
