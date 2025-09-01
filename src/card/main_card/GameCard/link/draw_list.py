@@ -56,7 +56,7 @@ draw_list = [
         "type": "作图",
         "title": "ASCIIFlow",
         "des": "Ascii作图工具",
-        "icon": "png:Actor/AsciiFlow.png",
+        "icon": "png:Actor/ASCIIFlow.png",
         "content":{
             "url": "https://asciiflow.com/#/",
             "size": [1200, 950]
@@ -69,7 +69,7 @@ draw_list = [
         "type": "作图",
         "title": "在线PS",
         "des": "在线Photoshop",
-        "icon": "png:Actor/AsciiFlow.png",
+        "icon": None,
         "content":{
             "url": "https://www.nuanque.com/ps/",
             "size": [1200, 950]

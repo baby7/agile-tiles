@@ -803,38 +803,23 @@ class Ui_Form(object):
 
         self.horizontalLayout_23.addItem(self.horizontalSpacer_22)
 
+
+        self.verticalLayout_19.addLayout(self.horizontalLayout_23)
+
         self.push_button_area_user_invite_code = QPushButton(self.widget_area_user_invite_bg)
         self.push_button_area_user_invite_code.setObjectName(u"push_button_area_user_invite_code")
         self.push_button_area_user_invite_code.setMinimumSize(QSize(80, 22))
         self.push_button_area_user_invite_code.setFont(font8)
         self.push_button_area_user_invite_code.setStyleSheet(u"QPushButton {\n"
 "border-radius:10px;\n"
-"background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 rgb(0, 145, 255), stop:1 rgb(92, 22, 255));\n"
+"background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 rgb(255, 28, 106), stop:1 rgb(251, 221, 73));\n"
 "color: white;\n"
 "}\n"
 "QPushButton:hover {\n"
-"background-color: qlineargradient(x1:1, y1:0, x2:0, y2:0,stop:0 rgb(0, 145, 255), stop:1 rgb(92, 22, 255));\n"
+"background-color: qlineargradient(x1:1, y1:0, x2:0, y2:0,stop:0 rgb(255, 28, 106), stop:1 rgb(251, 221, 73));\n"
 "}")
 
-        self.horizontalLayout_23.addWidget(self.push_button_area_user_invite_code)
-
-
-        self.verticalLayout_19.addLayout(self.horizontalLayout_23)
-
-        self.label_area_user_invite_info = QLabel(self.widget_area_user_invite_bg)
-        self.label_area_user_invite_info.setObjectName(u"label_area_user_invite_info")
-        font10 = QFont()
-        font10.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
-        font10.setPointSize(9)
-        font10.setBold(False)
-        font10.setKerning(False)
-        self.label_area_user_invite_info.setFont(font10)
-        self.label_area_user_invite_info.setStyleSheet(u"border: 0px solid #FF8D16;\n"
-"border-radius: 0px;\n"
-"background-color: rgba(0, 0, 0, 0);\n"
-"color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 rgb(255, 178, 0), stop:1 rgb(254, 232, 67));")
-
-        self.verticalLayout_19.addWidget(self.label_area_user_invite_info)
+        self.verticalLayout_19.addWidget(self.push_button_area_user_invite_code)
 
 
         self.gridLayout_14.addLayout(self.verticalLayout_19, 0, 0, 1, 1)
@@ -888,11 +873,11 @@ class Ui_Form(object):
         self.label_user_last_backup_time_title = QLabel(self.tab_5)
         self.label_user_last_backup_time_title.setObjectName(u"label_user_last_backup_time_title")
         self.label_user_last_backup_time_title.setGeometry(QRect(40, 30, 61, 21))
-        font11 = QFont()
-        font11.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
-        font11.setBold(False)
-        font11.setKerning(False)
-        self.label_user_last_backup_time_title.setFont(font11)
+        font10 = QFont()
+        font10.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
+        font10.setBold(False)
+        font10.setKerning(False)
+        self.label_user_last_backup_time_title.setFont(font10)
         self.label_user_last_backup_time_title.setStyleSheet(u"border: 0px solid #FF8D16;\n"
 "border-radius: 0px;\n"
 "background-color: rgba(0, 0, 0, 0);\n"
@@ -1026,7 +1011,7 @@ class Ui_Form(object):
         self.label_user_last_backup_time = QLabel(self.tab_5)
         self.label_user_last_backup_time.setObjectName(u"label_user_last_backup_time")
         self.label_user_last_backup_time.setGeometry(QRect(100, 30, 241, 21))
-        self.label_user_last_backup_time.setFont(font11)
+        self.label_user_last_backup_time.setFont(font10)
         self.label_user_last_backup_time.setStyleSheet(u"border: 0px solid #FF8D16;\n"
 "border-radius: 0px;\n"
 "background-color: rgba(0, 0, 0, 0);\n"
@@ -1180,8 +1165,7 @@ class Ui_Form(object):
         self.label_31.setText(QCoreApplication.translate("Form", u"\u4f1a\u5458\u5c0a\u4eab\u6807\u8bc6", None))
         self.label_area_user_invite_icon.setText("")
         self.label_user_login_invite_title.setText(QCoreApplication.translate("Form", u" \u9080\u8bf7\u7528\u6237", None))
-        self.push_button_area_user_invite_code.setText(QCoreApplication.translate("Form", u"\u590d\u5236\u9080\u8bf7\u7801", None))
-        self.label_area_user_invite_info.setText(QCoreApplication.translate("Form", u"\u9080\u8bf7\u65b0\u7528\u6237\u53cc\u65b9\u5747\u53ef\u83b7\u5f9730\u5929\u6708\u5361\u4f1a\u5458\u54e6~", None))
+        self.push_button_area_user_invite_code.setText(QCoreApplication.translate("Form", u"\u9080\u8bf7\u65b0\u7528\u6237\u53cc\u65b9\u5747\u53ef\u83b7\u5f9730\u5929\u6708\u5361\u4f1a\u5458\u54e6~", None))
         self.push_button_area_user_message_logout.setText("")
         self.label_area_user_message_logout.setText(QCoreApplication.translate("Form", u"\u9000\u51fa\u767b\u5f55", None))
         self.tab_widget_user.setTabText(self.tab_widget_user.indexOf(self.tab_11), QCoreApplication.translate("Form", u"\u8d26\u53f7", None))

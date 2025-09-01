@@ -9,7 +9,6 @@ from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QLabel
 
 from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
-# from src.component.AgileTilesFramelessWebEngineView.AgileTilesFramelessWebEngineView import AgileTilesFramelessWebEngineView
 from src.card.NormalCardManager.UiSetting import UiSetting
 from src.constant import card_constant, data_save_constant
 

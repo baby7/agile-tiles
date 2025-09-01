@@ -53,6 +53,7 @@ def open_privacy_policy_url():
     browser_util.open_url(common.privacy_policy_url)
 
 def open_about_us_url(main_object):
+    # 不能放到上面引用，否则会报错
     from src.module.About.about_us import AboutUsWindow
     main_object.setting_about_us_win = AboutUsWindow(None, main_object)
     main_object.setting_about_us_win.refresh_geometry(main_object.toolkit.resolution_util.get_screen(main_object))

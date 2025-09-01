@@ -7,7 +7,7 @@ game_list = [
         "des": "纯文字的冒险游戏",
         "icon": "png:Actor/ADR.png",
         "content": {
-            "url": "https://adarkroom.doublespeakgames.com/?lang=zh_cn",
+            "url": "https://game.ur1.fun/adarkroom/",
             "size": [1200, 800]
         },
         "link": "https://github.com/doublespeakgames/adarkroom",
@@ -18,9 +18,9 @@ game_list = [
         "type": "游戏",
         "title": "猫国建设者",
         "des": "猫国建设者",
-        "icon": "png:Actor/ADR.png",
+        "icon": "https://lolitalibrary.com/maomao/res/favicon.gif",
         "content": {
-            "url": "https://zhaolinxu.github.io/cat-zh/#",
+            "url": "https://lolitalibrary.com/maomao/",
             "size": [1200, 800]
         },
         "link": "https://bitbucket.org/bloodrizer/kitten-game/src/master/",
@@ -31,7 +31,7 @@ game_list = [
         "type": "游戏",
         "title": "超苦逼冒险者",
         "des": "超苦逼冒险者",
-        "icon": "png:Actor/ADR.png",
+        "icon": "png:Actor/KuBitionAdvanture.png",
         "content": {
             "url": "https://kubitionadvanture.sinaapp.com/",
             "size": [1200, 800]
@@ -83,9 +83,9 @@ game_list = [
         "type": "游戏",
         "title": "Evolve",
         "des": "从单细胞进化至宇宙文明",
-        "icon": "Edit/calendar",
+        "icon": "Travel/planet",
         "content": {
-            "url": "https://pmotschmann.github.io/Evolve/",
+            "url": "https://www.skxsj.com/?evolve",
             "size": [1200, 800]
         },
        "link": "https://github.com/pmotschmann/Evolve",

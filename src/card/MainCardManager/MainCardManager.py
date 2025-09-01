@@ -3,8 +3,9 @@ from functools import partial
 
 from PySide6 import QtGui, QtCore
 from PySide6.QtCore import QObject, Qt, QSize, QRect
-from PySide6.QtGui import QIcon, QFont, QCursor
-from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QScrollArea, QFrame
+from PySide6.QtGui import QIcon, QFont, QCursor, QAction
+from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QScrollArea, QFrame, QMenu, \
+    QToolButton
 
 from src.card.component.ThemeSwitchButton.ThemeSwitchButton import ThemeSwitchButton
 from src.card.main_card.FileSearchCard.FileSearchCard import FileSearchCard
@@ -23,6 +24,7 @@ from src.client import common
 from src.constant import card_constant, data_save_constant
 from src.module.Theme import theme_module
 from src.module.UserData.DataBase import user_data_common
+from src.module.About.about_us import AboutUsWindow
 from src.util import browser_util
 from src.ui import style_util
 
@@ -692,22 +694,31 @@ class MainCardManager(QObject):
         self.main_object.push_button_pin.setMinimumWidth(26)
         self.main_object.push_button_pin.setIconSize(QSize(22, 22))
         self.main_object.push_button_pin.setCursor(QCursor(Qt.PointingHandCursor))              # 鼠标手形
-        # 右侧第四个是截图按钮
-        self.main_object.push_button_screenshot = QPushButton()
-        self.main_object.push_button_screenshot.setObjectName(u"push_button_screenshot")
-        self.main_object.push_button_screenshot.setText("")
-        self.main_object.push_button_screenshot.setMinimumHeight(26)
-        self.main_object.push_button_screenshot.setMinimumWidth(26)
-        self.main_object.push_button_screenshot.setIconSize(QSize(22, 22))
-        self.main_object.push_button_screenshot.setCursor(QCursor(Qt.PointingHandCursor))              # 鼠标手形
-        # 右侧第五个是卡片设计按钮
-        self.main_object.push_button_card_design = QPushButton()
-        self.main_object.push_button_card_design.setObjectName(u"push_button_card_design")
-        self.main_object.push_button_card_design.setText("")
-        self.main_object.push_button_card_design.setMinimumHeight(26)
-        self.main_object.push_button_card_design.setMinimumWidth(26)
-        self.main_object.push_button_card_design.setIconSize(QSize(22, 22))
-        self.main_object.push_button_card_design.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
+        # 右侧第四个是更多按钮
+        self.main_object.push_button_more = QToolButton()
+        self.main_object.push_button_more.setObjectName(u"push_button_more")
+        self.main_object.push_button_more.setText("")
+        self.main_object.push_button_more.setMinimumHeight(26)
+        self.main_object.push_button_more.setMinimumWidth(26)
+        self.main_object.push_button_more.setIconSize(QSize(22, 22))
+        self.main_object.push_button_more.setCursor(QCursor(Qt.PointingHandCursor))              # 鼠标手形
+        self.main_object.push_button_more.setPopupMode(QToolButton.InstantPopup)
+        # # 右侧第四个是截图按钮
+        # self.main_object.push_button_screenshot = QPushButton()
+        # self.main_object.push_button_screenshot.setObjectName(u"push_button_screenshot")
+        # self.main_object.push_button_screenshot.setText("")
+        # self.main_object.push_button_screenshot.setMinimumHeight(26)
+        # self.main_object.push_button_screenshot.setMinimumWidth(26)
+        # self.main_object.push_button_screenshot.setIconSize(QSize(22, 22))
+        # self.main_object.push_button_screenshot.setCursor(QCursor(Qt.PointingHandCursor))              # 鼠标手形
+        # # 右侧第五个是卡片设计按钮
+        # self.main_object.push_button_card_design = QPushButton()
+        # self.main_object.push_button_card_design.setObjectName(u"push_button_card_design")
+        # self.main_object.push_button_card_design.setText("")
+        # self.main_object.push_button_card_design.setMinimumHeight(26)
+        # self.main_object.push_button_card_design.setMinimumWidth(26)
+        # self.main_object.push_button_card_design.setIconSize(QSize(22, 22))
+        # self.main_object.push_button_card_design.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
         # 最右侧是隐藏按钮
         self.main_object.push_button_hide_window = QPushButton()
         self.main_object.push_button_hide_window.setObjectName(u"push_button_hide_window")
@@ -720,20 +731,104 @@ class MainCardManager(QObject):
         # self.main_object.layout_header.addWidget(self.main_object.push_button_header_exit)
         # self.main_object.layout_header.addWidget(self.main_object.push_button_screenshot)
         self.main_object.layout_header.addWidget(self.main_object.push_button_pin)
-        self.main_object.layout_header.addWidget(self.main_object.push_button_screenshot)
-        self.main_object.layout_header.addWidget(self.main_object.push_button_card_design)
+        self.main_object.layout_header.addWidget(self.main_object.push_button_more)
+        # self.main_object.layout_header.addWidget(self.main_object.push_button_screenshot)
+        # self.main_object.layout_header.addWidget(self.main_object.push_button_card_design)
         self.main_object.layout_header.addWidget(self.main_object.push_button_hide_window)
-        # 设置按钮样式
-        self.set_header_button_theme()
         # 点击事件
         self.main_object.push_button_header_title.clicked.connect(partial(self.click_header_title_button))
         # self.main_object.push_button_header_exit.clicked.connect(partial(self.main_object.quit_before,  False))
         # self.main_object.push_button_screenshot.clicked.connect(
         #     partial(self.main_object.toolkit.image_util.screenshot, self.main_object))
         self.main_object.push_button_pin.clicked.connect(partial(self.push_button_pin_click))
-        self.main_object.push_button_screenshot.clicked.connect(partial(self.push_button_screenshot_click))
-        self.main_object.push_button_card_design.clicked.connect(partial(self.push_button_setting_card_permutation_click))
+        # self.main_object.push_button_screenshot.clicked.connect(partial(self.push_button_screenshot_click))
+        # self.main_object.push_button_card_design.clicked.connect(partial(self.push_button_setting_card_permutation_click))
         self.main_object.push_button_hide_window.clicked.connect(partial(self.push_button_hide_window_click))
+        # 创建更多的下拉菜单
+        self.main_object.header_more_menu = QMenu(self.main_object.push_button_more)
+        self.main_object.header_more_menu.setObjectName(u"header_more_menu")
+        self.apply_menu_style(self.main_object.is_dark)  # 应用菜单样式
+        # 截图选项
+        screenshot_action = QAction(style_util.get_icon_by_path("Edit/screenshot", is_dark=self.main_object.is_dark),
+                                    "截图", self.main_object.push_button_more)
+        screenshot_action.triggered.connect(lambda: self.push_button_screenshot_click())
+        self.main_object.header_more_menu.addAction(screenshot_action)
+        # 卡片设计选项
+        card_permutation_action = QAction(style_util.get_icon_by_path("Base/waterfalls-h", is_dark=self.main_object.is_dark),
+                                    "卡片设计", self.main_object.push_button_more)
+        card_permutation_action.triggered.connect(lambda: self.push_button_setting_card_permutation_click())
+        self.main_object.header_more_menu.addAction(card_permutation_action)
+        # 官网选项
+        official_website_action = QAction(style_util.get_icon_by_path("Travel/planet", is_dark=self.main_object.is_dark),
+                                    "打开官网", self.main_object.push_button_more)
+        official_website_action.triggered.connect(lambda: self.open_index_url())
+        self.main_object.header_more_menu.addAction(official_website_action)
+        # 关于我们选项
+        about_us_action = QAction(style_util.get_icon_by_path("Character/info", is_dark=self.main_object.is_dark),
+                                    "关于我们", self.main_object.push_button_more)
+        about_us_action.triggered.connect(lambda: self.open_about_us_url())
+        self.main_object.header_more_menu.addAction(about_us_action)
+        # 绑定菜单项点击事件
+        self.main_object.push_button_more.setMenu(self.main_object.header_more_menu)
+        # 设置按钮样式
+        self.set_header_button_theme()
+
+    def apply_menu_style(self, is_dark):
+        """应用菜单样式"""
+        if is_dark:
+            menu_style = """
+                QMenu {
+                    background-color: #333333;
+                    border: 1px solid #555555;
+                    border-radius: 5px;
+                    padding: 5px;
+                }
+                QMenu::item {
+                    background-color: transparent;
+                    color: #ffffff;
+                    padding: 5px 15px 5px 15px;
+                    border-radius: 3px;
+                }
+                QMenu::item:selected {
+                    background-color: #555555;
+                }
+                QMenu::item:disabled {
+                    color: #888888;
+                }
+                QMenu::separator {
+                    height: 1px;
+                    background-color: #555555;
+                    margin: 5px 0px 5px 0px;
+                }
+            """
+        else:
+            menu_style = """
+                QMenu {
+                    background-color: #ffffff;
+                    border: 1px solid #cccccc;
+                    border-radius: 5px;
+                    padding: 5px;
+                }
+                QMenu::item {
+                    background-color: transparent;
+                    color: #333333;
+                    padding: 5px 15px 5px 15px;
+                    border-radius: 3px;
+                }
+                QMenu::item:selected {
+                    background-color: #e6e6e6;
+                }
+                QMenu::item:disabled {
+                    color: #888888;
+                }
+                QMenu::separator {
+                    height: 1px;
+                    background-color: #cccccc;
+                    margin: 5px 0px 5px 0px;
+                }
+            """
+        if hasattr(self.main_object, "header_more_menu"):
+            self.main_object.header_more_menu.setStyleSheet(menu_style)
 
     # 设置
     def push_button_screenshot_click(self):
@@ -897,14 +992,17 @@ class MainCardManager(QObject):
         header_title_icon = QIcon()
         header_title_icon.addFile(":static/img/icon/icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.main_object.push_button_header_title.setIcon(header_title_icon)
-        # 退出按钮
+        # # 退出按钮
         # style_util.set_card_button_style(self.main_object.push_button_header_exit, "Base/power",
         #                                  is_dark=self.main_object.is_dark, style_change=False)
-        # 截图按钮
-        style_util.set_card_button_style(self.main_object.push_button_screenshot, "Edit/screenshot",
-                                         is_dark=self.main_object.is_dark, style_change=False)
-        # 卡片设计按钮
-        style_util.set_card_button_style(self.main_object.push_button_card_design, "Base/waterfalls-h",
+        # # 截图按钮
+        # style_util.set_card_button_style(self.main_object.push_button_screenshot, "Edit/screenshot",
+        #                                  is_dark=self.main_object.is_dark, style_change=False)
+        # # 卡片设计按钮
+        # style_util.set_card_button_style(self.main_object.push_button_card_design, "Base/waterfalls-h",
+        #                                  is_dark=self.main_object.is_dark, style_change=False)
+        # 更多按钮
+        style_util.set_card_button_style(self.main_object.push_button_more, "Base/hamburger-button",
                                          is_dark=self.main_object.is_dark, style_change=False)
         # 隐藏窗口按钮
         if self.main_object.form_locate == card_constant.MENU_POSITION_RIGHT:
@@ -922,22 +1020,24 @@ class MainCardManager(QObject):
         self.main_object.push_button_pin.setIcon(card_pin_icon)
         if self.main_object.is_dark:
             self.main_object.push_button_header_title.setStyleSheet(self.main_object.toolkit.style_util.header_button_dark_style)
-            # self.main_object.push_button_header_exit.setStyleSheet(self.main_object.toolkit.style_util.header_button_dark_style)
-            # self.main_object.push_button_screenshot.setStyleSheet(self.main_object.toolkit.style_util.header_button_dark_style)
             self.main_object.push_button_pin.setStyleSheet(self.main_object.toolkit.style_util.header_button_dark_style)
-            self.main_object.push_button_screenshot.setStyleSheet(self.main_object.toolkit.style_util.header_button_dark_style)
-            self.main_object.push_button_card_design.setStyleSheet(self.main_object.toolkit.style_util.header_button_dark_style)
             self.main_object.push_button_hide_window.setStyleSheet(self.main_object.toolkit.style_util.header_button_dark_style)
+            self.main_object.push_button_more.setStyleSheet(
+                self.main_object.toolkit.style_util.header_button_dark_style
+                .replace("QPushButton", "QToolButton") + "QToolButton::menu-indicator {image: none;}"
+            )
             style_util.set_card_shadow_effect(self.main_object.push_button_hide_window)  # 添加外部阴影效果
         else:
             self.main_object.push_button_header_title.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
-            # self.main_object.push_button_header_exit.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
-            # self.main_object.push_button_screenshot.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
             self.main_object.push_button_pin.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
-            self.main_object.push_button_screenshot.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
-            self.main_object.push_button_card_design.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
             self.main_object.push_button_hide_window.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
+            self.main_object.push_button_more.setStyleSheet(
+                self.main_object.toolkit.style_util.header_button_style
+                .replace("QPushButton", "QToolButton") + "QToolButton::menu-indicator {image: none;}"
+            )
             style_util.remove_card_shadow_effect(self.main_object.push_button_hide_window)  # 移除外部阴影效果
+        # 应用顶部更多按钮的菜单样式
+        self.apply_menu_style(self.main_object.is_dark)
 
     # 切换卡片显示
     def set_menu_theme(self):
@@ -1027,3 +1127,11 @@ class MainCardManager(QObject):
         for card in self.main_object.main_card_list:
             if hasattr(card, 'screenshot_captured'):
                 card.screenshot_captured(pixmap, do_job="ocr")
+
+    def open_index_url(self):
+        browser_util.open_url(common.index_url)
+
+    def open_about_us_url(self):
+        self.main_object.setting_about_us_win = AboutUsWindow(None, self.main_object)
+        self.main_object.setting_about_us_win.refresh_geometry(self.main_object.toolkit.resolution_util.get_screen(self.main_object))
+        self.main_object.setting_about_us_win.show()

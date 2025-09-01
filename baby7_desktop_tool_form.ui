@@ -1540,53 +1540,32 @@ color: rgb(0, 0, 0);</string>
                     </property>
                    </spacer>
                   </item>
-                  <item>
-                   <widget class="QPushButton" name="push_button_area_user_invite_code">
-                    <property name="minimumSize">
-                     <size>
-                      <width>80</width>
-                      <height>22</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <family>思源黑体</family>
-                      <pointsize>9</pointsize>
-                      <bold>true</bold>
-                     </font>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">QPushButton {
-border-radius:10px;
-background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 rgb(0, 145, 255), stop:1 rgb(92, 22, 255));
-color: white;
-}
-QPushButton:hover {
-background-color: qlineargradient(x1:1, y1:0, x2:0, y2:0,stop:0 rgb(0, 145, 255), stop:1 rgb(92, 22, 255));
-}</string>
-                    </property>
-                    <property name="text">
-                     <string>复制邀请码</string>
-                    </property>
-                   </widget>
-                  </item>
                  </layout>
                 </item>
                 <item>
-                 <widget class="QLabel" name="label_area_user_invite_info">
+                 <widget class="QPushButton" name="push_button_area_user_invite_code">
+                  <property name="minimumSize">
+                   <size>
+                    <width>80</width>
+                    <height>22</height>
+                   </size>
+                  </property>
                   <property name="font">
                    <font>
                     <family>思源黑体</family>
                     <pointsize>9</pointsize>
-                    <bold>false</bold>
-                    <kerning>false</kerning>
+                    <bold>true</bold>
                    </font>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">border: 0px solid #FF8D16;
-border-radius: 0px;
-background-color: rgba(0, 0, 0, 0);
-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 rgb(255, 178, 0), stop:1 rgb(254, 232, 67));</string>
+                   <string notr="true">QPushButton {
+border-radius:10px;
+background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 rgb(255, 28, 106), stop:1 rgb(251, 221, 73));
+color: white;
+}
+QPushButton:hover {
+background-color: qlineargradient(x1:1, y1:0, x2:0, y2:0,stop:0 rgb(255, 28, 106), stop:1 rgb(251, 221, 73));
+}</string>
                   </property>
                   <property name="text">
                    <string>邀请新用户双方均可获得30天月卡会员哦~</string>

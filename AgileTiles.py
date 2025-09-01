@@ -1187,6 +1187,8 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             self.normal_card_manager.hide_form()
         if self.main_card_manager is not None:
             self.main_card_manager.hide_form()
+        if hasattr(self, "header_more_menu"):
+            self.header_more_menu.hide()
 
     ''' **********************************键盘监听*************************************** '''
     def keyboard_re_init(self):
