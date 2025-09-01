@@ -32,9 +32,22 @@ class Updater(QObject):
             self.finished.emit(False, {})
             traceback.print_exc()
 
-    def download_package(self, url):
+    def download_package(self, update_info):
         """下载更新包"""
         try:
+            is_exe_tag = False
+            # 根据updateTag决定下载内容
+            if update_info.get("updateTag"):
+                # 大版本更新，下载完整安装包
+                download_url = update_info["url"]
+            else:
+                if "exeUrl" in update_info and update_info["exeUrl"] is not None and update_info["exeUrl"] != "":
+                    # 小版本更新，只下载exe文件
+                    download_url = update_info["exeUrl"]
+                    is_exe_tag = True
+                else:
+                    # 没有小版本更新文件则默认下载完整安装包
+                    download_url = update_info["url"]
             # 创建临时目录
             temp_dir = os.path.join(os.getcwd(), "temp_updates")
 
@@ -55,9 +68,9 @@ class Updater(QObject):
                 os.makedirs(temp_dir)
 
             # 提取文件名
-            file_name = os.path.basename(url)
+            file_name = os.path.basename(download_url)
             # 如果是exe更新，确保文件名固定为AgileTiles.exe
-            if "exeUrl" in url or url.endswith(".exe"):
+            if is_exe_tag:
                 file_name = "AgileTiles.exe"
 
             download_path = os.path.join(temp_dir, file_name)
@@ -68,7 +81,7 @@ class Updater(QObject):
                 raise Exception(f"无法创建文件: {download_path}")
 
             # 发送请求
-            request = QNetworkRequest(url)
+            request = QNetworkRequest(download_url)
             self.current_reply = self.network_manager.get(request)
 
             # 连接信号

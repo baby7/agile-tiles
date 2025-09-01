@@ -24,7 +24,7 @@ from src.module.UserData.DataBase import user_data_common
 from src.ui import style_util
 # 获取信息
 from src.util import browser_util
-from src.module.Box import text_box_util
+from src.module.Box import text_box_util, message_box_util
 
 
 def get_pixmap_park_path(icon_position, is_dark, is_yellow=False):
@@ -429,7 +429,7 @@ class SettingCard(MainCard):
         cancel_button.clicked.connect(self._handle_cancel_download)
 
         # 开始下载
-        self.updater.download_package(update_info["url"])
+        self.updater.download_package(update_info)
 
     def _handle_cancel_download(self):
         """取消下载处理"""
@@ -448,9 +448,16 @@ class SettingCard(MainCard):
         if success:
             # 获取下载的文件路径
             download_path = self.updater.downloaded_file_path
-
-            # 运行安装包并退出程序
-            self._run_installer_and_exit(download_path)
+            if update_info.get("updateTag"):
+                # 大版本更新：运行安装包并退出
+                self._run_installer_and_exit(download_path)
+            else:
+                if "exeUrl" in update_info and update_info["exeUrl"] is not None and update_info["exeUrl"] != "":
+                    # 小版本更新：替换exe文件
+                    self._replace_exe_and_restart(download_path, update_info)
+                else:
+                    # 没有小版本更新文件则默认运行安装包
+                    self._run_installer_and_exit(download_path)
         else:
             self.toolkit.message_box_util.box_information(
                 self.main_object,
@@ -458,14 +465,44 @@ class SettingCard(MainCard):
                 "下载更新包失败，请检查网络连接或稍后重试"
             )
 
+    def _replace_exe_and_restart(self, new_exe_path, update_info):
+        """替换exe文件并重启应用"""
+        # 获取当前exe的路径
+        current_exe_path = os.path.abspath(sys.argv[0])
+
+        # 获取updater_helper的路径（假设在同一目录下）
+        helper_path = os.path.join(os.path.dirname(current_exe_path), "patch_updater.exe")
+
+        if not os.path.exists(helper_path):
+            message_box_util.box_information(
+                self.main_object,
+                "错误",
+                "更新失败，您可以在官网下载安装最新版本。"
+            )
+            self.main_object.agree_update = False
+            self.main_object.update_ready.emit()
+            return
+
+        # 关闭主程序
+        self.main_object.quit_before_do()
+
+        # 启动替换程序
+        try:
+            subprocess.Popen([helper_path])
+        except Exception as e:
+            QApplication.quit()
+        # 退出应用
+        QApplication.quit()
+
     def _run_installer_and_exit(self, exe_path):
         """运行安装包并退出程序"""
         # 确保路径是绝对路径
         exe_path = os.path.abspath(exe_path)
 
+        print(f"exe_path:{exe_path}")
+
         # 关闭主程序（如果需要）
-        if hasattr(self.main_object, 'quit_before_do'):
-            self.main_object.quit_before_do()
+        self.main_object.quit_before_do()
 
         # 运行安装包
         try:

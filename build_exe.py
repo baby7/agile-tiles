@@ -102,7 +102,7 @@ print("完成复制 doc 文件夹")
 # 步骤9: 复制 run_util 文件夹
 shutil.copyfile("run_util/login_helper.exe", f"{output_dir}/login_helper.exe")
 shutil.copyfile("run_util/patch_updater.exe", f"{output_dir}/patch_updater.exe")
-shutil.copyfile("run_util/exit_updater.exe", f"{output_dir}/exit_updater.exe")
+shutil.copyfile("run_util/exit_helper.exe", f"{output_dir}/exit_helper.exe")
 print("完成复制 run_util 文件夹")
 
 # 步骤10: 删除"out/AgileTiles.dist"文件夹

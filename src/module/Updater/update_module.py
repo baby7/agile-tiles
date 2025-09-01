@@ -127,16 +127,8 @@ def start_update_process(main_object, update_info):
     # 取消按钮事件
     cancel_button.clicked.connect(lambda: handle_cancel_download(main_object))
 
-    # 根据updateTag决定下载内容
-    if update_info.get("updateTag"):
-        # 大版本更新，下载完整安装包
-        download_url = update_info["url"]
-    else:
-        # 小版本更新，只下载exe文件
-        download_url = update_info["exeUrl"]
-
     # 开始下载
-    main_object.downloader.download_package(download_url)
+    main_object.downloader.download_package(update_info)
 
 
 def handle_cancel_download(main_object):
@@ -158,8 +150,12 @@ def handle_download_finished(main_object, success, update_info):
             # 大版本更新：运行安装包并退出
             run_installer_and_exit(main_object, download_path)
         else:
-            # 小版本更新：替换exe文件
-            replace_exe_and_restart(main_object, download_path, update_info)
+            if "exeUrl" in update_info and update_info["exeUrl"] is not None and update_info["exeUrl"] != "":
+                # 小版本更新：替换exe文件
+                replace_exe_and_restart(main_object, download_path, update_info)
+            else:
+                # 没有小版本更新文件则默认运行安装包
+                run_installer_and_exit(main_object, download_path)
     else:
         message_box_util.box_information(
             main_object,
@@ -181,7 +177,7 @@ def replace_exe_and_restart(main_object, new_exe_path, update_info):
         message_box_util.box_information(
             main_object,
             "错误",
-            "找不到更新助手程序，无法完成更新。"
+            "更新失败，您可以在官网下载安装最新版本。"
         )
         main_object.agree_update = False
         main_object.update_ready.emit()
