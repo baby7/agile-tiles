@@ -4,7 +4,7 @@ import os
 
 from PySide6 import QtCore, QtWidgets, QtGui, QtNetwork
 from PySide6.QtCore import Signal, Qt, QSize, QRect
-from PySide6.QtGui import QIcon, QCursor
+from PySide6.QtGui import QCursor
 from PySide6.QtWidgets import QLabel
 
 from src.card.main_card.SettingCard.setting.CardPermutation.CardDetailWidget import CardDetailWidget
@@ -15,7 +15,7 @@ from src.ui.style_util import get_icon_by_path
 
 
 class CardStore(QtWidgets.QWidget):
-    cardAdded = Signal(dict)  # 新增信号用于传递卡片数据
+    cardAdded = Signal(dict)  # 信号用于传递卡片数据
     before_plugin_map = []
     card_store_client = None
 
@@ -23,11 +23,11 @@ class CardStore(QtWidgets.QWidget):
         super(CardStore, self).__init__(parent)
         self.card_permutation = parent
         self.use_parent = use_parent
-        self.card_widgets = {}  # 新增：用字典存储所有卡片widget {card_name: [widget1, widget2]}
+        self.card_widgets = {}  # 用字典存储所有卡片widget {card_name: [widget1, widget2]}
         self.before_plugin_map = get_plugin_folder_map()
         self.is_dark = is_dark
         self.card_store_data = []
-        self.network_manager = QtNetwork.QNetworkAccessManager(self)  # 新增网络管理器
+        self.network_manager = QtNetwork.QNetworkAccessManager(self)  # 网络管理器
         self.init_ui()
         # 加载卡片列表
         self.card_store_client = card_store_client.CardStoreClient(self.use_parent)
@@ -130,7 +130,7 @@ class CardStore(QtWidgets.QWidget):
         else:
             filtered_cards = [c for c in self.card_store_data
                               if any(cat["title"] == tab_name for cat in c.get("categoryList", []))]
-        # 空状态提示（新增统一处理）
+        # 空状态提示（统一处理）
         if not filtered_cards:
             empty_label = QtWidgets.QLabel("该分类暂时没有可用卡片" if tab_name != "待更新" else "没有卡片需要更新")
             empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -487,7 +487,7 @@ class CardStore(QtWidgets.QWidget):
                 print(f"插件 {card_name} 下载失败: {reply.errorString()}")
             btn.setEnabled(True)
             reply.deleteLater()
-            # 新增：更新所有同卡片的widget状态
+            # 更新所有同卡片的widget状态
             if card_name in self.card_widgets:
                 for w in self.card_widgets[card_name]:
                     self.update_action_btn(w)

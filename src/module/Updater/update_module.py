@@ -241,7 +241,7 @@ def check_update_normal(main_object):
 
 
 def handle_silent_update_normal_result(main_object, success, update_info):
-    """静默更新检查回调"""
+    """更新检查回调"""
     try:
         if not success or not update_info:
             # 获取更新失败

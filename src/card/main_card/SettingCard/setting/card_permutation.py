@@ -1,6 +1,4 @@
 # coding:utf-8
-from PySide6 import QtGui
-from PySide6.QtGui import QIcon
 from PySide6.QtCore import Qt, Signal, QDateTime
 
 from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
@@ -79,7 +77,6 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
             self.widget_left.setStyleSheet(button_bg_style)
             self.widget_middle.setStyleSheet(button_bg_style)
             self.widget_right.setStyleSheet(button_bg_style)
-            # self.widget_store_title.setStyleSheet(button_bg_style)
         # 按钮图标初始化
         style_util.set_card_button_style(self.delete_btn, "Edit/delete", is_dark=self.is_dark, style_change=False)
         style_util.set_card_button_style(self.push_button_add_box_width, "Edit/fullwidth", is_dark=self.is_dark, style_change=False)
@@ -172,7 +169,6 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
         card.signals.moveRequested.connect(self.handle_move)
         self.scene.addItem(card)
         self.card_items.append(card)
-        # print(f"添加卡片：{card_name} at ({start_col}, {start_row}) with size ({cols}, {rows})")
         self.refresh_card_data_list()
         return card
 
@@ -190,7 +186,6 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
 
     def handle_move(self, old_col, old_row, new_col, new_row, cols, rows):
         """处理卡片移动请求"""
-        # print(f"移动请求：从 ({old_col}, {old_row}) 到 ({new_col}, {new_row}) with size ({cols}, {rows})")
         # 获取卡片
         card = self.get_card(old_col, old_row, cols, rows)
         if not card:
@@ -251,7 +246,6 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
             item_row = item.get_row()
             rect1 = (item_col, item_row, item_col + item.cols, item_row + item.rows)
             rect2 = (new_col, new_row, new_col + cols, new_row + rows)
-
             if is_overlap(rect1, rect2):
                 # 检查目标卡片能否移动到原位置而不重叠
                 if not self.check_overlay(item, card.col, card.row, item.cols, item.rows):
@@ -355,7 +349,6 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
         """将卡片移回原位置"""
         for item in self.card_items:
             if item.col == col and item.row == row and item.cols == cols and item.rows == rows:
-                # print(f"将{item.card_name}卡片移回原位置：({col}, {row})")
                 item.setPos(col * self.grid_size, row * self.grid_size)
                 break
         self.refresh_card_data_list()
