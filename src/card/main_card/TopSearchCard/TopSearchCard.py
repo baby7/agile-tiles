@@ -1,4 +1,5 @@
 import json
+import time
 
 from PySide6.QtCore import QCoreApplication, QRect, Qt, QUrl
 from PySide6.QtGui import QFont
@@ -57,6 +58,9 @@ class TopSearchCard(MainCard):
     # 数据
     base_html = None
     base_time = None
+    # 上次刷新时间
+    last_load_time = 0
+    load_interval_time = 30 * 60 * 1000                 # 加载间隔30分钟
 
 
     def __init__(self, main_object=None, parent=None, theme=None, card=None, cache=None, data=None,
@@ -196,6 +200,15 @@ class TopSearchCard(MainCard):
 
     def refresh_ui(self, date_time_str):
         super().refresh_ui(date_time_str)
+        # 当前时间戳
+        current_time = int(round(time.time() * 1000))
+        # 上次时间戳
+        last_time = self.last_load_time
+        # 相隔x分钟内不进行重新加载
+        if current_time - last_time < self.load_interval_time:
+            return
+        # 记录加载时间戳
+        self.last_load_time = current_time
         print("热搜卡片开始刷新数据")
         self.send_network_request()
         super().refresh_ui_end(date_time_str)

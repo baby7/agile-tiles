@@ -8,6 +8,10 @@ import subprocess
 import time, datetime
 # 资源包
 import compiled_resources
+from src.card.main_card.ToolCard.housing_loan_rates import housing_loan_rates_util
+from src.module.ColorPicker import color_converter_util
+from src.module.ColorPicker.color_converter_util import ColorConverterDialog
+from src.module.ColorPicker.ColorPickerWidget import ScreenColorPicker
 
 from src.module.Screenshot.ScreenshotWidget import ScreenshotWidget
 from src.util import main_data_compare, hardware_id_util
@@ -149,6 +153,9 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
     access_token = None
     refresh_token = None
     refresh_token_datetime = None
+    # 上次获取用户时间
+    last_get_user_info_time = 0
+    get_user_info_interval_time = 10 * 60 * 1000                 # 加载间隔10分钟
     # 启动状态
     is_first = True
     start_login_view = False        # 登录窗口是否展示
@@ -626,11 +633,12 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
 
 
     ''' **********************************退出登录*************************************** '''
-    def logout(self):
+    def logout(self, need_dialog=True):
         # 显示对话框来确认
-        confirm = self.toolkit.message_box_util.box_acknowledgement(self, "退出", f"确定要退出登录吗？")
-        if not confirm:
-            return
+        if need_dialog:
+            confirm = self.toolkit.message_box_util.box_acknowledgement(self, "退出", f"确定要退出登录吗？")
+            if not confirm:
+                return
         # 获取login_helper的路径（假设在同一目录下）
         current_exe_path = os.path.abspath(sys.argv[0])
         login_helper_path = os.path.join(os.path.dirname(current_exe_path), "login_helper.exe")
@@ -1043,11 +1051,22 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
 
     def handle_user_detection_result(self, result):
         print("主进程 - handle_user_detection_result")
+        # 当前时间戳
+        current_time = int(round(time.time() * 1000))
+        # 上次时间戳
+        last_time = self.last_get_user_info_time
+        # 登录失败
         if result['code'] == 1:
             self.info_logger.error(f"获取用户信息失败，原因：{result['msg']}")
-            self.logout()
+            # 相隔x分钟内不进行退出
+            if current_time - last_time < self.get_user_info_interval_time:
+                return
+            # 超过时间直接退出登录
+            self.logout(need_dialog=False)
             return
         self.info_logger.info(f"获取用户信息成功")
+        # 记录加载时间戳
+        self.last_get_user_info_time = current_time
         # 更新信息
         self.current_user = {
             "id": result["data"]["id"],
@@ -1066,7 +1085,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         # vip用户需要做数据同步
         self.is_vip = True
         self.sync_data()
-        # 刷新界面
+        # 刷新用户信息界面
         self.update_user_view()
 
     def update_user_view(self):
@@ -1278,13 +1297,49 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         # 隐藏主窗口
         self.hide()
         # 延迟显示遮罩层
-        QTimer.singleShot(600, self._show_overlay)
+        QTimer.singleShot(600, self._show_screenshot_overlay)
         self.show_overlay_status = True
 
-    def _show_overlay(self):
+    def _show_screenshot_overlay(self):
         self.overlay = ScreenshotWidget(self, self)
         self.overlay.show()
         self.overlay.setFocus(Qt.FocusReason.ActiveWindowFocusReason)  # 强制获取焦点
+
+    def start_color_picker(self):
+        if self.show_overlay_status:
+            return
+        # 隐藏主窗口
+        self.hide()
+        self.toolkit.resolution_util.out_animation(self)
+        # 延迟显示遮罩层
+        QTimer.singleShot(600, self._show_color_picker_overlay)
+        self.show_overlay_status = True
+
+    def _show_color_picker_overlay(self):
+        self.color_picker_overlay = ScreenColorPicker(self, self)
+        self.color_picker_overlay.show()
+        self.color_picker_overlay.setFocus(Qt.FocusReason.ActiveWindowFocusReason)  # 强制获取焦点
+
+    def color_picker_captured(self, color=None):
+        """完成进行"""
+        self.show_overlay_status = False
+        # 显示主窗口
+        self.show()
+        # 隐藏遮罩层
+        try:
+            if hasattr(self, "color_picker_overlay"):
+                self.color_picker_overlay.hide()
+                self.color_picker_overlay.close()
+        except Exception:
+            pass
+        # 显示颜色转换器
+        if hasattr(self, "color_converter_dialog"):
+            try:
+                self.color_converter_dialog.close()
+                self.color_converter_dialog = None
+            except Exception:
+                pass
+        self.color_converter_dialog = color_converter_util.show_color_converter_dialog(self, "颜色转换器", initial_color=color)
 
     def screenshot_captured_to_translate(self, pixmap):
         """截图完成进行翻译"""

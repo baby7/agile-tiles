@@ -730,8 +730,8 @@ class MainCardManager(QObject):
         # 添加到布局
         # self.main_object.layout_header.addWidget(self.main_object.push_button_header_exit)
         # self.main_object.layout_header.addWidget(self.main_object.push_button_screenshot)
-        self.main_object.layout_header.addWidget(self.main_object.push_button_pin)
         self.main_object.layout_header.addWidget(self.main_object.push_button_more)
+        self.main_object.layout_header.addWidget(self.main_object.push_button_pin)
         # self.main_object.layout_header.addWidget(self.main_object.push_button_screenshot)
         # self.main_object.layout_header.addWidget(self.main_object.push_button_card_design)
         self.main_object.layout_header.addWidget(self.main_object.push_button_hide_window)
@@ -748,16 +748,21 @@ class MainCardManager(QObject):
         self.main_object.header_more_menu = QMenu(self.main_object.push_button_more)
         self.main_object.header_more_menu.setObjectName(u"header_more_menu")
         self.apply_menu_style(self.main_object.is_dark)  # 应用菜单样式
-        # 截图选项
-        screenshot_action = QAction(style_util.get_icon_by_path("Edit/screenshot", is_dark=self.main_object.is_dark),
-                                    "截图", self.main_object.push_button_more)
-        screenshot_action.triggered.connect(lambda: self.push_button_screenshot_click())
-        self.main_object.header_more_menu.addAction(screenshot_action)
         # 卡片设计选项
         card_permutation_action = QAction(style_util.get_icon_by_path("Base/waterfalls-h", is_dark=self.main_object.is_dark),
                                     "卡片设计", self.main_object.push_button_more)
         card_permutation_action.triggered.connect(lambda: self.push_button_setting_card_permutation_click())
         self.main_object.header_more_menu.addAction(card_permutation_action)
+        # 截图选项
+        screenshot_action = QAction(style_util.get_icon_by_path("Edit/screenshot", is_dark=self.main_object.is_dark),
+                                    "屏幕截图", self.main_object.push_button_more)
+        screenshot_action.triggered.connect(lambda: self.push_button_screenshot_click())
+        self.main_object.header_more_menu.addAction(screenshot_action)
+        # 取色选项
+        color_picker_action = QAction(style_util.get_icon_by_path("Hardware/electronic-pen", is_dark=self.main_object.is_dark),
+                                    "屏幕取色", self.main_object.push_button_more)
+        color_picker_action.triggered.connect(lambda: self.push_button_color_picker_click())
+        self.main_object.header_more_menu.addAction(color_picker_action)
         # 官网选项
         official_website_action = QAction(style_util.get_icon_by_path("Travel/planet", is_dark=self.main_object.is_dark),
                                     "打开官网", self.main_object.push_button_more)
@@ -833,6 +838,10 @@ class MainCardManager(QObject):
     # 设置
     def push_button_screenshot_click(self):
         self.main_object.on_screenshot_hotkey_triggered()
+
+    # 设置
+    def push_button_color_picker_click(self):
+        self.main_object.start_color_picker()
 
     # 设置钉住
     def push_button_pin_click(self):

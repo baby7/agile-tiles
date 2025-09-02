@@ -49,38 +49,47 @@ class ToolCard(AggregationCard):
     def init_ui(self):
         super().init_ui()
         self.aggregation_module_list = [
-            # 趣味
+            # 工具
             {
                 "category": self.module_category_browser,
-                "type": "趣味",
-                "title": "这班上得值不值",
-                "des": "测算版",
-                "icon": "Game/handle-triangle",
-                "content": None,
-                "link": "https://github.com/Zippland/worth-calculator/",
-                "call_back_func": self.salary_calculator
-            },
-            {
-                "category": self.module_category_browser,
-                "type": "趣味",
-                "title": "记仇生成器",
-                "des": "这个仇我记下了",
-                "icon": "Emoji/angry-face",
+                "type": "工具",
+                "title": "屏幕截图",
+                "des": "默认快捷键Alt+2",
+                "icon": "Edit/screenshot",
                 "content": None,
                 "link": None,
-                "call_back_func": lambda : self.hold_grudges_gen("记仇生成器")
+                "call_back_func": self.screenshot
             },
             {
                 "category": self.module_category_browser,
-                "type": "趣味",
-                "title": "中国家庭称谓计算器",
-                "des": "这下搞懂了",
-                "icon": "png:Actor/RelationShip.png",
+                "type": "工具",
+                "title": "屏幕取色",
+                "des": "获取屏幕某个点的颜色",
+                "icon": "Hardware/electronic-pen",
                 "content": None,
-                "link": "https://github.com/mumuy/relationship",
-                "call_back_func": self.relationship_calculator
+                "link": None,
+                "call_back_func": self.color_picker
             },
-            # 工具
+            {
+                "category": self.module_category_browser,
+                "type": "工具",
+                "title": "颜色转换器",
+                "des": "转换各种颜色格式",
+                "icon": "Components/platte",
+                "content": None,
+                "link": None,
+                "call_back_func": self.color_converter
+            },
+            # {
+            #     "category": self.module_category_browser,
+            #     "type": "工具",
+            #     "title": "图片批量转表格",
+            #     "des": "批量图片OCR识别转表格",
+            #     "icon": "Office/excel",
+            #     "content": None,
+            #     "link": None,
+            #     "call_back_func": self.progress_bar_generator
+            # },
             {
                 "category": self.module_category_browser,
                 "type": "工具",
@@ -142,8 +151,48 @@ class ToolCard(AggregationCard):
                 "link": None,
                 "call_back_func": lambda : self.time_calculator("时间计算器")
             },
+            # 趣味
+            {
+                "category": self.module_category_browser,
+                "type": "趣味",
+                "title": "这班上得值不值",
+                "des": "测算版",
+                "icon": "Game/handle-triangle",
+                "content": None,
+                "link": "https://github.com/Zippland/worth-calculator/",
+                "call_back_func": self.salary_calculator
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "趣味",
+                "title": "记仇生成器",
+                "des": "这个仇我记下了",
+                "icon": "Emoji/angry-face",
+                "content": None,
+                "link": None,
+                "call_back_func": lambda : self.hold_grudges_gen("记仇生成器")
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "趣味",
+                "title": "中国家庭称谓计算器",
+                "des": "这下搞懂了",
+                "icon": "png:Actor/RelationShip.png",
+                "content": None,
+                "link": "https://github.com/mumuy/relationship",
+                "call_back_func": self.relationship_calculator
+            },
         ]
         self.init_tab_widget()
+
+    def screenshot(self):
+        self.main_object.on_screenshot_hotkey_triggered()
+
+    def color_picker(self):
+        self.main_object.start_color_picker()
+
+    def color_converter(self):
+        self.main_object.color_picker_captured()
 
     def salary_calculator(self):
         self.toolkit.resolution_util.out_animation(self.main_object)

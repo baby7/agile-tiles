@@ -1,140 +1,17 @@
 import os
 import subprocess
 import tempfile
-from datetime import timedelta
 
-from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, \
+from PySide6.QtWidgets import QApplication, QVBoxLayout, QPushButton, QHBoxLayout, \
     QLabel, QTableWidget, QTableWidgetItem, QHeaderView, QAbstractItemView
-from PySide6.QtGui import Qt, QColor, QBrush, QPainter, QPen
-from PySide6.QtCore import Slot, QPointF
+from PySide6.QtGui import Qt, QColor, QBrush
+from PySide6.QtCore import Slot, QDateTime
 from lxml import html
-from dateutil import parser
 
 from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.component.ChartWidget.DateTimeChartWidget import DateTimeChartWidget
 from src.module.Box import message_box_util
 from src.ui import style_util
-
-
-class BatteryGraphWidget(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.points = []
-        self.min_date = None
-        self.max_date = None
-        self.min_health = 100
-        self.max_health = 100
-        self.setMinimumHeight(300)
-
-    def set_data(self, data):
-        """设置要绘制的数据"""
-        self.points = []
-        if not data:
-            return
-
-        # 转换日期和健康值
-        for date_str, _, _, health in data:
-            try:
-                date = parser.parse(date_str)
-                self.points.append((date, health))
-            except:
-                continue
-
-        if self.points:
-            # 计算最小/最大日期和健康值
-            self.min_date = min(p[0] for p in self.points)
-            self.max_date = max(p[0] for p in self.points)
-            self.min_health = min(p[1] for p in self.points)
-            self.max_health = max(p[1] for p in self.points)
-
-            # 确保最小健康值不低于0，最大不超过100
-            self.min_health = max(0, self.min_health - 5)
-            self.max_health = min(100, self.max_health + 5)
-
-        self.update()
-
-    def paintEvent(self, event):
-        """绘制电池健康曲线"""
-        if not self.points:
-            return
-
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
-
-        # 设置边距
-        margin = 40
-        width = self.width() - 2 * margin
-        height = self.height() - 2 * margin
-
-        # 绘制背景
-        painter.fillRect(self.rect(), QColor(240, 240, 240))
-
-        # 绘制坐标轴
-        painter.setPen(QPen(Qt.black, 2))
-        painter.drawLine(margin, margin, margin, margin + height)  # Y轴
-        painter.drawLine(margin, margin + height, margin + width, margin + height)  # X轴
-
-        # 绘制Y轴刻度和标签
-        painter.setPen(QPen(Qt.darkGray, 1))
-        for i in range(0, 101, 20):
-            y = margin + height - (i / 100.0) * height
-            painter.drawLine(margin - 5, y, margin + width, y)
-            painter.drawText(5, y + 5, f"{i}%")
-
-        # 绘制X轴刻度和标签
-        date_range = (self.max_date - self.min_date).days
-        if date_range < 1:
-            date_range = 1
-
-        # 每隔一定时间点绘制一个刻度
-        num_ticks = min(8, date_range)
-        interval = max(1, date_range // num_ticks)
-
-        for i in range(0, date_range + 1, interval):
-            date = self.min_date + timedelta(days=i)
-            x = margin + (i / date_range) * width
-            painter.drawLine(x, margin + height, x, margin + height + 5)
-
-            # 格式化日期
-            date_str = date.strftime("%Y-%m-%d")
-            painter.drawText(x - 20, margin + height + 20, date_str)
-
-        # 绘制曲线
-        if len(self.points) > 1:
-            path = []
-            for i, (date, health) in enumerate(self.points):
-                days = (date - self.min_date).days
-                x = margin + (days / date_range) * width
-                y = margin + height - (health / 100.0) * height
-
-                if i == 0:
-                    path.append(QPointF(x, y))
-                else:
-                    # 使用贝塞尔曲线平滑连接点
-                    prev_x, prev_y = path[-1].x(), path[-1].y()
-                    ctrl_x1 = prev_x + (x - prev_x) * 0.5
-                    ctrl_y1 = prev_y
-                    ctrl_x2 = prev_x + (x - prev_x) * 0.5
-                    ctrl_y2 = y
-
-                    path.append(QPointF(ctrl_x1, ctrl_y1))
-                    path.append(QPointF(ctrl_x2, ctrl_y2))
-                    path.append(QPointF(x, y))
-
-            # 绘制曲线
-            painter.setPen(QPen(QColor(0, 100, 200), 3))
-            painter.drawPolyline(path)
-
-            # 绘制数据点
-            painter.setPen(QPen(Qt.darkBlue, 1))
-            painter.setBrush(QBrush(QColor(100, 180, 255)))
-            for point in path:
-                if point in [path[0], path[-1]] or len(path) < 10:  # 只绘制首尾点或当点数少时绘制所有点
-                    painter.drawEllipse(point, 5, 5)
-
-        # 绘制标题
-        painter.setPen(Qt.darkBlue)
-        painter.setFont(self.font())
-        painter.drawText(margin, 20, "电池健康曲线")
 
 
 class BatteryTableWidget(QTableWidget):
@@ -219,7 +96,7 @@ class NotebookBatteryGraph(AgileTilesAcrylicWindow):
         layout.addWidget(self.status_label)
 
         # 创建电池健康曲线图
-        self.graph_widget = BatteryGraphWidget()
+        self.graph_widget = DateTimeChartWidget()
         layout.addWidget(self.graph_widget)
 
         # 创建数据表格
@@ -271,7 +148,7 @@ class NotebookBatteryGraph(AgileTilesAcrylicWindow):
             if result.returncode != 0:
                 raise Exception(f"命令执行失败: {result.stderr}")
 
-            # temp_path = "battery-report.html"
+            # temp_path = "dev_util/battery-report.html"
 
             self.status_label.setText(f"报告已生成: {temp_path}")
 
@@ -286,8 +163,15 @@ class NotebookBatteryGraph(AgileTilesAcrylicWindow):
                 self.status_label.setText("未找到电池数据，请检查报告内容")
                 return
 
+            chart_data = []
+            for data_item in data:
+                chart_data.append([QDateTime.fromString(data_item[0], "yyyy-MM-dd"), data_item[3]])
+
             # 更新图表和表格
-            self.graph_widget.set_data(data)
+            self.graph_widget.set_data(chart_data)
+            self.graph_widget.set_title("电池健康曲线")
+            self.graph_widget.set_x_axis_title("日期")
+            self.graph_widget.set_y_axis_title("健康度(%)")
             self.table_widget.set_data(data)
 
             # 更新底部信息

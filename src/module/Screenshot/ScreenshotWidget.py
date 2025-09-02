@@ -1,8 +1,8 @@
 import math
 
-from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QHBoxLayout, QFileDialog, QApplication, QVBoxLayout
-from PySide6.QtGui import QPainter, QColor, QPen, QGuiApplication, QPixmap, QFont, QIcon, QCursor, QPolygon
-from PySide6.QtCore import Qt, QRect, QPoint, Signal, QLine
+from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QHBoxLayout, QFileDialog, QApplication
+from PySide6.QtGui import QPainter, QColor, QPen, QGuiApplication, QPixmap, QFont
+from PySide6.QtCore import Qt, QRect, QPoint, Signal
 
 from src.ui import style_util
 
@@ -791,6 +791,11 @@ class ScreenshotWidget(QWidget):
             self.dragging = True
             self.tip_label.show()
             self.update()
+            # 明确接受事件，防止继续传递
+            event.accept()
+        else:
+            # 对于非左键事件，调用父类处理
+            super().mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
         """鼠标移动事件处理"""
