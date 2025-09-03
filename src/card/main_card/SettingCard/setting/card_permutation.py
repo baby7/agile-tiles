@@ -118,6 +118,7 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.render_card_list()
         # 最大化
         self.showMaximized()
+        self.add_card_widget.set_ui()
         # 背景
         self.label_background.resize(self.width(), self.height())
         # 按钮防抖机制

@@ -747,32 +747,26 @@ class MainCardManager(QObject):
         # 创建更多的下拉菜单
         self.main_object.header_more_menu = QMenu(self.main_object.push_button_more)
         self.main_object.header_more_menu.setObjectName(u"header_more_menu")
-        self.apply_menu_style(self.main_object.is_dark)  # 应用菜单样式
         # 卡片设计选项
-        card_permutation_action = QAction(style_util.get_icon_by_path("Base/waterfalls-h", is_dark=self.main_object.is_dark),
-                                    "卡片设计", self.main_object.push_button_more)
-        card_permutation_action.triggered.connect(lambda: self.push_button_setting_card_permutation_click())
-        self.main_object.header_more_menu.addAction(card_permutation_action)
+        self.main_object.card_permutation_action = QAction("卡片设计", self.main_object.push_button_more)
+        self.main_object.card_permutation_action.triggered.connect(lambda: self.push_button_setting_card_permutation_click())
+        self.main_object.header_more_menu.addAction(self.main_object.card_permutation_action)
         # 截图选项
-        screenshot_action = QAction(style_util.get_icon_by_path("Edit/screenshot", is_dark=self.main_object.is_dark),
-                                    "屏幕截图", self.main_object.push_button_more)
-        screenshot_action.triggered.connect(lambda: self.push_button_screenshot_click())
-        self.main_object.header_more_menu.addAction(screenshot_action)
+        self.main_object.screenshot_action = QAction("屏幕截图", self.main_object.push_button_more)
+        self.main_object.screenshot_action.triggered.connect(lambda: self.push_button_screenshot_click())
+        self.main_object.header_more_menu.addAction(self.main_object.screenshot_action)
         # 取色选项
-        color_picker_action = QAction(style_util.get_icon_by_path("Hardware/electronic-pen", is_dark=self.main_object.is_dark),
-                                    "屏幕取色", self.main_object.push_button_more)
-        color_picker_action.triggered.connect(lambda: self.push_button_color_picker_click())
-        self.main_object.header_more_menu.addAction(color_picker_action)
+        self.main_object.color_picker_action = QAction("屏幕取色", self.main_object.push_button_more)
+        self.main_object.color_picker_action.triggered.connect(lambda: self.push_button_color_picker_click())
+        self.main_object.header_more_menu.addAction(self.main_object.color_picker_action)
         # 官网选项
-        official_website_action = QAction(style_util.get_icon_by_path("Travel/planet", is_dark=self.main_object.is_dark),
-                                    "打开官网", self.main_object.push_button_more)
-        official_website_action.triggered.connect(lambda: self.open_index_url())
-        self.main_object.header_more_menu.addAction(official_website_action)
+        self.main_object.official_website_action = QAction("打开官网", self.main_object.push_button_more)
+        self.main_object.official_website_action.triggered.connect(lambda: self.open_index_url())
+        self.main_object.header_more_menu.addAction(self.main_object.official_website_action)
         # 关于我们选项
-        about_us_action = QAction(style_util.get_icon_by_path("Character/info", is_dark=self.main_object.is_dark),
-                                    "关于我们", self.main_object.push_button_more)
-        about_us_action.triggered.connect(lambda: self.open_about_us_url())
-        self.main_object.header_more_menu.addAction(about_us_action)
+        self.main_object.about_us_action = QAction("关于我们", self.main_object.push_button_more)
+        self.main_object.about_us_action.triggered.connect(lambda: self.open_about_us_url())
+        self.main_object.header_more_menu.addAction(self.main_object.about_us_action)
         # 绑定菜单项点击事件
         self.main_object.push_button_more.setMenu(self.main_object.header_more_menu)
         # 设置按钮样式
@@ -780,6 +774,11 @@ class MainCardManager(QObject):
 
     def apply_menu_style(self, is_dark):
         """应用菜单样式"""
+        self.main_object.card_permutation_action.setIcon(style_util.get_icon_by_path("Base/waterfalls-h", is_dark=is_dark))
+        self.main_object.screenshot_action.setIcon(style_util.get_icon_by_path("Edit/screenshot", is_dark=is_dark))
+        self.main_object.color_picker_action.setIcon(style_util.get_icon_by_path("Hardware/electronic-pen", is_dark=is_dark))
+        self.main_object.official_website_action.setIcon(style_util.get_icon_by_path("Travel/planet", is_dark=is_dark))
+        self.main_object.about_us_action.setIcon(style_util.get_icon_by_path("Character/info", is_dark=is_dark))
         if is_dark:
             menu_style = """
                 QMenu {

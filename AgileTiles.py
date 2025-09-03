@@ -1496,7 +1496,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         """更新记录"""
         text_box_util.show_text_dialog(self, "版本信息", {
             "content": version_constant.get_update_info(),
-            "size": [600, 600],
+            "size": [450, 500],
             "longText": True,
             "markdown": True
         })

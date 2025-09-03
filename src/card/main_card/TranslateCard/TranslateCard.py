@@ -2,7 +2,7 @@ import json
 
 from PySide6 import QtCore
 from PySide6.QtCore import Slot, QUrl, Qt, QTimer
-from PySide6.QtGui import QIcon, QAction
+from PySide6.QtGui import QIcon, QAction, QCursor
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QMenu, QPlainTextEdit
 
@@ -144,8 +144,8 @@ class TranslateCard(MainCard):
         self.swap_button.setMinimumHeight(24)
         self.swap_button.setMinimumWidth(30)
         self.swap_button.setIcon(QIcon.fromTheme("swap"))
-        self.swap_button.setToolTip("切换语言")
         self.swap_button.clicked.connect(self.swap_languages)
+        self.swap_button.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
         toolbar_layout.addWidget(self.swap_button)
 
         # 目标语言下拉框
@@ -226,7 +226,7 @@ class TranslateCard(MainCard):
         self.update_call_count()
 
         # 为目标文本框绑定回车键事件
-        self.source_text.keyPressEvent = self.custom_key_press_event
+        # self.source_text.keyPressEvent = self.custom_key_press_event
 
     def custom_key_press_event(self, event):
         """

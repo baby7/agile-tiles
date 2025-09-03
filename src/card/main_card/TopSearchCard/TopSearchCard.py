@@ -108,8 +108,12 @@ class TopSearchCard(MainCard):
         # 主要信息展示
         self.text_browser_top = QTextBrowser(self.card)
         self.text_browser_top.setObjectName(u"text_browser_top")
-        self.text_browser_top.setGeometry(QRect(20, 30 + tab_widget_height, self.card.width() - 40, self.card.height() - tab_widget_height - 50))
+        self.text_browser_top.setGeometry(QRect(20, 10 + tab_widget_height, self.card.width() - 40, self.card.height() - tab_widget_height - 50 + 20))
         self.text_browser_top.setFont(font3)
+        # 标题背景
+        self.label_top_area_background = QLabel(self.card)
+        self.label_top_area_background.setObjectName(u"label_top_area_background")
+        self.label_top_area_background.setGeometry(QRect(10, tab_widget_height + 1, self.card.width() - 20, 28))
         # 序号
         self.label_top_area_number = QLabel(self.card)
         self.label_top_area_number.setObjectName(u"label_top_area_number")
@@ -125,13 +129,13 @@ class TopSearchCard(MainCard):
         # 时间
         self.label_weibo_time = QLabel(self.card)
         self.label_weibo_time.setObjectName(u"label_weibo_time")
-        self.label_weibo_time.setGeometry(QRect(self.card.width() - 270, tab_widget_height, 221, 32))
+        self.label_weibo_time.setGeometry(QRect(self.card.width() - 270 - 20, tab_widget_height, 221, 32))
         self.label_weibo_time.setFont(font4)
         self.label_weibo_time.setAlignment(Qt.AlignRight | Qt.AlignTrailing | Qt.AlignVCenter)
         # 刷新
         self.push_button_search_refresh = QPushButton(self.card)
         self.push_button_search_refresh.setObjectName(u"push_button_search_refresh")
-        self.push_button_search_refresh.setGeometry(QRect(self.card.width() - 44, tab_widget_height, 32, 32))
+        self.push_button_search_refresh.setGeometry(QRect(self.card.width() - 64, tab_widget_height, 32, 32))
         # 下方切换
         self.tab_widget_toggle = QTabWidget(self.card)
         self.tab_widget_toggle.setObjectName(u"tab_widget_toggle")
@@ -157,7 +161,7 @@ class TopSearchCard(MainCard):
             border-width: 0px;
             outline: none;
         }
-        """ + style_util.scroll_bar_style)
+        """ + scroll_bar_style)
         # 设置浏览器不打开链接和没有滚动条
         # 关键步骤：设置文档的CSS，去除焦点时的虚线边框
         self.text_browser_top.setFocusPolicy(Qt.TabFocus)
@@ -186,6 +190,7 @@ class TopSearchCard(MainCard):
         # 层叠
         self.tab_widget_toggle.raise_()
         self.text_browser_top.raise_()
+        self.label_top_area_background.raise_()
         self.push_button_search_refresh.raise_()
         self.label_weibo_time.raise_()
         self.label_top_area_number.raise_()
@@ -379,6 +384,7 @@ class TopSearchCard(MainCard):
                     self.logger
                 )
                 self.base_html = get_micro_blog_info.change_css(self.base_html)
+                print(self.base_html)
 
             # 更新UI
             self.set_ui()
@@ -416,8 +422,10 @@ class TopSearchCard(MainCard):
             return False
         if self.is_light():
             text_color = "background-color: rgba(0, 0, 0, 0);color: rgba(0, 0, 0, 0.4);"
+            self.label_top_area_background.setStyleSheet("background: rgb(255, 255, 255); border-radius: 10px;")
         else:
             text_color = "background-color: rgba(0, 0, 0, 0);color: rgba(255, 255, 255, 0.4);"
+            self.label_top_area_background.setStyleSheet("background: rgb(0, 0, 0); border-radius: 10px;")
         style_util.set_card_button_style(self.push_button_search_refresh, "Arrows/redo", is_dark=not self.is_light())
         self.label_top_mask.setStyleSheet(u"background-color: transparent;")
         self.label_top_area_number.setStyleSheet(text_color)
@@ -425,3 +433,43 @@ class TopSearchCard(MainCard):
         self.label_weibo_time.setStyleSheet(text_color)
         style_util.set_tab_widget_style(self.tab_widget_toggle, self.is_dark())
         self.load_animation.set_theme(self.is_light())
+
+scroll_bar_style = """
+/******** 滚动条  *********/
+/* 垂直滚动条 */
+QScrollBar:vertical {
+    border-width: 0px;
+    border: none;
+    width: 10px;
+    margin-top: 25px;
+    border-radius: 5px;
+    background-color: transparent;
+}
+QScrollBar::handle:vertical {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0 rgba(179, 179, 179, 125), stop: 0.5 rgba(179, 179, 179, 125), stop:1 rgba(179, 179, 179, 125));
+    min-height: 20px;
+    max-height: 20px;
+    margin: 0px 0px 0px 0px;
+    border-radius: 5px;
+}
+QScrollBar::add-line:vertical {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0 rgba(179, 179, 179, 0), stop: 0.5 rgba(179, 179, 179, 0),  stop:1 rgba(179, 179, 179, 0));
+    height: 0px;
+    border: none;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+QScrollBar::sub-line:vertical {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0  rgba(179, 179, 179, 0), stop: 0.5 rgba(179, 179, 179, 0),  stop:1 rgba(179, 179, 179, 0));
+    height: 0 px;
+    border: none;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+QScrollBar::sub-page:vertical {
+    background: rgba(179, 179, 179, 0);
+}
+QScrollBar::add-page:vertical {
+    background: rgba(179, 179, 179, 0);
+}
+"""

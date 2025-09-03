@@ -41,24 +41,22 @@ def change_css(html_content):
     for match in matches:
         html_content = html_content.replace(match, "")
     # 热搜文字样式
-    for index in range(51):
-        if index == 1:
-            html_content = html_content.replace('class="td-01 ranktop ranktop' + str(index) + '"',
-                                                'class="td-01 ranktop ranktop' + str(index) + '" style="border-bottom:0px solid #f9f9f9;line-height:16px;color: #f26d5f;"')
-        if index <= 3:
-            html_content = html_content.replace('class="td-01 ranktop ranktop' + str(index) + '"',
-                                                'class="td-01 ranktop ranktop' + str(index) + '" style="border-bottom:0px solid #f9f9f9;line-height:25px;color: #f26d5f;"')
-        else:
-            html_content = html_content.replace('class="td-01 ranktop ranktop' + str(index) + '"',
-                                                'class="td-01 ranktop ranktop' + str(index) + '" style="border-bottom:0px solid #f9f9f9;line-height:25px;color: #ff8200;"')
-    html_content = html_content.replace('class="td-02"',
-                                        'class="td-02" style="border-bottom:0px solid #f9f9f9;line-height:25px;"')
-    html_content = html_content.replace('class="td-03"',
-                                        'class="td-03" style="border-bottom:0px solid #f9f9f9;line-height:25px;"')
+    # for index in range(51):
+    #     if index == 1:
+    #         html_content = html_content.replace('class="td-01 ranktop ranktop' + str(index) + '"',
+    #                                             'class="td-01 ranktop ranktop' + str(index) + '" style="border-bottom:0px solid #f9f9f9;line-height:16px;color: #f26d5f;"')
+    #     elif index <= 3:
+    #         html_content = html_content.replace('class="td-01 ranktop ranktop' + str(index) + '"',
+    #                                             'class="td-01 ranktop ranktop' + str(index) + '" style="border-bottom:0px solid #f9f9f9;line-height:25px;color: #f26d5f;"')
+    #     else:
+    #         html_content = html_content.replace('class="td-01 ranktop ranktop' + str(index) + '"',
+    #                                             'class="td-01 ranktop ranktop' + str(index) + '" style="border-bottom:0px solid #f9f9f9;line-height:25px;color: #ff8200;"')
+    # html_content = html_content.replace('class="td-02"',
+    #                                     'class="td-02" style="border-bottom:0px solid #f9f9f9;line-height:25px;"')
+    # html_content = html_content.replace('class="td-03"',
+    #                                     'class="td-03" style="border-bottom:0px solid #f9f9f9;line-height:25px;"')
     html_content = html_content.replace('target="_blank">',
                                         'target="_blank" style="text-decoration:none;color:#0078b6;">')
-    html_content = html_content.replace('class="th-02"',
-                                        'class="th-02" style="width:1000px;min-width:1000px;"')
     # html_content = html_content.replace('</tbody>',
     #                                     '<tr style="line-height:1px;height: 1px;"><td></td><td><span style="color:white">'
     #                                     '———————————————————————————'

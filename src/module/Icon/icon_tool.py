@@ -22,7 +22,7 @@ def set_tray_menu(main_object):
     menu.addAction(QAction(u'用户协议', main_object, triggered=open_user_agreement_url))
     menu.addAction(QAction(u'隐私政策', main_object, triggered=open_privacy_policy_url))
     menu.addSeparator()
-    menu.addAction(QAction(u'更新记录', main_object, triggered=main_object.open_update_view))
+    menu.addAction(QAction(u'版本信息', main_object, triggered=main_object.open_update_view))
     menu.addSeparator()
     menu.addAction(QAction(u'显示/隐藏', main_object, triggered=main_object.show_hide_form))
     menu.addAction(QAction(u'退出', main_object, triggered=lambda : main_object.quit_before(False)))
