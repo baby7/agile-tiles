@@ -413,13 +413,11 @@ class ImagePopup(AgileTilesAcrylicWindow):
         self.update()
 
     def save_image(self):
-        options = QFileDialog.Options()
         file_path, _ = QFileDialog.getSaveFileName(
             self,
             "保存图片",
             "",
-            "PNG 图片 (*.png);;JPEG 图片 (*.jpg *.jpeg)",
-            options=options)
+            "PNG 图片 (*.png);;JPEG 图片 (*.jpg *.jpeg)")
         if file_path:
             pixmap = self.image_label.pixmap()
             if pixmap:
