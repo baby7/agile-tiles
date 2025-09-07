@@ -198,13 +198,14 @@ class HoldGrudgesGenPopup(QWidget):
             return
 
         file_path, _ = QFileDialog.getSaveFileName(
-            self, "保存图片", "记仇图片.png", "PNG图像 (*.png);;所有文件 (*)"
+            self,
+            "保存图片",
+            "记仇图片.png",
+            "PNG 图片 (*.png);;JPEG 图片 (*.jpg *.jpeg)"
         )
 
         if file_path:
-            if not file_path.endswith(".png"):
-                file_path += ".png"
-            self.original_image.save(file_path, "PNG")
+            self.original_image.save(file_path)
 
     def refresh_theme(self, main_object):
         # 设置样式

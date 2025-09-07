@@ -6,12 +6,16 @@ import os, sys
 import ctypes
 import subprocess
 import time, datetime
+
+from PySide6.QtGui import QPixmap
+
 # 资源包
 import compiled_resources
 from src.card.main_card.ToolCard.housing_loan_rates import housing_loan_rates_util
 from src.module.ColorPicker import color_converter_util
 from src.module.ColorPicker.color_converter_util import ColorConverterDialog
 from src.module.ColorPicker.ColorPickerWidget import ScreenColorPicker
+from src.module.ImageToExcel import image_to_excel_converter_util, single_image_to_excel_converter_util
 
 from src.module.Screenshot.ScreenshotWidget import ScreenshotWidget
 from src.util import main_data_compare, hardware_id_util
@@ -1363,6 +1367,41 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         self.show_overlay_status = False
         self.show()
 
+    def start_image_to_excel_converter(self):
+        # 显示图片转excel转换器
+        if hasattr(self, "image_to_excel_converter_dialog"):
+            try:
+                self.image_to_excel_converter_dialog.close()
+                self.image_to_excel_converter_dialog = None
+            except Exception:
+                pass
+        self.image_to_excel_converter_dialog = image_to_excel_converter_util.show_image_to_excel_converter_dialog(self, "图片批量转Excel")
+
+    def start_single_image_to_excel_converter(self, pixmap):
+        # 显示图片转excel转换器
+        if hasattr(self, "single_image_to_excel_converter_dialog"):
+            try:
+                self.single_image_to_excel_converter_dialog.close()
+                self.single_image_to_excel_converter_dialog = None
+            except Exception:
+                pass
+        self.single_image_to_excel_converter_dialog = (
+            single_image_to_excel_converter_util.show_single_image_to_excel_converter_dialog(self, "图片转Excel", pixmap=pixmap))
+
+    def start_image_show(self, pixmap:QPixmap):
+        # 显示图片
+        if hasattr(self, "image_show_dialog"):
+            try:
+                self.image_show_dialog.close()
+                self.image_show_dialog = None
+            except Exception:
+                pass
+        if pixmap is None:
+            return
+        self.image_show_dialog = self.toolkit.image_box_util.show_image_dialog(self, "图片查看器", pixmap=pixmap)
+
+
+    ''' **********************************其他*************************************** '''
     def nativeEvent(self, eventType, message):
         """处理 Windows 原生事件"""
         # 修复：正确处理 VoidPtr 类型

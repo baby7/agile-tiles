@@ -135,6 +135,16 @@ class ScreenshotWidget(QWidget):
         self.screenshot_rect = None
         self.is_captured = False  # 标记是否已完成截图
 
+        # 区域调整相关变量
+        self.resizing = False  # 是否正在调整区域
+        self.resize_handle = None  # 当前调整的把手位置
+        self.resize_start_rect = None  # 调整开始时的矩形
+        self.resize_start_point = None  # 调整开始的鼠标位置
+        self.handle_size = 8  # 调整把手的大小
+        self.moving = False  # 是否正在移动截图区域
+        self.move_start_point = None  # 移动开始时的鼠标位置
+        self.move_start_rect = None  # 移动开始时的矩形位置
+
         # 图形绘制相关变量
         self.drawing = False  # 是否正在绘制图形
         self.draw_start = QPoint()  # 绘制起始点
@@ -425,12 +435,18 @@ class ScreenshotWidget(QWidget):
         self.translate_btn = QPushButton("", self.toolbar)
         self.translate_btn.setToolTip("识别文字并翻译")
         style_util.set_card_button_style(self.translate_btn, "Base/translate", is_dark=False)
+        self.ocr_to_excel_btn = QPushButton("", self.toolbar)
+        self.ocr_to_excel_btn.setToolTip("图片转表格")
+        style_util.set_card_button_style(self.ocr_to_excel_btn, "Office/excel", is_dark=False)
         self.ocr_btn = QPushButton("", self.toolbar)
         self.ocr_btn.setToolTip("识别文字")
         style_util.set_card_button_style(self.ocr_btn, "Office/text-recognition", is_dark=False)
         self.save_btn = QPushButton("", self.toolbar)
         self.save_btn.setToolTip("另存为图片")
         style_util.set_card_button_style(self.save_btn, "Hardware/memory-card-one", is_dark=False)
+        self.see_btn = QPushButton("", self.toolbar)
+        self.see_btn.setToolTip("查看截图")
+        style_util.set_card_button_style(self.see_btn, "Base/preview-open", is_dark=False)
         self.copy_btn = QPushButton("", self.toolbar)
         self.copy_btn.setToolTip("复制截图到剪贴板")
         style_util.set_card_button_style(self.copy_btn, "Edit/copy", is_dark=False)
@@ -444,16 +460,20 @@ class ScreenshotWidget(QWidget):
         self.line_btn.clicked.connect(lambda: self.toggle_drawing_mode("line"))
         self.arrow_btn.clicked.connect(lambda: self.toggle_drawing_mode("arrow"))
         self.translate_btn.clicked.connect(self.translate_screenshot)
+        self.ocr_to_excel_btn.clicked.connect(self.ocr_to_excel_screenshot)
         self.ocr_btn.clicked.connect(self.ocr_screenshot)
         self.save_btn.clicked.connect(self.save_screenshot)
+        self.see_btn.clicked.connect(self.see_screenshot)
         self.copy_btn.clicked.connect(self.copy_screenshot)
         self.close_btn.clicked.connect(self.close_screenshot)
 
         # 连接鼠标悬停事件
         self.close_btn.installEventFilter(self)
         self.translate_btn.installEventFilter(self)
+        self.ocr_to_excel_btn.installEventFilter(self)
         self.ocr_btn.installEventFilter(self)
         self.save_btn.installEventFilter(self)
+        self.see_btn.installEventFilter(self)
         self.copy_btn.installEventFilter(self)
         self.rect_btn.installEventFilter(self)
         self.ellipse_btn.installEventFilter(self)
@@ -471,11 +491,71 @@ class ScreenshotWidget(QWidget):
         toolbar_layout.addWidget(self.undo_btn)
         toolbar_layout.addWidget(self.redo_btn)
         toolbar_layout.addWidget(self.translate_btn)
+        toolbar_layout.addWidget(self.ocr_to_excel_btn)
         toolbar_layout.addWidget(self.ocr_btn)
         toolbar_layout.addWidget(self.save_btn)
+        toolbar_layout.addWidget(self.see_btn)
         toolbar_layout.addWidget(self.copy_btn)
         toolbar_layout.addWidget(self.close_btn)
         toolbar_layout.setContentsMargins(5, 5, 5, 5)
+
+    def get_resize_handle_at(self, pos):
+        """获取指定位置上的调整把手"""
+        if not self.screenshot_rect:
+            return None
+
+        rect = self.screenshot_rect
+        handle_size = self.handle_size
+
+        # 定义把手的矩形区域
+        handles = {
+            'top_left': QRect(rect.left() - handle_size // 2, rect.top() - handle_size // 2, handle_size, handle_size),
+            'top_right': QRect(rect.right() - handle_size // 2, rect.top() - handle_size // 2, handle_size,
+                               handle_size),
+            'bottom_left': QRect(rect.left() - handle_size // 2, rect.bottom() - handle_size // 2, handle_size,
+                                 handle_size),
+            'bottom_right': QRect(rect.right() - handle_size // 2, rect.bottom() - handle_size // 2, handle_size,
+                                  handle_size),
+            'top': QRect(rect.center().x() - handle_size // 2, rect.top() - handle_size // 2, handle_size, handle_size),
+            'bottom': QRect(rect.center().x() - handle_size // 2, rect.bottom() - handle_size // 2, handle_size,
+                            handle_size),
+            'left': QRect(rect.left() - handle_size // 2, rect.center().y() - handle_size // 2, handle_size,
+                          handle_size),
+            'right': QRect(rect.right() - handle_size // 2, rect.center().y() - handle_size // 2, handle_size,
+                           handle_size),
+        }
+
+        # 检查鼠标是否在任何把手上
+        for handle_name, handle_rect in handles.items():
+            if handle_rect.contains(pos):
+                return handle_name
+
+        # 检查是否在截图区域内（用于移动）
+        if rect.contains(pos):
+            return 'move'
+
+        return None
+
+    def update_cursor(self, pos):
+        """根据鼠标位置更新光标"""
+        if not self.is_captured or not self.screenshot_rect:
+            self.setCursor(Qt.CursorShape.CrossCursor)
+            return
+
+        handle = self.get_resize_handle_at(pos)
+
+        if handle == 'top_left' or handle == 'bottom_right':
+            self.setCursor(Qt.CursorShape.SizeFDiagCursor)
+        elif handle == 'top_right' or handle == 'bottom_left':
+            self.setCursor(Qt.CursorShape.SizeBDiagCursor)
+        elif handle == 'top' or handle == 'bottom':
+            self.setCursor(Qt.CursorShape.SizeVerCursor)
+        elif handle == 'left' or handle == 'right':
+            self.setCursor(Qt.CursorShape.SizeHorCursor)
+        elif handle == 'move' and not self.current_tool:  # 只有在非绘图模式下才显示移动光标
+            self.setCursor(Qt.CursorShape.SizeAllCursor)
+        else:
+            self.setCursor(Qt.CursorShape.ArrowCursor)
 
     def add_to_history(self):
         """将当前图形状态添加到历史记录"""
@@ -657,6 +737,10 @@ class ScreenshotWidget(QWidget):
                 painter.setPen(QPen(QColor(100, 150, 243), 2))
                 painter.drawRect(self.screenshot_rect)
 
+                # 绘制调整把手
+                if not self.drawing and not self.resizing and not self.moving:  # 不在绘图或调整时才绘制把手
+                    self.draw_resize_handles(painter)
+
             # 绘制所有已保存的图形
             for shape in self.shapes:
                 painter.setPen(shape.pen)
@@ -673,6 +757,7 @@ class ScreenshotWidget(QWidget):
             if self.drawing and self.draw_start and self.draw_end:
                 rect = QRect(self.draw_start, self.draw_end).normalized()
                 painter.setPen(self.current_pen)
+                painter.setBrush(Qt.BrushStyle.NoBrush)  # 确保没有填充
 
                 if self.current_tool == "rectangle":
                     painter.drawRect(rect)
@@ -682,6 +767,49 @@ class ScreenshotWidget(QWidget):
                     painter.drawLine(self.draw_start, self.draw_end)
                 elif self.current_tool == "arrow":
                     self.draw_arrow(painter, self.draw_start, self.draw_end, self.current_pen)
+
+    def draw_resize_handles(self, painter):
+        """绘制调整把手"""
+        if not self.screenshot_rect:
+            return
+
+        rect = self.screenshot_rect
+        handle_size = self.handle_size
+
+        # 保存原始画笔和画刷
+        original_pen = painter.pen()
+        original_brush = painter.brush()
+
+        # 设置把手颜色
+        painter.setPen(QPen(QColor(255, 255, 255), 1))
+        painter.setBrush(QColor(100, 150, 243))
+
+        # 绘制四个角把手
+        handles = [
+            QRect(rect.left() - handle_size // 2, rect.top() - handle_size // 2, handle_size, handle_size),  # 左上
+            QRect(rect.right() - handle_size // 2, rect.top() - handle_size // 2, handle_size, handle_size),  # 右上
+            QRect(rect.left() - handle_size // 2, rect.bottom() - handle_size // 2, handle_size, handle_size),  # 左下
+            QRect(rect.right() - handle_size // 2, rect.bottom() - handle_size // 2, handle_size, handle_size),  # 右下
+        ]
+
+        for handle in handles:
+            painter.drawRect(handle)
+
+        # 绘制四条边中间的把手
+        side_handles = [
+            QRect(rect.center().x() - handle_size // 2, rect.top() - handle_size // 2, handle_size, handle_size),  # 上
+            QRect(rect.center().x() - handle_size // 2, rect.bottom() - handle_size // 2, handle_size, handle_size),
+            # 下
+            QRect(rect.left() - handle_size // 2, rect.center().y() - handle_size // 2, handle_size, handle_size),  # 左
+            QRect(rect.right() - handle_size // 2, rect.center().y() - handle_size // 2, handle_size, handle_size),  # 右
+        ]
+
+        for handle in side_handles:
+            painter.drawRect(handle)
+
+        # 恢复原始画笔和画刷
+        painter.setPen(original_pen)
+        painter.setBrush(original_brush)
 
     def draw_arrow(self, painter, start_point, end_point, pen):
         """绘制箭头 - 修复版本"""
@@ -742,7 +870,7 @@ class ScreenshotWidget(QWidget):
         """绘制遮罩层和选区 - 修复模糊问题"""
         # 获取窗口大小
         win_size = self.size()
-        # 绘制屏幕截图背景（考虑DPI缩放）
+        # 绘制屏幕截图背景（考虑DPI缩放")
         scaled_pixmap = self.fullscreen_pixmap.scaled(
             win_size * self.dpr,
             Qt.AspectRatioMode.IgnoreAspectRatio,
@@ -774,23 +902,53 @@ class ScreenshotWidget(QWidget):
 
     def mousePressEvent(self, event):
         """鼠标按下事件处理"""
-        if self.current_tool and self.is_captured:
-            # 绘图模式下，记录起始点
-            if event.button() == Qt.MouseButton.LeftButton:
-                # 确保点击在截图区域内
-                if self.screenshot_rect.contains(event.pos()):
-                    self.draw_start = event.pos()
-                    self.draw_end = self.draw_start
-                    self.drawing = True
-                return
-
         if event.button() == Qt.MouseButton.LeftButton:
             # 使用原始坐标
-            self.start_point = event.position().toPoint()
-            self.end_point = self.start_point
-            self.dragging = True
-            self.tip_label.show()
-            self.update()
+            pos = event.position().toPoint()
+
+            if self.is_captured and self.screenshot_rect:
+                print("点击了截图区域")
+                # 检查是否点击了调整把手
+                handle = self.get_resize_handle_at(pos)
+                if handle and handle != "move":
+                    print("点击了调整把手")
+                    # 如果点击了把手，无论是否在绘图模式下都允许调整
+                    self.resizing = True
+                    self.resize_handle = handle
+                    self.resize_start_rect = QRect(self.screenshot_rect)
+                    self.resize_start_point = pos
+                    return
+
+                # 检查是否在截图区域内
+                if self.screenshot_rect.contains(pos):
+                    print("在截图区域内")
+                    if self.current_tool:
+                        print("在绘图模式下")
+                        # 绘图模式下，记录起始点
+                        self.draw_start = pos
+                        self.draw_end = self.draw_start
+                        self.drawing = True
+                    else:
+                        print("非绘图模式下")
+                        # 非绘图模式下，开始移动截图区域
+                        # self.moving = True
+                        # self.move_start_point = pos
+                        # self.move_start_rect = QRect(self.screenshot_rect)
+                        self.resizing = True
+                        self.resize_handle = handle
+                        self.resize_start_rect = QRect(self.screenshot_rect)
+                        self.resize_start_point = pos
+                    return
+
+            # 如果不在截图区域内，开始选择区域
+            if not self.is_captured:
+                print("开始选择区域")
+                self.start_point = pos
+                self.end_point = self.start_point
+                self.dragging = True
+                self.tip_label.show()
+                self.update()
+
             # 明确接受事件，防止继续传递
             event.accept()
         else:
@@ -799,10 +957,82 @@ class ScreenshotWidget(QWidget):
 
     def mouseMoveEvent(self, event):
         """鼠标移动事件处理"""
+        # 更新光标形状
+        self.update_cursor(event.position().toPoint())
+
         if self.drawing and self.is_captured:
             # 绘图模式下，更新结束点
             self.draw_end = event.pos()
             self.update()
+            return
+
+        if self.resizing and self.screenshot_rect:
+            # 调整区域大小
+            pos = event.position().toPoint()
+            dx = pos.x() - self.resize_start_point.x()
+            dy = pos.y() - self.resize_start_point.y()
+
+            new_rect = QRect(self.resize_start_rect)
+
+            if self.resize_handle == 'move':
+                # 移动整个区域
+                new_rect.translate(dx, dy)
+            elif self.resize_handle == 'top_left':
+                new_rect.setTopLeft(self.resize_start_rect.topLeft() + QPoint(dx, dy))
+            elif self.resize_handle == 'top_right':
+                new_rect.setTopRight(self.resize_start_rect.topRight() + QPoint(dx, dy))
+            elif self.resize_handle == 'bottom_left':
+                new_rect.setBottomLeft(self.resize_start_rect.bottomLeft() + QPoint(dx, dy))
+            elif self.resize_handle == 'bottom_right':
+                new_rect.setBottomRight(self.resize_start_rect.bottomRight() + QPoint(dx, dy))
+            elif self.resize_handle == 'top':
+                new_rect.setTop(self.resize_start_rect.top() + dy)
+            elif self.resize_handle == 'bottom':
+                new_rect.setBottom(self.resize_start_rect.bottom() + dy)
+            elif self.resize_handle == 'left':
+                new_rect.setLeft(self.resize_start_rect.left() + dx)
+            elif self.resize_handle == 'right':
+                new_rect.setRight(self.resize_start_rect.right() + dx)
+
+            # 确保矩形有效（宽度和高度为正）
+            if new_rect.width() > 10 and new_rect.height() > 10:
+                self.screenshot_rect = new_rect.normalized()
+
+                # 更新截图内容
+                if self.screen_count > 1:
+                    self.captured_pixmap = self.fullscreen_pixmap.copy(self.screenshot_rect)
+                else:
+                    dpr_rect = QRect(
+                        self.screenshot_rect.topLeft() * self.dpr,
+                        self.screenshot_rect.size() * self.dpr
+                    )
+                    self.captured_pixmap = self.fullscreen_pixmap.copy(dpr_rect)
+
+                # 重新定位工具栏
+                self.position_toolbar(self.screenshot_rect)
+
+                self.update()
+            return
+
+        if self.moving and self.screenshot_rect:
+            # 移动截图区域
+            pos = event.position().toPoint()
+            dx = pos.x() - self.move_start_point.x()
+            dy = pos.y() - self.move_start_point.y()
+
+            new_rect = QRect(self.move_start_rect)
+            new_rect.translate(dx, dy)
+
+            # 确保矩形在屏幕范围内
+            screen_geometry = self.rect()
+            if (new_rect.left() >= 0 and new_rect.right() <= screen_geometry.width() and
+                    new_rect.top() >= 0 and new_rect.bottom() <= screen_geometry.height()):
+                self.screenshot_rect = new_rect
+
+                # 重新定位工具栏
+                self.position_toolbar(self.screenshot_rect)
+
+                self.update()
             return
 
         if self.dragging:
@@ -866,6 +1096,23 @@ class ScreenshotWidget(QWidget):
                     self.draw_end = QPoint()
                     self.drawing = False
                 self.update()
+            return
+
+        if self.resizing:
+            # 结束调整
+            self.resizing = False
+            self.resize_handle = None
+            self.resize_start_rect = None
+            self.resize_start_point = None
+            self.update()  # 添加这行，确保调整结束后重绘把手
+            return
+
+        if self.moving:
+            # 结束移动
+            self.moving = False
+            self.move_start_point = None
+            self.move_start_rect = None
+            self.update()
             return
 
         if self.is_captured:
@@ -975,7 +1222,11 @@ class ScreenshotWidget(QWidget):
             x = max(0, min(x, screen_geometry.width() - self.toolbar.width()))
             y = max(0, min(y, screen_geometry.height() - self.toolbar.height()))
 
+        # 移动主工具栏
         self.toolbar.move(x, y)
+        # 如果绘图子工具栏正在显示，也移动它
+        if self.draw_toolbar.isVisible():
+            self.draw_toolbar.move(x, y + self.toolbar.height() + 5)
 
     def save_screenshot(self):
         """保存截图到文件"""
@@ -1033,8 +1284,8 @@ class ScreenshotWidget(QWidget):
             file_path, _ = QFileDialog.getSaveFileName(
                 self,
                 "保存截图",
-                "",
-                "PNG Images (*.png);;JPEG Images (*.jpg *.jpeg);;All Files (*)"
+                "屏幕截图.png",
+                "PNG 图片 (*.png);;JPEG 图片 (*.jpg *.jpeg)"
             )
             if file_path:
                 temp_pixmap.save(file_path)
@@ -1050,6 +1301,16 @@ class ScreenshotWidget(QWidget):
     def ocr_screenshot(self):
         """识别截图"""
         self.main_object.screenshot_captured_to_ocr(self.captured_pixmap)
+        self.close_trigger("")
+
+    def ocr_to_excel_screenshot(self):
+        """截图转excel"""
+        self.main_object.start_single_image_to_excel_converter(self.captured_pixmap)
+        self.close_trigger("")
+
+    def see_screenshot(self):
+        """查看截图"""
+        self.main_object.start_image_show(self.captured_pixmap)
         self.close_trigger("")
 
     def copy_screenshot(self):

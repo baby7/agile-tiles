@@ -5,12 +5,82 @@ from urllib.parse import unquote, quote
 from PySide6.QtCore import QRect, Qt
 from PySide6.QtGui import QFont, QTextCursor
 from PySide6.QtWidgets import (QLabel, QPushButton, QLineEdit, QTextBrowser,
-                              QWidget, QStackedWidget, QVBoxLayout, QHBoxLayout,
-                              QSizePolicy)
+                               QWidget, QStackedWidget, QVBoxLayout, QHBoxLayout,
+                               QSizePolicy)
 from src.card.MainCardManager.MainCard import MainCard
 from src.thread_list.everything_search_thread import EverythingStatusThread, EverythingSearchThread
 from src.ui import style_util
 from src.component.LoadAnimation.LoadAnimation import LoadAnimation
+
+file_type_map_list = [
+    # 音频
+    {
+        "type": "audio",
+        "icon": "Office/audio-file",
+        "suffixList": ["mp3", "flac", "wav", "wma", "aac", "ogg", "ape"]
+    },
+    # 视频
+    {
+        "type": "video",
+        "icon": "Office/video-file",
+        "suffixList": ["mp4", "avi", "mkv", "mov", "webm", "wmv"]
+    },
+    # 图片
+    {
+        "type": "image",
+        "icon": "Office/image-files",
+        "suffixList": ["jpg", "jpeg", "jpe", "jfif", "png", "bmp", "gif", "ico", "svg"]
+    },
+    # excel表格
+    {
+        "type": "excel",
+        "icon": "Office/file-excel",
+        "suffixList": ["xlsx", "xls"]
+    },
+    # pdf
+    {
+        "type": "pdf",
+        "icon": "Office/file-pdf-one",
+        "suffixList": ["pdf"]
+    },
+    # ppt
+    {
+        "type": "ppt",
+        "icon": "Office/file-ppt",
+        "suffixList": ["ppt", "pptx"]
+    },
+    # word
+    {
+        "type": "word",
+        "icon": "Office/file-word",
+        "suffixList": ["word", "doc", "docx"]
+    },
+    # 文本文件
+    {
+        "type": "txt",
+        "icon": "Office/file-txt-one",
+        "suffixList": ["txt", "md"]
+    },
+    # 压缩文件
+    {
+        "type": "zip",
+        "icon": "Office/file-zip",
+        "suffixList": ["zip", "7z", "rar", "gzip", "gz"]
+    },
+    # 代码文件
+    {
+        "type": "code",
+        "icon": "Office/file-code",
+        "suffixList": ["py", "pyc", "pyo", "pyd", "java", "class", "h", "c", "hpp", "cpp", "cs", "php",
+                       "html", "js", "css", "kt", "pl", "pm", "shell", "sh", "vue", "xml", "yml"]
+    },
+    # exe文件
+    {
+        "type": "exe",
+        "icon": "Abstract/ad-product",
+        "suffixList": ["exe"]
+    },
+]
 
 
 class FileSearchCard(MainCard):
@@ -56,6 +126,20 @@ class FileSearchCard(MainCard):
         super().__init__(main_object=main_object, parent=parent, theme=theme, card=card, cache=cache, data=data,
                          toolkit=toolkit, logger=logger, save_data_func=save_data_func)
         self.everything_path = "./static/thirdparty/everything/"
+
+        # 图标路径
+        self.file_icon_path = "Base/save"
+        self.folder_icon_path = "Office/folder-open"
+        # 图标对应路径
+        self.suffix_icon_map = {
+            "file": self.file_icon_path,
+            "folder": self.folder_icon_path
+        }
+        # 图标对应路径
+        for item in file_type_map_list:
+            item_suffix_list = item["suffixList"]
+            for suffix in item_suffix_list:
+                self.suffix_icon_map[suffix] = item["icon"]
 
     def clear(self):
         """清理资源"""
@@ -177,7 +261,7 @@ class FileSearchCard(MainCard):
         self.line_edit_search = QLineEdit()
         self.line_edit_search.setObjectName(u"line_edit_search")
         self.line_edit_search.setFont(font1)
-        self.line_edit_search.setPlaceholderText("输入搜索关键词...")
+        self.line_edit_search.setPlaceholderText("输入搜索本地文件/文件夹的关键词...")
         self.line_edit_search.setMinimumHeight(25)
         self.line_edit_search.returnPressed.connect(self.start_search)
         search_layout.addWidget(self.line_edit_search)
@@ -219,7 +303,7 @@ class FileSearchCard(MainCard):
         self.label_status.setObjectName(u"label_status")
         self.label_status.setFont(font2)
         self.label_status.setStyleSheet("background: transparent;")
-        self.label_status.setText("准备搜索...")
+        self.label_status.setText("准备搜索本地文件/文件夹...")
         status_layout.addWidget(self.label_status)
 
         # 索引状态标签
@@ -437,6 +521,8 @@ class FileSearchCard(MainCard):
         for result in results:
             # 提取文件名和路径
             file_name = result.filename
+            file_suffix_list = os.path.splitext(file_name)
+            file_suffix = file_suffix_list[1].replace(".", "").lower() if len(file_suffix_list) > 1 else ""
             file_path = result.path
             file_type = "文件夹" if result.is_folder else "文件"
             # 使用新函数格式化文件大小
@@ -446,9 +532,21 @@ class FileSearchCard(MainCard):
             # 对文件路径进行URL编码，特别是处理空格等特殊字符
             encoded_path = quote(file_path.replace("\\", "/"))  # 转换为正斜杠并编码
 
+            # 根据文件类型选择图标
+            print(file_suffix)
+            if file_suffix in self.suffix_icon_map:
+                icon_path = self.suffix_icon_map[file_suffix]
+            else:
+                if result.is_folder:
+                    icon_path = self.suffix_icon_map["folder"]
+                else:
+                    icon_path = self.suffix_icon_map["file"]
+            icon_path = ":static/img/IconPark/grey/" + icon_path + ".png"
+            icon_html = f'<img src="{icon_path}" width="26" height="26" style="vertical-align: middle;">'
             # 创建可点击的链接
             html_content += f'<div style="margin-bottom: 5px;">'
-            html_content += f'<a href="file:///{encoded_path}" style="font-weight: bold; text-decoration: none; font-size: 14px;">{file_name}</a>'
+            html_content += f'{icon_html}'
+            html_content += f'<a href="file:///{encoded_path}" style="font-weight: bold; text-decoration: none; font-size: 14px; vertical-align: middle;">&nbsp;{file_name}</a>'
             html_content += f'</div>'
             html_content += f'<div style="color: #666; font-size: 12px; margin-bottom: 10px;">{file_path}<br>'
             html_content += f'类型: <span style="font-weight: bold; font-size: 12px;"> {file_type} </span>'

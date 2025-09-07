@@ -2,7 +2,8 @@ from PySide6.QtCore import Qt, QByteArray, QSize
 from PySide6.QtGui import QFont, QPalette, QColor, QPixmap, QPainter, QIcon
 from PySide6.QtSvg import QSvgRenderer
 from PySide6.QtWidgets import QComboBox, QPushButton, QCheckBox, QLineEdit, QSpinBox, QTextEdit, QRadioButton, \
-    QFontComboBox, QFrame, QBoxLayout, QWidget, QToolTip, QDateEdit, QTabWidget, QTableWidget, QDoubleSpinBox
+    QFontComboBox, QFrame, QBoxLayout, QWidget, QToolTip, QDateEdit, QTabWidget, QTableWidget, QDoubleSpinBox, \
+    QPlainTextEdit
 from qframelesswindow import TitleBar
 from qframelesswindow.titlebar import MinimizeButton, MaximizeButton, CloseButton
 
@@ -244,6 +245,8 @@ def get_menu_button_style(state):
 # 普通按钮
 button_light_style = """
 QPushButton {
+    padding-left: 10px;
+    padding-right: 10px;
     border-radius: 10px;
     border: 1px solid black;
     background-color: rgba(230, 231, 232, 200);
@@ -260,6 +263,8 @@ QPushButton:disabled {
 }"""
 button_dark_style = """
 QPushButton {
+    padding-left: 10px;
+    padding-right: 10px;
     border-radius: 10px;
     border: 1px solid white;
     background-color: rgba(20, 21, 22, 200);
@@ -377,6 +382,9 @@ def set_button_style(button, is_dark=False, icon_path=None, size=None, style_cha
     if icon_path is not None and icon_path != "":
         button.setIcon(get_icon_by_path(icon_path=icon_path, size=size, is_dark=is_dark))
     button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+    # 最小高度
+    if button.minimumHeight() == 0:
+        button.setMinimumHeight(25)
 
 def set_card_button_style(button: QPushButton, icon_path: str, size=None, is_dark=False, style_change=True):
     if style_change:
@@ -1076,7 +1084,8 @@ def set_dialog_control_style(widget, is_dark=False):
     all_widgets = find_all_widgets(widget)
     for widget_item in all_widgets:
         if isinstance(widget_item, QWidget):
-            widget_item.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)     # 右键禁止
+            if not isinstance(widget, QPlainTextEdit):
+                widget_item.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)     # 右键禁止
         if isinstance(widget_item, QComboBox) or isinstance(widget_item, QFontComboBox):
             set_combo_box_style(widget_item, is_dark)
             continue
@@ -1133,7 +1142,8 @@ def set_font_and_right_click_style(main_window, widget):
     all_widgets = find_all_widgets(widget)
     for widget in all_widgets:
         if isinstance(widget, QWidget):
-            widget.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)     # 右键禁止
+            if not isinstance(widget, QPlainTextEdit):
+                widget.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)     # 右键禁止
         if isinstance(widget, QBoxLayout):
             continue
         if isinstance(widget, TitleBar):

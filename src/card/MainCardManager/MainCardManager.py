@@ -157,12 +157,12 @@ class MainCardManager(QObject):
             "trending": [self.main_object.push_button_weibo_info, "Energy/fire", self.main_object.top_area, "热搜"],
             "translate": [self.main_object.push_button_translate, "Base/translate", self.main_object.translate_area, "翻译"],
             "chat": [self.main_object.push_button_chat, "Abstract/smart-optimization", self.main_object.chat_area, "智能助手"],
+            "tool": [self.main_object.push_button_tool, "Others/toolkit", self.main_object.tool_area, "工具箱"],
+            "looking": [self.main_object.push_button_looking, "Base/preview-open", self.main_object.looking_area, "信息聚合"],
             "search": [self.main_object.push_button_search, "Base/search", self.main_object.search_area, "本地搜索"],
             "todo": [self.main_object.push_button_todo, "Edit/plan", self.main_object.todo_area, "待办事项"],
             "book": [self.main_object.push_button_book, "Office/book-one", self.main_object.book_area, "阅读"],
             "music": [self.main_object.push_button_music, "Music/music-one", self.main_object.music_area, "音乐"],
-            "looking": [self.main_object.push_button_looking, "Base/preview-open", self.main_object.looking_area, "信息聚合"],
-            "tool": [self.main_object.push_button_tool, "Others/toolkit", self.main_object.tool_area, "工具箱"],
             "game": [self.main_object.push_button_game, "Travel/planet", self.main_object.game_area, "更多"],
         }
         # 初始化卡片位置数据
@@ -181,24 +181,24 @@ class MainCardManager(QObject):
             self.main_object.top_area = QScrollArea(self.main_object.widget_base)
             self.main_object.translate_area = QScrollArea(self.main_object.widget_base)
             self.main_object.chat_area = QScrollArea(self.main_object.widget_base)
+            self.main_object.tool_area = QScrollArea(self.main_object.widget_base)
+            self.main_object.looking_area = QScrollArea(self.main_object.widget_base)
             self.main_object.search_area = QScrollArea(self.main_object.widget_base)
             self.main_object.todo_area = QScrollArea(self.main_object.widget_base)
             self.main_object.book_area = QScrollArea(self.main_object.widget_base)
             self.main_object.music_area = QScrollArea(self.main_object.widget_base)
-            self.main_object.looking_area = QScrollArea(self.main_object.widget_base)
-            self.main_object.tool_area = QScrollArea(self.main_object.widget_base)
             self.main_object.game_area = QScrollArea(self.main_object.widget_base)
             # 初始化主卡片区域
             area_list = [
                 self.main_object.top_area,
                 self.main_object.translate_area,
                 self.main_object.chat_area,
+                self.main_object.looking_area,
+                self.main_object.tool_area,
                 self.main_object.search_area,
                 self.main_object.todo_area,
                 self.main_object.book_area,
                 self.main_object.music_area,
-                self.main_object.looking_area,
-                self.main_object.tool_area,
                 self.main_object.game_area,
             ]
             for area in area_list:
@@ -224,12 +224,12 @@ class MainCardManager(QObject):
             self.main_object.top_area,
             self.main_object.translate_area,
             self.main_object.chat_area,
+            self.main_object.tool_area,
+            self.main_object.looking_area,
             self.main_object.search_area,
             self.main_object.todo_area,
             self.main_object.book_area,
             self.main_object.music_area,
-            self.main_object.looking_area,
-            self.main_object.tool_area,
             self.main_object.game_area,
         ]
         for area in self.area_list:
@@ -248,12 +248,12 @@ class MainCardManager(QObject):
         self.main_object.push_button_weibo_info.clicked.connect(self.push_button_weibo_click)
         self.main_object.push_button_translate.clicked.connect(self.push_button_translate_click)
         self.main_object.push_button_chat.clicked.connect(self.push_button_chat_click)
+        self.main_object.push_button_tool.clicked.connect(self.push_button_tool_click)
+        self.main_object.push_button_looking.clicked.connect(self.push_button_looking_click)
         self.main_object.push_button_search.clicked.connect(self.push_button_search_click)
         self.main_object.push_button_todo.clicked.connect(self.push_button_todo_click)
         self.main_object.push_button_book.clicked.connect(self.push_button_book_click)
         self.main_object.push_button_music.clicked.connect(self.push_button_music_click)
-        self.main_object.push_button_looking.clicked.connect(self.push_button_looking_click)
-        self.main_object.push_button_tool.clicked.connect(self.push_button_tool_click)
         self.main_object.push_button_game.clicked.connect(self.push_button_game_click)
 
     def init_main_card(self):
@@ -923,7 +923,7 @@ class MainCardManager(QObject):
         font.setKerning(True)
         button_names = [
             'user', 'setting',
-            'weibo_info', 'translate', 'chat', 'search', 'todo', 'book', 'music', 'looking', 'tool', 'game'
+            'weibo_info', 'translate', 'chat', 'tool', 'looking', 'search', 'todo', 'book', 'music', 'game'
         ]
         for name in button_names:
             # 创建按钮

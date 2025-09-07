@@ -740,7 +740,7 @@ class ProgressBarGenerator(AgileTilesAcrylicWindow):
             self,
             "保存进度条图像",
             last_image_path or "video_progress_bar.png",
-            "PNG图像 (*.png);;JPEG图像 (*.jpg *.jpeg);;所有文件 (*)"
+            "PNG 图片 (*.png);;JPEG 图片 (*.jpg *.jpeg)"
         )
 
         if file_path:
@@ -782,7 +782,7 @@ class ProgressBarGenerator(AgileTilesAcrylicWindow):
             self,
             "导出进度条数据",
             last_file_path or "progress_bar_data.json",
-            "JSON文件 (*.json);;所有文件 (*)"
+            "*.json"
         )
 
         if file_path:

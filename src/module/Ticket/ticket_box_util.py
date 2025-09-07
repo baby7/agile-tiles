@@ -262,8 +262,8 @@ class TicketListPopup(AgileTilesAcrylicWindow):
         # ticket_popup.refresh_geometry(self.screen)
         ticket_popup.show()
 
-        # 连接关闭信号以刷新列表
-        ticket_popup.destroyed.connect(self.load_tickets)
+        # 连接信号以刷新列表
+        ticket_popup.submitSignal.connect(self.load_tickets)
 
     def open_ticket_detail(self, item):
         """打开工单详情"""

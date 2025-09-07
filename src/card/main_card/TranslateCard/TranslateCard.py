@@ -178,8 +178,7 @@ class TranslateCard(MainCard):
         # 源文本输入
         self.source_text = QPlainTextEdit()
         self.source_text.setPlaceholderText("输入要翻译的文本...")
-        self.source_text.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.source_text.customContextMenuRequested.connect(self.show_source_context_menu)
+        self.source_text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.source_text.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         # 设置最大文本长度（5000字符）
         self.source_text.textChanged.connect(self.limit_text_length)
@@ -188,8 +187,7 @@ class TranslateCard(MainCard):
         # 目标文本显示
         self.target_text = QPlainTextEdit()
         self.target_text.setPlaceholderText("翻译结果将显示在这里...")
-        self.target_text.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.target_text.customContextMenuRequested.connect(self.show_target_context_menu)
+        self.target_text.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.source_text.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         text_layout.addWidget(self.target_text)
 
@@ -224,22 +222,13 @@ class TranslateCard(MainCard):
         self.set_info_bar()
         # 请求并更新对话次数信息
         self.update_call_count()
-
-        # 为目标文本框绑定回车键事件
-        # self.source_text.keyPressEvent = self.custom_key_press_event
-
-    def custom_key_press_event(self, event):
-        """
-        自定义 keyPressEvent，监听回车键并触发翻译操作。
-        """
-        if event.key() in (Qt.Key_Return, Qt.Key_Enter) and (event.modifiers() == Qt.NoModifier):
-            # 如果按下的是回车键且没有修饰键（如 Shift、Ctrl 等），触发翻译
-            self.translate_text()
-        else:
-            # 调用原始的 keyPressEvent 方法以保留默认行为
-            QPlainTextEdit.keyPressEvent(self.source_text, event)
+        # 连接事件
+        self.source_text.customContextMenuRequested.connect(self.show_source_context_menu)
+        self.target_text.customContextMenuRequested.connect(self.show_target_context_menu)
 
     def show_source_context_menu(self, position):
+        print("显示源文本菜单")
+
         # 创建中文右键菜单
         menu = QMenu()
 
@@ -280,9 +269,11 @@ class TranslateCard(MainCard):
         menu.addAction(translate_selected_action)
 
         # 显示菜单
-        menu.exec_(self.source_text.viewport().mapToGlobal(position))
+        menu.exec(self.source_text.viewport().mapToGlobal(position))
 
     def show_target_context_menu(self, position):
+        print("显示目标文本菜单")
+
         # 创建中文右键菜单（简化版）
         menu = QMenu()
 
@@ -302,7 +293,7 @@ class TranslateCard(MainCard):
         menu.addAction(copy_to_source_action)
 
         # 显示菜单
-        menu.exec_(self.target_text.viewport().mapToGlobal(position))
+        menu.exec(self.target_text.viewport().mapToGlobal(position))
 
     def translate_selected_text(self):
         # 获取选中的文本
@@ -652,6 +643,8 @@ class TranslateCard(MainCard):
                 border-radius: 10px;
                 border: 1px solid white;
                 background: transparent;
+                selection-color: white;
+                selection-background-color: #0078d4;
             }""" + style_util.scroll_bar_style
         else:
             text_edit_style = """
@@ -659,6 +652,8 @@ class TranslateCard(MainCard):
                 border-radius: 10px;
                 border: 1px solid black;
                 background: transparent;
+                selection-color: white;
+                selection-background-color: #0078d4;
             }""" + style_util.scroll_bar_style
         self.source_text.setStyleSheet(text_edit_style)
         self.target_text.setStyleSheet(text_edit_style)

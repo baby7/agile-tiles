@@ -2,8 +2,8 @@ programmer_list = [
     {
         "category": "Browser",
         "type": "程序员",
-        "title": "Ctool",
-        "des": "程序员工具箱",
+        "title": "Github",
+        "des": "全球最大的开源项目平台",
         "icon": "Brand/github",
         "content":{
             "url": "https://github.com/",

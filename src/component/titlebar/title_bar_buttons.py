@@ -221,8 +221,11 @@ class SvgTitleBarButton(TitleBarButton):
             element = pathNodes.at(i).toElement()
             element.setAttribute('stroke', color)
 
-        renderer = QSvgRenderer(self._svgDom.toByteArray())
-        renderer.render(painter, QRectF(self.rect()))
+        try:
+            renderer = QSvgRenderer(self._svgDom.toByteArray())
+            renderer.render(painter, QRectF(self.rect()))
+        except Exception:
+            pass
 
 
 class MinimizeButton(TitleBarButton):

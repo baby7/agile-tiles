@@ -69,9 +69,9 @@ class Updater(QObject):
 
             # 提取文件名
             file_name = os.path.basename(download_url)
-            # 如果是exe更新，确保文件名固定为AgileTiles.exe
+            # 如果是zip更新，确保文件名固定为AgileTiles.zip
             if is_exe_tag:
-                file_name = "AgileTiles.exe"
+                file_name = "AgileTiles.zip"
 
             download_path = os.path.join(temp_dir, file_name)
 

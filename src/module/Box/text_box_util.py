@@ -175,6 +175,7 @@ class TextPopup(AgileTilesAcrylicWindow):
         """创建富文本浏览器"""
         browser = QTextBrowser()
         browser.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        browser.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
         self._setup_browser_font(browser)
         content = str(self.content.get('content', ''))
         {

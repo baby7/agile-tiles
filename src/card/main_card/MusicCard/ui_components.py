@@ -103,6 +103,7 @@ def _create_icon_button(music_card, icon_name, size):
     btn = QPushButton()
     style_util.set_button_style(btn, icon_path=icon_name, is_dark=music_card.is_dark(), style_change=False)
     btn.setIconSize(QSize(size, size))
+    btn.setMinimumHeight(size)
     btn.setStyleSheet("background-color: transparent; border: none;")
     return btn
 

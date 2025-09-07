@@ -10,7 +10,7 @@ from src.ui import style_util
 
 
 class ImagePopup(AgileTilesAcrylicWindow):
-    def __init__(self, parent=None, use_parent=None, title=None, image_url=None, screen=None, link=None):
+    def __init__(self, parent=None, use_parent=None, title=None, image_url=None, screen=None, link=None, pixmap=None):
         super().__init__(parent=parent, is_dark=use_parent.is_dark, form_theme_mode=use_parent.form_theme_mode,
                          form_theme_transparency=use_parent.form_theme_transparency)
         try:
@@ -31,40 +31,46 @@ class ImagePopup(AgileTilesAcrylicWindow):
             self.url = image_url
             self.screen = screen
 
-            # QtNetwork方案
-            self.network_manager = QNetworkAccessManager()
-            self.current_reply = None  # 用于跟踪当前请求
-            # 创建网络请求
-            request = QNetworkRequest(QUrl(self.url))
-            request.setMaximumRedirectsAllowed(5)  # 设置最大重定向次数
-
-            self.current_reply = self.network_manager.get(request)
-            self.current_reply.finished.connect(self.on_request_finished)
-
-            # 横向布局
+            # 创建加载动画布局（无论哪种方式都需要）
             h_layout = QHBoxLayout()
             h_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            # 竖向布局
             v_layout = QVBoxLayout()
             v_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
             v_layout.addLayout(h_layout)
+
             # 加载动画
             self.loading_animation = LoadAnimation(self, theme="Dark" if self.is_dark else "Light")
             self.loading_animation.setFixedSize(40, 40)  # 设置合适尺寸
+            h_layout.addWidget(self.loading_animation)
 
             # 设置容器大小策略
             self.image_container.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-
             self.scroll_area.setWidget(self.image_container)
             self.image_container.setLayout(v_layout)  # 设置布局
-            h_layout.addWidget(self.loading_animation)
-            self.loading_animation.load()  # 启动动画
 
             # 设置初始窗口大小
             self.setMinimumSize(400, 300)
 
-            # 延迟居中加载动画
-            QTimer.singleShot(100, self.center_loading_animation)
+            # 如果有直接传入的pixmap，则直接显示
+            if pixmap is not None and not pixmap.isNull():
+                # 延迟显示图片，确保UI已经完全初始化
+                QTimer.singleShot(100, lambda: self.on_image_loaded(pixmap))
+            else:
+                # 启动加载动画
+                self.loading_animation.load()
+
+                # QtNetwork方案
+                self.network_manager = QNetworkAccessManager()
+                self.current_reply = None  # 用于跟踪当前请求
+                # 创建网络请求
+                request = QNetworkRequest(QUrl(self.url))
+                request.setMaximumRedirectsAllowed(5)  # 设置最大重定向次数
+
+                self.current_reply = self.network_manager.get(request)
+                self.current_reply.finished.connect(self.on_request_finished)
+
+                # 延迟居中加载动画
+                QTimer.singleShot(100, self.center_loading_animation)
         except Exception as e:
             print(e)
 
@@ -359,8 +365,8 @@ class ImagePopup(AgileTilesAcrylicWindow):
 
     @Slot(QPixmap)
     def on_image_loaded(self, pixmap):
-        # 移除加载动画
-        if hasattr(self, 'loading_animation'):
+        # 移除加载动画（如果存在）
+        if hasattr(self, 'loading_animation') and self.loading_animation:
             self.loading_animation.deleteLater()
             del self.loading_animation
 
@@ -408,22 +414,27 @@ class ImagePopup(AgileTilesAcrylicWindow):
 
     def save_image(self):
         options = QFileDialog.Options()
-        file_path, _ = QFileDialog.getSaveFileName(self, "Save Image", "", "Images (*.png *.jpg);;All Files (*)",
-                                                   options=options)
+        file_path, _ = QFileDialog.getSaveFileName(
+            self,
+            "保存图片",
+            "",
+            "PNG 图片 (*.png);;JPEG 图片 (*.jpg *.jpeg)",
+            options=options)
         if file_path:
             pixmap = self.image_label.pixmap()
             if pixmap:
                 pixmap.save(file_path)
 
     def closeEvent(self, event):
-        if self.current_reply and self.current_reply.isRunning():
+        if hasattr(self, 'current_reply') and self.current_reply and self.current_reply.isRunning():
             self.current_reply.abort()
         super().closeEvent(event)
 
 
-def show_image_dialog(main_object, title, image_url, link):
+def show_image_dialog(main_object, title, image_url=None, link=None, pixmap=None):
     screen = main_object.toolkit.resolution_util.get_screen(main_object)
-    dialog = ImagePopup(None, use_parent=main_object, title=title, image_url=image_url, screen=screen, link=link)
+    dialog = ImagePopup(None, use_parent=main_object, title=title, image_url=image_url, screen=screen, link=link,
+                        pixmap=pixmap)
     dialog.refresh_geometry(screen)
     dialog.show()
     return dialog

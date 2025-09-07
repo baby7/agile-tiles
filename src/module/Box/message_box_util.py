@@ -130,6 +130,7 @@ def box_acknowledgement(widget, title, content=None, button_ok_text="确定", bu
         font.setPointSize(10)
         browser.setFont(font)
         browser.setMarkdown(markdown_content)
+        browser.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
         layout.addWidget(browser)
 
     # 双按钮布局

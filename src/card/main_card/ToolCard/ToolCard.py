@@ -2,6 +2,8 @@ from PySide6.QtWidgets import QVBoxLayout
 
 from src.card.component.AggregationCard.AggregationCard import AggregationCard
 from src.card.main_card.ToolCard.bmi_calculator.bmi_calculator_util import BMICalculatorPopup
+from src.card.main_card.ToolCard.codec_tool.codec_tool_util import CodecTool
+from src.card.main_card.ToolCard.file_operation import file_operation_util
 from src.card.main_card.ToolCard.hold_grudges_gen.hold_grudges_gen_util import HoldGrudgesGenPopup
 from src.card.main_card.ToolCard.housing_loan_rates import housing_loan_rates_util
 from src.card.main_card.ToolCard.json_formatter import json_formatter_util
@@ -73,6 +75,16 @@ class ToolCard(AggregationCard):
             {
                 "category": self.module_category_browser,
                 "type": "工具",
+                "title": "图片批量转表格",
+                "des": "批量图片OCR识别转表格",
+                "icon": "Office/excel",
+                "content": None,
+                "link": None,
+                "call_back_func": self.image_to_excel_converter
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "工具",
                 "title": "颜色转换器",
                 "des": "转换各种颜色格式",
                 "icon": "Components/platte",
@@ -80,16 +92,16 @@ class ToolCard(AggregationCard):
                 "link": None,
                 "call_back_func": self.color_converter
             },
-            # {
-            #     "category": self.module_category_browser,
-            #     "type": "工具",
-            #     "title": "图片批量转表格",
-            #     "des": "批量图片OCR识别转表格",
-            #     "icon": "Office/excel",
-            #     "content": None,
-            #     "link": None,
-            #     "call_back_func": self.progress_bar_generator
-            # },
+            {
+                "category": self.module_category_browser,
+                "type": "工具",
+                "title": "文件批量操作",
+                "des": "根据规则批量重命名/删除",
+                "icon": "Office/file-editing",
+                "content": None,
+                "link": None,
+                "call_back_func": self.file_operation
+            },
             {
                 "category": self.module_category_browser,
                 "type": "工具",
@@ -134,22 +146,42 @@ class ToolCard(AggregationCard):
             {
                 "category": self.module_category_browser,
                 "type": "程序员",
+                "title": "时间计算器",
+                "des": "时间/时区、时间戳的计算",
+                "icon": "Time/stopwatch-start",
+                "content": None,
+                "link": None,
+                "call_back_func": lambda : self.time_calculator("时间计算器")
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "程序员",
+                "title": "编解码工具",
+                "des": "Base64 URL 各种编码",
+                "icon": "Sports/muscle",
+                "content": None,
+                "link": None,
+                "call_back_func": lambda : self.codec_tool("编解码工具")
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "程序员",
+                "title": "颜色转换器",
+                "des": "转换各种颜色格式",
+                "icon": "Components/platte",
+                "content": None,
+                "link": None,
+                "call_back_func": self.color_converter
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "程序员",
                 "title": "Json格式化工具",
                 "des": "经典Json格式化工具",
                 "icon": "Edit/code-brackets",
                 "content": None,
                 "link": None,
                 "call_back_func": self.json_formatter
-            },
-            {
-                "category": self.module_category_browser,
-                "type": "程序员",
-                "title": "时间计算器",
-                "des": "时间、时区、时间戳的计算器",
-                "icon": "Time/stopwatch-start",
-                "content": None,
-                "link": None,
-                "call_back_func": lambda : self.time_calculator("时间计算器")
             },
             # 趣味
             {
@@ -191,12 +223,19 @@ class ToolCard(AggregationCard):
     def color_picker(self):
         self.main_object.start_color_picker()
 
+    def image_to_excel_converter(self):
+        self.main_object.start_image_to_excel_converter()
+
     def color_converter(self):
         self.main_object.color_picker_captured()
 
     def salary_calculator(self):
         self.toolkit.resolution_util.out_animation(self.main_object)
         salary_calculator_util.show_salary_calculator_dialog(self.main_object, "这班上得值不值·测算版", None)
+
+    def file_operation(self):
+        self.toolkit.resolution_util.out_animation(self.main_object)
+        file_operation_util.show_file_operation_dialog(self.main_object, "文件批量操作", None)
 
     def hold_grudges_gen(self, title):
         # 清理展示面板
@@ -220,6 +259,12 @@ class ToolCard(AggregationCard):
         # 清理展示面板
         self.clear_show_panel()
         self.util_app = BMICalculatorPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
+        self.show_util_in_show_panel(title=title, util_app=self.util_app)
+
+    def codec_tool(self, title):
+        # 清理展示面板
+        self.clear_show_panel()
+        self.util_app = CodecTool(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def json_formatter(self):

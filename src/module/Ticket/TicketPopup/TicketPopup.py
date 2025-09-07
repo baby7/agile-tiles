@@ -18,6 +18,7 @@ from src.module.Box import message_box_util
 class TicketPopup(AgileTilesAcrylicWindow):
     """工单创建/回复弹窗"""
     setPixmapSignal = Signal(QPixmap)
+    submitSignal = Signal(str)
     # 添加调试模式常量
     DEBUG_MODE = False  # 设为True时显示支付状态标签
     ticket_reply = None
@@ -625,6 +626,9 @@ class TicketPopup(AgileTilesAcrylicWindow):
         # 确保上传按钮可见
         if self.upload_button.isHidden():
             self.upload_button.show()
+
+        # 发送信号
+        self.submitSignal.emit("")
 
     def closeEvent(self, event):
         # 标记窗口已关闭

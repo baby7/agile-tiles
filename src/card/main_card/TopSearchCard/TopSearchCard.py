@@ -384,7 +384,7 @@ class TopSearchCard(MainCard):
                     self.logger
                 )
                 self.base_html = get_micro_blog_info.change_css(self.base_html)
-                print(self.base_html)
+                # print(self.base_html)
 
             # 更新UI
             self.set_ui()
