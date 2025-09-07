@@ -257,4 +257,4 @@ def compare_version(version_1, version_2):
     else:
         return -1
 
-print(gen_download_history_md())
+# print(gen_download_history_md())
