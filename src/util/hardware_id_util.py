@@ -8,6 +8,7 @@ import wmi
 def get_hardware_id():
     """获取基于硬件信息的唯一标识（SHA256哈希值）"""
     system_info = ""
+    print("尝试获取设备ID...")
 
     try:
         # 获取操作系统类型
@@ -15,22 +16,27 @@ def get_hardware_id():
 
         # Windows系统
         if os_name == "Windows":
+            print("尝试获取Windows系统设备ID...")
+
             c = wmi.WMI()
 
             # 主板信息
             for board in c.Win32_BaseBoard():
                 if board.SerialNumber:
                     system_info += f"MB:{board.SerialNumber.strip()};"
+                    print("MB:", board.SerialNumber.strip())
 
             # BIOS信息
             for bios in c.Win32_BIOS():
                 if bios.SerialNumber:
                     system_info += f"BIOS:{bios.SerialNumber.strip()};"
+                    print("BIOS:", bios.SerialNumber.strip())
 
             # 硬盘序列号（第一块硬盘）
             for disk in c.Win32_DiskDrive(Index=0):
                 if disk.SerialNumber:
                     system_info += f"DISK:{disk.SerialNumber.strip()};"
+                    print("DISK:", disk.SerialNumber.strip())
 
         # Linux系统
         elif os_name == "Linux":
@@ -74,11 +80,15 @@ def get_hardware_id():
 
         # 如果以上方法均失败，使用平台默认标识
         if not system_info:
+            print("无法获取设备ID，使用平台默认标识作为后备1")
             system_info = platform.node()  # 主机名（作为后备方案）
+            print(f"成功获取到主机名1:{system_info}")
 
     except Exception as e:
         # 异常时使用平台标识作为后备
+        print("无法获取设备ID，使用平台默认标识作为后备2")
         system_info = platform.node()
+        print(f"成功获取到主机名2:{system_info}")
 
     # 生成SHA256哈希值（固定长度64字符）
     print("System Info:", system_info)
@@ -92,12 +102,14 @@ def get_os_version():
     获取操作系统的详细版本信息。
     返回值格式示例：Microsoft Windows 11 企业版 10.0.22631 Build 22631
     """
+    print("尝试获取操作系统版本...")
     os_name = platform.system()
     os_version = ""
 
     try:
         # Windows 系统
         if os_name == "Windows":
+            print("尝试获取Windows系统版本...")
             c = wmi.WMI()
 
             # 获取操作系统信息
@@ -106,6 +118,7 @@ def get_os_version():
                 version = os.Version.strip() if os.Version else ""
                 build_number = os.BuildNumber.strip() if os.BuildNumber else ""
                 os_version = f"{caption} {version} Build {build_number}"
+                print(f"成功获取到操作系统版本:{os_version}")
                 break
 
         # Linux 系统
@@ -136,11 +149,15 @@ def get_os_version():
 
         # 其他系统（使用平台默认标识）
         else:
+            print("无法获取操作系统版本，使用平台默认标识作为后备1")
             os_version = platform.platform()
+            print(f"成功获取到操作系统版本1:{os_version}")
 
     except Exception as e:
         # 异常时使用平台默认标识
+        print("无法获取操作系统版本，使用平台默认标识作为后备2")
         os_version = platform.platform()
+        print(f"成功获取到操作系统版本2:{os_version}")
 
     os_version_str = os_version.strip()
     print("OS Version:", os_version_str)

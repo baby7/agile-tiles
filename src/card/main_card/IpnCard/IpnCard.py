@@ -48,27 +48,15 @@ class IpnCard(MainCard):
                  toolkit=None, logger=None, save_data_func=None):
         super().__init__(main_object=main_object, parent=parent, theme=theme, card=card, cache=cache, data=data,
                          toolkit=toolkit, logger=logger, save_data_func=save_data_func)
-        # 初始化数据
-        self.ipn_data = self.data.setdefault("ipnData", {"files": [], "texts": []})
+        # 初始化数据(这里不直接使用setdefault是为了避免每次初始化都调用get_download_path函数)
+        if "ipnData" not in self.cache:
+            self.cache["ipnData"] = {"files": [], "texts": [], "port": self.DEFAULT_PORT, "uploadDir": self.get_download_path()}
+        self.ipn_data = self.cache.get("ipnData")
+        # 获取端口
+        self.port = self.ipn_data["port"]
         # 获取用户主目录
-        user_profile = os.environ.get('USERPROFILE')
-        if user_profile:
-            # 组合成下载路径
-            self.upload_dir = os.path.join(user_profile, 'Downloads')
-            if not os.path.exists(self.upload_dir):
-                # 如果无法获取用户目录，使用当前目录下的uploads文件夹作为备选
-                self.upload_dir = "ipn_uploads"
-                # 确保上传目录存在
-                if not os.path.exists(self.upload_dir):
-                    os.makedirs(self.upload_dir)
-        else:
-            # 如果无法获取用户目录，使用当前目录下的uploads文件夹作为备选
-            self.upload_dir = "ipn_uploads"
-            # 确保上传目录存在
-            if not os.path.exists(self.upload_dir):
-                os.makedirs(self.upload_dir)
-        # 端口
-        self.port = self.DEFAULT_PORT
+        self.upload_dir = self.ipn_data["uploadDir"]
+        # 其他
         self.server = None
         self.server_thread = None
         self.server_worker = None
@@ -116,6 +104,65 @@ class IpnCard(MainCard):
         except:
             return "127.0.0.1"
 
+    def get_download_path(self):
+        # 获取用户主目录
+        home_dir = os.path.expanduser("~")
+        print("获取用户主目录成功:", home_dir)
+        # 1. os.path.expanduser("~") + "Downloads"
+        print("1.尝试使用用户下载目录")
+        upload_dir = os.path.join(home_dir, "Downloads")
+        make_status = self.make_download_path(upload_dir, create=False)
+        if make_status:
+            print("1.获取用户下载目录成功:", upload_dir)
+            return upload_dir
+        # 2. os.path.expanduser("~") + "Documents"
+        print("2.尝试使用用户文档目录")
+        upload_dir = os.path.join(home_dir, "Documents")
+        make_status = self.make_download_path(upload_dir, create=False)
+        if make_status:
+            print("2.尝试使用用户文档目录成功:", upload_dir)
+            return upload_dir
+        # 3. os.path.expanduser("~") + 软件名称 + "ipn_uploads"
+        print("3.尝试使用用户主目录设置软件下载目录")
+        upload_dir = os.path.join(home_dir, self.main_object.app_name, "ipn_uploads")
+        make_status = self.make_download_path(upload_dir)
+        if make_status:
+            print("3.尝试使用用户主目录设置软件下载目录成功:", upload_dir)
+            return upload_dir
+        # 4. 软件安装目录 + "ipn_uploads"
+        print("4.尝试使用软件安装目录设置软件下载目录")
+        upload_dir = os.path.join(self.main_object.app_dir, "ipn_uploads")
+        make_status = self.make_download_path(upload_dir)
+        if make_status:
+            print("4.尝试使用软件安装目录设置软件下载目录成功:", upload_dir)
+            return upload_dir
+        # 5. 空路径
+        print("5.直接使用空路径")
+        return ""
+
+    def make_download_path(self, upload_dir, create=True):
+        if os.path.exists(upload_dir):
+            return True
+        if not create:
+            return False
+        try:
+            os.makedirs(upload_dir)
+            return True
+        except Exception as e:
+            return False
+
+    def can_save_file(self, upload_dir):
+        """检查程序是否可能需要管理员权限"""
+        # 尝试在程序文件所在目录创建测试文件
+        try:
+            test_file = os.path.join(upload_dir, "test_write_GYe8omhoVEXOZeLlNYt77pZMfDwoPuZN.tmp")
+            with open(test_file, 'w') as f:
+                f.write("test")
+            os.unlink(test_file)
+            return True
+        except PermissionError:
+            return False
+
     def create_service_control(self, layout):
         # 服务控制框架
         self.service_frame = QFrame()
@@ -151,12 +198,13 @@ class IpnCard(MainCard):
         upload_label = QLabel("上传路径:")
         upload_label.setStyleSheet("background-color: transparent; border: none;")
         upload_label.setMinimumWidth(60)
-        self.upload_dir_edit = QLineEdit(self.upload_dir)
-        self.upload_dir_edit.setReadOnly(True)
+        self.upload_dir_edit = QPushButton(self.upload_dir)
+        self.upload_dir_edit.setToolTip("点击打开上传文件夹")
+        self.upload_dir_edit.clicked.connect(self.open_upload_dir)
         self.select_upload_btn = QPushButton("选择")
         self.select_upload_btn.clicked.connect(self.select_upload_dir)
         upload_layout.addWidget(upload_label)
-        upload_layout.addWidget(self.upload_dir_edit)
+        upload_layout.addWidget(self.upload_dir_edit, 1)
         upload_layout.addWidget(self.select_upload_btn)
         service_layout.addLayout(upload_layout)
 
@@ -166,6 +214,7 @@ class IpnCard(MainCard):
         link_label.setStyleSheet("background-color: transparent; border: none;")
         link_label.setMinimumWidth(60)
         self.link_edit = QPushButton()
+        self.link_edit.setToolTip("点击打开访问链接")
         self.link_edit.clicked.connect(self.open_link)
         self.copy_link_btn = QPushButton("复制")
         self.copy_link_btn.clicked.connect(self.copy_link)
@@ -327,10 +376,13 @@ class IpnCard(MainCard):
             self.text_list.addItem(list_item)
 
     def save_data(self):
-        self.data = {
+        self.ipn_data["port"] = self.port_edit.value()
+        self.ipn_data["uploadDir"] = self.upload_dir_edit.text()
+        self.cache = {
             "ipnData": self.ipn_data,
         }
-        self.save_data_func(in_data=self.data, card_name=self.name, data_type=data_save_constant.DATA_TYPE_ENDURING)
+        self.save_data_func(need_upload=False, in_data=self.cache, card_name=self.name, data_type=data_save_constant.DATA_TYPE_CACHE)
+
 
     def update_link_display(self):
         port = str(self.port_edit.value())
@@ -341,6 +393,20 @@ class IpnCard(MainCard):
 
     def open_link(self):
         browser_util.open_url(self.link_edit.text())
+
+    def open_upload_dir(self):
+        file_path = self.upload_dir_edit.text()
+        try:
+            # 在文件管理器中打开并选中文件
+            if os.name == 'nt':  # Windows
+                file_path = file_path.replace("/", "\\")
+                os.system(f'explorer /select,\""{file_path}"\"')
+            elif os.name == 'posix':  # macOS
+                os.system(f'open -R "{file_path}"')
+            else:  # Linux
+                os.system(f'xdg-open "{os.path.dirname(file_path)}"')
+        except Exception as e:
+            self.logger.card_error("本地局域网文件传输", f"打开文件失败: {str(e)}")
 
     def generate_qr_code(self, text):
         """生成二维码并显示"""
@@ -382,27 +448,38 @@ class IpnCard(MainCard):
         if self.server and self.server_worker and self.server_worker._active:
             self.toolkit.dialog_module.box_information(self.main_object, "警告", "请先停止服务再更改上传目录")
             return
-
         dir_path = QFileDialog.getExistingDirectory(self.main_object, "选择上传目录")
         if dir_path:
             self.upload_dir = dir_path
             self.upload_dir_edit.setText(dir_path)
+            # 更新数据
+            self.save_data()
             # 确保上传目录存在
             if not os.path.exists(self.upload_dir):
-                os.makedirs(self.upload_dir)
+                try:
+                    os.makedirs(self.upload_dir)
+                except Exception as e:
+                    self.toolkit.dialog_module.box_information(self.main_object, "错误", f"无法创建上传目录: {e}")
+                    return
 
     def start_server(self):
         try:
+            if self.upload_dir is None or self.upload_dir == "" or not os.path.exists(self.upload_dir):
+                self.toolkit.dialog_module.box_information(self.main_object, "错误", "请选择上传目录")
+                return
+            if not self.can_save_file(self.upload_dir):
+                self.toolkit.dialog_module.box_information(self.main_object, "错误", "该上传目录暂无权限保存，您可以选择其他目录或者以管理员权限启动灵卡面板")
+                return
+
             port = self.port_edit.value()
             if port < 1024 or port > 65535:
                 self.toolkit.dialog_module.box_information(self.main_object, "错误", "端口号必须在1024-65535之间")
                 return
 
             self.port = port
-            ip = self.get_local_ip()
 
             # 创建服务器
-            server_address = (ip, self.port)
+            server_address = ("0.0.0.0", self.port)
             self.server = FileServer(server_address, HttpServerHandler, self.ipn_data, self.upload_dir,
                                      self.on_data_updated)
 
@@ -586,15 +663,23 @@ class IpnCard(MainCard):
         is_dark = self.is_dark()
         # 调整按钮样式
         button_list = [
-            self.default_port_btn, self.select_upload_btn, self.link_edit, self.copy_link_btn, self.qr_btn, self.start_button,
+            self.default_port_btn, self.select_upload_btn, self.upload_dir_edit, self.link_edit, self.copy_link_btn, self.qr_btn, self.start_button,
             self.stop_button, self.upload_file_btn, self.upload_folder_btn, self.delete_file_btn, self.clear_files_btn,
             self.refresh_btn, self.upload_text_btn, self.delete_text_btn, self.clear_texts_btn, self.refresh_text_btn
         ]
         for button in button_list:
             style_util.set_button_style(button, is_dark)
+        # 按钮文字左对齐和提示样式修改
+        left_text_button_list = [self.upload_dir_edit, self.link_edit]
+        for button in left_text_button_list:
+            # 按钮文字左对齐
+            button.setStyleSheet(button.styleSheet().replace("QPushButton {", "QPushButton {text-align: left;"))
+            if is_dark:
+                button.setStyleSheet(button.styleSheet() + "QToolTip{background-color: #484848; color:#ffffff;}")
+            else:
+                button.setStyleSheet(button.styleSheet() + "QToolTip{background-color: #ffffff; color:#484848;}")
         # 设置输入框的样式
         style_util.set_spin_box_style(self.port_edit, self.main_object.is_dark)
-        style_util.set_line_edit_style(self.upload_dir_edit, self.main_object.is_dark)
         # 设置分类的样式
         style_util.set_tab_widget_style(self.file_tabs, self.is_dark())
         # 设置主题

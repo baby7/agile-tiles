@@ -118,12 +118,15 @@ class HttpServerHandler(BaseHTTPRequestHandler):
         """处理POST请求，用于文件上传"""
         # 处理中文路径解码
         path = unquote(self.path)
-
+        # 判断路径
         if path == '/upload/file':
+            print("触发文件上传")
             self.handle_file_upload()
         elif path == '/upload/text':
+            print("触发文本上传")
             self.handle_text_upload()
         else:
+            print(f"请求路径错误:{path}")
             self.send_error(404, "Not found")
 
     def handle_file_upload(self):
@@ -131,7 +134,9 @@ class HttpServerHandler(BaseHTTPRequestHandler):
         try:
             # 检查内容类型
             content_type = self.headers.get('Content-Type')
+            print("Content-Type:", content_type)
             if not content_type or not content_type.startswith('multipart/form-data'):
+                print("Content-Type错误")
                 self.send_error(400, "Bad Request: expecting multipart/form-data")
                 return
 
@@ -145,31 +150,38 @@ class HttpServerHandler(BaseHTTPRequestHandler):
 
             # 获取上传的文件 - 使用更安全的方式检查
             if 'file' not in form:
+                print("文件字段不存在")
                 self.send_error(400, "Bad Request: no file field in form")
                 return
 
             file_field = form['file']
+            print(f"文件字段:{file_field}")
 
             # 检查file_field是否有效且包含文件数据
             if not hasattr(file_field, 'file') or not file_field.file:
+                print("文件字段无效")
                 self.send_error(400, "Bad Request: no file uploaded")
                 return
 
             # 获取文件名
             filename = file_field.filename
             if not filename:
+                print("文件名无效")
                 self.send_error(400, "Bad Request: no filename provided")
                 return
 
             # 安全地处理文件名
             filename = os.path.basename(filename)
+            print("文件名:", filename)
             save_path = os.path.join(self.server.upload_dir, filename)
+            print("判断保存路径:", save_path)
 
             # 如果文件已存在，添加数字后缀
             counter = 1
             while os.path.exists(save_path):
                 name, ext = os.path.splitext(filename)
                 save_path = os.path.join(self.server.upload_dir, f"{name}_{counter}{ext}")
+                print("实际保存路径:", save_path)
                 counter += 1
 
             # 保存文件
@@ -189,6 +201,7 @@ class HttpServerHandler(BaseHTTPRequestHandler):
                 "size": os.path.getsize(save_path),
                 "uploader": client_ip  # 添加上传者IP
             }
+            print("保存文件信息:", file_info)
 
             # 添加到文件数据中
             self.server.file_data["files"].append(file_info)
@@ -199,10 +212,14 @@ class HttpServerHandler(BaseHTTPRequestHandler):
             self.end_headers()
             response = json.dumps({"status": "success", "filename": file_info["name"]})
             self.wfile.write(response.encode('utf-8'))
+            print("文件保存成功")
 
             # 触发数据更新回调
             if hasattr(self.server, 'update_callback') and self.server.update_callback:
                 self.server.update_callback()
+                print("数据更新回调触发成功")
+            else:
+                print("数据更新回调不存在")
 
         except Exception as e:
             traceback.print_exc()
@@ -288,6 +305,10 @@ class HttpServerHandler(BaseHTTPRequestHandler):
                     --primary-hover: #0056b3;
                     --success-color: #34c759;
                     --success-hover: #2ca44e;
+                    --error-color: #ff3b30;
+                    --error-hover: #d70015;
+                    --warning-color: #ff9500;
+                    --warning-hover: #c93400;
                     --background: #f5f5f7;
                     --card-bg: white;
                     --text-color: #333;
@@ -346,6 +367,22 @@ class HttpServerHandler(BaseHTTPRequestHandler):
 
                 .action-button:hover {{ 
                     background-color: var(--primary-hover); 
+                }}
+
+                .action-button.success {{
+                    background-color: var(--success-color);
+                }}
+
+                .action-button.success:hover {{
+                    background-color: var(--success-hover);
+                }}
+
+                .action-button.error {{
+                    background-color: var(--error-color);
+                }}
+
+                .action-button.error:hover {{
+                    background-color: var(--error-hover);
                 }}
 
                 .file-list {{ 
@@ -483,6 +520,65 @@ class HttpServerHandler(BaseHTTPRequestHandler):
                     text-decoration: underline;
                 }}
 
+                /* 自定义弹窗样式 */
+                .custom-alert {{
+                    display: none;
+                    position: fixed;
+                    z-index: 1001;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0,0,0,0.5);
+                }}
+
+                .alert-content {{
+                    background-color: var(--card-bg);
+                    margin: 20% auto;
+                    padding: 24px;
+                    border-radius: 12px;
+                    width: 90%;
+                    max-width: 400px;
+                    text-align: center;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+                    position: relative;
+                }}
+
+                .alert-title {{
+                    font-size: 1.2rem;
+                    font-weight: bold;
+                    margin-bottom: 16px;
+                }}
+
+                .alert-message {{
+                    margin-bottom: 24px;
+                    line-height: 1.5;
+                }}
+
+                .alert-buttons {{
+                    display: flex;
+                    justify-content: center;
+                    gap: 12px;
+                }}
+
+                .alert-button {{
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    border: none;
+                    cursor: pointer;
+                    font-size: 1rem;
+                    min-width: 80px;
+                }}
+
+                .alert-button.confirm {{
+                    background-color: var(--primary-color);
+                    color: white;
+                }}
+
+                .alert-button.confirm:hover {{
+                    background-color: var(--primary-hover);
+                }}
+
                 /* 响应式设计 */
                 @media (min-width: 768px) {{
                     body {{
@@ -523,11 +619,55 @@ class HttpServerHandler(BaseHTTPRequestHandler):
                         padding: 20px;
                         margin: 5% auto;
                     }}
+
+                    .alert-content {{
+                        padding: 20px;
+                        margin: 10% auto;
+                    }}
                 }}
             </style>
             <script>
                 // 存储文本内容
                 var textContents = {texts_json};
+
+                // 自定义弹窗函数
+                function showAlert(title, message, type, callback) {{
+                    const alert = document.getElementById('customAlert');
+                    const alertTitle = document.getElementById('alertTitle');
+                    const alertMessage = document.getElementById('alertMessage');
+                    const alertButton = document.getElementById('alertButton');
+
+                    alertTitle.textContent = title;
+                    alertMessage.textContent = message;
+
+                    // 设置按钮样式
+                    alertButton.className = 'alert-button confirm';
+                    if (type === 'error') {{
+                        alertButton.style.backgroundColor = 'var(--error-color)';
+                        alertButton.onmouseover = function() {{ this.style.backgroundColor = 'var(--error-hover)'; }};
+                        alertButton.onmouseout = function() {{ this.style.backgroundColor = 'var(--error-color)'; }};
+                    }} else if (type === 'success') {{
+                        alertButton.style.backgroundColor = 'var(--success-color)';
+                        alertButton.onmouseover = function() {{ this.style.backgroundColor = 'var(--success-hover)'; }};
+                        alertButton.onmouseout = function() {{ this.style.backgroundColor = 'var(--success-color)'; }};
+                    }} else {{
+                        alertButton.style.backgroundColor = 'var(--primary-color)';
+                        alertButton.onmouseover = function() {{ this.style.backgroundColor = 'var(--primary-hover)'; }};
+                        alertButton.onmouseout = function() {{ this.style.backgroundColor = 'var(--primary-color)'; }};
+                    }}
+
+                    // 设置回调函数
+                    alertButton.onclick = function() {{
+                        hideAlert();
+                        if (callback) callback();
+                    }};
+
+                    alert.style.display = 'block';
+                }}
+
+                function hideAlert() {{
+                    document.getElementById('customAlert').style.display = 'none';
+                }}
 
                 // 复制文本到剪贴板
                 function copyText(index) {{
@@ -542,12 +682,12 @@ class HttpServerHandler(BaseHTTPRequestHandler):
                     try {{
                         var successful = document.execCommand("copy");
                         if(successful) {{
-                            alert("已复制到剪贴板");
+                            showAlert('成功', '已复制到剪贴板', 'success');
                         }} else {{
-                            alert("复制失败，请手动复制");
+                            showAlert('错误', '复制失败，请手动复制', 'error');
                         }}
                     }} catch (err) {{
-                        alert("复制失败，请手动复制: " + err);
+                        showAlert('错误', '复制失败，请手动复制: ' + err, 'error');
                     }}
 
                     document.body.removeChild(textArea);
@@ -556,19 +696,45 @@ class HttpServerHandler(BaseHTTPRequestHandler):
                 // 处理文件上传
                 function handleFileUpload() {{
                     var form = document.getElementById('fileUploadForm');
+                    var fileInput = form.querySelector('input[type="file"]');
+
+                    // 检查是否选择了文件
+                    if (!fileInput.files || fileInput.files.length === 0) {{
+                        showAlert('错误', '请选择要上传的文件', 'error');
+                        return false;
+                    }}
+
                     var formData = new FormData(form);
                     var xhr = new XMLHttpRequest();
 
                     xhr.open('POST', '/upload/file', true);
                     xhr.onload = function() {{
                         if (xhr.status === 200) {{
-                            alert('文件上传成功！');
-                            closeModal('fileUploadModal');
-                            location.reload();
+                            showAlert('成功', '文件上传成功！', 'success', function() {{
+                                closeModal('fileUploadModal');
+                                location.reload();
+                            }});
                         }} else {{
-                            alert('文件上传失败: ' + xhr.responseText);
+                            try {{
+                                var response = JSON.parse(xhr.responseText);
+                                showAlert('错误', '文件上传失败: ' + (response.error || xhr.statusText), 'error');
+                            }} catch (e) {{
+                                showAlert('错误', '文件上传失败: ' + xhr.statusText, 'error');
+                            }}
                         }}
                     }};
+
+                    xhr.onerror = function() {{
+                        showAlert('错误', '文件上传失败。如果您是本机访问且使用Edge浏览器上传文件，建议直接使用界面上传或切换Chrome浏览器。', 'error');
+                    }};
+
+                    xhr.upload.onprogress = function(event) {{
+                        if (event.lengthComputable) {{
+                            var percentComplete = (event.loaded / event.total) * 100;
+                            console.log('上传进度: ' + percentComplete + '%');
+                        }}
+                    }};
+
                     xhr.send(formData);
                     return false;
                 }}
@@ -580,7 +746,7 @@ class HttpServerHandler(BaseHTTPRequestHandler):
                     var textContent = textarea.value;
 
                     if (!textContent) {{
-                        alert('请输入文本内容');
+                        showAlert('错误', '请输入文本内容', 'error');
                         return false;
                     }}
 
@@ -590,12 +756,22 @@ class HttpServerHandler(BaseHTTPRequestHandler):
 
                     xhr.onload = function() {{
                         if (xhr.status === 200) {{
-                            alert('文本上传成功！');
-                            closeModal('textUploadModal');
-                            location.reload();
+                            showAlert('成功', '文本上传成功！', 'success', function() {{
+                                closeModal('textUploadModal');
+                                location.reload();
+                            }});
                         }} else {{
-                            alert('文本上传失败: ' + xhr.responseText);
+                            try {{
+                                var response = JSON.parse(xhr.responseText);
+                                showAlert('错误', '文本上传失败: ' + (response.error || xhr.statusText), 'error');
+                            }} catch (e) {{
+                                showAlert('错误', '文本上传失败: ' + xhr.statusText, 'error');
+                            }}
                         }}
+                    }};
+
+                    xhr.onerror = function() {{
+                        showAlert('错误', '文本上传失败。如果您是本机访问且使用Edge浏览器上传文本，建议直接使用界面上传或切换Chrome浏览器。', 'error');
                     }};
 
                     var data = JSON.stringify({{ text: textContent }});
@@ -617,6 +793,9 @@ class HttpServerHandler(BaseHTTPRequestHandler):
                 window.onclick = function(event) {{
                     if (event.target.className === 'modal') {{
                         event.target.style.display = 'none';
+                    }}
+                    if (event.target.id === 'customAlert') {{
+                        hideAlert();
                     }}
                 }}
             </script>
@@ -704,6 +883,17 @@ class HttpServerHandler(BaseHTTPRequestHandler):
                             <br>
                             <input type="submit" value="上传文本">
                         </form>
+                    </div>
+                </div>
+
+                <!-- 自定义弹窗 -->
+                <div id="customAlert" class="custom-alert">
+                    <div class="alert-content">
+                        <div class="alert-title" id="alertTitle">提示</div>
+                        <div class="alert-message" id="alertMessage"></div>
+                        <div class="alert-buttons">
+                            <button id="alertButton" class="alert-button confirm">确定</button>
+                        </div>
                     </div>
                 </div>
             </div>

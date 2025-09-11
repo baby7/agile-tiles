@@ -3,34 +3,23 @@
 import copy
 import json
 import os, sys
-import ctypes
 import subprocess
 import time, datetime
-
-from PySide6.QtGui import QPixmap
-
+print("_基础包加载完成")
 # 资源包
 import compiled_resources
-from src.card.main_card.ToolCard.housing_loan_rates import housing_loan_rates_util
-from src.module.ColorPicker import color_converter_util
-from src.module.ColorPicker.color_converter_util import ColorConverterDialog
-from src.module.ColorPicker.ColorPickerWidget import ScreenColorPicker
-from src.module.ImageToExcel import image_to_excel_converter_util, single_image_to_excel_converter_util
-
-from src.module.Screenshot.ScreenshotWidget import ScreenshotWidget
-from src.util import main_data_compare, hardware_id_util
-
-
-# 管理员权限
-def is_admin():
-    try:
-        return ctypes.windll.shell32.IsUserAnAdmin()
-    except:
-        return False
-if not is_admin():
-    # 重新以管理员权限运行
-    ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
-    sys.exit()
+print("_资源包加载完成")
+# 管理员权限(现在取消)
+import ctypes
+# def is_admin():
+#     try:
+#         return ctypes.windll.shell32.IsUserAnAdmin()
+#     except:
+#         return False
+# if not is_admin():
+#     # 重新以管理员权限运行
+#     ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+#     sys.exit()
 # 错误日志
 import traceback
 # 内存控制
@@ -38,47 +27,61 @@ import gc
 # 内存跟踪 & 内存诊断
 import tracemalloc
 import faulthandler
-
-from PySide6.QtNetwork import QNetworkProxyFactory, QNetworkProxy, QLocalServer, QLocalSocket, QNetworkDiskCache
-
-from src.component.ImageCacheManager.ImageCacheManager import ImageCacheManager
-
 faulthandler.enable()
+print("_日志和调试分析包加载完成")
 # 热键监听
 from ctypes.wintypes import MSG
+print("_热键监听包加载完成")
 # 基础界面框架
+from PySide6.QtGui import QPixmap
 from PySide6.QtCore import QEvent, Qt, qInstallMessageHandler, QSettings, Signal, QEventLoop, Q_ARG, Slot, \
     QMetaObject, QTimer, QStandardPaths
 from PySide6.QtWidgets import QApplication, QSystemTrayIcon
+from PySide6.QtNetwork import QNetworkProxyFactory, QNetworkProxy, QLocalServer, QLocalSocket, QNetworkDiskCache
+print("_基础界面框架加载完成")
 # 我的界面内容
 from baby7_desktop_tool_form import Ui_Form
+print("_界面加载完成")
 # 卡片管理
 from src.card.NormalCardManager.NormalCardManager import NormalCardManager
 from src.card.MainCardManager.MainCardManager import MainCardManager
+print("_卡片管理加载完成")
+# 窗口工具
 from src.component.TutorialWindow.TutorialWindow import TutorialWindow
 from src.component.MainAcrylicWindow.MainAcrylicWindow import MainAcrylicWindow
+from src.component.ImageCacheManager.ImageCacheManager import ImageCacheManager
+from src.component.Neumorphism import QtWidgets, QtGui
+from src.component.GlobalHotkeyManager import GlobalHotkeyManager
+print("_窗口工具包加载完成")
 # 模块
 from src.module import init_module, dialog_module
+from src.module.Box import text_box_util
 from src.module.Icon import icon_tool
 from src.module.Theme import theme_module
 from src.module.Screen import screen_module
 from src.module.User import user_module
 from src.module.Updater import update_module
-from src.component.Neumorphism import QtWidgets, QtGui
+from src.module.ColorPicker import color_converter_util
+from src.module.ColorPicker.ColorPickerWidget import ScreenColorPicker
+from src.module.ImageToExcel import image_to_excel_converter_util, single_image_to_excel_converter_util
+from src.module.Screenshot.ScreenshotWidget import ScreenshotWidget
 from src.module.UserData.Sync.data_client import DataClient
 from src.module.User.user_client import UserClient
-from src.component.GlobalHotkeyManager import GlobalHotkeyManager
 from src.module.Login.start_login import StartLoginWindow
 from src.module.UserData.DataBase.DatabaseManager import DatabaseManager
 from src.module.StartCard.StartCardManager import CardManager
+print("_模块包加载完成")
 # 线程
 from src.thread_list import card_thread, main_thread
+print("_线程包加载完成")
 # 工具
 from src.ui import style_util
 from src.util.Toolkit import Toolkit
+from src.util import main_data_compare, hardware_id_util
+print("_工具包加载完成")
 # 静态常量
 from src.constant import data_save_constant, card_constant, version_constant
-from src.module.Box import text_box_util
+print("_静态常量加载完成")
 
 
 # 捕获Qt的日志
@@ -86,6 +89,7 @@ def qt_message_handler(mode, context, message):
     if "stun" in message.lower() or "dns" in message.lower():
         print(f"[Qt Network] mode: {mode}, context: {context}, message: {message}")
 qInstallMessageHandler(qt_message_handler)
+print("_捕获Qt的日志完成")
 
 
 # 主窗口

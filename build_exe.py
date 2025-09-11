@@ -28,7 +28,7 @@ nuitka_command = [
 
     "--mingw64",                                                            # 使用 MinGW64 编译器
     "--standalone",                                                         # 生成一个包含所有依赖的文件夹，里面有可执行文件和依赖。
-    "--windows-console-mode=disable",                                       # 禁用控制台窗口
+    # "--windows-console-mode=disable",                                       # 禁用控制台窗口
 
     "--enable-plugin=pyside6",                                              # 使用 PySide6 插件
     "--disable-plugin=pyqt5,pyqt6",                                         # 禁用 PyQt5 和 PyQt6 插件

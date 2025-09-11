@@ -1186,16 +1186,10 @@ def set_font_and_right_click_style(main_window, widget):
             except Exception as e:
                 print(f"set_font_and_right_click_style error: {str(e)}")
 def set_all_theme(main_object):
-    tooltip_palette = QToolTip.palette()
     if main_object.is_dark:
         main_object.setStyleSheet("*{ outline: none; background:rgba(24, 24, 24, 255); color:rgb(239, 240, 241) };")
-        tooltip_palette.setColor(QPalette.ColorGroup.Inactive, QPalette.ColorRole.ToolTipBase, Qt.GlobalColor.black)
-        tooltip_palette.setColor(QPalette.ColorGroup.Inactive, QPalette.ColorRole.ToolTipText, QColor(24, 24, 24, 255))
     else:
         main_object.setStyleSheet("*{ outline: none; background:rgba(0, 115, 255, 15); color:rgb(0, 0, 0) };")
-        tooltip_palette.setColor(QPalette.ColorGroup.Inactive, QPalette.ColorRole.ToolTipBase, Qt.GlobalColor.white)
-        tooltip_palette.setColor(QPalette.ColorGroup.Inactive, QPalette.ColorRole.ToolTipText, QColor(0, 0, 0, 255))
-    QToolTip.setPalette(tooltip_palette)
 
 '''
 ↑                                                                                ↑
