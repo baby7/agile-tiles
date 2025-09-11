@@ -1,11 +1,6 @@
 import os
 import sys
 import win32com.client  # 需要安装 pywin32
-import winreg  # 用于清理旧的注册表项
-
-# 注册表信息（用于清理旧版本）
-WINREG_KEY = r"Software\Microsoft\Windows\CurrentVersion\Run"
-WINREG_NAME = "AgileTiles"
 
 
 def get_exe_path():
@@ -44,28 +39,11 @@ def is_auto_start_enabled():
         print(f"Error checking shortcut: {e}")
         return False
 
-def cleanup_old_registry_entry():
-    """清理旧的注册表项"""
-    try:
-        key = winreg.OpenKey(
-            winreg.HKEY_CURRENT_USER,
-            WINREG_KEY,
-            0, winreg.KEY_SET_VALUE
-        )
-        try:
-            winreg.DeleteValue(key, WINREG_NAME)
-            print("Removed old registry entry")
-        except FileNotFoundError:
-            pass  # 如果不存在，忽略错误
-        key.Close()
-    except Exception as e:
-        print(f"Error cleaning up registry: {e}")
-
 
 def set_auto_start(enabled):
     """启用/禁用自启动"""
     # 无论启用还是禁用，都先清理旧的注册表项
-    cleanup_old_registry_entry()
+    # cleanup_old_registry_entry()
 
     shortcut_path = get_shortcut_path()
 

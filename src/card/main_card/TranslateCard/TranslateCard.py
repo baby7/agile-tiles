@@ -7,6 +7,7 @@ from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequ
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QMenu, QPlainTextEdit
 
 from src.card.MainCardManager.MainCard import MainCard
+from src.constant import data_save_constant
 from src.module.Box import text_box_util
 from src.client import common
 from src.ui import style_util
@@ -51,6 +52,10 @@ class TranslateCard(MainCard):
         self.current_engine = "有道"
         # 网络管理器
         self.network_manager = QNetworkAccessManager(self)
+        # 从卡片缓存中获取配置
+        self.engine = self.cache.setdefault("engine", "有道")
+        self.source_lang = self.cache.setdefault("sourceLang", "自动")
+        self.target_lang = self.cache.setdefault("targetLang", "中")
 
     def clear(self):
         try:
@@ -127,6 +132,7 @@ class TranslateCard(MainCard):
         self.engine_combo.setMinimumHeight(24)
         self.engine_combo.setMinimumWidth(60)
         self.engine_combo.addItems(["有道", "百度"])
+        self.engine_combo.setCurrentText(self.engine)
         self.engine_combo.currentTextChanged.connect(self.set_engine)
         toolbar_layout.addWidget(self.engine_combo)
         toolbar_layout.addStretch()
@@ -134,9 +140,9 @@ class TranslateCard(MainCard):
         # 源语言下拉框
         self.source_lang_combo = QComboBox()
         self.source_lang_combo.setMinimumHeight(24)
-        self.source_lang_combo.setMinimumWidth(40)
-        self.source_lang_combo.addItems(["英", "中", "日", "韩", "俄", "法", "德"])
-        self.source_lang_combo.setCurrentText("英")
+        self.source_lang_combo.setMinimumWidth(60)
+        self.source_lang_combo.addItems(["自动", "英", "中", "日", "韩", "俄", "法", "德"])
+        self.source_lang_combo.setCurrentText(self.source_lang)
         toolbar_layout.addWidget(self.source_lang_combo)
 
         # 切换按钮
@@ -153,7 +159,7 @@ class TranslateCard(MainCard):
         self.target_lang_combo.setMinimumHeight(24)
         self.target_lang_combo.setMinimumWidth(40)
         self.target_lang_combo.addItems(["中", "英", "日", "韩", "俄", "法", "德"])
-        self.target_lang_combo.setCurrentText("中")
+        self.target_lang_combo.setCurrentText(self.target_lang)
         toolbar_layout.addWidget(self.target_lang_combo)
         toolbar_layout.addStretch()
 
@@ -222,9 +228,22 @@ class TranslateCard(MainCard):
         self.set_info_bar()
         # 请求并更新对话次数信息
         self.update_call_count()
-        # 连接事件
+        # 连接事件-文本输入框的右键菜单
         self.source_text.customContextMenuRequested.connect(self.show_source_context_menu)
         self.target_text.customContextMenuRequested.connect(self.show_target_context_menu)
+        # 连接事件-下拉框的事件
+        self.source_lang_combo.currentTextChanged.connect(self.set_source_lang)
+        self.target_lang_combo.currentTextChanged.connect(self.set_target_lang)
+        self.engine_combo.currentTextChanged.connect(self.set_engine)
+
+    def set_source_lang(self, event):
+        self.save_lang()
+
+    def set_target_lang(self, event):
+        self.save_lang()
+
+    def set_engine(self, event):
+        self.save_lang()
 
     def show_source_context_menu(self, position):
         print("显示源文本菜单")
@@ -385,13 +404,26 @@ class TranslateCard(MainCard):
         # 交换当前选择的语言
         source_lang = self.source_lang_combo.currentText()
         target_lang = self.target_lang_combo.currentText()
+        if source_lang == "自动":
+            if target_lang == "中":
+                source_lang = "英"
+                target_lang = "中"
+            elif target_lang == "英":
+                source_lang = "中"
+                target_lang = "英"
         self.source_lang_combo.setCurrentText(target_lang)
         self.target_lang_combo.setCurrentText(source_lang)
-        # 交换文本内容
-        # source_text = self.source_text.toPlainText()
-        # target_text = self.target_text.toPlainText()
-        # self.source_text.setPlainText(target_text)
-        # self.target_text.setPlainText(source_text)
+        # 保存语言
+        self.save_lang()
+
+    def save_lang(self):
+        self.cache = {
+            "engine": self.current_engine,
+            "sourceLang": self.source_lang_combo.currentText(),
+            "targetLang": self.target_lang_combo.currentText(),
+        }
+        # 保存配置
+        self.save_data_func(need_upload=False, in_data=self.cache, card_name=self.name, data_type=data_save_constant.DATA_TYPE_CACHE)
 
     def limit_text_length(self):
         """限制文本框的最大字符数"""
@@ -664,6 +696,7 @@ class TranslateCard(MainCard):
 # 语言代码映射
 LANG_CODES = {
     "有道": {
+        "自动": "auto",
         "中": "zh-CHS",
         "英": "en",
         "日": "ja",
@@ -673,6 +706,7 @@ LANG_CODES = {
         "德": "de"
     },
     "百度": {
+        "自动": "auto",
         "中": "zh",
         "英": "en",
         "日": "jp",

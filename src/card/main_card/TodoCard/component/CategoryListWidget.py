@@ -102,6 +102,7 @@ class CategoryListWidget(QListWidget):
         push_button_detail.setFont(font)
         push_button_detail.setGeometry(QtCore.QRect(5, 30, width - 10, 55))
         push_button_detail.setText(card_map["title"])
+        push_button_detail.setCursor(Qt.CursorShape.PointingHandCursor)
         push_button_detail.setStyleSheet("""
         QPushButton {
             text-align: left;
@@ -130,6 +131,7 @@ class CategoryListWidget(QListWidget):
         # 右上角删除按钮
         delete_button = QtWidgets.QPushButton(background_label)
         delete_button.setGeometry(QtCore.QRect(background_label.size().width() - 10 - 18, 5, 22, 22))
+        delete_button.setCursor(Qt.CursorShape.PointingHandCursor)
         delete_button.setStyleSheet("""
         QPushButton {
             border: none;

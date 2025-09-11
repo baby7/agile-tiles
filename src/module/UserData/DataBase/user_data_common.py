@@ -194,7 +194,7 @@ DEFAULT_MINI_DATA_MODEL = {
     "data": {}
 }
 big_card_name_list = ["GameCard", "BookCard", "ToolCard", "TodoCard", "ChatCard", "FileSearchCard", "MusicCard", "SettingCard",
-                      "TopSearchCard", "InformationCard", "TranslateCard"]
+                      "TopSearchCard", "InformationCard", "TranslateCard", "IpnCard"]
 
 def get_data(hardware_id):
     # 获取屏幕高度

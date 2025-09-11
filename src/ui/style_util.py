@@ -3,7 +3,7 @@ from PySide6.QtGui import QFont, QPalette, QColor, QPixmap, QPainter, QIcon
 from PySide6.QtSvg import QSvgRenderer
 from PySide6.QtWidgets import QComboBox, QPushButton, QCheckBox, QLineEdit, QSpinBox, QTextEdit, QRadioButton, \
     QFontComboBox, QFrame, QBoxLayout, QWidget, QToolTip, QDateEdit, QTabWidget, QTableWidget, QDoubleSpinBox, \
-    QPlainTextEdit
+    QPlainTextEdit, QToolButton
 from qframelesswindow import TitleBar
 from qframelesswindow.titlebar import MinimizeButton, MaximizeButton, CloseButton
 
@@ -329,7 +329,7 @@ QPushButton {
     padding: 7px;
 }
 QPushButton:hover {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(125, 125, 125, 30);
     color: #FFFFFF;
     border: 0px solid black;
 }
@@ -385,6 +385,9 @@ def set_button_style(button, is_dark=False, icon_path=None, size=None, style_cha
     # 最小高度
     if button.minimumHeight() == 0:
         button.setMinimumHeight(25)
+    # 鼠标手型
+    if button.cursor() != Qt.CursorShape.PointingHandCursor:
+        button.setCursor(Qt.CursorShape.PointingHandCursor)
 
 def set_card_button_style(button: QPushButton, icon_path: str, size=None, is_dark=False, style_change=True):
     if style_change:
@@ -394,6 +397,9 @@ def set_card_button_style(button: QPushButton, icon_path: str, size=None, is_dar
             button.setStyleSheet(card_button_style)
     button.setIcon(get_icon_by_path(icon_path=icon_path, size=size, is_dark=is_dark))
     button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+    # 鼠标手型
+    if button.cursor() != Qt.CursorShape.PointingHandCursor:
+        button.setCursor(Qt.CursorShape.PointingHandCursor)
 '''
 ↑                                                                                ↑
 **********************************按钮 · 结束***************************************
@@ -419,7 +425,7 @@ QRadioButton::indicator:unchecked {
     image: url(:static/img/IconPark/dark/Graphics/round.png);
 }
 QRadioButton::indicator:unchecked:hover {
-    image: url(:static/img/IconPark/dark/Character/check-one.png);
+    image: url(:static/img/IconPark/dark/Graphics/round.png);
 }
 QRadioButton::indicator:unchecked:pressed {
     image: url(:static/img/IconPark/dark/Graphics/round.png);
@@ -449,7 +455,7 @@ QCheckBox::indicator:unchecked {            /* 未选中时状态 */
     image: url(:static/img/IconPark/dark/Graphics/round.png);
 }
 QCheckBox::indicator:unchecked:hover {      /* 未选中时，鼠标悬停时的状态 */
-    image: url(:static/img/IconPark/dark/Character/check-one.png);
+    image: url(:static/img/IconPark/dark/Graphics/round.png);
 }
 QCheckBox::indicator:unchecked:pressed {    /* 未选中时，按钮下按时的状态 */
     image: url(:static/img/IconPark/dark/Graphics/round.png);
@@ -473,6 +479,9 @@ def set_radio_button_style(radio_button, is_dark=False):
     # 根据弧度设置最小高度
     if radio_button.minimumHeight() == 0:
         radio_button.setMinimumHeight(20)
+    # 鼠标手型
+    if radio_button.cursor() != Qt.CursorShape.PointingHandCursor:
+        radio_button.setCursor(Qt.CursorShape.PointingHandCursor)
 
 def set_check_box_style(check_box, is_dark=False):
     if is_dark:
@@ -483,6 +492,9 @@ def set_check_box_style(check_box, is_dark=False):
     # 根据弧度设置最小高度
     if check_box.minimumHeight() == 0:
         check_box.setMinimumHeight(20)
+    # 鼠标手型
+    if check_box.cursor() != Qt.CursorShape.PointingHandCursor:
+        check_box.setCursor(Qt.CursorShape.PointingHandCursor)
 '''
 ↑                                                                                ↑
 **********************************复选框 · 结束***************************************
@@ -1089,6 +1101,11 @@ def set_dialog_control_style(widget, is_dark=False):
         if isinstance(widget_item, QComboBox) or isinstance(widget_item, QFontComboBox):
             set_combo_box_style(widget_item, is_dark)
             continue
+        elif isinstance(widget_item, QToolButton):
+            # 鼠标手型
+            if widget_item.cursor() != Qt.CursorShape.PointingHandCursor:
+                widget_item.setCursor(Qt.CursorShape.PointingHandCursor)
+            continue
         elif isinstance(widget_item, QPushButton):
             if widget_item.objectName() in [
                 "AgileTilesTitleBarTitlePushButton",
@@ -1098,6 +1115,9 @@ def set_dialog_control_style(widget, is_dark=False):
                 "push_button_importance_no_exigency",
                 "push_button_no_importance_no_exigency",
             ]:
+                # 鼠标手型
+                if widget_item.cursor() != Qt.CursorShape.PointingHandCursor:
+                    widget_item.setCursor(Qt.CursorShape.PointingHandCursor)
                 continue
             set_button_style(widget_item, is_dark)
             continue

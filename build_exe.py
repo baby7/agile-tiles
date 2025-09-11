@@ -44,9 +44,9 @@ nuitka_command = [
     "--windows-product-name=灵卡面板",                                       # Windows下软件名称
     "--windows-file-version=" + no_v_version,                               # Windows下软件的版本
     "--windows-product-version=" + no_v_version,                            # Windows下软件的产品版本
-    "--windows-file-description=灵卡面板",                      # Windows下软件的作用描述
+    "--windows-file-description=灵卡面板",                                  # Windows下软件的作用描述
 
-    "--windows-uac-admin",                                                  # 嵌入清单
+    # "--windows-uac-admin",                                                  # 管理员权限的清单文件
 
     "--lto=yes",                                                            # 启用 Link Time Optimization（LTO）以优化编译速度和性能。
     "--jobs=14",                                                            # 使用 16 个线程并行编译，加速编译速度。

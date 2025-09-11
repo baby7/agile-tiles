@@ -1605,7 +1605,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
 
     def event(self, event):
         """ 处理窗口失焦事件 """
-        if event.type() == QEvent.Type.WindowDeactivate:
+        if QEvent.Type.WindowDeactivate == event.type():
             # 如果窗口显示且鼠标不在边缘区域，才隐藏
             if self.show_form:
                 cursor_pos = QtGui.QCursor.pos()

@@ -1,6 +1,6 @@
 from PySide6.QtCore import QEventLoop
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QLineEdit
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QLineEdit, QTextEdit
 
 from src.ui import style_util
 
@@ -202,17 +202,18 @@ def box_acknowledgement(main_object, title, content, button_ok_text="确定", bu
     # 返回结果
     return result
 
-def box_input(main_object, title, content, button_ok_text="确定", button_no_text="取消", old_text=None):
+
+def box_input(main_object, title, content, button_ok_text="确定", button_no_text="取消", old_text=None, text_type="line"):
     """
     输入弹窗
     :param main_object: 主窗口
     :param title: 标题
     :param content: 内容
     :param button_ok_text: 确认按钮文本
-    :param button_no_text:  取消按钮文本
-    :param old_text:  默认展示的文本
-    :return: 是否按了确定
-    :return:
+    :param button_no_text: 取消按钮文本
+    :param old_text: 默认展示的文本
+    :param text_type: 输入类型，"line" 表示单行，"text" 表示多行
+    :return: 用户输入的文本（如果取消则返回 None）
     """
     # 清空控件
     clear_widget(main_object)
@@ -220,6 +221,7 @@ def box_input(main_object, title, content, button_ok_text="确定", button_no_te
     loop = QEventLoop()
     # 结果变量
     result = None
+
     # 确定按钮事件
     def accept():
         nonlocal result, loop
@@ -227,6 +229,7 @@ def box_input(main_object, title, content, button_ok_text="确定", button_no_te
         main_object.widget_dialog_base.hide()
         if loop and loop.isRunning():
             loop.quit()
+
     # 取消按钮事件
     def reject():
         nonlocal result, loop
@@ -234,6 +237,7 @@ def box_input(main_object, title, content, button_ok_text="确定", button_no_te
         main_object.widget_dialog_base.hide()
         if loop and loop.isRunning():
             loop.quit()
+
     # 设置弹窗标题
     main_object.label_dialog_title.setText(title)
     # 设置按钮显示
@@ -253,12 +257,24 @@ def box_input(main_object, title, content, button_ok_text="确定", button_no_te
     }""")
     layout.addWidget(content_label)
     # 输入框
-    input_field = QLineEdit()
-    style_util.set_line_edit_style(input_field, main_object.is_dark)
-    input_field.setMinimumWidth(260)
-    input_field.setMinimumHeight(22)
+    if text_type == "line":
+        input_field = QLineEdit()
+        style_util.set_line_edit_style(input_field, main_object.is_dark)
+        input_field.setMinimumWidth(260)
+        input_field.setMinimumHeight(22)
+    elif text_type == "text":
+        input_field = QTextEdit()
+        style_util.set_text_edit_style(input_field, main_object.is_dark)  # 假设有一个类似的方法设置 QTextEdit 样式
+        input_field.setMinimumSize(260, 100)  # 设置多行文本框的最小尺寸
+    else:
+        raise ValueError("Invalid text_type. Expected 'line' or 'text'.")
+
     if old_text:
-        input_field.setText(old_text)
+        if text_type == "line":
+            input_field.setText(old_text)
+        elif text_type == "text":
+            input_field.setPlainText(old_text)
+
     layout.addWidget(input_field)
     # 将布局添加到弹窗内容中
     main_object.widget_dialog_content.setLayout(layout)
@@ -273,7 +289,7 @@ def box_input(main_object, title, content, button_ok_text="确定", button_no_te
     loop.exec()
     # 获取要返回的结果
     if result:
-        result_text = input_field.text()
+        result_text = input_field.text() if text_type == "line" else input_field.toPlainText()
     else:
         result_text = None
     # 断开按钮的点击事件

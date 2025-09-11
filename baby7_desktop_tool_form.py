@@ -373,6 +373,7 @@ class Ui_Form(object):
         font5.setPointSize(10)
         font5.setBold(True)
         self.push_button_area_user_vip_subscription.setFont(font5)
+        self.push_button_area_user_vip_subscription.setCursor(QCursor(Qt.PointingHandCursor))
         self.push_button_area_user_vip_subscription.setStyleSheet(u"QPushButton {\n"
 "border-radius:10px;\n"
 "background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 rgb(255, 178, 0), stop:1 rgb(254, 232, 67));\n"
@@ -388,6 +389,7 @@ class Ui_Form(object):
         self.push_button_area_user_vip_subscription_history.setObjectName(u"push_button_area_user_vip_subscription_history")
         self.push_button_area_user_vip_subscription_history.setMinimumSize(QSize(85, 22))
         self.push_button_area_user_vip_subscription_history.setFont(font5)
+        self.push_button_area_user_vip_subscription_history.setCursor(QCursor(Qt.PointingHandCursor))
         self.push_button_area_user_vip_subscription_history.setStyleSheet(u"QPushButton {\n"
 "border-radius:10px;\n"
 "background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 rgb(255, 178, 0), stop:1 rgb(254, 232, 67));\n"
@@ -507,6 +509,7 @@ class Ui_Form(object):
         font8.setPointSize(9)
         font8.setBold(True)
         self.push_button_area_user_vip_info.setFont(font8)
+        self.push_button_area_user_vip_info.setCursor(QCursor(Qt.PointingHandCursor))
         self.push_button_area_user_vip_info.setStyleSheet(u"QPushButton {\n"
 "border-radius:10px;\n"
 "background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 rgb(0, 145, 255), stop:1 rgb(92, 22, 255));\n"
@@ -810,6 +813,7 @@ class Ui_Form(object):
         self.push_button_area_user_invite_code.setObjectName(u"push_button_area_user_invite_code")
         self.push_button_area_user_invite_code.setMinimumSize(QSize(80, 22))
         self.push_button_area_user_invite_code.setFont(font8)
+        self.push_button_area_user_invite_code.setCursor(QCursor(Qt.PointingHandCursor))
         self.push_button_area_user_invite_code.setStyleSheet(u"QPushButton {\n"
 "border-radius:10px;\n"
 "background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 rgb(255, 28, 106), stop:1 rgb(251, 221, 73));\n"
@@ -852,6 +856,7 @@ class Ui_Form(object):
         self.push_button_area_user_message_logout.setObjectName(u"push_button_area_user_message_logout")
         self.push_button_area_user_message_logout.setGeometry(QRect(14, 3, 40, 40))
         self.push_button_area_user_message_logout.setFont(font5)
+        self.push_button_area_user_message_logout.setCursor(QCursor(Qt.PointingHandCursor))
         self.push_button_area_user_message_logout.setStyleSheet(u"border: 1px solid black; border-radius: 20px;")
         self.push_button_area_user_message_logout.setIconSize(QSize(20, 20))
         self.label_area_user_message_logout = QLabel(self.widget_3)
@@ -898,6 +903,7 @@ class Ui_Form(object):
         self.push_button_area_user_data_backup = QPushButton(self.widget_area_user_data_server)
         self.push_button_area_user_data_backup.setObjectName(u"push_button_area_user_data_backup")
         self.push_button_area_user_data_backup.setFont(font5)
+        self.push_button_area_user_data_backup.setCursor(QCursor(Qt.PointingHandCursor))
         self.push_button_area_user_data_backup.setStyleSheet(u"QPushButton {\n"
 "border: none;\n"
 "background: rgba(0, 0, 0, 0);\n"
@@ -916,6 +922,7 @@ class Ui_Form(object):
         self.push_button_area_user_data_recover = QPushButton(self.widget_area_user_data_server)
         self.push_button_area_user_data_recover.setObjectName(u"push_button_area_user_data_recover")
         self.push_button_area_user_data_recover.setFont(font5)
+        self.push_button_area_user_data_recover.setCursor(QCursor(Qt.PointingHandCursor))
         self.push_button_area_user_data_recover.setStyleSheet(u"QPushButton {\n"
 "border: none;\n"
 "background: rgba(0, 0, 0, 0);\n"
@@ -946,6 +953,7 @@ class Ui_Form(object):
         self.push_button_area_user_data_import = QPushButton(self.widget_area_user_data_local)
         self.push_button_area_user_data_import.setObjectName(u"push_button_area_user_data_import")
         self.push_button_area_user_data_import.setFont(font5)
+        self.push_button_area_user_data_import.setCursor(QCursor(Qt.PointingHandCursor))
         self.push_button_area_user_data_import.setStyleSheet(u"QPushButton {\n"
 "border: none;\n"
 "background: rgba(0, 0, 0, 0);\n"
@@ -964,6 +972,7 @@ class Ui_Form(object):
         self.push_button_area_user_data_export = QPushButton(self.widget_area_user_data_local)
         self.push_button_area_user_data_export.setObjectName(u"push_button_area_user_data_export")
         self.push_button_area_user_data_export.setFont(font5)
+        self.push_button_area_user_data_export.setCursor(QCursor(Qt.PointingHandCursor))
         self.push_button_area_user_data_export.setStyleSheet(u"QPushButton {\n"
 "border: none;\n"
 "background: rgba(0, 0, 0, 0);\n"
@@ -994,6 +1003,7 @@ class Ui_Form(object):
         self.push_button_area_user_data_synchronization = QPushButton(self.widget_area_user_data_sync)
         self.push_button_area_user_data_synchronization.setObjectName(u"push_button_area_user_data_synchronization")
         self.push_button_area_user_data_synchronization.setFont(font5)
+        self.push_button_area_user_data_synchronization.setCursor(QCursor(Qt.PointingHandCursor))
         self.push_button_area_user_data_synchronization.setStyleSheet(u"QPushButton {\n"
 "border: none;\n"
 "background: rgba(0, 0, 0, 0);\n"
@@ -1088,12 +1098,14 @@ class Ui_Form(object):
         self.push_button_dialog_cancel = QPushButton(self.widget_dialog_entity)
         self.push_button_dialog_cancel.setObjectName(u"push_button_dialog_cancel")
         self.push_button_dialog_cancel.setMinimumSize(QSize(50, 25))
+        self.push_button_dialog_cancel.setCursor(QCursor(Qt.PointingHandCursor))
 
         self.horizontalLayout_5.addWidget(self.push_button_dialog_cancel)
 
         self.push_button_dialog_confirm = QPushButton(self.widget_dialog_entity)
         self.push_button_dialog_confirm.setObjectName(u"push_button_dialog_confirm")
         self.push_button_dialog_confirm.setMinimumSize(QSize(50, 25))
+        self.push_button_dialog_confirm.setCursor(QCursor(Qt.PointingHandCursor))
 
         self.horizontalLayout_5.addWidget(self.push_button_dialog_confirm)
 

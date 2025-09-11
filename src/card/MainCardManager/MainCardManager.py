@@ -9,6 +9,7 @@ from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLa
 
 from src.card.component.ThemeSwitchButton.ThemeSwitchButton import ThemeSwitchButton
 from src.card.main_card.FileSearchCard.FileSearchCard import FileSearchCard
+from src.card.main_card.IpnCard.IpnCard import IpnCard
 from src.card.main_card.SettingCard.setting.card_permutation import CardPermutationWindow
 from src.card.main_card.ToolCard.ToolCard import ToolCard
 from src.card.main_card.TodoCard.TodoCard import TodoCard
@@ -53,7 +54,7 @@ class MainCardManager(QObject):
     main_card_width = 6
     main_card_height = 8
     # 菜单
-    menu_button_width = 30
+    menu_button_width = 34
 
     def __init__(self, main_object):
         super(MainCardManager, self).__init__()
@@ -88,6 +89,7 @@ class MainCardManager(QObject):
                 self.main_object.translate_area,
                 self.main_object.chat_area,
                 self.main_object.search_area,
+                self.main_object.ipn_area,
                 self.main_object.todo_area,
                 self.main_object.book_area,
                 self.main_object.music_area,
@@ -160,6 +162,7 @@ class MainCardManager(QObject):
             "tool": [self.main_object.push_button_tool, "Others/toolkit", self.main_object.tool_area, "工具箱"],
             "looking": [self.main_object.push_button_looking, "Base/preview-open", self.main_object.looking_area, "信息聚合"],
             "search": [self.main_object.push_button_search, "Base/search", self.main_object.search_area, "本地搜索"],
+            "ipn": [self.main_object.push_button_ipn, "Arrows/transfer-data", self.main_object.ipn_area, "局域网文件传输"],
             "todo": [self.main_object.push_button_todo, "Edit/plan", self.main_object.todo_area, "待办事项"],
             "book": [self.main_object.push_button_book, "Office/book-one", self.main_object.book_area, "阅读"],
             "music": [self.main_object.push_button_music, "Music/music-one", self.main_object.music_area, "音乐"],
@@ -184,6 +187,7 @@ class MainCardManager(QObject):
             self.main_object.tool_area = QScrollArea(self.main_object.widget_base)
             self.main_object.looking_area = QScrollArea(self.main_object.widget_base)
             self.main_object.search_area = QScrollArea(self.main_object.widget_base)
+            self.main_object.ipn_area = QScrollArea(self.main_object.widget_base)
             self.main_object.todo_area = QScrollArea(self.main_object.widget_base)
             self.main_object.book_area = QScrollArea(self.main_object.widget_base)
             self.main_object.music_area = QScrollArea(self.main_object.widget_base)
@@ -196,6 +200,7 @@ class MainCardManager(QObject):
                 self.main_object.looking_area,
                 self.main_object.tool_area,
                 self.main_object.search_area,
+                self.main_object.ipn_area,
                 self.main_object.todo_area,
                 self.main_object.book_area,
                 self.main_object.music_area,
@@ -227,6 +232,7 @@ class MainCardManager(QObject):
             self.main_object.tool_area,
             self.main_object.looking_area,
             self.main_object.search_area,
+            self.main_object.ipn_area,
             self.main_object.todo_area,
             self.main_object.book_area,
             self.main_object.music_area,
@@ -251,6 +257,7 @@ class MainCardManager(QObject):
         self.main_object.push_button_tool.clicked.connect(self.push_button_tool_click)
         self.main_object.push_button_looking.clicked.connect(self.push_button_looking_click)
         self.main_object.push_button_search.clicked.connect(self.push_button_search_click)
+        self.main_object.push_button_ipn.clicked.connect(self.push_button_ipn_click)
         self.main_object.push_button_todo.clicked.connect(self.push_button_todo_click)
         self.main_object.push_button_book.clicked.connect(self.push_button_book_click)
         self.main_object.push_button_music.clicked.connect(self.push_button_music_click)
@@ -334,6 +341,12 @@ class MainCardManager(QObject):
                                 cache=in_card_cache, data=in_card_data,
                                 toolkit=self.main_object.toolkit, logger=self.main_object.info_logger,
                                 save_data_func=self.save_card_data_func)
+            elif card_data["name"] == "IpnCard":
+                card_area = self.main_object.ipn_area
+                card = IpnCard(main_object=self.main_object, parent=self.main_object, theme=theme, card=card_area,
+                                cache=in_card_cache, data=in_card_data,
+                                toolkit=self.main_object.toolkit, logger=self.main_object.info_logger,
+                                save_data_func=self.save_card_data_func)
             elif card_data["name"] == "FileSearchCard":
                 card_area = self.main_object.search_area
                 card = FileSearchCard(main_object=self.main_object, parent=self.main_object, theme=theme, card=card_area,
@@ -414,9 +427,9 @@ class MainCardManager(QObject):
         if is_init:
             button_pos = get_position(self.main_object.label_menu)
             if self.menu_position == card_constant.MENU_POSITION_RIGHT:
-                button_indicate_x = button_pos.x() + self.CARD_INTERVAL / 2
+                button_indicate_x = button_pos.x() + int(self.CARD_INTERVAL / 3)
             else:
-                button_indicate_x = button_pos.x() + self.menu_button_width
+                button_indicate_x = button_pos.x() + self.menu_button_width - 3
             button_indicate_y = button_pos.y() + 16
             self.main_object.label_current_menu.move(button_indicate_x, button_indicate_y)
         # 初始化菜单按钮
@@ -441,7 +454,7 @@ class MainCardManager(QObject):
                 continue
             button = value[0]
             self.main_object.toolkit.animation_util.start_line_y_animation(
-                self.main_object.label_current_menu, self.main_object.label_current_menu.y(), get_position(button).y() + 4)
+                self.main_object.label_current_menu, self.main_object.label_current_menu.y(), get_position(button).y() + 6)
             print("设置菜单按钮指示位置")
 
     def theme_switch_button_click(self):
@@ -455,7 +468,7 @@ class MainCardManager(QObject):
             font.setPointSize(11)
             if not is_init:
                 self.main_object.toolkit.animation_util.start_line_y_animation(
-                    self.main_object.label_current_menu, self.main_object.label_current_menu.y(), get_position(button).y() + 4)
+                    self.main_object.label_current_menu, self.main_object.label_current_menu.y(), get_position(button).y() + 6)
         else:
             font.setPointSize(10)
         font.setBold(state)
@@ -588,6 +601,16 @@ class MainCardManager(QObject):
         except Exception as e:
             self.main_object.info_logger.card_error("主程序", "切换搜索失败,错误信息:{}".format(e))
             self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换搜索失败,请稍后重试")
+
+    def push_button_ipn_click(self):
+        print("点击IPN按钮")
+        try:
+            self.main_object.info_logger.card_info("主程序", "切换局域网文件传输完成")
+            self.see_card = "ipn"
+            self.show_change()
+        except Exception as e:
+            self.main_object.info_logger.card_error("主程序", "切换局域网文件传输失败,错误信息:{}".format(e))
+            self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换局域网文件传输失败,请稍后重试")
 
     def push_button_setting_click(self):
         print("点击Setting按钮")
@@ -908,8 +931,8 @@ class MainCardManager(QObject):
         }""")
         # 菜单栏布局
         self.main_object.layout_menu_background = QVBoxLayout(self.main_object.label_menu)
-        self.main_object.layout_menu_background.setContentsMargins(4, 10, 4, 10)
-        self.main_object.layout_menu_background.setSpacing(6)
+        self.main_object.layout_menu_background.setContentsMargins(2, 10, 4, 10)
+        self.main_object.layout_menu_background.setSpacing(2)
         # 菜单栏指示按钮位置的指示条
         self.main_object.label_menu.lower()
         self.main_object.label_menu_background.lower()
@@ -923,7 +946,7 @@ class MainCardManager(QObject):
         font.setKerning(True)
         button_names = [
             'user', 'setting',
-            'weibo_info', 'translate', 'chat', 'tool', 'looking', 'search', 'todo', 'book', 'music', 'game'
+            'weibo_info', 'translate', 'chat', 'tool', 'looking', 'search', 'ipn', 'todo', 'book', 'music', 'game'
         ]
         for name in button_names:
             # 创建按钮
@@ -943,7 +966,7 @@ class MainCardManager(QObject):
                 color: rgb(0, 0, 0);
             }""")
             menu_button.setFont(font)
-            menu_button.setIconSize(QSize(20, 20))
+            menu_button.setIconSize(QSize(22, 22))
             self.main_object.layout_menu_background.addWidget(menu_button)
             # 上下半部分需要增加伸缩条和主题切换按钮
             if name == 'setting':
@@ -951,7 +974,7 @@ class MainCardManager(QObject):
                 print(f"self.main_object.is_dark:{self.main_object.is_dark}")
                 self.main_object.theme_switch_button = ThemeSwitchButton(default_theme=not self.main_object.is_dark)
                 self.main_object.theme_switch_button.clicked.connect(self.theme_switch_button_click)
-                self.main_object.theme_switch_button.setFixedSize(QSize(self.main_object.label_menu.width() - self.CARD_INTERVAL, 50))
+                self.main_object.theme_switch_button.setFixedSize(QSize(self.main_object.label_menu.width() - self.CARD_INTERVAL + 5, 58))
                 self.main_object.theme_switch_button.resize(self.main_object.theme_switch_button.size())
                 self.main_object.theme_switch_button.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
                 self.main_object.layout_menu_background.addWidget(self.main_object.theme_switch_button)

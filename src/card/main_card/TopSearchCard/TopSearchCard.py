@@ -1,7 +1,7 @@
 import json
 import time
 
-from PySide6.QtCore import QCoreApplication, QRect, Qt, QUrl
+from PySide6.QtCore import QCoreApplication, QRect, Qt, QUrl, Signal
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QLabel, QPushButton, QTabWidget, QTextBrowser, QWidget
 from PySide6 import QtNetwork
@@ -12,6 +12,25 @@ from src.get_info import get_tophub_blog_info, get_micro_blog_info
 from src.util import browser_util
 from src.ui import style_util
 from src.component.LoadAnimation.LoadAnimation import LoadAnimation
+
+
+class CustomTextBrowser(QTextBrowser):
+    # 定义自定义信号
+    middleClicked = Signal(QUrl)
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+    def mousePressEvent(self, event):
+        # 检查是否是鼠标中键点击
+        if event.button() == Qt.MouseButton.MiddleButton:
+            # 获取点击位置的链接
+            anchor = self.anchorAt(event.pos())
+            if anchor:
+                # 触发自定义信号
+                self.middleClicked.emit(QUrl(anchor))
+        # 调用父类方法以保持默认行为
+        super().mousePressEvent(event)
 
 
 class TopSearchCard(MainCard):
@@ -106,7 +125,7 @@ class TopSearchCard(MainCard):
         font4.setBold(False)
         tab_widget_height = 45
         # 主要信息展示
-        self.text_browser_top = QTextBrowser(self.card)
+        self.text_browser_top = CustomTextBrowser(self.card)
         self.text_browser_top.setObjectName(u"text_browser_top")
         self.text_browser_top.setGeometry(QRect(20, 10 + tab_widget_height, self.card.width() - 40, self.card.height() - tab_widget_height - 50 + 20))
         self.text_browser_top.setFont(font3)
@@ -187,6 +206,7 @@ class TopSearchCard(MainCard):
         self.push_button_search_refresh.clicked.connect(self.push_button_search_refresh_click)
         self.tab_widget_toggle.currentChanged.connect(self.tab_widget_change)
         self.text_browser_top.anchorClicked.connect(self.click_textbrowser)
+        self.text_browser_top.middleClicked.connect(self.click_textbrowser_not_active)
         # 层叠
         self.tab_widget_toggle.raise_()
         self.text_browser_top.raise_()
@@ -414,6 +434,14 @@ class TopSearchCard(MainCard):
     def click_textbrowser(self, url):
         browser_util.open_url(url.toString())
 
+    def click_textbrowser_not_active(self, url):
+        # 当前时间戳
+        current_time = int(round(time.time() * 1000))
+        # 修改上次动画时间戳避免触发隐藏窗口动画
+        self.main_object.animation_time = current_time
+        # 打开浏览器
+        browser_util.open_url(url.toString())
+
     def tab_widget_change(self):
         self.send_network_request()
 
@@ -426,7 +454,7 @@ class TopSearchCard(MainCard):
         else:
             text_color = "background-color: rgba(0, 0, 0, 0);color: rgba(255, 255, 255, 0.4);"
             self.label_top_area_background.setStyleSheet("background: rgb(0, 0, 0); border-radius: 10px;")
-        style_util.set_card_button_style(self.push_button_search_refresh, "Arrows/redo", is_dark=not self.is_light())
+        style_util.set_card_button_style(self.push_button_search_refresh, "Arrows/redo", is_dark=self.main_object.is_dark)
         self.label_top_mask.setStyleSheet(u"background-color: transparent;")
         self.label_top_area_number.setStyleSheet(text_color)
         self.label_top_area_title.setStyleSheet(text_color)

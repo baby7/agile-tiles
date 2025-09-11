@@ -389,6 +389,9 @@ class TodoCard(MainCard):
         todo_type = dialog_module.box_input(self.main_object, "添加", "待办事项分类名称：")
         if todo_type is None:
             return
+        if todo_type == "":
+            dialog_module.box_information(self.main_object, "提示", "待办事项分类不能为空！")
+            return
         # 强制处理所有待处理的事件
         QApplication.processEvents()
         # 使用定时器延迟创建新布局，确保删除操作完成

@@ -252,6 +252,15 @@ class FileSearchCard(MainCard):
         main_layout = QVBoxLayout(self.main_widget)
         main_layout.setContentsMargins(10, 10, 10, 10)
         main_layout.setSpacing(5)
+        # 标题
+        title = QLabel("本地文件搜索")
+        title.setStyleSheet("background-color: transparent; border: none;")
+        title_font = QFont()
+        title_font.setPointSize(12)
+        title_font.setBold(True)
+        title.setFont(title_font)
+        title.setAlignment(Qt.AlignCenter)
+        main_layout.addWidget(title)
 
         # 搜索行布局
         search_layout = QHBoxLayout()
@@ -532,17 +541,18 @@ class FileSearchCard(MainCard):
             # 对文件路径进行URL编码，特别是处理空格等特殊字符
             encoded_path = quote(file_path.replace("\\", "/"))  # 转换为正斜杠并编码
 
-            # 根据文件类型选择图标
-            print(file_suffix)
-            if file_suffix in self.suffix_icon_map:
-                icon_path = self.suffix_icon_map[file_suffix]
+            # 根据文件类型选择图标或字符
+            if result.is_folder:
+                # 使用文字字符📁代替文件夹图标
+                icon_html = '<span style="font-size: 26px; vertical-align: middle;">📁</span>'
             else:
-                if result.is_folder:
-                    icon_path = self.suffix_icon_map["folder"]
+                if file_suffix in self.suffix_icon_map:
+                    icon_path = self.suffix_icon_map[file_suffix]
                 else:
                     icon_path = self.suffix_icon_map["file"]
-            icon_path = ":static/img/IconPark/grey/" + icon_path + ".png"
-            icon_html = f'<img src="{icon_path}" width="26" height="26" style="vertical-align: middle;">'
+                icon_path = ":static/img/IconPark/grey/" + icon_path + ".png"
+                icon_html = f'<img src="{icon_path}" width="26" height="26" style="vertical-align: middle;">'
+
             # 创建可点击的链接
             html_content += f'<div style="margin-bottom: 5px;">'
             html_content += f'{icon_html}'

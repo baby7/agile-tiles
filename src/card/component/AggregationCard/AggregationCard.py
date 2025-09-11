@@ -326,6 +326,7 @@ class AggregationCard(MainCard):
         button.setObjectName(u"push_button_aggregation_" + str(index))
         button.setMinimumSize(QSize(width, height))
         button.setMaximumSize(QSize(width, height))
+        button.setCursor(Qt.CursorShape.PointingHandCursor)
 
         # 在按钮内创建一个布局
         button_layout = QHBoxLayout(button)

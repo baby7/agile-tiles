@@ -79,6 +79,7 @@ class MyQListWidgetItemWidget(QWidget):
         button.setFixedSize(22, 22)
         button.setIconSize(QtCore.QSize(18, 18))
         button.setFont(get_font(9))
+        button.setCursor(Qt.CursorShape.PointingHandCursor)
         push_button_style = """
         QPushButton {
             border: none;
@@ -98,6 +99,7 @@ class MyQListWidgetItemWidget(QWidget):
     def create_delete_button(self):
         button = QtWidgets.QPushButton(self.parent)
         button.setFixedSize(22, 22)
+        button.setCursor(Qt.CursorShape.PointingHandCursor)
         return button
 
     def create_degree_line(self, degree, warn):
