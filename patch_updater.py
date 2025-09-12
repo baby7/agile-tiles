@@ -6,7 +6,27 @@ import zipfile
 
 
 # 打包命令
-# nuitka --onefile --standalone --windows-console-mode=disable --windows-icon-from-ico=run_util/util.ico --output-dir=out --windows-uac-admin --lto=yes --jobs=8 --show-progress --show-memory patch_updater.py
+"""
+nuitka \
+--mingw64 \
+--onefile \
+--standalone \
+--windows-console-mode=disable \
+--windows-icon-from-ico=run_util/util.ico \
+--output-dir=out \
+--windows-company-name=杭州市拱墅区启杭灵卡软件开发工作室 \
+--windows-product-name=灵卡面板 \
+--windows-file-version=1.0.0 \
+--windows-product-version=1.0.0 \
+--windows-file-description=灵卡面板更新工具 \
+--windows-uac-admin \
+--lto=yes \
+--jobs=8 \
+--show-progress \
+--show-memory \
+patch_updater.py
+"""
+
 
 def kill_process_by_exe_path(exe_path):
     """根据exe路径杀死进程（纯Windows命令实现）"""
