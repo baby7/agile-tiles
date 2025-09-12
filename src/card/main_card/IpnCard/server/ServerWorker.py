@@ -20,17 +20,21 @@ class ServerWorker(QObject):
         try:
             self._active = True
             self._stop_requested = False
-            self.server.timeout = 0.1  # 设置更短的超时时间
+            self.server.timeout = 1.0    # 设置合理的超时时间
             self.server_started.emit()
 
             # 使用非阻塞方式运行服务器
             while self._active and not self._stop_requested:
-                # 使用select检查是否有连接请求
-                readable, _, _ = select.select([self.server.socket], [], [], 0.1)
-                if readable:
-                    # 有连接请求，处理它
-                    self.server.handle_request()
-                # 没有请求时，继续循环检查停止标志
+                try:
+                    # 使用select检查是否有连接请求
+                    readable, _, _ = select.select([self.server.socket], [], [], 0.5)
+                    if readable:
+                        # 有连接请求，处理它
+                        self.server.handle_request()
+                    # 没有请求时，继续循环检查停止标志
+                except Exception as e:
+                    if self._active:  # 只在服务器应运行时报告错误
+                        self.error_occurred.emit(f"服务器错误: {e}")
 
         except Exception as e:
             self.error_occurred.emit(f"服务器错误: {e}")

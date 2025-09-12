@@ -895,6 +895,7 @@ def set_tab_widget_style(tab_widget, is_dark=False):
         tab_widget.setStyleSheet(tab_widget_dark_style)
     else:
         tab_widget.setStyleSheet(tab_widget_style)
+    tab_widget.setStyleSheet(tab_widget.styleSheet() + scroll_bar_style)
     tab_bar = tab_widget.tabBar()
     tab_bar.setCursor(Qt.PointingHandCursor)
 

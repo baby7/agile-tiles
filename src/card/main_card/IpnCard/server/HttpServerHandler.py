@@ -1,4 +1,5 @@
 import os
+import socket
 import traceback
 import json
 import cgi
@@ -725,7 +726,7 @@ class HttpServerHandler(BaseHTTPRequestHandler):
                     }};
 
                     xhr.onerror = function() {{
-                        showAlert('错误', '文件上传失败。如果您是本机访问且使用Edge浏览器上传文件，建议直接使用界面上传或切换Chrome浏览器。', 'error');
+                        showAlert('错误', '文件上传失败。如果您是本机访问浏览器，请直接使用界面上传。', 'error');
                     }};
 
                     xhr.upload.onprogress = function(event) {{
@@ -771,7 +772,7 @@ class HttpServerHandler(BaseHTTPRequestHandler):
                     }};
 
                     xhr.onerror = function() {{
-                        showAlert('错误', '文本上传失败。如果您是本机访问且使用Edge浏览器上传文本，建议直接使用界面上传或切换Chrome浏览器。', 'error');
+                        showAlert('错误', '文本上传失败。如果您是本机访问浏览器，请直接使用界面上传。', 'error');
                     }};
 
                     var data = JSON.stringify({{ text: textContent }});
@@ -1097,5 +1098,23 @@ class HttpServerHandler(BaseHTTPRequestHandler):
         return html
 
     def log_message(self, format, *args):
-        # 禁用默认的日志输出
-        pass
+        print(format % args)
+
+    def handle_one_request(self):
+        try:
+            # 设置合理的超时
+            self.request.settimeout(3.0)
+            super().handle_one_request()
+        except socket.timeout:
+            print("请求超时")
+            self.send_error(408, "Request Timeout")
+        except ConnectionResetError:
+            print("连接被重置")
+        except BrokenPipeError:
+            print("管道破裂")
+        except Exception as e:
+            print(f"处理请求时出错: {e}")
+            try:
+                self.send_error(500, f"Server error: {str(e)}")
+            except:
+                pass
