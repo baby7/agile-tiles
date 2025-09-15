@@ -206,7 +206,7 @@ update_map_date = {
     "v1.3.2": "2025-09-03",
     "v1.3.3": "2025-09-07",
     "v1.4.0": "2025-09-12",
-    "v1.4.1": "2025-09-18",
+    "v1.4.1": "2025-09-15",
 }
 
 
@@ -275,4 +275,4 @@ def compare_version(version_1, version_2):
     else:
         return -1
 
-# print(gen_download_history_md())
+print(gen_download_history_md())

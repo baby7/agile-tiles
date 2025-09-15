@@ -1,3 +1,4 @@
+import ctypes
 import sys
 import os
 import subprocess
@@ -185,10 +186,20 @@ def replace_exe_and_restart(main_object, new_exe_path, update_info):
 
     # 关闭主程序
     main_object.quit_before_do()
-
     # 启动替换程序
     try:
-        subprocess.Popen([helper_path])
+        # 直接运行exe
+        # subprocess.Popen([helper_path])
+        # 使用 ShellExecute 触发 UAC 弹窗
+        result = ctypes.windll.shell32.ShellExecuteW(
+            None, "runas", helper_path, None, None, 1
+        )
+        if result <= 32:
+            message_box_util.box_information(
+                main_object,
+                "错误",
+                "更新失败，您可以在官网下载安装最新版本。"
+            )
     except Exception as e:
         QApplication.quit()
     # 退出应用
