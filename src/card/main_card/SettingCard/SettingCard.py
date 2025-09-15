@@ -94,8 +94,8 @@ class SettingCard(MainCard):
         self.setting_data = self.data.setdefault(self.hardware_id, user_data_common.setting_config)
         self.setting_card_button_list = [
             # 设置
-            [self.parent.push_button_setting_system, "系统设置", "Base", "setting-config", None, None],
-            [self.parent.push_button_setting_card_permutation, "卡片设计", "Base", "waterfalls-h", None, None],
+            [self.parent.push_button_setting_system, "系统设置", "Base", "setting-two", None, None],
+            [self.parent.push_button_setting_card_permutation, "卡片设计", "Build", "application", None, None],
             [self.parent.push_button_setting_screen, "界面设置", "Components", "page", None, None],
             [self.parent.push_button_setting_theme, "主题设置", "Clothes", "theme", None, None],
             # [self.parent.push_button_setting_file, "文件管理", "Office", "folder-open", None, None],

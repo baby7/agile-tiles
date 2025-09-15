@@ -463,7 +463,7 @@ class AggregationCard(MainCard):
             # 样式
             style_util.set_tab_widget_style(self.aggregation_tab_widget, self.is_dark())
         # 展示面板左上角按钮图标
-        style_util.set_button_style(self.show_panel_back_button, icon_path="Edit/return",
+        style_util.set_button_style(self.show_panel_back_button, icon_path="Edit/back",
                                     is_dark=self.is_dark(), style_change=False)
         style_util.set_button_style(self.show_panel_hide_button, icon_path="Base/preview-open",
                                     is_dark=self.is_dark(), style_change=False)

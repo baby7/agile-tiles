@@ -797,7 +797,7 @@ class MainCardManager(QObject):
 
     def apply_menu_style(self, is_dark):
         """应用菜单样式"""
-        self.main_object.card_permutation_action.setIcon(style_util.get_icon_by_path("Base/waterfalls-h", is_dark=is_dark))
+        self.main_object.card_permutation_action.setIcon(style_util.get_icon_by_path("Build/application", is_dark=is_dark))
         self.main_object.screenshot_action.setIcon(style_util.get_icon_by_path("Edit/screenshot", is_dark=is_dark))
         self.main_object.color_picker_action.setIcon(style_util.get_icon_by_path("Hardware/electronic-pen", is_dark=is_dark))
         self.main_object.official_website_action.setIcon(style_util.get_icon_by_path("Travel/planet", is_dark=is_dark))
@@ -1019,6 +1019,7 @@ class MainCardManager(QObject):
 
     def set_header_button_theme(self):
         self.main_object.widget_header.resize(QSize(self.main_object.width(), self.HEADER_VIEW_HEIGHT))
+        print(f"界面宽度和高度：{self.main_object.width()} x {self.main_object.height()}")
         # 标题栏按钮
         header_title_icon = QIcon()
         header_title_icon.addFile(":static/img/icon/icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
@@ -1030,7 +1031,7 @@ class MainCardManager(QObject):
         # style_util.set_card_button_style(self.main_object.push_button_screenshot, "Edit/screenshot",
         #                                  is_dark=self.main_object.is_dark, style_change=False)
         # # 卡片设计按钮
-        # style_util.set_card_button_style(self.main_object.push_button_card_design, "Base/waterfalls-h",
+        # style_util.set_card_button_style(self.main_object.push_button_card_design, "Build/application",
         #                                  is_dark=self.main_object.is_dark, style_change=False)
         # 更多按钮
         style_util.set_card_button_style(self.main_object.push_button_more, "Base/hamburger-button",
@@ -1057,7 +1058,6 @@ class MainCardManager(QObject):
                 self.main_object.toolkit.style_util.header_button_dark_style
                 .replace("QPushButton", "QToolButton") + "QToolButton::menu-indicator {image: none;}"
             )
-            style_util.set_card_shadow_effect(self.main_object.push_button_hide_window)  # 添加外部阴影效果
         else:
             self.main_object.push_button_header_title.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
             self.main_object.push_button_pin.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
@@ -1066,7 +1066,6 @@ class MainCardManager(QObject):
                 self.main_object.toolkit.style_util.header_button_style
                 .replace("QPushButton", "QToolButton") + "QToolButton::menu-indicator {image: none;}"
             )
-            style_util.remove_card_shadow_effect(self.main_object.push_button_hide_window)  # 移除外部阴影效果
         # 应用顶部更多按钮的菜单样式
         self.apply_menu_style(self.main_object.is_dark)
 

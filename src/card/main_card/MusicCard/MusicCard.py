@@ -1,7 +1,8 @@
 import os
 
+from PySide6.QtGui import QColor
 from PySide6.QtMultimedia import QMediaPlayer
-from PySide6.QtWidgets import QDialog, QSlider, QVBoxLayout, QStackedWidget, QFileDialog
+from PySide6.QtWidgets import QDialog, QSlider, QVBoxLayout, QStackedWidget, QFileDialog, QGraphicsDropShadowEffect
 from PySide6.QtCore import Qt, QRect, QPoint
 from src.card.MainCardManager.MainCard import MainCard
 from src.constant import data_save_constant
@@ -37,6 +38,7 @@ class MusicCard(MainCard):
     playlists = None
     title_label = None
     song_list_title_label = None
+    cover_label = None
 
     def __init__(self, main_object=None, parent=None, theme=None, card=None, cache=None, data=None,
                  toolkit=None, logger=None, save_data_func=None):
@@ -100,6 +102,8 @@ class MusicCard(MainCard):
         if not self.current_playlist and self.playlist_data:
             self.set_first_playlist_as_current()
         self.loading_ok = True
+        # 设置阴影部分
+        self.graphics_effect()
 
     def update_data(self, data=None):
         """
@@ -263,10 +267,29 @@ class MusicCard(MainCard):
     def refresh_theme(self):
         if not super().refresh_theme():
             return False
+        # 刷新模式图标
         self.update_mode_icon()
+        # 刷新音量
         self.update_volume(int(self.audio_output.volume() * 100))
-        # Update button icons based on theme
+        # 设置阴影部分
+        self.graphics_effect()
+        # 返回
         return True
+
+    def graphics_effect(self):
+        # 设置阴影部分
+        if self.main_object.is_dark:
+            if self.cover_label.graphicsEffect():
+                self.cover_label.graphicsEffect().deleteLater()
+        else:
+            if self.cover_label.graphicsEffect():
+                self.cover_label.graphicsEffect().deleteLater()
+            # 添加外部阴影效果（暂不启用，启用会导致其下的按钮的图标和文字中间有间隔，例如音乐卡片上面的两个按钮）
+            shadow_effect = QGraphicsDropShadowEffect(self.cover_label)
+            shadow_effect.setColor(QColor(150, 150, 150, 200))  # rgba(150, 150, 150, 40)
+            shadow_effect.setOffset(3, 3)  # 偏移量
+            shadow_effect.setBlurRadius(25)  # 模糊半径
+            self.cover_label.setGraphicsEffect(shadow_effect)
 
     def adjust_volume(self):
         """调整音量的方法"""

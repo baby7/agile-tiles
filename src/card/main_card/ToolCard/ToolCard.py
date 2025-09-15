@@ -3,6 +3,7 @@ from PySide6.QtWidgets import QVBoxLayout
 from src.card.component.AggregationCard.AggregationCard import AggregationCard
 from src.card.main_card.ToolCard.bmi_calculator.bmi_calculator_util import BMICalculatorPopup
 from src.card.main_card.ToolCard.codec_tool.codec_tool_util import CodecTool
+from src.card.main_card.ToolCard.cron_generator.cron_generator_util import CronGeneratorPopup
 from src.card.main_card.ToolCard.file_operation import file_operation_util
 from src.card.main_card.ToolCard.hold_grudges_gen.hold_grudges_gen_util import HoldGrudgesGenPopup
 from src.card.main_card.ToolCard.housing_loan_rates import housing_loan_rates_util
@@ -12,6 +13,7 @@ from src.card.main_card.ToolCard.progress_bar_generator import progress_bar_gene
 from src.card.main_card.ToolCard.relationship_calculator import relationship_calculator_util
 from src.card.main_card.ToolCard.salary_calculator import salary_calculator_util
 from src.card.main_card.ToolCard.time_calculator.time_calculator_util import TimeCalculatorApp
+from src.card.main_card.ToolCard.uuid_generator.uuid_generator_util import UUIDGeneratorPopup
 
 
 class ToolCard(AggregationCard):
@@ -157,7 +159,7 @@ class ToolCard(AggregationCard):
                 "category": self.module_category_browser,
                 "type": "程序员",
                 "title": "编解码工具",
-                "des": "Base64 URL 各种编码",
+                "des": "URL Base64 ASCII 等",
                 "icon": "Sports/muscle",
                 "content": None,
                 "link": None,
@@ -182,6 +184,26 @@ class ToolCard(AggregationCard):
                 "content": None,
                 "link": None,
                 "call_back_func": self.json_formatter
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "程序员",
+                "title": "Cron表达式生成器",
+                "des": "Crontab表达式生成器",
+                "icon": "Time/alarm-clock",
+                "content": None,
+                "link": None,
+                "call_back_func": lambda : self.cron_generator("Cron表达式生成器")
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "程序员",
+                "title": "UUID生成器",
+                "des": "批量生成UUID",
+                "icon": "Edit/layers",
+                "content": None,
+                "link": None,
+                "call_back_func": lambda : self.uuid_generator("UUID生成器")
             },
             # 趣味
             {
@@ -259,6 +281,18 @@ class ToolCard(AggregationCard):
         # 清理展示面板
         self.clear_show_panel()
         self.util_app = BMICalculatorPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
+        self.show_util_in_show_panel(title=title, util_app=self.util_app)
+
+    def cron_generator(self, title):
+        # 清理展示面板
+        self.clear_show_panel()
+        self.util_app = CronGeneratorPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
+        self.show_util_in_show_panel(title=title, util_app=self.util_app)
+
+    def uuid_generator(self, title):
+        # 清理展示面板
+        self.clear_show_panel()
+        self.util_app = UUIDGeneratorPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def codec_tool(self, title):

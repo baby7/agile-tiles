@@ -142,12 +142,12 @@ def update_mode_icon(music_card):
     style_util.set_button_style(music_card.playlist_button, icon_path="Music/music-list", is_dark=is_dark, style_change=False)
     style_util.set_button_style(music_card.song_list_button, icon_path="Music/music-one", is_dark=is_dark, style_change=False)
     # 歌单页顶部图标
-    style_util.set_button_style(music_card.close_playlist_button, icon_path="Edit/next", is_dark=is_dark, style_change=False)
+    style_util.set_button_style(music_card.close_playlist_button, icon_path="Edit/back", is_dark=is_dark, style_change=False)
     style_util.set_button_style(music_card.edit_playlist_button, icon_path="Edit/edit", is_dark=is_dark, style_change=False)
     style_util.set_button_style(music_card.delete_playlist_button, icon_path="Edit/delete", is_dark=is_dark, style_change=False)
     style_util.set_button_style(music_card.add_playlist_button, icon_path="Music/list-add", is_dark=is_dark, style_change=False)
     # 歌曲列表页顶部图标
-    style_util.set_button_style(music_card.close_song_list_button, icon_path="Edit/return", is_dark=is_dark, style_change=False)
+    style_util.set_button_style(music_card.close_song_list_button, icon_path="Edit/back", is_dark=is_dark, style_change=False)
     style_util.set_button_style(music_card.delete_song_button, icon_path="Edit/delete", is_dark=is_dark, style_change=False)
     style_util.set_button_style(music_card.import_button, icon_path="Arrows/afferent-three", is_dark=is_dark, style_change=False)
     # 歌曲控制模块背景

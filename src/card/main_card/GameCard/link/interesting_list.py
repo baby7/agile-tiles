@@ -94,7 +94,7 @@ interesting_list = [
         "category": "Browser",
         "type": "趣味",
         "title": "极限色差挑战",
-        "des": "考验的可能不是眼睛而是屏幕",
+        "des": "也许考验不是眼睛是屏幕~",
         "icon": "Travel/planet",
         "content":{
             "url": "https://kuku-kube.com/",

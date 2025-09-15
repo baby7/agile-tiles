@@ -40,6 +40,7 @@ def init_base_ui(music_card):
     music_card.cover_label.setMaximumWidth(270)
     music_card.cover_label.setMaximumHeight(270)
     music_card.base_layout.addWidget(music_card.cover_label, alignment=Qt.AlignCenter)
+    music_card.base_layout.addStretch()
 
     music_card.song_title = QLabel("歌曲标题", alignment=Qt.AlignmentFlag.AlignCenter)
     music_card.song_title.setStyleSheet("font-size: 18px;")
@@ -116,7 +117,7 @@ def init_playlist_ui(music_card):
     music_card.playlist_layout.setContentsMargins(8, 8, 8, 8)  # 设置边距
     music_card.playlist_layout.setSpacing(4)
     # 顶部按钮布局
-    music_card.close_playlist_button = _create_icon_button(music_card, "Edit/return", 20)
+    music_card.close_playlist_button = _create_icon_button(music_card, "Edit/back", 20)
     music_card.close_playlist_button.setText("返回")
     music_card.close_playlist_button.clicked.connect(music_card.show_base)
 
@@ -255,7 +256,7 @@ def init_songlist_ui(music_card):
     music_card.song_list_layout.setSpacing(10)
 
     # 新增水平布局容纳导入按钮和关闭按钮
-    music_card.close_song_list_button = _create_icon_button(music_card, "Edit/return", 20)
+    music_card.close_song_list_button = _create_icon_button(music_card, "Edit/back", 20)
     music_card.close_song_list_button.setText("返回")
     music_card.close_song_list_button.clicked.connect(music_card.show_base)
 

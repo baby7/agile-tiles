@@ -1,8 +1,8 @@
 from PySide6.QtCore import Qt, QByteArray, QSize
-from PySide6.QtGui import QFont, QPalette, QColor, QPixmap, QPainter, QIcon
+from PySide6.QtGui import QFont, QPixmap, QPainter, QIcon
 from PySide6.QtSvg import QSvgRenderer
 from PySide6.QtWidgets import QComboBox, QPushButton, QCheckBox, QLineEdit, QSpinBox, QTextEdit, QRadioButton, \
-    QFontComboBox, QFrame, QBoxLayout, QWidget, QToolTip, QDateEdit, QTabWidget, QTableWidget, QDoubleSpinBox, \
+    QFontComboBox, QFrame, QBoxLayout, QWidget, QDateEdit, QTabWidget, QTableWidget, QDoubleSpinBox, \
     QPlainTextEdit, QToolButton
 from qframelesswindow import TitleBar
 from qframelesswindow.titlebar import MinimizeButton, MaximizeButton, CloseButton
@@ -194,8 +194,6 @@ header_button_dark_style = """
 QPushButton {
     border-radius: none;
     background-color: transparent;
-    padding-left: 4px;
-    padding-right: 4px;
 }
 QPushButton:hover {
     border:0px solid #2C2E39;
@@ -431,13 +429,13 @@ QRadioButton::indicator:unchecked:pressed {
     image: url(:static/img/IconPark/dark/Graphics/round.png);
 }
 QRadioButton::indicator:checked {
-    image: url(:static/img/IconPark/dark/Character/check-one.png);
+    image: url(:static/img/IconPark/dark/Edit/radio-two.png);
 }
 QRadioButton::indicator:checked:hover {
-    image: url(:static/img/IconPark/dark/Character/check-one.png);
+    image: url(:static/img/IconPark/dark/Edit/radio-two.png);
 }
 QRadioButton::indicator:checked:pressed {
-    image: url(:static/img/IconPark/dark/Character/check-one.png);
+    image: url(:static/img/IconPark/dark/Edit/radio-two.png);
 }
 """
 check_box_style = """
@@ -547,6 +545,7 @@ QSpinBox {
     border: 1px solid black;
     color: rgb(0, 0, 0);
     background-color: transparent;
+    padding: 0px;
 }
 QSpinBox:hover { }
 QSpinBox:up-button {
@@ -588,6 +587,7 @@ QDoubleSpinBox {
     border: 1px solid black;
     color: rgb(0, 0, 0);
     background-color: transparent;
+    padding: 0px;
 }
 QDoubleSpinBox:hover { }
 QDoubleSpinBox:up-button {

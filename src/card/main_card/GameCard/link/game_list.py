@@ -56,7 +56,7 @@ game_list = [
         "category": "Browser",
         "type": "游戏",
         "title": "人生重开模拟器",
-        "des": "这垃圾人生一秒也不想呆了",
+        "des": "垃圾人生一秒也不想呆了",
         "icon": "png:Actor/LR.png",
         "content": {
             "url": "https://liferestart.syaro.io/public/index.html",
@@ -95,7 +95,7 @@ game_list = [
         "category": "Browser",
         "type": "游戏",
         "title": "信任的进化",
-        "des": "THE EVOLUTION OF TRUST",
+        "des": "EVOLUTION OF TRUST",
         "icon": "png:Actor/Trust.png",
         "content": {
             "url": "https://dccxi.com/trust/",

@@ -663,10 +663,10 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
     def check_line_edit(self, line_edit, push_button):
         if line_edit.echoMode() == QLineEdit.Password:
             line_edit.setEchoMode(QLineEdit.Normal)
-            push_button.setIcon(get_icon_park_path("Base/preview-open", self.is_dark))
+            push_button.setIcon(style_util.get_icon_by_path("Base/preview-open", is_dark=self.is_dark))
         else:
             line_edit.setEchoMode(QLineEdit.Password)
-            push_button.setIcon(get_icon_park_path("Base/preview-close-one", self.is_dark))
+            push_button.setIcon(style_util.get_icon_by_path("Base/preview-close-one", is_dark=self.is_dark))
 
     # ************************************************** 软件更新 ***************************************************
     def push_button_update_soft_click(self):

@@ -5,6 +5,9 @@ import json
 import os, sys
 import subprocess
 import time, datetime
+
+from src.component.TopImageAcrylicWindow import TopImageAcrylicWindow
+
 print("_基础包加载完成")
 # 资源包
 import compiled_resources
@@ -1392,7 +1395,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         self.single_image_to_excel_converter_dialog = (
             single_image_to_excel_converter_util.show_single_image_to_excel_converter_dialog(self, "图片转Excel", pixmap=pixmap))
 
-    def start_image_show(self, pixmap:QPixmap):
+    def start_image_show(self, pixmap: QPixmap):
         # 显示图片
         if hasattr(self, "image_show_dialog"):
             try:
@@ -1403,6 +1406,18 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         if pixmap is None:
             return
         self.image_show_dialog = self.toolkit.image_box_util.show_image_dialog(self, "图片查看器", pixmap=pixmap)
+
+    def start_top_image_show(self, pixmap: QPixmap):
+        # 显示图片
+        if hasattr(self, "top_image_show_dialog"):
+            try:
+                self.top_image_show_dialog.close()
+                self.top_image_show_dialog = None
+            except Exception:
+                pass
+        if pixmap is None:
+            return
+        self.top_image_show_dialog = TopImageAcrylicWindow.show_top_image_dialog(self, pixmap=pixmap)
 
 
     ''' **********************************其他*************************************** '''

@@ -209,9 +209,9 @@ class CardDetailWidget(QWidget):
         self.version_label.setStyleSheet(f"font-size: 13px; color: {self.colors['text_tertiary'].name()};")
         left_meta.addWidget(self.version_label)
 
-        self.size_label = QLabel()  # 文件大小
-        self.size_label.setStyleSheet(f"font-size: 13px; color: {self.colors['text_tertiary'].name()};")
-        left_meta.addWidget(self.size_label)
+        # self.size_label = QLabel()  # 文件大小
+        # self.size_label.setStyleSheet(f"font-size: 13px; color: {self.colors['text_tertiary'].name()};")
+        # left_meta.addWidget(self.size_label)
 
         # 右侧元数据
         right_meta = QVBoxLayout()
@@ -337,16 +337,16 @@ class CardDetailWidget(QWidget):
             self.version_label.setText(f"最新版本: {current_version.setdefault('version', '未知')}")
 
             # 转换文件大小
-            size_str = "0B"
-            if "file" in current_version and current_version["file"] is not None:
-                size_bytes = current_version["file"].setdefault("size", 0)
-                size_str = self.format_size(size_bytes)
-            self.size_label.setText(f"文件大小: {size_str}")
+            # size_str = "0B"
+            # if "file" in current_version and current_version["file"] is not None:
+            #     size_bytes = current_version["file"].setdefault("size", 0)
+            #     size_str = self.format_size(size_bytes)
+            # self.size_label.setText(f"文件大小: {size_str}")
 
             # 开发者
-            developer_title = "未知"
+            developer_title = "官方"
             if "developer" in data and data["developer"] is not None:
-                developer_title = data["developer"].setdefault("title", "未知")
+                developer_title = data["developer"].setdefault("title", "官方")
             self.developer_label.setText(f"开发者: {developer_title}")
 
             # 开源地址
@@ -422,10 +422,10 @@ class CardDetailWidget(QWidget):
             # 版本号
             version_num = version.get("version", "未知版本")
             # 文件大小
-            size_str = "0B"
-            if "file" in version and version["file"] is not None:
-                size_bytes = version["file"].setdefault("size", 0)
-                size_str = self.format_size(size_bytes)
+            # size_str = "0B"
+            # if "file" in version and version["file"] is not None:
+            #     size_bytes = version["file"].setdefault("size", 0)
+            #     size_str = self.format_size(size_bytes)
             # 创建时间
             create_time = version.get("createTime", "未知时间")
             # 更新说明
@@ -436,10 +436,10 @@ class CardDetailWidget(QWidget):
 
             # 添加元数据
             if create_time:
-                markdown_content += f"- **发布日期**: {create_time.split(' ')[0]}\n"
+                markdown_content += f"- **发布日期**: {create_time.split(' ')[0]}\n\n"
             else:
-                markdown_content += f"- **发布日期**: 未知\n"
-            markdown_content += f"- **文件大小**: {size_str}\n\n"
+                markdown_content += f"- **发布日期**: 未知\n\n"
+            # markdown_content += f"- **文件大小**: {size_str}\n\n"
 
             # 添加更新说明
             markdown_content += f"{'无更新说明' if description is None else description}\n\n"

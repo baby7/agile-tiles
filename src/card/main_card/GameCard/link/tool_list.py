@@ -4,7 +4,7 @@ tool_list = [
         "category": "Browser",
         "type": "实用",
         "title": "PDF工具箱",
-        "des": "免费且易于使用的在线PDF工具",
+        "des": "免费且易用的PDF工具",
         "icon": "https://tools.pdf24.org/static/img/pdf24.png",
         "content":{
             "url": "https://tools.pdf24.org/zh/",
@@ -17,7 +17,7 @@ tool_list = [
         "category": "Browser",
         "type": "实用",
         "title": "在线单位转换",
-        "des": "几乎可以换算所有计量单位",
+        "des": "几乎可换算所有计量单位",
         "icon": "https://www.convertworld.com/favicon.ico",
         "content":{
             "url": "https://www.convertworld.com/zh-hans/",

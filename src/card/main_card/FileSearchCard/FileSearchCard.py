@@ -3,7 +3,7 @@ import subprocess
 import webbrowser
 from urllib.parse import unquote, quote
 from PySide6.QtCore import QRect, Qt
-from PySide6.QtGui import QFont, QTextCursor
+from PySide6.QtGui import QFont, QTextCursor, QTextOption
 from PySide6.QtWidgets import (QLabel, QPushButton, QLineEdit, QTextBrowser,
                                QWidget, QStackedWidget, QVBoxLayout, QHBoxLayout,
                                QSizePolicy)
@@ -331,6 +331,7 @@ class FileSearchCard(MainCard):
         self.text_browser_results.setObjectName(u"text_browser_results")
         self.text_browser_results.setFont(font1)
         self.text_browser_results.setOpenLinks(False)
+        self.text_browser_results.setWordWrapMode(QTextOption.WrapMode.WrapAnywhere)        # 禁用智能换行改为按照宽度换行
         self.text_browser_results.anchorClicked.connect(self.on_result_clicked)
         self.text_browser_results.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         main_layout.addWidget(self.text_browser_results)
@@ -562,7 +563,7 @@ class FileSearchCard(MainCard):
             html_content += f'类型: <span style="font-weight: bold; font-size: 12px;"> {file_type} </span>'
             html_content += f' | 大小: <span style="font-weight: bold; font-size: 12px;"> {file_size} </span>'
             html_content += f' | 修改时间: <span style="font-weight: bold; font-size: 12px;"> {modified_time} </span>'
-            html_content += f'</div>'
+            html_content += f'<br></div>'
 
         # 保存当前滚动位置
         scroll_bar = self.text_browser_results.verticalScrollBar()

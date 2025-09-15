@@ -3,7 +3,7 @@ programmer_list = [
         "category": "Browser",
         "type": "程序员",
         "title": "Github",
-        "des": "全球最大的开源项目平台",
+        "des": "全球最大的开源平台",
         "icon": "Brand/github",
         "content":{
             "url": "https://github.com/",
@@ -55,7 +55,7 @@ programmer_list = [
         "category": "Browser",
         "type": "程序员",
         "title": "WebSocket测试",
-        "des": "WebSocket在线测试工具",
+        "des": "WebSocket在线测试",
         "icon": "https://wstool.js.org/favicon.ico",
         "content":{
             "url": "https://wstool.js.org/",
@@ -81,10 +81,10 @@ programmer_list = [
         "category": "Browser",
         "type": "程序员",
         "title": "各种表格转换",
-        "des": "excel csv json sql md",
+        "des": "Excel JSON SQL MD",
         "icon": "https://tableconvert.com/images/favicon.png",
         "content":{
-            "url": "https://tableconvert.com/",
+            "url": "https://tableconvert.com/zh-cn/",
             "size": [1200, 950]
         },
         "link": "https://tableconvert.com/",
@@ -94,7 +94,7 @@ programmer_list = [
         "category": "Browser",
         "type": "程序员",
         "title": "SpringBoot初始化",
-        "des": "构建一个基础的SpringBoot项目",
+        "des": "构建初始SpringBoot",
         "icon": "https://start.aliyun.com/images/aliyun-icon.png",
         "content":{
             "url": "https://start.aliyun.com/bootstrap.html",

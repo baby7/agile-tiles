@@ -2,7 +2,7 @@ import math
 
 from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QHBoxLayout, QFileDialog, QApplication
 from PySide6.QtGui import QPainter, QColor, QPen, QGuiApplication, QPixmap, QFont
-from PySide6.QtCore import Qt, QRect, QPoint, Signal
+from PySide6.QtCore import Qt, QRect, QPoint, Signal, QSize
 
 from src.ui import style_util
 
@@ -60,6 +60,16 @@ def grab_screens():
         painter.drawPixmap(target_rect, pix)
     painter.end()
     return result, virtual_geo
+
+# def pixmap_device_pixel_ratio_change(pixmap: QPixmap):
+#     width = int(pixmap.width() / pixmap.devicePixelRatio())
+#     height = int(pixmap.height() / pixmap.devicePixelRatio())
+#     result = QPixmap(QSize(width, height))
+#     result.fill(Qt.GlobalColor.transparent)
+#     painter = QPainter(result)
+#     painter.drawPixmap(QPoint(0, 0), pixmap)
+#     return result
+
 
 
 class Rectangle:
@@ -447,6 +457,9 @@ class ScreenshotWidget(QWidget):
         self.see_btn = QPushButton("", self.toolbar)
         self.see_btn.setToolTip("查看截图")
         style_util.set_card_button_style(self.see_btn, "Base/preview-open", is_dark=False)
+        self.top_btn = QPushButton("", self.toolbar)
+        self.top_btn.setToolTip("置顶/钉住")
+        style_util.set_card_button_style(self.top_btn, "Edit/pin", is_dark=False)
         self.copy_btn = QPushButton("", self.toolbar)
         self.copy_btn.setToolTip("复制截图到剪贴板")
         style_util.set_card_button_style(self.copy_btn, "Edit/copy", is_dark=False)
@@ -464,6 +477,7 @@ class ScreenshotWidget(QWidget):
         self.ocr_btn.clicked.connect(self.ocr_screenshot)
         self.save_btn.clicked.connect(self.save_screenshot)
         self.see_btn.clicked.connect(self.see_screenshot)
+        self.top_btn.clicked.connect(self.see_top_screenshot)
         self.copy_btn.clicked.connect(self.copy_screenshot)
         self.close_btn.clicked.connect(self.close_screenshot)
 
@@ -474,6 +488,7 @@ class ScreenshotWidget(QWidget):
         self.ocr_btn.installEventFilter(self)
         self.save_btn.installEventFilter(self)
         self.see_btn.installEventFilter(self)
+        self.top_btn.installEventFilter(self)
         self.copy_btn.installEventFilter(self)
         self.rect_btn.installEventFilter(self)
         self.ellipse_btn.installEventFilter(self)
@@ -495,6 +510,7 @@ class ScreenshotWidget(QWidget):
         toolbar_layout.addWidget(self.ocr_btn)
         toolbar_layout.addWidget(self.save_btn)
         toolbar_layout.addWidget(self.see_btn)
+        toolbar_layout.addWidget(self.top_btn)
         toolbar_layout.addWidget(self.copy_btn)
         toolbar_layout.addWidget(self.close_btn)
         toolbar_layout.setContentsMargins(5, 5, 5, 5)
@@ -1310,15 +1326,26 @@ class ScreenshotWidget(QWidget):
 
     def see_screenshot(self):
         """查看截图"""
-        self.main_object.start_image_show(self.captured_pixmap)
+        self.main_object.start_image_show(self.get_end_captured_pixmap())
+        self.close_trigger("")
+
+    def see_top_screenshot(self):
+        """查看置顶"""
+        self.main_object.start_top_image_show(self.get_end_captured_pixmap())
         self.close_trigger("")
 
     def copy_screenshot(self):
         """复制截图到剪贴板"""
+        # 获取绘制后的截图
+        temp_pixmap = self.get_end_captured_pixmap()
+        # 将图片复制到剪贴板
+        QApplication.clipboard().setPixmap(temp_pixmap)
+        self.close_trigger("")
+
+    def get_end_captured_pixmap(self):
         # 创建一个临时副本，用于绘制图形
         temp_pixmap = self.captured_pixmap.copy()
         painter = QPainter(temp_pixmap)
-
         # 将所有图形绘制到截图上
         for shape in self.shapes:
             # 将屏幕坐标转换为截图内的相对坐标
@@ -1364,9 +1391,7 @@ class ScreenshotWidget(QWidget):
                 self.draw_arrow(painter, relative_start, relative_end, shape.pen)
 
         painter.end()
-
-        QApplication.clipboard().setPixmap(temp_pixmap)
-        self.close_trigger("")
+        return temp_pixmap
 
     def close_screenshot(self):
         """关闭"""

@@ -10,6 +10,7 @@
         <file alias="static/img/IconPark/dark/Arrows/right-one.png">resources/img/IconPark/dark/Arrows/right-one.png</file>
         <file alias="static/img/IconPark/dark/Character/check-one.png">resources/img/IconPark/dark/Character/check-one.png</file>
         <file alias="static/img/IconPark/dark/Graphics/round.png">resources/img/IconPark/dark/Graphics/round.png</file>
+        <file alias="static/img/IconPark/dark/Edit/radio-two.png">resources/img/IconPark/dark/Edit/radio-two.png</file>
         <file alias="static/img/IconPark/gif/loading.gif">resources/img/IconPark/gif/loading.gif</file>
         <file alias="static/img/IconPark/green/Character/check-one.png">resources/img/IconPark/green/Character/check-one.png</file>
         <file alias="static/img/IconPark/grey/close-one.png">resources/img/IconPark/grey/close-one.png</file>
@@ -31,6 +32,7 @@
         <file alias="static/img/IconPark/light/Arrows/right-one.png">resources/img/IconPark/light/Arrows/right-one.png</file>
         <file alias="static/img/IconPark/light/Character/check-one.png">resources/img/IconPark/light/Character/check-one.png</file>
         <file alias="static/img/IconPark/light/Graphics/round.png">resources/img/IconPark/light/Graphics/round.png</file>
+        <file alias="static/img/IconPark/light/Edit/radio-two.png">resources/img/IconPark/light/Edit/radio-two.png</file>
         <file alias="static/img/IconPark/png/Actor/2048.png">resources/img/IconPark/png/Actor/2048.png</file>
         <file alias="static/img/IconPark/png/Actor/ADR.png">resources/img/IconPark/png/Actor/ADR.png</file>
         <file alias="static/img/IconPark/png/Actor/ASCIIFlow.png">resources/img/IconPark/png/Actor/ASCIIFlow.png</file>
