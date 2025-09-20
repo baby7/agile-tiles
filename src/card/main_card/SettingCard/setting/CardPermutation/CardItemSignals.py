@@ -53,7 +53,7 @@ class CardDesignItem(QGraphicsRectItem, QObject):
         self.label.setScaledContents(True)
 
         # 设置样式
-        style = "border-radius: 10px; border: 1px solid %s; background-color: transparent;"
+        style = "border-radius: 12px; border: 1px solid %s; background-color: transparent;"
         border_color = "rgba(38, 41, 52, 170)" if is_dark else "rgba(255, 255, 255, 170)"
         self.label.setStyleSheet(style % border_color)
 

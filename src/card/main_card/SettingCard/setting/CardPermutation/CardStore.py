@@ -320,7 +320,7 @@ class CardStore(QtWidgets.QWidget):
         widget.setStyleSheet(f"""
             background-color: rgba({'255, 255, 255, 20' if self.is_dark else '255, 255, 255, 160'});
             border: 1px solid rgba({'255, 255, 255, 50' if self.is_dark else '0, 0, 0, 50'});
-            border-radius: 10px;
+            border-radius: 12px;
         """)
         widget.card_data = card_data
 
@@ -404,8 +404,10 @@ class CardStore(QtWidgets.QWidget):
         widget.img_label = QtWidgets.QLabel()  # 中间的卡片图片
         widget.img_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         widget.img_label.setFixedSize(image_height, image_height)
-        widget.img_label.setStyleSheet(
-            f"background: transparent; border: 1px solid rgba({'255, 255, 255, 50' if self.is_dark else '0, 0, 0, 50'});")
+        if self.is_dark:
+            widget.img_label.setStyleSheet("border-radius: 12px; background: transparent; border: 1px solid rgba(255, 255, 255, 50);")
+        else:
+            widget.img_label.setStyleSheet("border-radius: 12px; background: transparent; border: 1px solid rgba(0, 0, 0, 50);")
         widget.img_label.setScaledContents(True)
         image_layout.addWidget(widget.img_label)
         image_layout.addStretch()

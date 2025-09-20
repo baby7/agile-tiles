@@ -2,7 +2,7 @@ import copy
 from functools import partial
 
 from PySide6 import QtGui, QtCore
-from PySide6.QtCore import QObject, Qt, QSize, QRect
+from PySide6.QtCore import QObject, Qt, QSize, QRect, QTimer
 from PySide6.QtGui import QIcon, QFont, QCursor, QAction
 from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QScrollArea, QFrame, QMenu, \
     QToolButton
@@ -144,14 +144,19 @@ class MainCardManager(QObject):
         """
         self.main_object.main_card_list = []
         # 初始化区域
+        # print(f'__主卡片初始化区域开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.init_area()
         # 初始化顶部导航栏部分
+        # print(f'__主卡片初始化导航栏开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.init_header()
         # 菜单位置
+        # print(f'__主卡片初始化区域开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.menu_position = self.main_object.form_menu_locate
         # 初始化菜单部分
+        # print(f'__主卡片初始化菜单开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.init_menu_bg_and_slider()
         # 设置菜单样式
+        # print(f'__主卡片初始化菜单样式开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.menu_button_map = {
             "user": [self.main_object.push_button_user, "Peoples/people", self.main_object.user_area, "用户管理"],
             "setting": [self.main_object.push_button_setting, "Base/setting-two", self.main_object.setting_area, "设置"],
@@ -169,14 +174,19 @@ class MainCardManager(QObject):
             "game": [self.main_object.push_button_game, "Travel/planet", self.main_object.game_area, "更多"],
         }
         # 初始化卡片位置数据
+        # print(f'__主卡片初始化卡片位置开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.init_geometry_data(card_data)
         # 初始化主题
+        # print(f'__主卡片初始化主题开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.set_theme()
         # 初始化主卡片区域中的菜单区域
+        # print(f'__主卡片初始化菜单区域开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.init_menu()
         # 初始化主卡片区域中的主区域
+        # print(f'__主卡片初始化主区域开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.init_main_card()
         # 初始化菜单
+        # print(f'__主卡片初始化菜单开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.show_change(is_init=True)
 
     def init_area(self):
@@ -295,8 +305,10 @@ class MainCardManager(QObject):
                 break
         # 获取卡片数据
         for card_data_index in range(len(self.main_object.main_data["bigCard"])):
+            # 获取卡片数据
             card_data = self.main_object.main_data["bigCard"][card_data_index]
             card_area = None
+            # print(f'__主卡片初始化对应主卡片 {card_data["name"]} 创建时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
             # 初始化数据
             if card_data["name"] in self.main_object.main_data["data"]:
                 long_time_data = self.main_object.main_data["data"][card_data["name"]]
@@ -392,6 +404,7 @@ class MainCardManager(QObject):
             card_area.hide()
         # 卡片初始化
         for card in self.main_object.main_card_list:
+            # print(f'__主卡片初始化对应主卡片 {card.name} 初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
             card.init_ui()
             if self.main_object.is_dark:
                 card.card.setStyleSheet(self.main_object.toolkit.style_util.card_dark_style)
@@ -399,6 +412,7 @@ class MainCardManager(QObject):
             else:
                 card.card.setStyleSheet(self.main_object.toolkit.style_util.card_style)
                 style_util.remove_card_shadow_effect(card.card)     # 移除外部阴影效果
+            # print(f'__主卡片初始化对应主卡片 {card.name} 初始化结束时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
 
     def save_card_data_func(self, trigger_type=data_save_constant.TRIGGER_TYPE_CARD_UPDATE, need_upload=True, in_data=None,
                             data_type=data_save_constant.DATA_TYPE_ENDURING, card_name=None):
@@ -662,7 +676,7 @@ class MainCardManager(QObject):
         self.set_header_button_theme()
 
     def init_header(self):
-        if hasattr(self.main_object, "widget_header"):
+        if hasattr(self.main_object, "widget_header") and self.main_object.widget_header is not None:
             self.main_object.widget_header.show()
             return
         # 导航栏
@@ -887,6 +901,9 @@ class MainCardManager(QObject):
     # 设置卡片排列
     def push_button_setting_card_permutation_click(self):
         self.main_object.toolkit.resolution_util.out_animation(self.main_object)
+        QTimer.singleShot(100, self.show_card_permutation_win)
+
+    def show_card_permutation_win(self):
         setting_card = None
         for card in self.main_object.main_card_list:
             if card.name == "SettingCard":
@@ -894,14 +911,13 @@ class MainCardManager(QObject):
         user_card_list = copy.deepcopy(self.main_object.main_data["card"])
         main_config = copy.deepcopy(self.main_object.main_data)
         self.main_object.card_permutation_win = CardPermutationWindow(setting_card, self.main_object, user_card_list, main_config)
-        # self.card_permutation_win.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
         self.main_object.card_permutation_win.show()
 
     def click_header_title_button(self):
         browser_util.open_url(common.index_url)
 
     def init_menu_bg_and_slider(self):
-        if hasattr(self.main_object, "label_menu"):
+        if hasattr(self.main_object, "label_menu") and self.main_object.label_menu is not None:
             self.main_object.label_menu.show()
             self.main_object.label_current_menu.show()
             self.main_object.label_menu_background.show()

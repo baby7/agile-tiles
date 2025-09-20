@@ -3,7 +3,7 @@ import qrcode
 import socket
 import traceback
 from io import BytesIO
-from PySide6.QtCore import Qt, QThread, QRect
+from PySide6.QtCore import Qt, QThread, QRect, QTimer
 from PySide6.QtGui import QFont, QPixmap
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit,
                                QListWidget, QListWidgetItem, QFileDialog, QTabWidget, QFrame, QApplication, QSpinBox)
@@ -277,7 +277,7 @@ class IpnCard(MainCard):
         self.port_edit.textChanged.connect(self.update_link_display)
 
         # 初始化链接显示和二维码
-        self.update_link_display()
+        QTimer.singleShot(100, self.update_link_display)
 
         layout.addWidget(self.service_frame)
 
@@ -312,7 +312,7 @@ class IpnCard(MainCard):
 
         # 文件列表
         self.file_list = QListWidget()
-        self.refresh_file_list()
+        QTimer.singleShot(100, self.refresh_file_list)
         file_layout.addWidget(self.file_list)
 
         # 文本管理标签
@@ -336,7 +336,7 @@ class IpnCard(MainCard):
 
         # 文本列表
         self.text_list = QListWidget()
-        self.refresh_text_list()
+        QTimer.singleShot(100, self.refresh_text_list)
         text_layout.addWidget(self.text_list)
 
         # 添加标签页

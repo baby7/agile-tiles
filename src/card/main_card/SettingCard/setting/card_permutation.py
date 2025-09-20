@@ -61,7 +61,7 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
             }""")
             widget_style = """
             QWidget {
-                border-radius: 10px;
+                border-radius: 12px;
                 border: none;
                 background-color: rgba(255, 255, 255, 25);
             }"""
@@ -70,7 +70,7 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
             self.widget_menu_store.setStyleSheet(widget_style)
             button_bg_style = """
             QWidget {`
-                border-radius: 10px;
+                border-radius: 12px;
                 border: 1px solid black;
                 background-color:rgba(0, 0, 0, 200);
             }"""

@@ -6,7 +6,7 @@ import sys
 from PySide6.QtGui import QCursor
 
 from src.card.MainCardManager.MainCard import MainCard
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QApplication
 
 from src.card.main_card.SettingCard.setting.card_permutation import CardPermutationWindow
@@ -172,10 +172,12 @@ class SettingCard(MainCard):
     # 设置卡片排列
     def push_button_setting_card_permutation_click(self):
         self.toolkit.resolution_util.out_animation(self.main_object)
+        QTimer.singleShot(100, self.show_card_permutation_win)
+
+    def show_card_permutation_win(self):
         user_card_list = copy.deepcopy(self.main_object.main_data["card"])
         main_config = copy.deepcopy(self.main_object.main_data)
         self.card_permutation_win = CardPermutationWindow(self, self.main_object, user_card_list, main_config)
-        # self.card_permutation_win.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
         self.card_permutation_win.show()
 
     def save_card_data(self, card, data):

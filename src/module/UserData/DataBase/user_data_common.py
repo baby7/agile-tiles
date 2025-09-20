@@ -64,61 +64,61 @@ DEFAULT_DATA_MODEL = {
     "timestamp": 1716426823229,
     "card": [
         {
-            "name": "LcdClockCard",
+            "name": "FlipClockCard",
+            "size": "2_1",
+            "data": {},
             "x": 1,
             "y": 1,
-            "size": "2_1",
-            "data": {}
-        },
-        {
-            "name": "DrinkingCard",
-            "x": 3,
-            "y": 4,
-            "size": "2_2",
-            "data": {}
-        },
-        {
-            "name": "WorkdayCard",
-            "x": 5,
-            "y": 4,
-            "size": "2_2",
-            "data": {}
-        },
-        {
-            "size": "6_8",
-            "data": {},
-            "name": "MainCard",
-            "x": 1,
-            "y": 6
-        },
-        {
-            "name": "WeatherCard",
-            "data": {},
-            "size": "4_2",
-            "x": 3,
-            "y": 2
-        },
-        {
-            "name": "CalendarCard",
-            "data": {},
-            "size": "2_2",
-            "x": 1,
-            "y": 2
         },
         {
             "name": "SearchCard",
             "data": {},
             "size": "4_1",
             "x": 3,
-            "y": 1
+            "y": 1,
         },
         {
-            "name": "WoodenFishCard",
+            "name": "DateCard",
             "data": {},
             "size": "2_2",
             "x": 1,
-            "y": 4
-        }
+            "y": 2,
+        },
+        {
+            "name": "WeatherCard",
+            "data": {},
+            "size": "4_2",
+            "x": 3,
+            "y": 2,
+        },
+        {
+            "name": "ComputerMonitorCard",
+            "data": {},
+            "size": "2_2",
+            "x": 1,
+            "y": 4,
+        },
+        {
+            "name": "WoodenFishCard",
+            "size": "2_2",
+            "data": {},
+            "x": 3,
+            "y": 4,
+        },
+        {
+            "name": "DrinkingCard",
+            "data": {},
+            "size": "2_2",
+            "x": 5,
+            "y": 4,
+        },
+        {
+            "size": "6_8",
+            "data": {},
+            "name": "MainCard",
+            "x": 1,
+            "y": 6,
+        },
     ],
     "bigCard": [],
     "data": {}
@@ -127,25 +127,60 @@ DEFAULT_MINI_DATA_MODEL = {
     "timestamp": 1716426823229,
     "card": [
         {
-            "name": "LcdClockCard",
+            "name": "DateCard",
+            "data": {},
+            "size": "2_1",
             "x": 1,
             "y": 1,
+        },
+        {
+            "name": "FlipClockCard",
+            "data": {},
             "size": "2_1",
-            "data": {}
+            "x": 3,
+            "y": 1,
+        },
+        {
+            "name": "SearchCard",
+            "data": {},
+            "size": "4_1",
+            "x": 1,
+            "y": 2,
+        },
+        {
+            "name": "WeatherCard",
+            "data": {},
+            "size": "4_2",
+            "x": 1,
+            "y": 3,
         },
         {
             "name": "DrinkingCard",
+            "data": {},
+            "size": "2_2",
             "x": 1,
             "y": 5,
-            "size": "2_2",
-            "data": {}
         },
         {
-            "name": "WorkdayCard",
+            "name": "WoodenFishCard",
+            "data": {},
+            "size": "2_2",
+            "x": 3,
+            "y": 5,
+        },
+        {
+            "name": "ComputerMonitorCard",
+            "data": {},
+            "size": "2_2",
+            "x": 1,
+            "y": 7
+        },
+        {
+            "name": "TimeProgressCard",
+            "data": {},
+            "size": "2_2",
             "x": 3,
             "y": 7,
-            "size": "2_2",
-            "data": {}
         },
         {
             "size": "6_8",
@@ -154,41 +189,6 @@ DEFAULT_MINI_DATA_MODEL = {
             "x": 5,
             "y": 1
         },
-        {
-            "name": "WeatherCard",
-            "data": {},
-            "size": "4_2",
-            "x": 1,
-            "y": 3
-        },
-        {
-            "name": "CalendarCard",
-            "data": {},
-            "size": "2_2",
-            "x": 3,
-            "y": 1
-        },
-        {
-            "name": "WoodenFishCard",
-            "data": {},
-            "size": "2_2",
-            "x": 3,
-            "y": 5
-        },
-        {
-            "data": {},
-            "name": "CountdownDayCard",
-            "size": "2_2",
-            "x": 1,
-            "y": 7
-        },
-        {
-            "data": {},
-            "name": "SearchCard",
-            "size": "2_1",
-            "x": 1,
-            "y": 2
-        }
     ],
     "bigCard": [],
     "data": {}

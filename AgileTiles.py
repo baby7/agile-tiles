@@ -5,8 +5,7 @@ import json
 import os, sys
 import subprocess
 import time, datetime
-
-from src.component.TopImageAcrylicWindow import TopImageAcrylicWindow
+# print(f'__启动时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
 
 print("_基础包加载完成")
 # 资源包
@@ -36,7 +35,7 @@ print("_日志和调试分析包加载完成")
 from ctypes.wintypes import MSG
 print("_热键监听包加载完成")
 # 基础界面框架
-from PySide6.QtGui import QPixmap
+from PySide6.QtGui import QPixmap, QFont
 from PySide6.QtCore import QEvent, Qt, qInstallMessageHandler, QSettings, Signal, QEventLoop, Q_ARG, Slot, \
     QMetaObject, QTimer, QStandardPaths
 from PySide6.QtWidgets import QApplication, QSystemTrayIcon
@@ -55,6 +54,7 @@ from src.component.MainAcrylicWindow.MainAcrylicWindow import MainAcrylicWindow
 from src.component.ImageCacheManager.ImageCacheManager import ImageCacheManager
 from src.component.Neumorphism import QtWidgets, QtGui
 from src.component.GlobalHotkeyManager import GlobalHotkeyManager
+from src.component.TopImageAcrylicWindow import TopImageAcrylicWindow
 print("_窗口工具包加载完成")
 # 模块
 from src.module import init_module, dialog_module
@@ -94,6 +94,7 @@ def qt_message_handler(mode, context, message):
 qInstallMessageHandler(qt_message_handler)
 print("_捕获Qt的日志完成")
 
+# print(f'__包加载完成时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
 
 # 主窗口
 class AgileTilesForm(MainAcrylicWindow, Ui_Form):
@@ -129,6 +130,10 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
     theme_idempotence = False       # 主题幂等控制
     is_show = False
     form_animation_time = 200
+    # 控件
+    widget_header = None            # 顶部导航栏
+    label_menu = None               # 菜单栏
+    label_current_menu = None       # 菜单指示条
     # 主题信息
     form_theme = None
     form_theme_mode = None
@@ -191,6 +196,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
     def __init__(self):
         super(AgileTilesForm, self).__init__()
         # **************** 基本初始化 ****************
+        # print(f'__窗口初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         # 窗口置顶
         self.setWindowFlag(Qt.WindowType.ToolTip)
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint)
@@ -206,6 +212,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         self.network_disk_cache.setCacheDirectory(QStandardPaths.writableLocation(QStandardPaths.CacheLocation))
         self.network_disk_cache.setMaximumCacheSize(100 * 1024 * 1024)    # 设置缓存大小（单位：字节） 例如 100 MB
         # ***************** 更新检测 *****************
+        # print(f'__更新检测开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         # 创建本地事件循环
         update_loop = QEventLoop()
         # 数据加载完成信号
@@ -219,6 +226,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             self.quit_before(is_hide_dialog=True)
             exit()
         # ***************** 登录检测 *****************
+        # print(f'__登录检测开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         # 创建本地事件循环
         login_loop = QEventLoop()
         # 数据加载完成信号
@@ -228,6 +236,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         # 阻塞等待数据就绪
         login_loop.exec()
         # ***************** 卡片检测 *****************
+        # print(f'__卡片检测开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         # 创建本地事件循环
         card_loop = QEventLoop()
         # 数据加载完成信号
@@ -237,8 +246,10 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         # 阻塞等待数据就绪
         card_loop.exec()
         # **************** 后续初始化 ****************
+        # print(f'__后续初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         # 同步初始化UI
         self.atomic_init()
+        # print(f'__窗口初始化结束时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
 
     def init(self):
         print(f"用户状态:{self.user_data_status}")
@@ -251,39 +262,97 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
 
     def atomic_init(self):
         # 初始化分辨率参数、位置和大小
-        screen_module.init_resolution(self)
+        # print(f'__分辨率初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        screen_module.init_resolution(self, out_animation_tag=False)
         # 初始化主题
+        # print(f'__主题初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         theme_module.init_theme(self)
+        # 显示加载中窗口
+        # print(f'__显示加载中窗口开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        self.show_load_window()
         # 其余初始化
+        # print(f'__其余初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         init_module.init_module(self)
         # 初始化样式
+        # print(f'__样式初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         init_module.init_style(self)
         # 初始化模块
+        # print(f'__模块初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         user_module.init_module(self)
         # 卡片
+        # print(f'__卡片初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.init_card()
+        # 透明窗口和隐藏任务栏图标(使用QTimer延迟执行避免阻塞)
+        # print(f'__透明窗口初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        self.refresh_window_show()
         # 初始化所有请求对象
+        # print(f'__请求初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.init_all_client()
         # 线程
+        # print(f'__线程初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.start_thread_list()
-        # 透明窗口和隐藏任务栏图标
-        self.refresh_window_show()
         # 初始化鼠标检测窗口
-        screen_module.init_mouse_detect_window(self)
+        # print(f'__鼠标检测初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        QTimer.singleShot(100, lambda : screen_module.init_mouse_detect_window(self))
         # 初始化主题
+        # print(f'__主题设置开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         init_module.set_theme(self, is_main=True)
         # 初始化弹窗
+        # print(f'__弹窗初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         dialog_module.set_dialog(self)
         # 首次启动时，显示引导程序
+        # print(f'__引导程序初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.check_first_run()
         # 更新状态
         self.is_first = False
         # 启动时，先执行一次定时任务
+        # print(f'__定时任务初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.time_task()
         # 设置字体
+        # print(f'__字体初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         style_util.set_font_and_right_click_style(self, self)
-        # 调整主卡片菜单位置
+        # 退出动画
+        # print(f'__退出动画开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        QTimer.singleShot(100, lambda : self.toolkit.resolution_util.out_animation(self))
+        # 隐藏加载中窗口
+        # print(f'__隐藏加载中窗口开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        self.hide_load_window()
+
+    def show_load_window(self):
+        # 显示窗口
+        self.show()
+        # 显示加载中窗口
+        font = QFont()
+        font.setPointSize(16)
+        self.label_background.setFont(font)
+        self.label_background.setAlignment(Qt.AlignCenter)
+        if self.is_dark:
+            self.label_background.setStyleSheet("background-color: rgb(24, 24, 24); color: rgb(255, 255, 255)")
+        else:
+            self.label_background.setStyleSheet("background-color: rgb(200, 200, 200); color: rgb(0, 0, 0)")
+        self.label_background.setText(f"{self.app_title}启动中...")
+        self.label_background.resize(self.width(), self.height())
+        self.label_background.show()
+        self.label_background.raise_()
+
+    def hide_load_window(self):
+        self.label_background.setText("")
+        self.label_background.show()
+        self.label_background.lower()
+        self.widget_base.show()
+        self.widget_base.raise_()
+        # 顶部导航条显示
+        self.widget_header.show()
+        # 菜单栏显示
+        self.label_menu.show()
+        # 小卡片管理显示
+        self.normal_card_manager.show()
+        # 菜单按钮指示显示
+        self.label_current_menu.show()
+        # 设置菜单按钮指示位置
         self.main_card_manager.change_menu_indicate_location()
+        # 弹窗
+        self.widget_dialog_base.raise_()
 
     ''' **********************************数据管理*************************************** '''
     def load_data(self):
@@ -1124,12 +1193,16 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
     ''' **********************************卡片管理*************************************** '''
     def init_card(self):
         # 主卡片管理
-        if self.normal_card_manager is None:
+        if self.main_card_manager is None:
+            # print(f'__主卡片创建开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
             self.main_card_manager = MainCardManager(self)
+        # print(f'__主卡片初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.main_card_manager.init(self.main_data["card"])
         # 卡片管理
         if self.normal_card_manager is None:
+            # print(f'__小卡片创建开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
             self.normal_card_manager = NormalCardManager(self.widget_base, self)
+        # print(f'__小卡片初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.normal_card_manager.set_card_map_list(self.main_data["card"], self.main_data["data"],
                                             self.toolkit, self.info_logger, self.local_trigger_data_update)
 

@@ -350,16 +350,10 @@ class BookCard(MainCard):
         self.text_push_button_setting_font_size_minus.clicked.connect(self.font_size_minus)
         self.text_push_button_setting_font_size_add.clicked.connect(self.font_size_add)
         # 初始化书籍信息
-        self.init_book_info()
+        QtCore.QTimer.singleShot(100, self.init_book_info)
+        # self.init_book_info()
         # 初始化设置信息
         self.init_setting_info()
-        # 添加延迟确保布局完成(临时方案)
-        QtCore.QTimer.singleShot(1000, self.update_scrollbar_range)
-        QtCore.QTimer.singleShot(3000, self.update_scrollbar_range)
-        QtCore.QTimer.singleShot(5000, self.update_scrollbar_range)
-        QtCore.QTimer.singleShot(7000, self.update_scrollbar_range)
-        QtCore.QTimer.singleShot(10000, self.update_scrollbar_range)
-        QtCore.QTimer.singleShot(15000, self.update_scrollbar_range)
 
     def refresh_data(self, date_time_str):
         super().refresh_data(date_time_str)
@@ -398,6 +392,13 @@ class BookCard(MainCard):
         self.text_label_setting_font_size_minus.setText(self.font_size)
         self.text_interval_combo_box.setCurrentText(self.line_spacing)
         self.text_setting_edit_filtration.setPlainText(self.text_filtration)
+        # 添加延迟确保布局完成(临时方案)
+        QtCore.QTimer.singleShot(1000, self.update_scrollbar_range)
+        QtCore.QTimer.singleShot(3000, self.update_scrollbar_range)
+        QtCore.QTimer.singleShot(5000, self.update_scrollbar_range)
+        QtCore.QTimer.singleShot(7000, self.update_scrollbar_range)
+        QtCore.QTimer.singleShot(10000, self.update_scrollbar_range)
+        QtCore.QTimer.singleShot(15000, self.update_scrollbar_range)
 
     # 保存设置
     def save_info(self):
