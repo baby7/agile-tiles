@@ -1425,6 +1425,11 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 pass
         self.color_converter_dialog = color_converter_util.show_color_converter_dialog(self, "颜色转换器", initial_color=color)
 
+    def cancel_color_picker(self):
+        """取消屏幕取色"""
+        self.show_overlay_status = False
+        self.show()
+
     def screenshot_captured_to_translate(self, pixmap):
         """截图完成进行翻译"""
         self.show_overlay_status = False

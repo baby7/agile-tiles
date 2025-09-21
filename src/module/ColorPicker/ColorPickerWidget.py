@@ -182,12 +182,17 @@ class ScreenColorPicker(QWidget):
             # 对于非左键事件，调用父类处理
             super().mousePressEvent(event)
 
+    def close_trigger(self, text=None):
+        try:
+            self.main_object.cancel_color_picker()
+        except Exception:
+            pass
+        try:
+            self.close()
+        except Exception:
+            pass
+
     def keyPressEvent(self, event):
         """键盘事件处理"""
         if event.key() == Qt.Key.Key_Escape:
-            self.close()
-            # 明确接受事件，防止继续传递
-            event.accept()
-        else:
-            # 对于非左键事件，调用父类处理
-            super().keyPressEvent(event)
+            self.close_trigger()
