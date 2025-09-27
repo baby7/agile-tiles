@@ -834,14 +834,14 @@ def set_combo_box_style(combo_box, is_dark=False):
 '''
 tab_widget_style = """
 QWidget {
-    background:transparent
+    background: transparent;
 }
 QTabWidget::pane {
     margin: 10px;
-    background: rgba(255, 255, 255, 150);
+    background: transparent;
     color: rgb(0, 0, 0);
-    border: none;
-    border-radius: 10px;
+    border-radius: 12px;
+    border: 1px solid white;
 }
 QTabBar::tab {
     height:24px; 
@@ -870,7 +870,7 @@ QTabWidget::pane {
     background: rgba(0, 0, 0, 150);
     color: rgb(255, 255, 255);
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
 }
 QTabBar::tab {
     height:24px; 

@@ -382,6 +382,10 @@ class TodoCard(MainCard):
         self.save_data_func(in_data=self.data, card_name=self.name, data_type=data_save_constant.DATA_TYPE_ENDURING)
 
     def add_todo_type_clicked(self):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         # 限制分类数量
         if len(self.todo_type_list) >= self.Max_Todo_Type_Count:
             dialog_module.box_information(self.main_object, "提示", f"待办事项分类数量已达到上限，不能超过{self.Max_Todo_Type_Count}个！")
@@ -428,6 +432,10 @@ class TodoCard(MainCard):
         self.stacked_widget.setCurrentIndex(0)
 
     def remove_todo_type_clicked(self, todo_type):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         if not dialog_module.box_acknowledgement(self.main_object, "注意",
                                             f"确定要删除 {todo_type} 分类吗？这将删除该分类下的所有待办事项！"):
             return

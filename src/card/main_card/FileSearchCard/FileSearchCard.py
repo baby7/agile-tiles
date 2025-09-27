@@ -223,10 +223,12 @@ class FileSearchCard(MainCard):
 
         # 创建堆叠窗口
         self.stacked_widget = QStackedWidget(self.card)
+        self.stacked_widget.setStyleSheet("background-color: transparent; border: none;")
         self.stacked_widget.setGeometry(QRect(0, 0, self.card.width(), self.card.height()))
 
         # 创建主界面
         self.main_widget = QWidget()
+        self.main_widget.setStyleSheet("background-color: transparent; border: none;")
         self.init_main_ui()
         self.stacked_widget.addWidget(self.main_widget)
 
@@ -667,7 +669,7 @@ class FileSearchCard(MainCard):
                 QTextBrowser {
                     border: 1px solid #ccc;
                     border-radius: 4px;
-                    background-color: white;
+                    background-color: transparent;
                 }
             """ + style_util.scroll_bar_style)
             self.label_ready_status.setStyleSheet("background: transparent;")
@@ -680,7 +682,7 @@ class FileSearchCard(MainCard):
                 QTextBrowser {
                     border: 1px solid #555;
                     border-radius: 4px;
-                    background-color: #333;
+                    background-color: transparent;
                     color: white;
                 }
             """ + style_util.scroll_bar_style)

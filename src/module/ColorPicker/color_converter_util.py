@@ -2,8 +2,8 @@ import math
 import re
 from PySide6.QtWidgets import (QWidget, QLabel, QVBoxLayout, QHBoxLayout,
                                QPushButton, QLineEdit, QFrame, QGroupBox, QApplication)
-from PySide6.QtGui import QPainter, QColor, QPolygon, QIcon
-from PySide6.QtCore import Qt, QRect, QPoint, Signal, QSettings
+from PySide6.QtGui import QPainter, QColor, QPolygonF, QIcon, QPolygonF, QPixmap
+from PySide6.QtCore import Qt, QRect, QPoint, Signal, QSettings, QPointF, QSize
 
 from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 from src.module.Box import message_box_util
@@ -11,7 +11,7 @@ from src.ui import style_util
 
 
 class ColorPickerWidget(QWidget):
-    """颜色选择器组件"""
+    """颜色选择器组件 - 高分辨率优化版本"""
     colorChanged = Signal(QColor)
 
     def __init__(self, parent=None):
@@ -20,75 +20,131 @@ class ColorPickerWidget(QWidget):
         self.hue = 0
         self.saturation = 255
         self.value = 255
-        self.alpha = 255  # 新增透明度属性
+        self.alpha = 255
         self.color = QColor.fromHsv(self.hue, self.saturation, self.value, self.alpha)
-        self.sectors = 180  # 将圆盘分成360个扇形
-        self.rings = 10  # 将圆盘分成100个同心圆环
+
+        # 每个圆环的扇形数量（从内到外）
+        self.ring_sectors = [10, 20, 30, 45, 60, 75, 90, 120, 150, 180]
+        self.rings = len(self.ring_sectors)
+
+        # 缓存相关变量
+        self.color_wheel_pixmap = None
+        self.pixmap_size = QSize(0, 0)
+        self.pixmap_dirty = True
+        self.scale_factor = 2  # 缩放因子，使用2倍大小绘制
+
+        # 设置背景为透明，避免重绘时闪烁
+        self.setAttribute(Qt.WA_OpaquePaintEvent, False)
 
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
 
-        # 绘制HSV颜色选择圆盘
-        center = self.rect().center()
-        radius = min(self.width(), self.height()) / 2 - 10
+        # 检查是否需要重新生成颜色圆盘缓存
+        current_size = self.size()
+        if (self.pixmap_dirty or
+                self.color_wheel_pixmap is None or
+                self.pixmap_size != current_size):
+            self.generate_color_wheel_pixmap(current_size)
+            self.pixmap_dirty = False
+            self.pixmap_size = current_size
+
+        # 绘制缓存的颜色圆盘（缩小到实际大小）
+        if self.color_wheel_pixmap:
+            # 使用平滑变换缩放图像
+            painter.setRenderHint(QPainter.SmoothPixmapTransform)
+            target_rect = QRect(0, 0, current_size.width(), current_size.height())
+            painter.drawPixmap(target_rect, self.color_wheel_pixmap)
+
+        # 绘制当前选择的颜色指示器（这部分需要动态绘制）
+        self.draw_color_indicator(painter)
+
+    def generate_color_wheel_pixmap(self, size):
+        """生成颜色圆盘的QPixmap缓存（使用2倍大小）"""
+        if size.width() <= 0 or size.height() <= 0:
+            return
+
+        # 创建2倍大小的pixmap
+        scaled_size = QSize(size.width() * self.scale_factor, size.height() * self.scale_factor)
+        self.color_wheel_pixmap = QPixmap(scaled_size)
+        self.color_wheel_pixmap.fill(Qt.transparent)
+
+        pixmap_painter = QPainter(self.color_wheel_pixmap)
+        pixmap_painter.setRenderHint(QPainter.Antialiasing)
+
+        # 在2倍大小的画布上绘制HSV颜色选择圆盘
+        center = QPoint(scaled_size.width() // 2, scaled_size.height() // 2)
+        radius = min(scaled_size.width(), scaled_size.height()) / 2 - 10 * self.scale_factor
 
         # 使用三角形填充圆盘，避免边缘空隙
         for ring in range(self.rings):
             inner_radius = radius * ring / self.rings
             outer_radius = radius * (ring + 1) / self.rings
 
-            for sector in range(self.sectors):
+            # 当前圆环的扇形数量
+            sectors = self.ring_sectors[ring]
+
+            for sector in range(sectors):
                 # 计算扇形的角度
-                angle1 = sector * 2 * math.pi / self.sectors
-                angle2 = (sector + 1) * 2 * math.pi / self.sectors
+                angle1 = sector * 2 * math.pi / sectors
+                angle2 = (sector + 1) * 2 * math.pi / sectors
 
                 # 确保最后一个扇形闭合到第一个扇形
-                if sector == self.sectors - 1:
+                if sector == sectors - 1:
                     angle2 = 2 * math.pi
 
-                # 计算三角形的四个顶点
-                x1 = center.x() + inner_radius * math.cos(angle1)
-                y1 = center.y() + inner_radius * math.sin(angle1)
+                overlap = 10  # 像素重叠
 
-                x2 = center.x() + outer_radius * math.cos(angle1)
-                y2 = center.y() + outer_radius * math.sin(angle1)
+                # 计算三角形的四个顶点（使用2倍坐标）
+                x1 = center.x() + inner_radius * math.cos(angle1) - overlap * math.cos(angle1)
+                y1 = center.y() + inner_radius * math.sin(angle1) - overlap * math.sin(angle1)
 
-                x3 = center.x() + outer_radius * math.cos(angle2)
-                y3 = center.y() + outer_radius * math.sin(angle2)
+                x2 = center.x() + outer_radius * math.cos(angle1) - overlap * math.cos(angle1)
+                y2 = center.y() + outer_radius * math.sin(angle1) - overlap * math.sin(angle1)
 
-                x4 = center.x() + inner_radius * math.cos(angle2)
-                y4 = center.y() + inner_radius * math.sin(angle2)
+                x3 = center.x() + outer_radius * math.cos(angle2) - overlap * math.cos(angle1)
+                y3 = center.y() + outer_radius * math.sin(angle2) - overlap * math.sin(angle1)
+
+                x4 = center.x() + inner_radius * math.cos(angle2) - overlap * math.cos(angle1)
+                y4 = center.y() + inner_radius * math.sin(angle2) - overlap * math.sin(angle1)
 
                 # 计算颜色 - 使用HSV颜色模型
-                hue = sector * 360 / self.sectors
+                hue = sector * 360 / sectors
                 saturation = (ring + 1) * 255 / self.rings
 
-                color = QColor.fromHsv(int(hue), int(saturation), 255, 255)  # 保持完全不透明
-                painter.setPen(Qt.NoPen)
-                painter.setBrush(color)
+                color = QColor.fromHsv(int(hue), int(saturation), 255, 255)
+                pixmap_painter.setPen(Qt.NoPen)
+                pixmap_painter.setBrush(color)
 
                 # 绘制两个三角形组成扇形
-                triangle1 = QPolygon([
-                    QPoint(round(x1), round(y1)),
-                    QPoint(round(x2), round(y2)),
-                    QPoint(round(x4), round(y4))
+                triangle1 = QPolygonF([
+                    QPointF(x1, y1),
+                    QPointF(x2, y2),
+                    QPointF(x4, y4)
                 ])
 
-                triangle2 = QPolygon([
-                    QPoint(round(x2), round(y2)),
-                    QPoint(round(x3), round(y3)),
-                    QPoint(round(x4), round(y4))
+                triangle2 = QPolygonF([
+                    QPointF(x2, y2),
+                    QPointF(x3, y3),
+                    QPointF(x4, y4)
                 ])
 
-                painter.drawPolygon(triangle1)
-                painter.drawPolygon(triangle2)
+                pixmap_painter.drawPolygon(triangle1)
+                pixmap_painter.drawPolygon(triangle2)
 
-        # 绘制当前选择的颜色指示器
+        pixmap_painter.end()
+
+    def draw_color_indicator(self, painter):
+        """绘制颜色指示器（动态部分）"""
+        center = self.rect().center()
+        radius = min(self.width(), self.height()) / 2 - 10
+
+        # 计算指示器位置
         angle = self.hue * math.pi / 180
         x = center.x() + radius * math.cos(angle) * (self.saturation / 255)
         y = center.y() + radius * math.sin(angle) * (self.saturation / 255)
 
+        # 绘制指示器
         painter.setPen(Qt.black)
         painter.setBrush(Qt.white)
         painter.drawEllipse(QPoint(round(x), round(y)), 5, 5)
@@ -114,13 +170,70 @@ class ColorPickerWidget(QWidget):
         max_distance = min(self.width(), self.height()) / 2 - 10
 
         # 更新HSV值
+        old_hue = self.hue
+        old_saturation = self.saturation
+
         self.hue = int(angle)
         self.saturation = min(255, int(255 * distance / max_distance))
 
-        # 更新颜色，保持原有透明度
-        self.color = QColor.fromHsv(self.hue, self.saturation, self.value, self.alpha)
-        self.colorChanged.emit(self.color)
-        self.update()
+        # 如果颜色有变化，才更新并发射信号
+        if old_hue != self.hue or old_saturation != self.saturation:
+            # 更新颜色，保持原有透明度
+            self.color = QColor.fromHsv(self.hue, self.saturation, self.value, self.alpha)
+            self.colorChanged.emit(self.color)
+
+            # 只更新需要重绘的区域（指示器移动的区域）
+            self.update()
+
+    def resizeEvent(self, event):
+        """窗口大小改变时重新生成缓存"""
+        super().resizeEvent(event)
+        self.pixmap_dirty = True
+
+    def set_hue(self, hue):
+        """设置色调"""
+        if 0 <= hue <= 360 and self.hue != hue:
+            self.hue = hue
+            self.color = QColor.fromHsv(self.hue, self.saturation, self.value, self.alpha)
+            self.colorChanged.emit(self.color)
+            self.update()
+
+    def set_saturation(self, saturation):
+        """设置饱和度"""
+        if 0 <= saturation <= 255 and self.saturation != saturation:
+            self.saturation = saturation
+            self.color = QColor.fromHsv(self.hue, self.saturation, self.value, self.alpha)
+            self.colorChanged.emit(self.color)
+            self.update()
+
+    def set_value(self, value):
+        """设置亮度"""
+        if 0 <= value <= 255 and self.value != value:
+            self.value = value
+            self.color = QColor.fromHsv(self.hue, self.saturation, self.value, self.alpha)
+            self.colorChanged.emit(self.color)
+            # 亮度改变不需要重绘圆盘，因为圆盘是固定亮度的
+            self.update()
+
+    def set_alpha(self, alpha):
+        """设置透明度"""
+        if 0 <= alpha <= 255 and self.alpha != alpha:
+            self.alpha = alpha
+            self.color = QColor.fromHsv(self.hue, self.saturation, self.value, self.alpha)
+            self.colorChanged.emit(self.color)
+            # 透明度改变不需要重绘圆盘
+            self.update()
+
+    def get_color(self):
+        """获取当前颜色"""
+        return self.color
+
+    def set_scale_factor(self, factor):
+        """设置缩放因子，可以动态调整分辨率"""
+        if factor > 0 and self.scale_factor != factor:
+            self.scale_factor = factor
+            self.pixmap_dirty = True
+            self.update()
 
 
 class HorizontalValueSlider(QWidget):

@@ -4,6 +4,7 @@ from PySide6 import QtCore
 from PySide6.QtCore import Qt, Signal, Property
 from PySide6.QtGui import QPainter, QPainterPath, QColor, QMouseEvent, QPaintEvent, QPen, QPixmap
 from PySide6.QtWidgets import QWidget, QApplication, QLabel, QGraphicsOpacityEffect
+from win32api import MonitorFromPoint, GetMonitorInfo
 
 from src.ui import style_util
 
@@ -20,7 +21,13 @@ class ThemeSwitchButton(QWidget):
         self.m_animation = True             # 动画开关
         self.m_space = 2                    # 间隔
         self.m_radius = 5                   # 滑块半径
-        self.m_borderWidth = 2.5            # 边框粗细
+        # 边框粗细
+        monitor_info = GetMonitorInfo(MonitorFromPoint((0, 0)))
+        monitor = monitor_info.get('Monitor')  # 屏幕分辨率
+        if monitor[2] > 2000:
+            self.m_borderWidth = 2.5
+        else:
+            self.m_borderWidth = 1.5
         self.BORDER_OFFSET = 1              # 防裁剪偏移量
         self.SLIDER_SIZE_OFFSET = 6         # 滑块尺寸补偿值
         self.SLIDER_POS_OFFSET = 1          # 滑块位置补偿值

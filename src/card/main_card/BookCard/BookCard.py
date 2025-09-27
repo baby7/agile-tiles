@@ -408,6 +408,10 @@ class BookCard(MainCard):
         self.save_data_func(in_data=self.data, card_name=self.name, data_type=data_save_constant.DATA_TYPE_ENDURING)
 
     def save_setting(self):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         self.font_size = self.text_label_setting_font_size_minus.text()
         self.line_spacing = self.text_interval_combo_box.currentText()
         self.text_filtration = self.text_setting_edit_filtration.toPlainText()
@@ -422,6 +426,10 @@ class BookCard(MainCard):
         dialog_module.box_information(self.main_object, "成功", "修改阅读设置成功")
 
     def push_button_book_select_click(self):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         # 弹出QFileDialog窗口。getOpenFileName()方法的第一个参数是说明文字，
         # 第二个参数是默认打开的文件夹路径。默认情况下显示所有类型的文件。
         if not self.current_file:

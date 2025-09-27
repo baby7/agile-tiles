@@ -143,7 +143,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
         QWidget {
             border-radius: 10px;
             border: 1px solid black;
-            background-color: rgba(255, 255, 255, 150);
+            background-color: transparent;
             padding-left: 5px;
         }
         """
@@ -151,7 +151,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
         QWidget {
             border-radius: 10px;
             border: 1px solid white;
-            background-color: rgb(0, 0, 0);
+            background-color: transparent;
             padding-left: 5px;
         }
         """
@@ -222,6 +222,9 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
         """
         登录
         """
+
+        # TODO 1.登录后保存到数据库然后重启程序   2.退出登录时也是弹出登录窗口   3.用户名可以下拉选择
+
         try:
             # 先进行输入校验
             if not self.validate_login_phone():
@@ -247,6 +250,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 显示加载层
             self.show_overlay("登录中...")
         except Exception as e:
+            traceback.print_exc()
             message_box_util.box_information(self, "错误信息", "登录失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
             self.hide_overlay()
 
@@ -272,23 +276,27 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             self.refresh_token = result["data"]["refreshToken"]
             # 存储用户信息
             self.use_parent.save_user(self.username, self.refresh_token)
-            # 登录成功后，保存用户数据直接给刷新后无法获取数据的逻辑中使用
-            self.use_parent.login_restart_data = result
-            # 非vip用户直接展示成功
-            if not self.is_vip:
-                # 隐藏加载层
-                message_box_util.box_information(self, "提示信息", "登录成功", close_seconds=2)
-                self.hide_overlay()
-                self.end_login_logic()
-            else:
-                self.user_data_status = "load_server_data"
-                current_user = self.use_parent.get_current_user()
-                self.use_parent.set_current_user(current_user)
-                # 对于vip用户，需要进行数据同步
-                self.start_user_data_client.pull_data(self.username, self.access_token)
-                # 显示加载层
-                self.show_overlay("vip用户数据同步中...")
+            # 存储后重启应用
+            self.use_parent.reboot()
+
+            # # 登录成功后，保存用户数据直接给刷新后无法获取数据的逻辑中使用
+            # self.use_parent.login_restart_data = result
+            # # 非vip用户直接展示成功
+            # if not self.is_vip:
+            #     # 隐藏加载层
+            #     message_box_util.box_information(self, "提示信息", "登录成功", close_seconds=2)
+            #     self.hide_overlay()
+            #     self.end_login_logic()
+            # else:
+            #     self.user_data_status = "load_server_data"
+            #     current_user = self.use_parent.get_current_user()
+            #     self.use_parent.set_current_user(current_user)
+            #     # 对于vip用户，需要进行数据同步
+            #     self.start_user_data_client.pull_data(self.username, self.access_token)
+            #     # 显示加载层
+            #     self.show_overlay("vip用户数据同步中...")
         except Exception as e:
+            traceback.print_exc()
             message_box_util.box_information(self, "错误信息", "登录失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
             self.hide_overlay()
 

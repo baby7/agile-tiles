@@ -166,6 +166,7 @@ class IpnCard(MainCard):
     def create_service_control(self, layout):
         # 服务控制框架
         self.service_frame = QFrame()
+        self.service_frame.setStyleSheet("background-color: transparent; border: none;")
         service_layout = QVBoxLayout(self.service_frame)
         service_layout.setContentsMargins(15, 5, 15, 5)
         # 标题
@@ -686,12 +687,14 @@ class IpnCard(MainCard):
         if is_dark:
             self.service_frame.setStyleSheet("""
                 QFrame {
-                    background: rgba(0, 0, 0, 150);
+                    background: transparent;
+                    border: 1px solid rgba(255, 255, 255, 50);
                 }""")
         else:
             self.service_frame.setStyleSheet("""
                 QFrame {
-                    background: rgba(255, 255, 255, 150);
+                    background: transparent;
+                    border: 1px solid rgba(0, 0, 0, 50);
                 }""")
 
     def refresh_data(self, date_time_str):

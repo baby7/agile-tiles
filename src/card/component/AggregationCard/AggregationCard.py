@@ -80,8 +80,10 @@ class AggregationCard(MainCard):
         # 创建堆栈窗口
         self.stacked_widget = QtWidgets.QStackedWidget(self.card)
         self.stacked_widget.setGeometry(QtCore.QRect(0, 0, self.card.width(), self.card.height()))
+        self.stacked_widget.setStyleSheet("background: transparent; border: none;")
         # 分类面板
         self.aggregation_tab = QWidget(self.card)
+        self.aggregation_tab.setStyleSheet("background: transparent; border: none;")
         # 分类面板面板增加竖向布局
         self.aggregation_tab_layout = QVBoxLayout(self.card)
         self.aggregation_tab_layout.setSpacing(0)
@@ -472,10 +474,10 @@ class AggregationCard(MainCard):
         # 显示面板背景
         if self.is_dark():
             self.show_panel_content_panel.setStyleSheet(
-                f"background: rgba(24, 24, 24, 150); border-radius: 10px; border: none; padding: 10px;")
+                f"background: rgba(24, 24, 24, 150); border-radius: 12px; border: none; padding: 10px;")
         else:
             self.show_panel_content_panel.setStyleSheet(
-                f"background: rgba(255, 255, 255, 150); border-radius: 10px; border: none; padding: 10px;")
+                f"background: rgba(255, 255, 255, 150); border-radius: 12px; border: none; padding: 10px;")
 
     def set_image_icon(self, image_label, aggregation_module):
         if aggregation_module["icon"] is not None:

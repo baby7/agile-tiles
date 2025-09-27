@@ -108,6 +108,8 @@ class UserClient(QObject):
 
     def get_user_info(self, username, token):
         """获取用户信息"""
+        if username == "LocalUser":
+            return  # 本地用户不进行登录和信息交互
         try:
             url = common.BASE_URL + "/user/normal/info?username=" + str(username)
             request = QNetworkRequest(QUrl(url))
@@ -119,6 +121,8 @@ class UserClient(QObject):
 
     def refresh(self, username, refresh_token, hardware_id, os_version=None):
         """刷新令牌"""
+        if username == "LocalUser":
+            return  # 本地用户不进行登录和信息交互
         print(f"正在刷新令牌...{hardware_id}")
         url = common.BASE_URL + "/user/public/refresh"
         request = QNetworkRequest(QUrl(url))

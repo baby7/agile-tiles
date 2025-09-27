@@ -454,6 +454,8 @@ class TranslateCard(MainCard):
             self.status_label.setText(f"文本长度超过{MAX_LENGTH}字符，已自动截断")
 
     def screenshot_captured(self, pixmap, do_job="translate"):
+        # 未登录的判断
+        self.main_object.show_login_tip()
         # 保存截图
         self.captured_pixmap = pixmap
         # 更新状态
@@ -552,6 +554,9 @@ class TranslateCard(MainCard):
         ocr_reply.deleteLater()
 
     def translate_text(self):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+
         # 获取输入文本
         text = self.source_text.toPlainText().strip()
         if not text:

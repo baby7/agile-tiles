@@ -1,13 +1,13 @@
 import os
 
-from PySide6.QtGui import QColor
+from PySide6.QtGui import QColor, QPixmap, QPainter
 from PySide6.QtMultimedia import QMediaPlayer
 from PySide6.QtWidgets import QDialog, QSlider, QVBoxLayout, QStackedWidget, QFileDialog, QGraphicsDropShadowEffect
-from PySide6.QtCore import Qt, QRect, QPoint
+from PySide6.QtCore import Qt, QRect, QPoint, QTimer
 from src.card.MainCardManager.MainCard import MainCard
 from src.constant import data_save_constant
 from src.module import dialog_module
-from src.ui import style_util
+from src.ui import style_util, image_util
 
 from . import music_style, music_analysis
 from .ui_components import init_base_ui, init_playlist_ui, init_songlist_ui, init_other_ui, delete_current_playlist
@@ -39,6 +39,7 @@ class MusicCard(MainCard):
     title_label = None
     song_list_title_label = None
     cover_label = None
+    background_label = None
 
     def __init__(self, main_object=None, parent=None, theme=None, card=None, cache=None, data=None,
                  toolkit=None, logger=None, save_data_func=None):
@@ -162,6 +163,10 @@ class MusicCard(MainCard):
         self.stacked_widget.setCurrentWidget(self.song_list_widget)  # 直接跳转到歌曲列表
 
     def add_playlist(self):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         song_list = dialog_module.box_input(self.main_object, "新增歌单", "请输入歌单名称：")
         if song_list is None:
             return
@@ -177,6 +182,10 @@ class MusicCard(MainCard):
         self.save_settings()
 
     def import_music(self):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         if self.playlist_data is None or self.playlist_data == {}:
             dialog_module.box_information(self.main_object, "告警", f"当前无歌单，请先创建歌单！")
             return
@@ -199,6 +208,8 @@ class MusicCard(MainCard):
         self.song_title.setText(song_title)
         self.artist.setText(artist)
         self.cover_label.setPixmap(cover_pixmap if cover_pixmap else self.default_pixmap)
+        # 更新背景
+        self.update_background(self.cover_label.pixmap())
 
     def _create_stacked_widget(self):
         widget = QStackedWidget(self.card)
@@ -379,3 +390,104 @@ class MusicCard(MainCard):
     def hide_form(self):
         if hasattr(self, 'volume_dialog') and self.volume_dialog.isVisible():
             self.volume_dialog.close()
+
+    def update_background(self, original_pixmap):
+        # 使用QTimer延迟处理，避免界面卡顿
+        QTimer.singleShot(10, lambda: self._update_background_delayed(original_pixmap))
+
+    def _update_background_delayed(self, original_pixmap):
+        # 对图片进行裁切，根据窗口大小进行裁切，去掉图片的两边，只保留中间竖长
+        cut_pixmap = self.crop_to_portrait(pixmap=original_pixmap, target_ratio=self.card.width() / self.card.height())
+        # 缩放图片到较小尺寸（加快模糊处理）
+        small_pixmap = cut_pixmap.scaled(
+            self.card.width() // 8, self.card.height() // 8,
+            Qt.KeepAspectRatioByExpanding,
+            Qt.SmoothTransformation
+        )
+        # 应用快速模糊效果
+        blurred_pixmap = self.apply_fast_blur(small_pixmap)
+        # 放大到窗口大小
+        final_pixmap = blurred_pixmap.scaled(
+            self.card.width(), self.card.height(),
+            Qt.KeepAspectRatioByExpanding,
+            Qt.SmoothTransformation
+        )
+        # 设置透明度
+        final_pixmap = self.set_image_opacity(final_pixmap, 80)
+        # 设置圆角
+        final_pixmap = image_util.create_rounded_pixmap(final_pixmap, 0.0193)
+        # 设置背景
+        self.background_label.setPixmap(final_pixmap)
+        self.background_label.setScaledContents(True)
+        self.background_label.setGeometry(0, 0, self.card.width(), self.card.height())
+
+    def crop_to_portrait(self, pixmap, target_ratio=9 / 16):
+        """
+        从近似正方形的QPixmap裁切出竖长型的中间部分
+
+        Args:
+            pixmap: 源QPixmap图像（近似正方形）
+            target_ratio: 目标长宽比（宽/高），默认9:16（竖屏）
+
+        Returns:
+            QPixmap: 裁切后的竖长型图像
+        """
+        if pixmap.isNull():
+            return QPixmap()
+        # 获取原图尺寸
+        original_width = pixmap.width()
+        original_height = pixmap.height()
+        # 计算目标尺寸
+        if original_height * target_ratio <= original_width:
+            # 以高度为基准计算宽度
+            target_width = int(original_height * target_ratio)
+            target_height = original_height
+        else:
+            # 以宽度为基准计算高度（通常不会发生，因为目标比例是竖长型）
+            target_height = int(original_width / target_ratio)
+            target_width = original_width
+        # 计算裁切区域（居中裁切）
+        x = (original_width - target_width) // 2
+        y = (original_height - target_height) // 2
+        # 创建裁切区域
+        crop_rect = QRect(x, y, target_width, target_height)
+        # 执行裁切
+        cropped_pixmap = pixmap.copy(crop_rect)
+        return cropped_pixmap
+
+    def set_image_opacity(self, original_pixmap, alpha_value):
+        """
+        创建一个带有指定透明度的新 Pixmap
+        :param original_pixmap: 原始的 QPixmap 对象
+        :param alpha_value: 透明度值 (0-255)
+        :return: 处理后的 QPixmap
+        """
+        # 创建一个临时图像用于绘画
+        temp_image = original_pixmap.toImage()
+
+        painter = QPainter(temp_image)
+        # 设置合成模式，以便将透明度应用于现有图像
+        painter.setCompositionMode(QPainter.CompositionMode_DestinationIn)
+        # 用指定的透明度填充整个图像区域
+        painter.fillRect(temp_image.rect(), QColor(0, 0, 0, alpha_value))
+        painter.end()
+
+        # 将处理后的图像转换回 QPixmap
+        transparent_pixmap = QPixmap.fromImage(temp_image)
+        return transparent_pixmap
+
+    def apply_fast_blur(self, pixmap):
+        """使用缩放方法实现快速模糊效果"""
+        # 进一步缩小图片
+        small = pixmap.scaled(
+            pixmap.width() // 4, pixmap.height() // 4,
+            Qt.KeepAspectRatio,
+            Qt.FastTransformation
+        )
+        # 放大回原尺寸
+        blurred = small.scaled(
+            pixmap.width(), pixmap.height(),
+            Qt.KeepAspectRatio,
+            Qt.SmoothTransformation
+        )
+        return blurred

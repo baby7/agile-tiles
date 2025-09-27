@@ -81,6 +81,9 @@ def create_rounded_pixmap(pixmap: QPixmap, radius: Union[int, float]) -> QPixmap
     if pixmap.isNull():
         return pixmap
 
+    # 获取设备像素比
+    device_pixel_ratio = pixmap.devicePixelRatio()
+
     # 计算实际圆角半径
     if isinstance(radius, float) and 0 < radius < 1:
         # 百分比模式：取宽高中较小值的百分比
@@ -94,22 +97,30 @@ def create_rounded_pixmap(pixmap: QPixmap, radius: Union[int, float]) -> QPixmap
     orig_width = pixmap.width()
     orig_height = pixmap.height()
 
+    # 考虑设备像素比的实际尺寸
+    actual_orig_width = orig_width / device_pixel_ratio
+    actual_orig_height = orig_height / device_pixel_ratio
+
     # 设置最大尺寸限制
     MAX_SIZE = 2000
-    if orig_width > MAX_SIZE or orig_height > MAX_SIZE:
-        scale_factor = min(MAX_SIZE / orig_width, MAX_SIZE / orig_height)
-        scaled_width = int(orig_width * scale_factor)
-        scaled_height = int(orig_height * scale_factor)
+    if actual_orig_width > MAX_SIZE or actual_orig_height > MAX_SIZE:
+        scale_factor = min(MAX_SIZE / actual_orig_width, MAX_SIZE / actual_orig_height)
+        scaled_width = int(actual_orig_width * scale_factor)
+        scaled_height = int(actual_orig_height * scale_factor)
+        # 使用设备像素比创建正确尺寸的 pixmap
         scaled_pixmap = pixmap.scaled(
-            scaled_width, scaled_height,
+            scaled_width * device_pixel_ratio,
+            scaled_height * device_pixel_ratio,
             Qt.KeepAspectRatio, Qt.SmoothTransformation
         )
+        scaled_pixmap.setDevicePixelRatio(device_pixel_ratio)
     else:
         scaled_pixmap = pixmap
-        scaled_width, scaled_height = orig_width, orig_height
+        scaled_width, scaled_height = int(actual_orig_width), int(actual_orig_height)
 
-    # 创建目标图像
-    dest_image = QPixmap(scaled_width, scaled_height)
+    # 创建目标图像，考虑设备像素比
+    dest_image = QPixmap(scaled_width * device_pixel_ratio, scaled_height * device_pixel_ratio)
+    dest_image.setDevicePixelRatio(device_pixel_ratio)
     dest_image.fill(Qt.transparent)
 
     painter = QPainter(dest_image)
@@ -127,7 +138,6 @@ def create_rounded_pixmap(pixmap: QPixmap, radius: Union[int, float]) -> QPixmap
     painter.end()
 
     return dest_image
-
 
 def screenshot(widget):
     try:

@@ -1,36 +1,179 @@
 import json
 import time
+import urllib
+import webbrowser
 
 from PySide6.QtCore import QCoreApplication, QRect, Qt, QUrl, Signal
-from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QLabel, QPushButton, QTabWidget, QTextBrowser, QWidget
+from PySide6.QtGui import QFont, QCursor
+from PySide6.QtWidgets import QLabel, QPushButton, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, \
+    QSizePolicy, QScrollArea
 from PySide6 import QtNetwork
 # 获取信息
 from src.card.MainCardManager.MainCard import MainCard
 from src.client import common
-from src.get_info import get_tophub_blog_info, get_micro_blog_info
+from src.ui.style_util import scroll_bar_style
 from src.util import browser_util
 from src.ui import style_util
 from src.component.LoadAnimation.LoadAnimation import LoadAnimation
 
 
-class CustomTextBrowser(QTextBrowser):
-    # 定义自定义信号
-    middleClicked = Signal(QUrl)
+# 热度标签映射
+TAG_MAP = {
+    "new": ("新", "#ff3852"),
+    "hot": ("热", "#ff9406"),
+    "boil": ("沸", "#f86400"),
+    "warm": ("暖", "#ffab5a"),
+    "boom": ("爆", "#bd0000"),
+}
 
-    def __init__(self, parent=None):
-        super().__init__(parent)
+
+class ClickableLabel(QLabel):
+    leftClicked = Signal()
+    middleClicked = Signal()
+
+    def __init__(self, text="", parent=None):
+        super().__init__(text, parent)
+        self.setWordWrap(True)
+        self.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        self.setCursor(QCursor(Qt.PointingHandCursor))
 
     def mousePressEvent(self, event):
-        # 检查是否是鼠标中键点击
-        if event.button() == Qt.MouseButton.MiddleButton:
-            # 获取点击位置的链接
-            anchor = self.anchorAt(event.pos())
-            if anchor:
-                # 触发自定义信号
-                self.middleClicked.emit(QUrl(anchor))
-        # 调用父类方法以保持默认行为
-        super().mousePressEvent(event)
+        if event.button() == Qt.LeftButton:
+            self.leftClicked.emit()
+            event.accept()  # 阻止冒泡
+            return
+        elif event.button() == Qt.MiddleButton:
+            self.middleClicked.emit()
+            event.accept()  # 阻止冒泡
+            return
+        super().mousePressEvent(event)  # 其它情况才交给父类
+
+
+class HotSearchItem(QWidget):
+    def __init__(self, parent=None, data=None, data_type=None):
+        super().__init__(parent)
+        self.data = data
+        if data_type == "weibo":
+            self.link = "https://s.weibo.com/weibo?q=" + urllib.parse.quote("#" + str(data['t']) + "#")
+        else:
+            self.link = str(data['u'])
+
+        # 主布局
+        main_layout = QVBoxLayout(self)
+        main_layout.setContentsMargins(10, 2, 10, 2)
+        main_layout.setSpacing(0)
+
+        # 第一行水平布局：序号 + 内容 + 标签
+        first_line_layout = QHBoxLayout()
+        first_line_layout.setContentsMargins(0, 0, 0, 0)
+        first_line_layout.setSpacing(5)  # 增加间距避免元素过于紧凑
+
+        # 序号 - 根据排名设置不同颜色
+        index_label = QLabel(data["i"])
+        try:
+            index_num = int(data["i"])
+            if index_num <= 3:
+                index_color = "#f26d5f"  # 前三个红色
+            else:
+                index_color = "#ff8200"  # 后面橙色
+        except ValueError:
+            index_color = "#ff8200"  # 默认橙色
+
+        index_label.setStyleSheet(f"font-weight: bold; min-width: 20px; color: {index_color}; padding: 2px 0px;")
+        index_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        first_line_layout.addWidget(index_label, alignment=Qt.AlignTop)
+
+        # 内容（可点击）- 设置蓝色，使用统一的字体大小
+        self.content = ClickableLabel(f"{data['t']} {data['n']}")
+        self.content.setStyleSheet(f"color: rgb(0, 120, 182); padding: 2px 0px;")  # 使用统一的字体大小
+        self.content.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        self.content.setMinimumWidth(0)
+        first_line_layout.addWidget(self.content, stretch=1)
+
+        # 标签 - 使用统一的字体大小
+        if "c" in data and data["c"] in TAG_MAP:
+            tag_text, tag_color = TAG_MAP[data["c"]]
+            tag_label = QLabel(tag_text)
+            tag_label.setStyleSheet(
+                f"color: white; background: {tag_color};"
+                f"border-radius: 6px; padding: 2px 6px; font-weight: bold;"
+            )
+            tag_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+            first_line_layout.addWidget(tag_label, alignment=Qt.AlignRight | Qt.AlignTop)
+
+        main_layout.addLayout(first_line_layout)
+
+        # 背景默认 & hover
+        self.default_color = "rgb(0, 120, 182);"
+        self.hover_color = "rgb(64, 160, 182)"
+        self.update_bg(self.default_color)
+        self.setCursor(QCursor(Qt.PointingHandCursor))
+
+        # 信号绑定
+        self.content.leftClicked.connect(lambda: self.open_link(False))
+        self.content.middleClicked.connect(lambda: self.open_link(True))
+
+    def update_bg(self, color: str):
+        self.content.setStyleSheet(f"color: {color}; padding: 2px 0px;")  # 使用统一的字体大小
+
+    def enterEvent(self, event):
+        self.update_bg(self.hover_color)
+        return super().enterEvent(event)
+
+    def leaveEvent(self, event):
+        self.update_bg(self.default_color)
+        return super().leaveEvent(event)
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self.open_link(False)
+        elif event.button() == Qt.MiddleButton:
+            self.open_link(True)
+        return super().mousePressEvent(event)
+
+    def open_link(self, new_tab=False):
+        if new_tab:
+            webbrowser.open_new_tab(self.link)
+        else:
+            webbrowser.open(self.link)
+
+
+class HotSearchList(QWidget):
+
+    """
+    热搜列表
+    """
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+        # 滚动区域
+        scroll = QScrollArea()
+        scroll.setStyleSheet("""
+        QScrollArea {
+            background: transparent;
+            border: none;
+        }
+        """ + scroll_bar_style)
+        scroll.setWidgetResizable(True)
+        layout.addWidget(scroll)
+        container = QWidget()
+        container.setStyleSheet("background: transparent;")
+        self.vbox = QVBoxLayout(container)
+        self.vbox.setContentsMargins(0, 0, 0, 0)
+        self.vbox.setSpacing(4)
+        scroll.setWidget(container)
+
+    def set_data_list(self, data_list: list, data_type: str):
+        try:
+            for i in reversed(range(self.vbox.count())):
+                self.vbox.itemAt(i).widget().setParent(None)
+        except Exception as e:
+            print(e)
+        for item in data_list:
+            widget = HotSearchItem(data=item, data_type=data_type)
+            self.vbox.addWidget(widget)
 
 
 class TopSearchCard(MainCard):
@@ -75,7 +218,7 @@ class TopSearchCard(MainCard):
     tab_map = { "微博": "weibo", "百度": "baidu", "B站": "bilibili", "知乎": "zhihu", "抖音": "douyin", "腾讯": "tencent" }
 
     # 数据
-    base_html = None
+    base_data_list = None
     base_time = None
     # 上次刷新时间
     last_load_time = 0
@@ -124,37 +267,47 @@ class TopSearchCard(MainCard):
         font4.setPointSize(9)
         font4.setBold(False)
         tab_widget_height = 45
-        # 主要信息展示
-        self.text_browser_top = CustomTextBrowser(self.card)
-        self.text_browser_top.setObjectName(u"text_browser_top")
-        self.text_browser_top.setGeometry(QRect(20, 10 + tab_widget_height, self.card.width() - 40, self.card.height() - tab_widget_height - 50 + 20))
-        self.text_browser_top.setFont(font3)
+        self.main_layout = QVBoxLayout(self.card)
+        self.main_layout.setContentsMargins(10, tab_widget_height + 1, 10, 10)
+        self.main_layout.setSpacing(6)
+        self.label_top_area_background_layout = QHBoxLayout()
+        self.label_top_area_background_layout.setContentsMargins(5, 0, 5, 0)
+        self.label_top_area_background_layout.setSpacing(5)
         # 标题背景
-        self.label_top_area_background = QLabel(self.card)
+        self.label_top_area_background = QWidget()
         self.label_top_area_background.setObjectName(u"label_top_area_background")
-        self.label_top_area_background.setGeometry(QRect(10, tab_widget_height + 1, self.card.width() - 20, 28))
+        self.label_top_area_background.setFixedHeight(32)
+        self.label_top_area_background.setLayout(self.label_top_area_background_layout)
+        self.main_layout.addWidget(self.label_top_area_background)
         # 序号
-        self.label_top_area_number = QLabel(self.card)
+        self.label_top_area_number = QLabel()
         self.label_top_area_number.setObjectName(u"label_top_area_number")
-        self.label_top_area_number.setGeometry(QRect(0, tab_widget_height, 41, 32))
         self.label_top_area_number.setFont(font4)
         self.label_top_area_number.setAlignment(Qt.AlignRight | Qt.AlignTrailing | Qt.AlignVCenter)
+        self.label_top_area_background_layout.addWidget(self.label_top_area_number)
         # 关键词
-        self.label_top_area_title = QLabel(self.card)
+        self.label_top_area_title = QLabel()
         self.label_top_area_title.setObjectName(u"label_top_area_title")
-        self.label_top_area_title.setGeometry(QRect(40, tab_widget_height, 51, 32))
         self.label_top_area_title.setFont(font4)
         self.label_top_area_title.setAlignment(Qt.AlignRight | Qt.AlignTrailing | Qt.AlignVCenter)
+        self.label_top_area_background_layout.addWidget(self.label_top_area_title)
+        self.label_top_area_background_layout.addStretch()
         # 时间
-        self.label_weibo_time = QLabel(self.card)
+        self.label_weibo_time = QLabel()
         self.label_weibo_time.setObjectName(u"label_weibo_time")
-        self.label_weibo_time.setGeometry(QRect(self.card.width() - 270 - 20, tab_widget_height, 221, 32))
         self.label_weibo_time.setFont(font4)
         self.label_weibo_time.setAlignment(Qt.AlignRight | Qt.AlignTrailing | Qt.AlignVCenter)
+        self.label_top_area_background_layout.addWidget(self.label_weibo_time)
         # 刷新
-        self.push_button_search_refresh = QPushButton(self.card)
+        self.push_button_search_refresh = QPushButton()
         self.push_button_search_refresh.setObjectName(u"push_button_search_refresh")
-        self.push_button_search_refresh.setGeometry(QRect(self.card.width() - 64, tab_widget_height, 32, 32))
+        self.push_button_search_refresh.setFixedSize(32, 32)
+        self.label_top_area_background_layout.addWidget(self.push_button_search_refresh)
+        # 主要信息展示
+        self.text_browser_top = HotSearchList()
+        self.text_browser_top.setObjectName(u"text_browser_top")
+        self.text_browser_top.setFont(font3)
+        self.main_layout.addWidget(self.text_browser_top)
         # 下方切换
         self.tab_widget_toggle = QTabWidget(self.card)
         self.tab_widget_toggle.setObjectName(u"tab_widget_toggle")
@@ -173,23 +326,12 @@ class TopSearchCard(MainCard):
         # 样式调整
         style_util.set_tab_widget_style(self.tab_widget_toggle, self.is_dark())
         self.text_browser_top.setStyleSheet("""
-        QTextBrowser {
-            background-color: transparent;
-            padding: 0px;
-            margin: 0px;
-            border-width: 0px;
-            outline: none;
-        }
+        background-color: transparent;
+        padding: 0px;
+        margin: 0px;
+        border-width: 0px;
+        outline: none;
         """ + scroll_bar_style)
-        # 设置浏览器不打开链接和没有滚动条
-        # 关键步骤：设置文档的CSS，去除焦点时的虚线边框
-        self.text_browser_top.setFocusPolicy(Qt.TabFocus)
-        self.text_browser_top.setReadOnly(True)
-        self.text_browser_top.setOpenLinks(False)
-        self.text_browser_top.setOpenExternalLinks(False)
-        self.text_browser_top.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)   # 禁止水平滚动
-        # self.text_browser_top.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)   # 禁止垂直滚动
-        self.text_browser_top.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
         # 文字
         self.label_top_area_number.setText("序号")
         self.label_top_area_title.setText("关键词")
@@ -205,8 +347,6 @@ class TopSearchCard(MainCard):
         # 按钮事件绑定
         self.push_button_search_refresh.clicked.connect(self.push_button_search_refresh_click)
         self.tab_widget_toggle.currentChanged.connect(self.tab_widget_change)
-        self.text_browser_top.anchorClicked.connect(self.click_textbrowser)
-        self.text_browser_top.middleClicked.connect(self.click_textbrowser_not_active)
         # 层叠
         self.tab_widget_toggle.raise_()
         self.text_browser_top.raise_()
@@ -271,141 +411,13 @@ class TopSearchCard(MainCard):
             # 读取并解析数据
             data = reply.readAll().data()
             result = json.loads(data)
-            # result = {
-            #     "code": 0,
-            #     "msg": None,
-            #     "data": [
-            #         {
-            #             "id": 1,
-            #             "company": "weibo",
-            #             "source_url": None,
-            #             "createDateStr": "2025-08-26 13:53:02",
-            #             "updateDateStr": "2025-08-26 13:53:02",
-            #             "content": [
-            #                 {
-            #                     "t": "热搜示例第1条XXXXX",
-            #                     "i": "1",
-            #                     "n": "1250470"
-            #                 },
-            #                 {
-            #                     "c": "new",
-            #                     "t": "热搜示例第2条XXXXXXXXXXXXXXX",
-            #                     "i": "2",
-            #                     "n": "697227"
-            #                 },
-            #                 {
-            #                     "t": "热搜示例第3条XXXXXXXXX",
-            #                     "i": "3",
-            #                     "n": "697126"
-            #                 },
-            #                 {
-            #                     "c": "new",
-            #                     "t": "热搜示例第4条XXXXXXXXXXXXXXXXXXXXX",
-            #                     "i": "4",
-            #                     "n": "697039"
-            #                 },
-            #                 {
-            #                     "t": "热搜示例第5条XXXXXXXXXXXXX",
-            #                     "i": "5",
-            #                     "n": "666968"
-            #                 },
-            #                 {
-            #                     "t": "热搜示例第6条XXXXXXXXX",
-            #                     "i": "6",
-            #                     "n": "363118"
-            #                 },
-            #                 {
-            #                     "t": "热搜示例第7条XXXXXXXXX",
-            #                     "i": "7",
-            #                     "n": "341444"
-            #                 },
-            #                 {
-            #                     "c": "new",
-            #                     "t": "热搜示例第8条XXXXXXXXXXXXXXX",
-            #                     "i": "8",
-            #                     "n": "286066"
-            #                 },
-            #                 {
-            #                     "c": "new",
-            #                     "t": "热搜示例第9条XXXXXXXXXXXXXXX",
-            #                     "i": "9",
-            #                     "n": "248693"
-            #                 },
-            #                 {
-            #                     "t": "热搜示例第10条XXXXXXXXX",
-            #                     "i": "10",
-            #                     "n": "244446"
-            #                 },
-            #                 {
-            #                     "c": "new",
-            #                     "t": "热搜示例第11条XXXXXXXXX",
-            #                     "i": "11",
-            #                     "n": "244366"
-            #                 },
-            #                 {
-            #                     "c": "hot",
-            #                     "t": "热搜示例第12条XXXXXXXXXXXX",
-            #                     "i": "12",
-            #                     "n": "244239"
-            #                 },
-            #                 {
-            #                     "c": "new",
-            #                     "t": "热搜示例第13条XXXXXXXXXXXX",
-            #                     "i": "13",
-            #                     "n": "244089"
-            #                 },
-            #                 {
-            #                     "c": "hot",
-            #                     "t": "热搜示例第14条XXXXXXXXX",
-            #                     "i": "14",
-            #                     "n": "244038"
-            #                 },
-            #                 {
-            #                     "c": "new",
-            #                     "t": "热搜示例第15条XXXXXXXXXXXX",
-            #                     "i": "15",
-            #                     "n": "243899"
-            #                 },
-            #                 {
-            #                     "c": "new",
-            #                     "t": "热搜示例第16条XXXXXXXXXXXXXXX",
-            #                     "i": "16",
-            #                     "n": "243779"
-            #                 },
-            #                 {
-            #                     "c": "new",
-            #                     "t": "热搜示例第17条XXXXXXXXX",
-            #                     "i": "17",
-            #                     "n": "243573"
-            #                 },
-            #                 {
-            #                     "c": "hot",
-            #                     "t": "热搜示例第18条XXXXXXXXXXXX",
-            #                     "i": "18",
-            #                     "n": "243533"
-            #                 },
-            #                 {
-            #                     "t": "热搜示例第19条XXXXXXXXX",
-            #                     "i": "19",
-            #                     "n": "243411"
-            #                 }
-            #             ]
-            #         }
-            #     ]
-            # }
 
-            # 处理数据
-            self.base_html = ""
+            self.base_data_list = []
+            self.base_data_type = ""
             for data_entry in result["data"]:
                 self.base_time = '刷新时间: ' + data_entry['updateDateStr']
-                self.base_html = get_tophub_blog_info.get_html(
-                    data_entry["content"],
-                    data_entry["company"],
-                    self.logger
-                )
-                self.base_html = get_micro_blog_info.change_css(self.base_html)
-                # print(self.base_html)
-
+                self.base_data_list = data_entry["content"]
+                self.base_data_type = data_entry["company"]
             # 更新UI
             self.set_ui()
             self.logger.card_info("主程序", "数据更新成功")
@@ -418,8 +430,7 @@ class TopSearchCard(MainCard):
     def set_ui(self):
         try:
             self.label_weibo_time.setText(self.base_time)
-            self.text_browser_top.setHtml(self.base_html)
-            self.text_browser_top.document().setDefaultStyleSheet("a:focus { outline: none; }")
+            self.text_browser_top.set_data_list(self.base_data_list, self.base_data_type)
             self.logger.card_info("主程序", "获取微博信息完成")
         except Exception as e:
             self.logger.card_error("主程序", "获取微博信息失败,错误信息:{}".format(e))
@@ -461,43 +472,3 @@ class TopSearchCard(MainCard):
         self.label_weibo_time.setStyleSheet(text_color)
         style_util.set_tab_widget_style(self.tab_widget_toggle, self.is_dark())
         self.load_animation.set_theme(self.is_light())
-
-scroll_bar_style = """
-/******** 滚动条  *********/
-/* 垂直滚动条 */
-QScrollBar:vertical {
-    border-width: 0px;
-    border: none;
-    width: 10px;
-    margin-top: 25px;
-    border-radius: 5px;
-    background-color: transparent;
-}
-QScrollBar::handle:vertical {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0 rgba(179, 179, 179, 125), stop: 0.5 rgba(179, 179, 179, 125), stop:1 rgba(179, 179, 179, 125));
-    min-height: 20px;
-    max-height: 20px;
-    margin: 0px 0px 0px 0px;
-    border-radius: 5px;
-}
-QScrollBar::add-line:vertical {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0 rgba(179, 179, 179, 0), stop: 0.5 rgba(179, 179, 179, 0),  stop:1 rgba(179, 179, 179, 0));
-    height: 0px;
-    border: none;
-    subcontrol-position: bottom;
-    subcontrol-origin: margin;
-}
-QScrollBar::sub-line:vertical {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0  rgba(179, 179, 179, 0), stop: 0.5 rgba(179, 179, 179, 0),  stop:1 rgba(179, 179, 179, 0));
-    height: 0 px;
-    border: none;
-    subcontrol-position: top;
-    subcontrol-origin: margin;
-}
-QScrollBar::sub-page:vertical {
-    background: rgba(179, 179, 179, 0);
-}
-QScrollBar::add-page:vertical {
-    background: rgba(179, 179, 179, 0);
-}
-"""

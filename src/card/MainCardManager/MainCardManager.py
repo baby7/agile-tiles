@@ -706,6 +706,13 @@ class MainCardManager(QObject):
         self.main_object.push_button_header_title.setIconSize(QSize(20, 20))
         self.main_object.push_button_header_title.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
         self.main_object.layout_header.addWidget(self.main_object.push_button_header_title)
+        # 导航栏中间暂时用QLabel放置信息
+        self.main_object.layout_header.addStretch()
+        self.main_object.push_button_header_info = QPushButton()
+        self.main_object.push_button_header_info.setObjectName(u"push_button_header_info")
+        self.main_object.push_button_header_info.setText("")
+        self.main_object.push_button_header_info.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
+        self.main_object.layout_header.addWidget(self.main_object.push_button_header_info)
         self.main_object.layout_header.addStretch()
         # 右侧第一个是退出按钮
         # self.main_object.push_button_header_exit = QPushButton()
@@ -774,6 +781,7 @@ class MainCardManager(QObject):
         self.main_object.layout_header.addWidget(self.main_object.push_button_hide_window)
         # 点击事件
         self.main_object.push_button_header_title.clicked.connect(partial(self.click_header_title_button))
+        self.main_object.push_button_header_info.clicked.connect(partial(self.push_button_login_click))
         # self.main_object.push_button_header_exit.clicked.connect(partial(self.main_object.quit_before,  False))
         # self.main_object.push_button_screenshot.clicked.connect(
         #     partial(self.main_object.toolkit.image_util.screenshot, self.main_object))
@@ -892,6 +900,10 @@ class MainCardManager(QObject):
             card_pin_icon = style_util.get_icon_by_path(card_pin_icon_path, is_dark=self.main_object.is_dark)
         self.main_object.push_button_pin.setIcon(card_pin_icon)
 
+    # 链接登录
+    def push_button_login_click(self):
+        self.main_object.show_login_tip(need_tip=False)
+
     # 退出
     def push_button_hide_window_click(self):
         if self.main_object.pin_form:
@@ -900,6 +912,10 @@ class MainCardManager(QObject):
 
     # 设置卡片排列
     def push_button_setting_card_permutation_click(self):
+        # 未登录的判断
+        self.main_object.show_login_tip(tip_text="海量卡片和卡片设计功能需要登录使用，要现在登录吗？")
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         self.main_object.toolkit.resolution_util.out_animation(self.main_object)
         QTimer.singleShot(100, self.show_card_permutation_win)
 
@@ -1074,6 +1090,17 @@ class MainCardManager(QObject):
                 self.main_object.toolkit.style_util.header_button_dark_style
                 .replace("QPushButton", "QToolButton") + "QToolButton::menu-indicator {image: none;}"
             )
+            self.main_object.push_button_header_info.setStyleSheet("""
+            QPushButton {
+                background-color: rgba(34, 34, 34, 255);
+                padding: 5px;
+                border-radius: 8px;
+                color: rgb(245, 61, 79);
+            }
+            QPushButton:hover {
+                color: red;
+            }
+            """)
         else:
             self.main_object.push_button_header_title.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
             self.main_object.push_button_pin.setStyleSheet(self.main_object.toolkit.style_util.header_button_style)
@@ -1082,6 +1109,17 @@ class MainCardManager(QObject):
                 self.main_object.toolkit.style_util.header_button_style
                 .replace("QPushButton", "QToolButton") + "QToolButton::menu-indicator {image: none;}"
             )
+            self.main_object.push_button_header_info.setStyleSheet("""
+            QPushButton {
+                background-color: rgba(255, 255, 255, 100);
+                padding: 5px;
+                border-radius: 8px;
+                color: rgb(245, 61, 79);
+            }
+            QPushButton:hover {
+                color: red;
+            }
+            """)
         # 应用顶部更多按钮的菜单样式
         self.apply_menu_style(self.main_object.is_dark)
 

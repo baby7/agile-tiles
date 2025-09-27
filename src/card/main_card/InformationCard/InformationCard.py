@@ -324,6 +324,10 @@ class InformationCard(AggregationCard):
         self.stacked_widget.setCurrentIndex(1)
 
     def push_button_reading_history_click(self):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         # 清理展示面板
         self.clear_show_panel()
         # 创建网络请求
@@ -399,6 +403,10 @@ class InformationCard(AggregationCard):
             self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "获取{}失败,请稍后重试".format("随机土味情话"))
 
     def push_button_random_text_click(self, title, url_suffix, call_back=None):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         # 清理展示面板
         self.clear_show_panel()
         # 创建网络请求
@@ -426,6 +434,10 @@ class InformationCard(AggregationCard):
             )
 
     def push_button_moyu_image_click(self):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         url = QUrl(f'{common.BASE_URL}/imageContent/normal/moyu/today')
         request = QNetworkRequest(url)
         request.setRawHeader(b"Authorization", self.main_object.access_token.encode())
@@ -450,6 +462,10 @@ class InformationCard(AggregationCard):
             )
 
     def push_button_random_image_click(self, image_type, title):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         url = QUrl(f'{common.BASE_URL}/imageContent/normal/random?type={image_type}')
         request = QNetworkRequest(url)
         request.setRawHeader(b"Authorization", self.main_object.access_token.encode())

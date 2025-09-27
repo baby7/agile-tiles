@@ -171,6 +171,10 @@ class SettingCard(MainCard):
 
     # 设置卡片排列
     def push_button_setting_card_permutation_click(self):
+        # 未登录的判断
+        self.main_object.show_login_tip(tip_text="海量卡片和卡片设计功能需要登录使用，要现在登录吗？")
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         self.toolkit.resolution_util.out_animation(self.main_object)
         QTimer.singleShot(100, self.show_card_permutation_win)
 
@@ -310,6 +314,10 @@ class SettingCard(MainCard):
         self.setting_about_us_win.show()
 
     def push_button_setting_ticket_click(self):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         if not self.main_object.is_vip:
             dialog_module.box_information(self.main_object, "提示信息", "会员专属功能，请开通会员后使用哦")
             return
@@ -318,6 +326,10 @@ class SettingCard(MainCard):
                                                current_user=self.main_object.current_user)
 
     def push_button_setting_feedback_opinion_click(self):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         self.toolkit.resolution_util.out_animation(self.main_object)
         feedback_box_util.show_feedback_dialog(main_object=self.main_object,
                                                title="意见反馈",

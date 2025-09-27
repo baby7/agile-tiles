@@ -9,6 +9,7 @@ from src.ui import image_util, style_util
 
 
 def init_base_ui(music_card):
+    # 基础界面
     music_card.base_widget = QWidget()
     music_card.base_layout = QVBoxLayout()
     music_card.base_layout.setContentsMargins(20, 10, 20, 40)
@@ -55,6 +56,11 @@ def init_base_ui(music_card):
 
     music_card.base_widget.setLayout(music_card.base_layout)
     music_card.stacked_widget.addWidget(music_card.base_widget)
+
+    # 背景图片
+    music_card.background_label = QLabel(music_card.base_widget)
+    music_card.background_label.setScaledContents(True)
+    music_card.background_label.lower()
 
 
 def _setup_progress_controls(music_card):
@@ -191,6 +197,10 @@ def show_playlist_context_menu(music_card, pos):
 
 
 def edit_playlist(music_card, old_name):
+    # 未登录的判断
+    music_card.main_object.show_login_tip()
+    if music_card.main_object.current_user['username'] == "LocalUser":
+        return
     new_name = dialog_module.box_input(music_card.main_object, "编辑歌单", "请输入歌单名称：", old_text=old_name)
     if new_name is None:
         return
@@ -372,6 +382,10 @@ def edit_current_playlist(music_card):
 
 
 def delete_current_playlist(music_card):
+    # 未登录的判断
+    music_card.main_object.show_login_tip()
+    if music_card.main_object.current_user['username'] == "LocalUser":
+        return
     # 获取选中的歌单项
     selected_items = music_card.playlists.selectedItems()
     if not selected_items:

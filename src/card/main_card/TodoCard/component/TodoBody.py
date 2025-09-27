@@ -80,6 +80,10 @@ class TodoBody(object):
     ↓                                                                                 ↓
     '''
     def delete_click(self, todo_id, todo_state):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         """
         删除按钮
         :param todo_id: 任务id
@@ -100,6 +104,10 @@ class TodoBody(object):
         self.todo_card.data_process_call_back(self.proceed_data_list, self.complete_data_list, self.todo_type)
     
     def checked_click(self, todo_id, todo_state):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         """
         勾选按钮
         :param todo_id: 任务id
@@ -150,6 +158,10 @@ class TodoBody(object):
     ↓                                                                                 ↓
     '''
     def open_new_todo_view(self, input_data=None, todo_type=None):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         # 限制数量
         if len(self.proceed_data_list) >= self.Max_Todo_Count or len(self.complete_data_list) >= self.Max_Todo_Count:
             dialog_module.box_information(self.main_object, "提示", "待办事项数量已达到上限！")

@@ -80,7 +80,8 @@ print("_线程包加载完成")
 # 工具
 from src.ui import style_util
 from src.util.Toolkit import Toolkit
-from src.util import main_data_compare, hardware_id_util
+from src.util import main_data_compare, hardware_id_util, winreg_util
+
 print("_工具包加载完成")
 # 静态常量
 from src.constant import data_save_constant, card_constant, version_constant
@@ -132,6 +133,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
     form_animation_time = 200
     # 控件
     widget_header = None            # 顶部导航栏
+    push_button_header_info = None        # 导航栏信息
     label_menu = None               # 菜单栏
     label_current_menu = None       # 菜单指示条
     # 主题信息
@@ -269,7 +271,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         theme_module.init_theme(self)
         # 显示加载中窗口
         # print(f'__显示加载中窗口开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
-        self.show_load_window()
+        self.show_load_window(f"{self.app_title}启动中...")
         # 其余初始化
         # print(f'__其余初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         init_module.init_module(self)
@@ -318,7 +320,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         # print(f'__隐藏加载中窗口开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.hide_load_window()
 
-    def show_load_window(self):
+    def show_load_window(self, load_title=None):
         # 显示窗口
         self.show()
         # 显示加载中窗口
@@ -330,19 +332,32 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             self.label_background.setStyleSheet("background-color: rgb(24, 24, 24); color: rgb(255, 255, 255)")
         else:
             self.label_background.setStyleSheet("background-color: rgb(200, 200, 200); color: rgb(0, 0, 0)")
-        self.label_background.setText(f"{self.app_title}启动中...")
+        self.label_background.setText(load_title)
         self.label_background.resize(self.width(), self.height())
         self.label_background.show()
         self.label_background.raise_()
+        QApplication.processEvents()
 
     def hide_load_window(self):
         self.label_background.setText("")
-        self.label_background.show()
+        self.label_background.hide()
         self.label_background.lower()
         self.widget_base.show()
         self.widget_base.raise_()
         # 顶部导航条显示
         self.widget_header.show()
+        # 判断用户是否登录
+        if self.current_user['username'] == "LocalUser":
+            self.push_button_header_info.setText("未登录状态不存储数据！")
+            self.push_button_area_user_login.show()
+            self.push_button_area_user_vip_subscription.hide()
+            self.push_button_area_user_vip_subscription_history.hide()
+            self.label_area_user_vip_info.hide()
+            self.push_button_area_user_message_logout.hide()
+            self.label_area_user_message_logout.hide()
+        else:
+            self.push_button_header_info.hide()
+            self.push_button_area_user_login.hide()
         # 菜单栏显示
         self.label_menu.show()
         # 小卡片管理显示
@@ -353,6 +368,43 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         self.main_card_manager.change_menu_indicate_location()
         # 弹窗
         self.widget_dialog_base.raise_()
+        # 用来展示一个空白窗口
+        # self.label_background.hide()
+        # self.widget_base.hide()
+        # self.widget_header.hide()
+        # self.label_menu.hide()
+        # self.normal_card_manager.hide()
+        # self.label_current_menu.hide()
+        # self.widget_dialog_base.hide()
+        # 开机自启动
+        winreg_util.set_auto_start(True)
+
+    def show_login_tip(self, need_tip=True, tip_text=None):
+        if need_tip:
+            if self.current_user['username'] != "LocalUser":
+                return
+            if tip_text is None:
+                tip_text = "请登录后使用该功能，要现在登录吗？"
+            if not dialog_module.box_acknowledgement(self, "注意", tip_text):
+                return
+        QTimer.singleShot(1, lambda : self.show_login_tip_do())
+
+    def show_login_tip_do(self):
+        if hasattr(self, "single_login_tip_dialog"):
+            try:
+                self.single_login_tip_dialog.close()
+                self.single_login_tip_dialog = None
+            except Exception:
+                pass
+        # 启动登录窗口
+        if not self.is_first:
+            # 设置主题到QSetting
+            settings = QSettings(self.app_name, "Theme")
+            settings.setValue("IsDark", self.is_dark)
+        # 显示登录窗口
+        self.single_login_tip_dialog = StartLoginWindow(None, self)
+        self.single_login_tip_dialog.refresh_geometry(self.toolkit.resolution_util.get_screen(self))
+        self.single_login_tip_dialog.show()
 
     ''' **********************************数据管理*************************************** '''
     def load_data(self):
@@ -362,10 +414,28 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             self.database_manager = DatabaseManager(app_name="AgileTiles")
             # 获取本地当前用户
             self.current_user = self.database_manager.get_current_user()
-            if self.current_user is None:
-                # 如果首次启动，则启动登录窗口
-                self.show_start_login_window()
-                print("关闭启动登录窗口")
+            if self.current_user is None or self.current_user["username"] == "LocalUser":
+                # 如果首次启动，则以本地用户身份启动
+                self.access_token = "access_token"
+                self.refresh_token = "refresh_token"
+                self.refresh_token_datetime = datetime.datetime.now()
+                self.is_vip = False
+                self.current_user = {
+                    "id": "0",
+                    "nickName": "本地用户",
+                    "username": "LocalUser",
+                    "accessToken": self.access_token,
+                    "refreshToken": self.refresh_token,
+                    "vipStatus": self.is_vip,
+                    "vipExpireTime": None,
+                    "inviteCode": None,
+                }
+                self.save_user(self.current_user["username"], self.refresh_token)
+                self.main_data = self.save_default_data(self.current_user["username"])
+                print("以本地用户身份启动")
+                # 如果是本地用户则直接初始化
+                self.do_local_login()
+                return
             else:
                 # 获取本地用户数据
                 main_data_str = self.database_manager.get_current_data(self.current_user["username"])
@@ -579,6 +649,14 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         self.init()
         return
 
+    def do_local_login(self):
+        self.user_data_status = "login_success"
+        self.is_login = True
+        # 设置主题到QSetting
+        settings = QSettings(self.app_name, "Theme")
+        settings.setValue("IsDark", self.is_dark)
+        QTimer.singleShot(1, self.init)
+
     def handle_update_backup_time(self, result):
         # 使用 QMetaObject 确保在主线程执行
         QMetaObject.invokeMethod(
@@ -710,6 +788,21 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                     self.main_data["timestamp"]
                 )
             )
+
+    ''' **********************************重启*************************************** '''
+    def reboot(self):
+        # 获取login_helper的路径（假设在同一目录下）
+        current_exe_path = os.path.abspath(sys.argv[0])
+        login_helper_path = os.path.join(os.path.dirname(current_exe_path), "login_helper.exe")
+        # 关闭主程序
+        self.quit_before_do()
+        # 启动替换程序
+        try:
+            subprocess.Popen([login_helper_path])
+        except Exception as e:
+            QApplication.quit()
+        # 退出应用
+        QApplication.quit()
 
 
     ''' **********************************退出登录*************************************** '''
@@ -1373,9 +1466,17 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
 
     def on_screenshot_hotkey_triggered(self):
         """快捷键截图"""
+        # 未登录的判断
+        self.show_login_tip()
+        if self.current_user['username'] == "LocalUser":
+            return
+        # 截屏
         self.start_screenshot()
 
     def start_screenshot(self):
+        self.show_login_tip()
+        if self.current_user['username'] == "LocalUser":
+            return
         if self.show_overlay_status:
             return
         # 隐藏主窗口
@@ -1617,6 +1718,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
 
     def change_theme(self):
         # 修改主题
+        self.show_load_window("切换主题中...")
         print(f"修改主题,当前主题:{self.is_dark}")
         if self.main_card_manager is not None:
             self.main_card_manager.set_theme()
@@ -1627,6 +1729,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         icon_tool.set_icon(self)
         icon_tool.set_tray_icon(self)
         self.update()
+        self.hide_load_window()
 
     def open_update_view(self):
         """更新记录"""
@@ -1750,11 +1853,13 @@ if __name__ == '__main__':
     # 开启DPI适应
     QApplication.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
     # 禁用系统代理(不会被Fiddler抓到)
-    QNetworkProxyFactory.setUseSystemConfiguration(False)
+    # QNetworkProxyFactory.setUseSystemConfiguration(False)
     # 禁用系统代理(不走vpn)
-    QNetworkProxy.setApplicationProxy(QNetworkProxy.NoProxy)
-    os.environ['QT_DEBUG_PLUGINS'] = '1'  # 启用插件调试
-    # os.environ['QT_FATAL_WARNINGS'] = '1'  # 将警告转为崩溃
+    # QNetworkProxy.setApplicationProxy(QNetworkProxy.NoProxy)
+    # 启用插件调试
+    # os.environ['QT_DEBUG_PLUGINS'] = '1'
+    # 将警告转为崩溃
+    # os.environ['QT_FATAL_WARNINGS'] = '1'
     # 其他配置
     # os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = (
     #     "--disable-ipv6"            # 禁用IPv6

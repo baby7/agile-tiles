@@ -93,7 +93,7 @@ class ImageCacheManager:
         :param url: 网络名称
         :return: QPixmap对象或None
         """
-        if not url.startswith("http"):
+        if url is None or not url.startswith("http"):
             return None
         image_name = os.path.basename(url)
         return self.get_pixmap(image_name)

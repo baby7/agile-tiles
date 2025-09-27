@@ -3,7 +3,7 @@ import uuid
 from functools import cmp_to_key
 
 from PySide6 import QtWidgets
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QWidget, QLabel
 from src.card.NormalCardManager.NormalCard import NormalCard
 from src.util import version_util
 from src.ui import style_util
@@ -84,11 +84,15 @@ class NormalCardItem(QWidget):
     def enterEvent(self, event):
         """ 鼠标进入卡片时 """
         super(NormalCardItem, self).enterEvent(event)
+        if self.card is None:
+            return
         self.card.enter_event()
 
     def leaveEvent(self, event):
         """ 鼠标离开卡片时 """
         super(NormalCardItem, self).leaveEvent(event)
+        if self.card is None:
+            return
         self.card.leave_event()
 
     def clear(self):

@@ -3,10 +3,12 @@ import traceback
 import uuid
 import copy
 import importlib.util
+from functools import partial
 
-from PySide6 import QtGui, QtCore
-from PySide6.QtCore import QObject
-from PySide6.QtWidgets import QLabel
+from PySide6 import QtGui, QtCore, QtWidgets
+from PySide6.QtCore import QObject, Qt
+from PySide6.QtGui import QFont, QCursor
+from PySide6.QtWidgets import QLabel, QPushButton
 
 from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 from src.card.NormalCardManager.UiSetting import UiSetting
@@ -82,7 +84,41 @@ class NormalCard(QObject):
         # 加载卡片设置对象
         self.card_ui_setting = UiSetting(self)
         # 加载卡片逻辑插件
-        self.load_card_plugin()
+        if main_object.current_user["username"] == "LocalUser" and card_name == "WeatherCard":
+            text_layout = QtWidgets.QHBoxLayout()
+            text_layout.addStretch()
+            font = QFont()
+            font.setPointSize(11)
+            left_text_label = QLabel("天气卡片需要")
+            left_text_label.setStyleSheet("background: transparent; border: none;")
+            left_text_label.setFont(font)
+            text_layout.addWidget(left_text_label)
+            font = QFont()
+            font.setPointSize(11)
+            push_button_login = QPushButton("登录")
+            push_button_login.setCursor(QCursor(Qt.PointingHandCursor))
+            push_button_login.setStyleSheet("""
+            QPushButton {
+                background: transparent; border: none;
+                color: rgb(64, 158, 255);
+            }
+            QPushButton:hover {
+                color: rgb(6, 110, 255);
+            }
+            """)
+            push_button_login.setFont(font)
+            text_layout.addWidget(push_button_login)
+            font = QFont()
+            font.setPointSize(11)
+            right_text_label = QLabel("才可使用哦")
+            right_text_label.setStyleSheet("background: transparent; border: none;")
+            right_text_label.setFont(font)
+            text_layout.addWidget(right_text_label)
+            text_layout.addStretch()
+            self.card.setLayout(text_layout)
+            push_button_login.clicked.connect(lambda : self.main_object.show_login_tip(need_tip=False))
+        else:
+            self.load_card_plugin()
         print(f"新增卡片，uuid:{self.uuid}")
 
 

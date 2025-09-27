@@ -12,6 +12,7 @@ from src.card.main_card.ToolCard.notebook_battery_graph import notebook_battery_
 from src.card.main_card.ToolCard.progress_bar_generator import progress_bar_generator_util
 from src.card.main_card.ToolCard.relationship_calculator import relationship_calculator_util
 from src.card.main_card.ToolCard.salary_calculator import salary_calculator_util
+from src.card.main_card.ToolCard.tax_calculator.tax_calculator_util import TaxCalculatorPopup
 from src.card.main_card.ToolCard.time_calculator.time_calculator_util import TimeCalculatorApp
 from src.card.main_card.ToolCard.uuid_generator.uuid_generator_util import UUIDGeneratorPopup
 
@@ -137,6 +138,16 @@ class ToolCard(AggregationCard):
             {
                 "category": self.module_category_browser,
                 "type": "工具",
+                "title": "个人所得税计算器",
+                "des": "个人所得税计算",
+                "icon": "Sports/muscle",
+                "content": None,
+                "link": None,
+                "call_back_func": lambda : self.tax_calculator("个人所得税计算器")
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "工具",
                 "title": "BMI计算器",
                 "des": "身体质量指数计算",
                 "icon": "Sports/muscle",
@@ -246,6 +257,10 @@ class ToolCard(AggregationCard):
         self.main_object.start_color_picker()
 
     def image_to_excel_converter(self):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         self.main_object.start_image_to_excel_converter()
 
     def color_converter(self):
@@ -276,6 +291,12 @@ class ToolCard(AggregationCard):
     def notebook_battery_graph(self):
         self.toolkit.resolution_util.out_animation(self.main_object)
         notebook_battery_graph_util.show_notebook_battery_graph_dialog(self.main_object, "笔记本电池健康报告", None)
+
+    def tax_calculator(self, title):
+        # 清理展示面板
+        self.clear_show_panel()
+        self.util_app = TaxCalculatorPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
+        self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def bmi_calculator(self, title):
         # 清理展示面板

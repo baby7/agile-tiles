@@ -50,7 +50,7 @@ def init_click_connect(main_object):
     :param main_object:
     :return:
     """
-    main_object.push_button_area_user_message_logout.clicked.connect(main_object.logout)
+    main_object.push_button_area_user_message_logout.clicked.connect(lambda : main_object.show_login_tip(need_tip=False))
     main_object.push_button_area_user_vip_subscription.clicked.connect(partial(push_button_area_user_vip_subscription_click, main_object))
     main_object.push_button_area_user_data_export.clicked.connect(partial(push_button_export_data_to_windows_click, main_object))
     main_object.push_button_area_user_data_import.clicked.connect(partial(push_button_import_data_from_windows_click, main_object))
@@ -58,6 +58,8 @@ def init_click_connect(main_object):
     main_object.push_button_area_user_data_recover.clicked.connect(partial(push_button_area_user_data_recover_click, main_object))
     main_object.push_button_area_user_data_backup.clicked.connect(partial(push_button_area_user_data_backup_click, main_object))
     main_object.push_button_area_user_invite_code.clicked.connect(partial(push_button_area_user_invite_code_click, main_object))
+    # 登录
+    main_object.push_button_area_user_login.clicked.connect(lambda : main_object.show_login_tip(need_tip=False))
     # vip权益提示
     main_object.push_button_area_user_vip_power_1.clicked.connect(partial(push_button_area_user_vip_info_click, main_object))
     main_object.push_button_area_user_vip_power_2.clicked.connect(partial(push_button_area_user_vip_info_click, main_object))
@@ -77,6 +79,10 @@ def push_button_area_user_vip_info_click(main_object):
 
 def push_button_area_user_vip_subscription_history_click(main_object):
     try:
+        # 未登录的判断
+        main_object.show_login_tip()
+        if main_object.current_user['username'] == "LocalUser":
+            return
         if not main_object.is_login:
             dialog_module.box_information(main_object, "提示信息", "请先登录")
             return
@@ -95,6 +101,10 @@ def push_button_area_user_vip_subscription_click(main_object):
     续费或开通会员
     """
     try:
+        # 未登录的判断
+        main_object.show_login_tip()
+        if main_object.current_user['username'] == "LocalUser":
+            return
         if not main_object.is_login:
             dialog_module.box_information(main_object, "提示信息", "请先登录")
             return
@@ -113,6 +123,10 @@ def push_button_area_user_invite_code_click(main_object):
     复制邀请码
     """
     try:
+        # 未登录的判断
+        main_object.show_login_tip()
+        if main_object.current_user['username'] == "LocalUser":
+            return
         if not main_object.is_login:
             dialog_module.box_information(main_object, "提示信息", "请先登录")
             return
@@ -131,6 +145,10 @@ def push_button_export_data_to_windows_click(main_object):
     导出main_data的数据到本地，json格式，弹出框选择保存位置
     """
     try:
+        # 未登录的判断
+        main_object.show_login_tip()
+        if main_object.current_user['username'] == "LocalUser":
+            return
         file_name = QFileDialog.getSaveFileName(main_object, "导出数据", "", "*.json")
         if file_name[0] == "":
             return
@@ -146,6 +164,10 @@ def push_button_import_data_from_windows_click(main_object):
     从本地导入main_data的数据，弹出框选择json文件
     """
     try:
+        # 未登录的判断
+        main_object.show_login_tip()
+        if main_object.current_user['username'] == "LocalUser":
+            return
         file_name = QFileDialog.getOpenFileName(main_object, "导入数据", "", "*.json")
         if file_name[0] == "":
             return
@@ -170,6 +192,10 @@ def push_button_import_data_from_windows_click(main_object):
 
 def push_button_area_user_data_synchronization_click(main_object):
     try:
+        # 未登录的判断
+        main_object.show_login_tip()
+        if main_object.current_user['username'] == "LocalUser":
+            return
         if main_object.current_user is None or main_object.current_user["username"] is None:
             dialog_module.box_information(main_object, "提醒", f"未知错误，请重新登录")
             return
@@ -187,6 +213,10 @@ def push_button_area_user_data_synchronization_click(main_object):
 
 def push_button_area_user_data_recover_click(main_object):
     try:
+        # 未登录的判断
+        main_object.show_login_tip()
+        if main_object.current_user['username'] == "LocalUser":
+            return
         if main_object.current_user is None or main_object.current_user["username"] is None:
             dialog_module.box_information(main_object, "提醒", f"未知错误，请重新登录")
             return
@@ -209,6 +239,10 @@ def push_button_area_user_data_recover_click(main_object):
 
 def push_button_area_user_data_backup_click(main_object):
     try:
+        # 未登录的判断
+        main_object.show_login_tip()
+        if main_object.current_user['username'] == "LocalUser":
+            return
         if main_object.current_user is None or main_object.current_user["username"] is None:
             dialog_module.box_information(main_object, "提醒", f"未知错误，请重新登录")
             return

@@ -785,6 +785,10 @@ user@deepseek-terminal:~/Documents$
         self.init_tab_widget()
 
     def push_button_chat_click(self, title):
+        # 未登录的判断
+        self.main_object.show_login_tip(tip_text="和AI对话需要登录后使用，要现在登录吗？")
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         self.toolkit.resolution_util.out_animation(self.main_object)
         # 窗口仅能存在一个
         if self.chat_win is not None and self.chat_win.isVisible():
@@ -795,6 +799,10 @@ user@deepseek-terminal:~/Documents$
         self.chat_win.show()
 
     def push_button_actor_click(self, actor):
+        # 未登录的判断
+        self.main_object.show_login_tip(tip_text="和智能体对话需要登录后使用，要现在登录吗？")
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
         self.toolkit.resolution_util.out_animation(self.main_object)
         # 窗口仅能存在一个
         if self.chat_win is not None and self.chat_win.isVisible():
