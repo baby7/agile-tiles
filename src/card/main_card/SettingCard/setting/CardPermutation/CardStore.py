@@ -25,7 +25,7 @@ class CardStore(QtWidgets.QWidget):
         self.card_permutation = parent
         self.use_parent = use_parent
         self.card_widgets = {}  # 用字典存储所有卡片widget {card_name: [widget1, widget2]}
-        self.before_plugin_map = get_plugin_folder_map()
+        self.before_plugin_map = get_plugin_folder_map(self.use_parent)
         self.is_dark = is_dark
         self.card_store_data = []
         self.network_manager = QtNetwork.QNetworkAccessManager(self)  # 网络管理器
@@ -704,7 +704,7 @@ class CardStore(QtWidgets.QWidget):
 
     def install_or_update_card(self, card_data, widget):
         url = card_data['currentVersion']['url']
-        plugin_dir = os.path.join(str(os.getcwd()), "plugin")
+        plugin_dir = self.use_parent.app_data_plugin_path
         zip_path = os.path.join(plugin_dir, f"{card_data['name']}.zip")  # 直接保存为插件名.zip
         btn = widget.action_btn
         btn.setEnabled(False)
@@ -721,7 +721,7 @@ class CardStore(QtWidgets.QWidget):
                     f.write(reply.readAll().data())
                 btn.setText("添加")
                 print(f"插件 {card_name} 下载完成")
-                self.before_plugin_map = get_plugin_folder_map()  # 仍需要刷新插件列表
+                self.before_plugin_map = get_plugin_folder_map(self.use_parent)  # 仍需要刷新插件列表
                 # 对于新增的插件，需要新增到插件列表中，对于更新的插件，需要更新插件列表中该插件的版本
                 if card_name in self.before_plugin_map:
                     self.before_plugin_map[card_name]["version"] = card_data["currentVersion"]["version"]
@@ -769,10 +769,10 @@ class CardStore(QtWidgets.QWidget):
         self.card_permutation.widget.setVisible(visible)
 
 
-def get_plugin_folder_map():
+def get_plugin_folder_map(use_parent=None):
     """获取插件目录中每个插件的json内容组合成字典"""
     plugin_map = {}
-    plugin_dir = os.path.join(str(os.getcwd()), "plugin")
+    plugin_dir = use_parent.app_data_plugin_path
     # 遍历plugin目录下的所有子目录
     for plugin_folder_name in os.listdir(plugin_dir):
         plugin_path = os.path.join(plugin_dir, plugin_folder_name)

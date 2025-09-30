@@ -1,9 +1,9 @@
+import ctypes
 import os
 import sys
 import time
 import subprocess
 import zipfile
-
 
 # 打包命令
 """
@@ -12,14 +12,13 @@ nuitka \
 --onefile \
 --standalone \
 --windows-console-mode=disable \
---windows-icon-from-ico=run_util/util.ico \
+--windows-icon-from-ico=resources/img/icon/icon.ico \
 --output-dir=out \
 --windows-company-name=杭州市拱墅区启杭灵卡软件开发工作室 \
 --windows-product-name=灵卡面板 \
 --windows-file-version=1.0.0 \
 --windows-product-version=1.0.0 \
---windows-file-description=灵卡面板更新工具 \
---windows-uac-admin \
+--windows-file-description=灵卡面板补丁更新工具 \
 --lto=yes \
 --jobs=8 \
 --show-progress \
@@ -97,27 +96,52 @@ def extract_zip_with_overwrite(zip_path, extract_to):
         return False
 
 
-def main():
-    current_exe = os.path.join(os.getcwd(), "AgileTiles.exe")  # 当前主程序的exe路径
-    zip_path = os.path.join(os.getcwd(), "temp_updates", "AgileTiles.zip")  # 新下载的zip路径
-    restart_command = current_exe  # 重启主程序的命令
+def is_admin():
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        return False
 
-    print(f"当前程序: {current_exe}")
-    print(f"ZIP文件: {zip_path}")
-    print(f"重启命令: {restart_command}")
-
-    # 等待主程序退出
-    time.sleep(2)
-
-    print(f"current_exe:{current_exe}")
+def kill_exe(current_exe):
     # 尝试杀死可能还在运行的进程
     print("尝试终止可能还在运行的进程...")
     killed = kill_process_by_exe_path(current_exe)
     if killed:
         print("成功终止了进程")
-        time.sleep(1)  # 给系统一点时间释放资源
+        time.sleep(0.5)  # 给系统一点时间释放资源
     else:
         print("没有找到需要终止的进程")
+
+
+def main():
+    # 检查管理员权限，如果需要则提升
+    if not is_admin():
+        import ctypes
+        # 尝试以管理员权限重新运行
+        ctypes.windll.shell32.ShellExecuteW(
+            None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+        sys.exit(0)
+
+    # 创建应用程序实例，不显示控制台窗口
+    if sys.platform == "win32":
+        import ctypes
+        # 隐藏控制台窗口（如果是从命令行启动的）
+        ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
+
+    current_exe = os.path.join(os.getcwd(), "AgileTiles.exe")  # 当前主程序的exe路径
+    kill_exe(current_exe)
+
+    app_name = "AgileTiles"
+
+    data_parent_dir = os.environ['LOCALAPPDATA']
+    data_dir = os.path.join(data_parent_dir, app_name)
+
+    zip_path = os.path.join(data_dir, "UpdateCache", "AgileTiles.zip")  # 新下载的zip路径
+    restart_command = current_exe  # 重启主程序的命令
+
+    print(f"当前程序: {current_exe}")
+    print(f"ZIP文件: {zip_path}")
+    print(f"重启命令: {restart_command}")
 
     # 检查ZIP文件是否存在
     if not os.path.exists(zip_path):

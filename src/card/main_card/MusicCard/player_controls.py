@@ -29,10 +29,15 @@ def play_song(music_card, item):
         for index, song in enumerate(music_card.playlist_data[music_card.current_playlist]):
             if os.path.basename(song) == song_path:
                 music_card.current_song_index = index
-                if music_card.player.isPlaying():
+                # 更彻底地停止播放器
+                if music_card.player.playbackState() != QMediaPlayer.StoppedState:
                     music_card.player.stop()
+                    # 等待状态变化
+                    while music_card.player.playbackState() != QMediaPlayer.StoppedState:
+                        QCoreApplication.processEvents()
                 QCoreApplication.processEvents()
-                music_card.player.setSource(QUrl.fromLocalFile(song))
+                url = QUrl.fromLocalFile(song)
+                music_card.player.setSource(url)
                 music_card.player.play()
                 style_util.set_button_style(play_pause_button, icon_path="Music/pause-one", is_dark=music_card.is_dark(),
                                             style_change=False)

@@ -1,41 +1,14 @@
 import json
-import os
 import sqlite3
-import hashlib
 
 from src.module.UserData.DataBase import user_data_common
-
-from PySide6.QtCore import QStandardPaths
 
 from src.util import hardware_id_util
 
 
-def get_db_path(app_name):
-    # 获取应用程序数据目录（跨平台）
-    # Windows: C:\Users\<User>\AppData\Local\<AppName>
-    # macOS: ~/Library/Application Support/<AppName>
-    # Linux: ~/.local/share/<AppName>
-    data_dir = QStandardPaths.writableLocation(QStandardPaths.AppLocalDataLocation)
-    print(f"第一次获取目录:{data_dir}")
-    if not data_dir:  # 确保目录有效
-        data_dir = os.path.expanduser("~")  # 回退到用户目录
-        print(f"第二次获取目录:{data_dir}")
-
-    # 跨平台安全拼接路径
-    app_dir = os.path.join(data_dir, app_name)
-    print(f"程序数据目录:{app_dir}")
-    try:
-        os.makedirs(app_dir, exist_ok=True)
-    except OSError as e:
-        print(f"无法创建目录 {app_dir}: {e}")
-        return None  # 或抛出异常
-
-    return os.path.join(app_dir, "app.db")  # 使用 os.path.join 自动处理分隔符
-
-
 class DatabaseManager:
-    def __init__(self, app_name):
-        self.db_path = get_db_path(app_name)
+    def __init__(self, db_path=None):
+        self.db_path = db_path
         self.FIXED_SALT = b'c093dd8c-c3da-4201-b291-ec4482fd624b'  # 32字节固定盐值
         self._init_db()
 

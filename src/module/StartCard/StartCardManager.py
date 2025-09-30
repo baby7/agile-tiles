@@ -4,7 +4,6 @@ import zipfile
 import tempfile
 import shutil
 import re
-from pathlib import Path
 from urllib.parse import urlparse
 
 from PySide6.QtCore import QObject, Signal, QUrl
@@ -53,7 +52,7 @@ class CardManager(QObject):
     def get_local_card_list_sync(self):
         """同步获取本地卡片列表"""
         try:
-            local_data = scan_local_cards()  # 直接调用同步扫描函数
+            local_data = scan_local_cards(self.main_object)  # 直接调用同步扫描函数
             self.handle_local_data(local_data)
         except Exception as e:
             print(f"Error getting local card list: {str(e)}")
@@ -153,7 +152,7 @@ class CardManager(QObject):
             url = reply.url().toString()
 
             # 保存和解压缩卡片
-            extracted_path = save_and_extract(content, url)
+            extracted_path = save_and_extract(content, url, use_parent=self.main_object)
 
             print(f"Downloaded card: {card_name} to {extracted_path}")
 
@@ -173,7 +172,7 @@ class CardManager(QObject):
         print("All downloads completed")
         self.main_object.card_ready.emit()
 
-def save_and_extract(content, download_url):
+def save_and_extract(content, download_url, use_parent=None):
     """保存并解压卡片内容，使用下载地址中的文件名作为文件夹名称"""
     # 从URL中提取文件名（最后一个'/'之后的部分）
     parsed_url = urlparse(download_url)
@@ -196,11 +195,11 @@ def save_and_extract(content, download_url):
             f.write(content)
 
         # 目标目录 (./plugin/base_name)
-        plugin_dir = Path("./plugin")
-        card_dir = plugin_dir / base_name
+        plugin_path = use_parent.app_data_plugin_path
+        card_dir = os.path.join(plugin_path, base_name)
 
         # 确保目录存在
-        card_dir.mkdir(parents=True, exist_ok=True)
+        os.makedirs(card_dir, exist_ok=True)
 
         # 解压zip文件
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:

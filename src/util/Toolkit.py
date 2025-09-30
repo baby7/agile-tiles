@@ -9,7 +9,7 @@ from src.util import file_util, browser_util, time_util, version_util
 from src.ui import style_util, animation_util, image_util
 from src.module.Screen import screen_module
 import src.ui.my_color as my_color
-from src.module.Box import image_box_util, browser_box_util, text_box_util, message_box_util
+from src.module.Box import image_box_util, text_box_util, message_box_util
 from src.module import dialog_module
 from src.module.Pay import qr_code_box_util
 import psutil, calendar, webbrowser, lunardate
@@ -32,7 +32,6 @@ class Toolkit(QObject):
     image_box_util = image_box_util
     qr_code_box_util = qr_code_box_util
     text_box_util = text_box_util
-    browser_box_util = browser_box_util
     # 下面主要是为了第三方卡片使用
     psutil = psutil
     calendar = calendar

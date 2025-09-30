@@ -65,7 +65,7 @@ class NormalCardManager(QWidget):
         2. 验证config.json有效性
         3. 生成UUID目录并解压
         """
-        plugin_dir = os.path.join(os.getcwd(), "plugin")
+        plugin_dir = self.parent.app_data_plugin_path
         for filename in os.listdir(plugin_dir):
             if not filename.lower().endswith('.zip'):
                 continue
@@ -102,7 +102,7 @@ class NormalCardManager(QWidget):
         遍历插件目录并建立插件信息索引
         """
         self.plugin_info.clear()
-        plugin_dir = os.path.join(os.getcwd(), "plugin")
+        plugin_dir = self.parent.app_data_plugin_path
 
         for dir_name in os.listdir(plugin_dir):
             dir_path = os.path.join(plugin_dir, dir_name)

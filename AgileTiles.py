@@ -3,6 +3,7 @@
 import copy
 import json
 import os, sys
+import atexit
 import subprocess
 import time, datetime
 # print(f'__启动时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
@@ -13,15 +14,6 @@ import compiled_resources
 print("_资源包加载完成")
 # 管理员权限(现在取消)
 import ctypes
-# def is_admin():
-#     try:
-#         return ctypes.windll.shell32.IsUserAnAdmin()
-#     except:
-#         return False
-# if not is_admin():
-#     # 重新以管理员权限运行
-#     ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
-#     sys.exit()
 # 错误日志
 import traceback
 # 内存控制
@@ -37,9 +29,9 @@ print("_热键监听包加载完成")
 # 基础界面框架
 from PySide6.QtGui import QPixmap, QFont
 from PySide6.QtCore import QEvent, Qt, qInstallMessageHandler, QSettings, Signal, QEventLoop, Q_ARG, Slot, \
-    QMetaObject, QTimer, QStandardPaths
+    QMetaObject, QTimer, QSharedMemory
 from PySide6.QtWidgets import QApplication, QSystemTrayIcon
-from PySide6.QtNetwork import QNetworkProxyFactory, QNetworkProxy, QLocalServer, QLocalSocket, QNetworkDiskCache
+from PySide6.QtNetwork import QLocalServer, QLocalSocket, QNetworkDiskCache
 print("_基础界面框架加载完成")
 # 我的界面内容
 from baby7_desktop_tool_form import Ui_Form
@@ -207,11 +199,18 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         self.os_version = hardware_id_util.get_os_version()
         # 工具包
         self.toolkit = Toolkit(self, self)
+        # 软件数据路径
+        self.app_data_path = self.toolkit.file_util.get_app_data_path(self.app_name)
+        self.app_data_db_path = self.toolkit.file_util.get_app_data_db_path(self.app_data_path, self.app_name)
+        self.app_data_plugin_path = self.toolkit.file_util.get_app_data_plugin_path(self.app_data_path)
+        self.app_data_network_path = self.toolkit.file_util.get_app_data_network_path(self.app_data_path)
+        self.app_data_image_path = self.toolkit.file_util.get_app_data_image_path(self.app_data_path)
+        self.app_data_update_path = self.toolkit.file_util.get_app_data_update_path(self.app_data_path)
         # 图片缓存管理器
-        self.image_cache_manager = ImageCacheManager()
+        self.image_cache_manager = ImageCacheManager(image_path=self.app_data_image_path)
         # 网络缓存
         self.network_disk_cache = QNetworkDiskCache(self)
-        self.network_disk_cache.setCacheDirectory(QStandardPaths.writableLocation(QStandardPaths.CacheLocation))
+        self.network_disk_cache.setCacheDirectory(self.app_data_network_path)
         self.network_disk_cache.setMaximumCacheSize(100 * 1024 * 1024)    # 设置缓存大小（单位：字节） 例如 100 MB
         # ***************** 更新检测 *****************
         # print(f'__更新检测开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
@@ -411,7 +410,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         # 启动时，检测本地用户
         try:
             # 初始化数据库
-            self.database_manager = DatabaseManager(app_name="AgileTiles")
+            self.database_manager = DatabaseManager(db_path=self.app_data_db_path)
             # 获取本地当前用户
             self.current_user = self.database_manager.get_current_user()
             if self.current_user is None or self.current_user["username"] == "LocalUser":
@@ -1763,17 +1762,13 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 exit()
 
     def run_exit_helper(self):
-        # 获取exit_helper的路径（假设在同一目录下）
-        current_exe_path = os.path.abspath(sys.argv[0])
-        exit_helper_path = os.path.join(os.path.dirname(current_exe_path), "exit_helper.exe")
-        # 找不到就不运行exit助手
-        if not os.path.exists(exit_helper_path):
-            return
-        # 启动exit程序
-        try:
-            subprocess.Popen([exit_helper_path])
-        except Exception as e:
-            pass
+        QTimer.singleShot(1000, self.run_exit_helper_one)
+        QTimer.singleShot(2000, self.run_exit_helper_one)
+        QTimer.singleShot(3000, self.run_exit_helper_one)
+
+    def run_exit_helper_one(self):
+        while True:
+            QApplication.instance().quit()
 
     def quit_before_do(self):
         """退出前置处理"""
@@ -1844,6 +1839,27 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             event.accept()
 
 
+def is_another_instance_running():
+    """检查是否已有实例在运行"""
+    shared_memory = QSharedMemory("AgileTiles")
+    # 尝试附加到现有共享内存
+    if shared_memory.attach():
+        # 如果能附加，说明已有实例运行
+        shared_memory.detach()
+        return True
+    # 尝试创建共享内存
+    if not shared_memory.create(1):  # 创建1字节大小的共享内存
+        # 创建失败，说明已有实例运行
+        error = shared_memory.error()
+        if error == QSharedMemory.AlreadyExists:
+            # 共享内存已存在，尝试附加确认
+            if shared_memory.attach():
+                shared_memory.detach()
+                return True
+        return True  # 其他创建错误也认为已有实例
+    # 创建成功，无其他实例
+    return False
+
 if __name__ == '__main__':
     # 设置工作目录为应用安装目录来修复开机自启动无法加载图片的问题(sys.frozen用来判断pyinstaller，__compiled__用来判断nuitka)
     if getattr(sys, 'frozen', False) or '__compiled__' in globals():
@@ -1867,25 +1883,42 @@ if __name__ == '__main__':
     #     " --no-sandbox"             # 禁用沙箱模式（在部分系统环境下需要）
     #     # " --enable-logging --v=1"   # 启用Chromium日志
     # )
+    # 检查是否已有实例运行
+    if is_another_instance_running():
+        print("程序已在运行中，新实例将退出")
+        # 可选：激活已运行的实例窗口
+        try:
+            socket = QLocalSocket()
+            socket.connectToServer("AgileTiles")
+            if socket.waitForConnected(500):
+                socket.write(b"activate")
+                socket.flush()
+                socket.waitForBytesWritten(1000)
+                socket.close()
+        except:
+            pass
+        sys.exit(0)
+    # 程序退出时清理共享内存
+    def cleanup_shared_memory():
+        shared_memory = QSharedMemory("AgileTiles")
+        if shared_memory.isAttached():
+            shared_memory.detach()
     # 限制单机挂载数量一个
     try:
-        app = QtWidgets.QApplication(sys.argv)
-        serverName = 'AgileTiles'
-        socket = QLocalSocket()
-        socket.connectToServer(serverName)
-        # 判定应用服务是否正常链接，如正常则证明程序实例已经在运行
-        if socket.waitForConnected(500):
-            app.quit()
-        # 如果没有实例运行，则创建应用服务器并监听服务
-        else:
-            localServer = QLocalServer()
-            localServer.listen(serverName)
-            # 原始启动逻辑
-            my_form = AgileTilesForm()
-            my_form.show()
-            sys.exit(app.exec())
+        app = QApplication(sys.argv)
+        # 创建本地服务器用于实例间通信（可选）
+        localServer = QLocalServer()
+        localServer.listen("AgileTiles")
+        # 原始启动逻辑
+        my_form = AgileTilesForm()
+        my_form.show()
+        # 注册清理函数
+        atexit.register(cleanup_shared_memory)
+        sys.exit(app.exec())
     except Exception as e:
         print("程序启动异常：{}".format(e))
         # 打印错误详细信息
         traceback.print_exc()
+        atexit.register(cleanup_shared_memory)
+    atexit.register(cleanup_shared_memory)
     exit()

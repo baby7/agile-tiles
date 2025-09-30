@@ -1,7 +1,6 @@
 import os
 import shutil
 import zipfile
-import tempfile
 
 
 def get_file_size(file_path):
@@ -79,3 +78,86 @@ def atomic_delete(path: str) -> bool:
             except Exception as rollback_e:
                 print(f"回滚失败：{rollback_e}")
         return False
+
+def get_app_data_path(app_name):
+    # 获取应用程序数据目录（跨平台）
+    # Windows: C:\Users\<User>\AppData\Local\<AppName>
+    # macOS: ~/Library/Application Support/<AppName>
+    # Linux: ~/.local/share/<AppName>
+    data_parent_dir = os.environ['LOCALAPPDATA']
+    data_dir = os.path.join(data_parent_dir, app_name)
+    print(f"获取软件数据目录:{data_dir}")
+    if not data_dir:  # 确保目录有效
+        data_dir = os.path.expanduser("~")  # 回退到用户目录
+    # 创建目录
+    try:
+        os.makedirs(data_dir, exist_ok=True)
+    except OSError as e:
+        print(f"无法创建目录 {data_dir}: {e}")
+        return None  # 或抛出异常
+    return data_dir
+
+def get_app_data_db_path(app_data_path, app_name):
+    # 跨平台安全拼接路径
+    old_db_dir = os.path.join(app_data_path, app_name)
+    old_db_file = os.path.join(str(old_db_dir), "app.db")
+    db_dir = os.path.join(app_data_path, "DB")
+    db_file = os.path.join(str(db_dir), "app.db")
+    # 如果新目录不存在，则创建
+    if not os.path.exists(db_dir):
+        os.makedirs(db_dir, exist_ok=True)
+    # 如果旧数据库存在且新数据库不存在，则移动旧数据库到新目录
+    if os.path.exists(old_db_file) and not os.path.exists(db_file):
+        # 移动旧数据库到新目录
+        shutil.move(str(old_db_file), str(db_dir))
+    # 删除旧数据库
+    if os.path.exists(old_db_file):
+        os.remove(old_db_file)
+    # 删除旧目录
+    if os.path.exists(old_db_dir):
+        shutil.rmtree(old_db_dir)
+    return db_file
+
+def get_app_data_plugin_path(app_data_path):
+    # 跨平台安全拼接路径
+    plugin_dir = os.path.join(app_data_path, "Plugin")
+    print(f"程序插件目录:{plugin_dir}")
+    try:
+        os.makedirs(plugin_dir, exist_ok=True)
+    except OSError as e:
+        print(f"无法创建目录 {plugin_dir}: {e}")
+        return None  # 或抛出异常
+    return plugin_dir
+
+def get_app_data_network_path(app_data_path):
+    # 跨平台安全拼接路径
+    network_dir = os.path.join(app_data_path, "NetworkCache")
+    print(f"程序网络缓存目录:{network_dir}")
+    try:
+        os.makedirs(network_dir, exist_ok=True)
+    except OSError as e:
+        print(f"无法创建目录 {network_dir}: {e}")
+        return None  # 或抛出异常
+    return network_dir
+
+def get_app_data_image_path(app_data_path):
+    # 跨平台安全拼接路径
+    image_dir = os.path.join(app_data_path, "ImageCache")
+    print(f"程序图片缓存目录:{image_dir}")
+    try:
+        os.makedirs(image_dir, exist_ok=True)
+    except OSError as e:
+        print(f"无法创建目录 {image_dir}: {e}")
+        return None  # 或抛出异常
+    return image_dir
+
+def get_app_data_update_path(app_data_path):
+    # 跨平台安全拼接路径
+    update_dir = os.path.join(app_data_path, "UpdateCache")
+    print(f"程序更新缓存目录:{update_dir}")
+    try:
+        os.makedirs(update_dir, exist_ok=True)
+    except OSError as e:
+        print(f"无法创建目录 {update_dir}: {e}")
+        return None  # 或抛出异常
+    return update_dir

@@ -1,34 +1,12 @@
 import os
-from PySide6.QtGui import QPixmap, QImage
-from PySide6.QtCore import QDir, QStandardPaths
-
-def get_image_path():
-    # 获取图片目录（跨平台）
-    # Windows: C:\Users\<User>\AppData\Local\<AppName>
-    # macOS: ~/Library/Application Support/<AppName>
-    # Linux: ~/.local/share/<AppName>
-    data_dir = QStandardPaths.writableLocation(QStandardPaths.AppLocalDataLocation)
-    print(f"第一次获取目录:{data_dir}")
-    if not data_dir:  # 确保目录有效
-        data_dir = os.path.expanduser("~")  # 回退到用户目录
-        print(f"第二次获取目录:{data_dir}")
-
-    # 跨平台安全拼接路径
-    cache_dir = os.path.join(data_dir, "cache")
-    print(f"图片目录:{cache_dir}")
-    try:
-        os.makedirs(cache_dir, exist_ok=True)
-    except OSError as e:
-        print(f"无法创建目录 {cache_dir}: {e}")
-        return None  # 或抛出异常
-
-    return os.path.join(cache_dir, "images")
+from PySide6.QtGui import QPixmap
+from PySide6.QtCore import QDir
 
 
 class ImageCacheManager:
-    def __init__(self):
+    def __init__(self, image_path=None):
         self.cache = {}  # 图片缓存字典 {image_name: QPixmap}
-        self.base_dir = get_image_path()  # 图片基础目录
+        self.base_dir = image_path  # 图片基础目录
 
     def get_pixmap(self, image_name):
         """

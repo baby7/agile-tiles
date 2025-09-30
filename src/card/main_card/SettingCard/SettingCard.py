@@ -349,7 +349,8 @@ class SettingCard(MainCard):
         # 创建更新器实例
         self.updater = Updater(
             api_url=common.BASE_URL + "/version/public/check?type=Windows",
-            app_version=self.main_object.app_version  # 假设 main_object 有 app_version 属性
+            app_version=self.main_object.app_version,  # 假设 main_object 有 app_version 属性,
+            update_dir=self.main_object.app_data_update_path
         )
 
         # 连接信号
@@ -431,7 +432,8 @@ class SettingCard(MainCard):
         # 重新配置更新器（用于下载）
         self.updater = Updater(
             api_url=common.BASE_URL + "/version/public/check?type=Windows",
-            app_version=self.main_object.app_version
+            app_version=self.main_object.app_version,
+            update_dir=self.main_object.app_data_update_path
         )
 
         # 连接下载信号
@@ -483,10 +485,8 @@ class SettingCard(MainCard):
         """替换exe文件并重启应用"""
         # 获取当前exe的路径
         current_exe_path = os.path.abspath(sys.argv[0])
-
         # 获取updater_helper的路径（假设在同一目录下）
         helper_path = os.path.join(os.path.dirname(current_exe_path), "patch_updater.exe")
-
         if not os.path.exists(helper_path):
             message_box_util.box_information(
                 self.main_object,
@@ -496,40 +496,51 @@ class SettingCard(MainCard):
             self.main_object.agree_update = False
             self.main_object.update_ready.emit()
             return
-
         # 关闭主程序
         self.main_object.quit_before_do()
-
-        # 启动替换程序
+        # 运行安装包
         try:
-            subprocess.Popen([helper_path])
+            if sys.platform == "win32":
+                os.startfile(helper_path)
+            else:
+                subprocess.Popen([helper_path])
         except Exception as e:
-            QApplication.quit()
+            message_box_util.box_information(
+                self.main_object,
+                "错误",
+                f"无法启动安装程序: {str(e)}"
+            )
         # 退出应用
         QApplication.quit()
 
     def _run_installer_and_exit(self, exe_path):
         """运行安装包并退出程序"""
-        # 确保路径是绝对路径
-        exe_path = os.path.abspath(exe_path)
-
-        print(f"exe_path:{exe_path}")
-
-        # 关闭主程序（如果需要）
+        # 获取当前exe的路径
+        current_exe_path = os.path.abspath(sys.argv[0])
+        # 获取updater_helper的路径（假设在同一目录下）
+        helper_path = os.path.join(os.path.dirname(current_exe_path), "full_updater.exe")
+        if not os.path.exists(helper_path):
+            message_box_util.box_information(
+                self.main_object,
+                "错误",
+                "更新失败，您可以在官网下载安装最新版本。"
+            )
+            self.main_object.agree_update = False
+            self.main_object.update_ready.emit()
+            return
+        # 关闭主程序
         self.main_object.quit_before_do()
-
         # 运行安装包
         try:
             if sys.platform == "win32":
-                os.startfile(exe_path)
+                os.startfile(helper_path)
             else:
-                subprocess.Popen([exe_path])
+                subprocess.Popen([helper_path])
         except Exception as e:
-            self.toolkit.message_box_util.box_critical(
+            message_box_util.box_information(
                 self.main_object,
                 "错误",
                 f"无法启动安装程序: {str(e)}"
             )
-
         # 退出应用
         QApplication.quit()

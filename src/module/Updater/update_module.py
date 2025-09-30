@@ -16,7 +16,8 @@ def check_update_on_start(main_object, tag=None):
     """启动时静默检查更新"""
     main_object.silent_updater = Updater(
         api_url=common.BASE_URL + "/version/public/check?type=Windows",
-        app_version=main_object.app_version
+        app_version=main_object.app_version,
+        update_dir=main_object.app_data_update_path
     )
     main_object.silent_updater.finished.connect(
         lambda success, update_info: handle_silent_update_result(main_object, success, update_info, tag)
@@ -117,7 +118,8 @@ def start_update_process(main_object, update_info):
     # 创建下载器
     main_object.downloader = Updater(
         api_url=common.BASE_URL + "/version/public/check?type=Windows",
-        app_version=main_object.silent_updater.app_version
+        app_version=main_object.silent_updater.app_version,
+        update_dir=main_object.app_data_update_path
     )
 
     # 连接信号
@@ -170,10 +172,8 @@ def replace_exe_and_restart(main_object, new_exe_path, update_info):
     """替换exe文件并重启应用"""
     # 获取当前exe的路径
     current_exe_path = os.path.abspath(sys.argv[0])
-
     # 获取updater_helper的路径（假设在同一目录下）
     helper_path = os.path.join(os.path.dirname(current_exe_path), "patch_updater.exe")
-
     if not os.path.exists(helper_path):
         message_box_util.box_information(
             main_object,
@@ -183,54 +183,53 @@ def replace_exe_and_restart(main_object, new_exe_path, update_info):
         main_object.agree_update = False
         main_object.update_ready.emit()
         return
-
     # 关闭主程序
     main_object.quit_before_do()
-    # 启动替换程序
-    try:
-        # 直接运行exe
-        # subprocess.Popen([helper_path])
-        # 使用 ShellExecute 触发 UAC 弹窗
-        result = ctypes.windll.shell32.ShellExecuteW(
-            None, "runas", helper_path, None, None, 1
-        )
-        if result <= 32:
-            message_box_util.box_information(
-                main_object,
-                "错误",
-                "更新失败，您可以在官网下载安装最新版本。"
-            )
-    except Exception as e:
-        QApplication.quit()
-    # 退出应用
-    QApplication.quit()
-
-
-def run_installer_and_exit(main_object, exe_path):
-    """运行安装包并退出程序"""
-    # 确保路径是绝对路径
-    exe_path = os.path.abspath(exe_path)
-
-    print(f"exe_path:{exe_path}")
-
-    # 关闭主程序
-    main_object.quit_before_do()
-
     # 运行安装包
     try:
         if sys.platform == "win32":
-            os.startfile(exe_path)
+            os.startfile(helper_path)
         else:
-            subprocess.Popen([exe_path])
+            subprocess.Popen([helper_path])
     except Exception as e:
         message_box_util.box_information(
             main_object,
             "错误",
             f"无法启动安装程序: {str(e)}"
         )
+    # 退出应用
+    QApplication.quit()
 
-    main_object.agree_update = False
-    main_object.update_ready.emit()
+
+def run_installer_and_exit(main_object, exe_path):
+    """运行安装包并退出程序"""
+    # 获取当前exe的路径
+    current_exe_path = os.path.abspath(sys.argv[0])
+    # 获取updater_helper的路径（假设在同一目录下）
+    helper_path = os.path.join(os.path.dirname(current_exe_path), "full_updater.exe")
+    if not os.path.exists(helper_path):
+        message_box_util.box_information(
+            main_object,
+            "错误",
+            "更新失败，您可以在官网下载安装最新版本。"
+        )
+        main_object.agree_update = False
+        main_object.update_ready.emit()
+        return
+    # 关闭主程序
+    main_object.quit_before_do()
+    # 运行安装包
+    try:
+        if sys.platform == "win32":
+            os.startfile(helper_path)
+        else:
+            subprocess.Popen([helper_path])
+    except Exception as e:
+        message_box_util.box_information(
+            main_object,
+            "错误",
+            f"无法启动安装程序: {str(e)}"
+        )
     # 退出应用
     QApplication.quit()
 
@@ -240,7 +239,8 @@ def check_update_normal(main_object):
     try:
         main_object.silent_updater = Updater(
             api_url=common.BASE_URL + "/version/public/check?type=Windows",
-            app_version=main_object.app_version
+            app_version=main_object.app_version,
+            update_dir=main_object.app_data_update_path
         )
         main_object.silent_updater.finished.connect(
             lambda success, update_info: handle_silent_update_normal_result(main_object, success, update_info)

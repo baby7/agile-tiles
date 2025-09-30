@@ -37,16 +37,14 @@ nuitka_command = [
     "--include-package=win32com",                                           # pywin32的核心包
     "--include-package=pywintypes",                                         # pywin32的核心包
 
-    "--windows-icon-from-ico=resources/img/icon/icon.ico",                     # 图标路径
+    "--windows-icon-from-ico=resources/img/icon/icon.ico",                  # 图标路径
     "--output-dir=out",                                                     # 输出目录
 
     "--windows-company-name=杭州市拱墅区启杭灵卡软件开发工作室",                  # Windows下软件公司信息
     "--windows-product-name=灵卡面板",                                       # Windows下软件名称
     "--windows-file-version=" + no_v_version,                               # Windows下软件的版本
     "--windows-product-version=" + no_v_version,                            # Windows下软件的产品版本
-    "--windows-file-description=灵卡面板",                                  # Windows下软件的作用描述
-
-    "--windows-uac-admin",                                                  # 管理员权限的清单文件
+    "--windows-file-description=灵卡面板",                                   # Windows下软件的作用描述
 
     "--lto=yes",                                                            # 启用 Link Time Optimization（LTO）以优化编译速度和性能。
     "--jobs=14",                                                            # 使用 16 个线程并行编译，加速编译速度。
@@ -102,7 +100,7 @@ print("完成复制 doc 文件夹")
 # 步骤9: 复制 run_util 文件夹
 shutil.copyfile("run_util/login_helper.exe", f"{output_dir}/login_helper.exe")
 shutil.copyfile("run_util/patch_updater.exe", f"{output_dir}/patch_updater.exe")
-shutil.copyfile("run_util/exit_helper.exe", f"{output_dir}/exit_helper.exe")
+shutil.copyfile("run_util/full_updater.exe", f"{output_dir}/full_updater.exe")
 print("完成复制 run_util 文件夹")
 
 # 步骤10: 删除"out/AgileTiles.dist"文件夹

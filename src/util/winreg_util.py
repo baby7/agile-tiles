@@ -1,62 +1,72 @@
 import os
-import winreg
 import sys
-
-# 注册表信息
-WINREG_KEY = r"Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Run"
-WINREG_NAME = "AgileTiles"
+import win32com.client  # 需要安装 pywin32
 
 
 def get_exe_path():
     """获取正确的可执行文件路径"""
     if getattr(sys, 'frozen', False):
-        # 打包环境：使用sys.executable
-        return sys.executable
+        # 打包环境：使用os.getcwd()
+        return os.path.join(os.getcwd(), "AgileTiles.exe")
     else:
         # 开发环境：使用当前脚本路径
         return os.path.abspath(sys.argv[0])
 
-def get_quoted_path(path):
-    """处理含空格的路径，添加双引号"""
-    if " " in path and not path.startswith('"'):
-        return f'"{path}"'
-    return path
+
+def get_startup_folder():
+    """获取启动文件夹路径"""
+    return os.path.join(os.environ['APPDATA'],
+                        r'Microsoft\Windows\Start Menu\Programs\Startup')
+
+
+def get_shortcut_path():
+    """获取快捷方式路径"""
+    return os.path.join(get_startup_folder(), "AgileTiles.lnk")
+
 
 def is_auto_start_enabled():
     """检查是否已启用自启动"""
+    shortcut_path = get_shortcut_path()
+    if not os.path.exists(shortcut_path):
+        return False
     try:
-        key = winreg.OpenKey(
-            winreg.HKEY_LOCAL_MACHINE,      # 注册表项(HKEY_LOCAL_MACHINE)
-            WINREG_KEY,
-            0, winreg.KEY_READ
-        )
-        reg_value, _ = winreg.QueryValueEx(key, WINREG_NAME)
-        key.Close()
-        current_path = get_quoted_path(get_exe_path())
-        return os.path.normpath(reg_value) == os.path.normpath(current_path)
-    except FileNotFoundError:
-        return False
+        # 检查快捷方式指向的路径是否正确
+        shell = win32com.client.Dispatch("WScript.Shell")
+        shortcut = shell.CreateShortCut(shortcut_path)
+        current_path = get_exe_path()
+        return os.path.normpath(shortcut.Targetpath) == os.path.normpath(current_path)
     except Exception as e:
-        print(f"Error checking auto-start: {e}")
+        print(f"Error checking shortcut: {e}")
         return False
+
 
 def set_auto_start(enabled):
     """启用/禁用自启动"""
-    try:
-        key = winreg.OpenKey(
-            winreg.HKEY_LOCAL_MACHINE,      # 注册表项(HKEY_LOCAL_MACHINE)
-            WINREG_KEY,
-            0, winreg.KEY_SET_VALUE
-        )
-        if enabled:
-            current_path = get_quoted_path(get_exe_path())
-            print(f"current_path:{current_path}")
-            winreg.SetValueEx(key, WINREG_NAME, 0, winreg.REG_SZ, current_path)
-        else:
-            try:
-                winreg.DeleteValue(key, WINREG_NAME)
-            except FileNotFoundError:
-                pass
-        key.Close()
-    except Exception as e:
-        print(f"Error setting auto-start: {e}")
+    shortcut_path = get_shortcut_path()
+    if enabled:
+        try:
+            # 获取当前可执行文件路径
+            target_path = get_exe_path()
+            # 获取工作目录
+            working_dir = os.path.dirname(target_path)
+            # 确保启动文件夹存在
+            startup_folder = get_startup_folder()
+            if not os.path.exists(startup_folder):
+                os.makedirs(startup_folder)
+            # 创建快捷方式
+            shell = win32com.client.Dispatch("WScript.Shell")
+            shortcut = shell.CreateShortCut(shortcut_path)
+            shortcut.Targetpath = target_path
+            shortcut.WorkingDirectory = working_dir
+            shortcut.save()
+            print(f"Created shortcut at: {shortcut_path}")
+        except Exception as e:
+            print(f"Error creating shortcut: {e}")
+    else:
+        try:
+            # 删除快捷方式
+            if os.path.exists(shortcut_path):
+                os.remove(shortcut_path)
+                print(f"Removed shortcut: {shortcut_path}")
+        except Exception as e:
+            print(f"Error removing shortcut: {e}")

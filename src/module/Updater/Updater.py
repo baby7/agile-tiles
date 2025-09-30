@@ -2,7 +2,7 @@ import os
 import json
 import shutil
 import traceback
-from PySide6.QtCore import QObject, Signal, QFile, QSaveFile, QIODevice
+from PySide6.QtCore import QObject, Signal, QSaveFile, QIODevice
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
 
@@ -11,11 +11,12 @@ class Updater(QObject):
     finished = Signal(bool, dict)  # 完成信号(是否成功, 更新信息)
     message = Signal(str)  # 消息信号
 
-    def __init__(self, api_url, app_version):
+    def __init__(self, api_url, app_version, update_dir):
         super().__init__()
         self.api_url = api_url + "&version=" + str(app_version)
         self.app_version = app_version
         self.downloaded_file_path = None
+        self.update_dir = update_dir
         self.network_manager = QNetworkAccessManager(self)
         self.current_reply = None
         self.download_file = None
@@ -24,7 +25,6 @@ class Updater(QObject):
         """检查更新"""
         try:
             request = QNetworkRequest(self.api_url)
-
             self.current_reply = self.network_manager.get(request)
             self.current_reply.finished.connect(self._handle_update_response)
         except Exception as e:
@@ -49,8 +49,7 @@ class Updater(QObject):
                     # 没有小版本更新文件则默认下载完整安装包
                     download_url = update_info["url"]
             # 创建临时目录
-            temp_dir = os.path.join(os.getcwd(), "temp_updates")
-
+            temp_dir = self.update_dir
             # 清理临时目录（如果存在）
             if os.path.exists(temp_dir):
                 for filename in os.listdir(temp_dir):
