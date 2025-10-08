@@ -51,7 +51,7 @@ def play_song(music_card, item):
         music_card.show_base()  # 显示基础界面
         music_card.save_settings()
     except Exception as e:
-        traceback.print_exc()
+        music_card.main_object.info_logger.error(traceback.format_exc())
 
 def toggle_playback_mode(music_card):
     # 切换播放模式
@@ -69,7 +69,7 @@ def prev_song(music_card):
         music_card.play_current_song()
         music_card.save_settings()
     except Exception as e:
-        traceback.print_exc()
+        music_card.main_object.info_logger.error(traceback.format_exc())
 
 def next_song(music_card):
     try:
@@ -90,7 +90,7 @@ def next_song(music_card):
         music_card.play_current_song()
         music_card.save_settings()
     except Exception as e:
-        traceback.print_exc()
+        music_card.main_object.info_logger.error(traceback.format_exc())
 
 def toggle_play_pause(music_card):
     if music_card.player.source().isEmpty():

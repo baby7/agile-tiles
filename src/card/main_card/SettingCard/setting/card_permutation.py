@@ -1,7 +1,7 @@
 # coding:utf-8
 from PySide6.QtCore import Qt, Signal, QDateTime
 
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 from src.card.main_card.SettingCard.setting.CardPermutation.CardStore import CardStore
 from src.card.main_card.SettingCard.setting.card_permutation_form import Ui_Form
 from src.card.main_card.SettingCard.setting.CardPermutation.CardItemSignals import CardDesignItem
@@ -124,6 +124,8 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
         # 按钮防抖机制
         self.last_click_time = 0  # 上次点击时间戳
         self.click_delay = 500    # 防抖延迟(毫秒)
+        # 设置字体
+        style_util.set_font_and_right_click_style(self.use_parent, self)
 
     def render_card_list(self):
         """渲染卡片列表"""

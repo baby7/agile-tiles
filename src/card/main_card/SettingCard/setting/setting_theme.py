@@ -5,7 +5,7 @@ from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QListView
 
 from src.card.main_card.SettingCard.setting.setting_theme_form import Ui_Form
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 import src.ui.style_util as style_util
 from src.constant import data_save_constant
 from src.module.Box import message_box_util

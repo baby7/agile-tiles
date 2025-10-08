@@ -7,7 +7,7 @@ from PySide6.QtWidgets import QComboBox, QPushButton, QCheckBox, QLineEdit, QSpi
 from qframelesswindow import TitleBar
 from qframelesswindow.titlebar import MinimizeButton, MaximizeButton, CloseButton
 
-from src.card.main_card.ChatCard.component.EnterTextEdit.EnterTextEdit import EnterTextEdit
+from src.card.main_card.ChatCard.chat_component.EnterTextEdit.EnterTextEdit import EnterTextEdit
 from src.ui.svg_dict import svg_dict
 
 '''
@@ -1085,11 +1085,16 @@ def set_table_widget_style(table_widget, is_dark=False):
 '''
 frame_style = "QFrame { background-color: transparent; }"
 def find_all_widgets(widget, widget_list=None):
-    if widget_list is None:
-        widget_list = []
-    widget_list.append(widget)
-    for child in widget.children():
-        find_all_widgets(child, widget_list)
+    """
+    使用迭代方式查找所有子控件，避免递归深度超限
+    """
+    widget_list = []
+    stack = [widget]
+    while stack:
+        current_widget = stack.pop()
+        widget_list.append(current_widget)
+        # 使用 children() 获取直接子控件，并添加到栈中
+        stack.extend(current_widget.children())
     return widget_list
 
 def set_dialog_control_style(widget, is_dark=False):
@@ -1186,6 +1191,8 @@ def set_font_and_right_click_style(main_window, widget):
                 widget.setFont(QFont(main_window.use_parent.form_font_name, widget.font().pointSize()))
             except Exception as e:
                 print(f"set_font_and_right_click_style error: {str(e)}")
+
+
 def set_all_theme(main_object):
     if main_object.is_dark:
         main_object.setStyleSheet("*{ outline: none; background:rgba(24, 24, 24, 255); color:rgb(239, 240, 241) };")

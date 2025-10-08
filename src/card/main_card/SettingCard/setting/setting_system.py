@@ -8,8 +8,8 @@ from PySide6.QtWidgets import QListView
 from src.card.main_card.SettingCard.setting.setting_system_form import Ui_Form
 import src.ui.style_util as style_util
 import src.constant.data_save_constant as data_save_constant
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
-from src.component.GlobalHotkeyManager.GlobalHotkeyManager import GlobalHotkeyManager
+from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.my_component.GlobalHotkeyManager.GlobalHotkeyManager import GlobalHotkeyManager
 from src.util import winreg_util
 from src.module.Box import message_box_util
 
@@ -180,8 +180,7 @@ class SettingSystemWindow(AgileTilesAcrylicWindow, Ui_Form):
                 else:
                     winreg_util.set_auto_start(False)
             except Exception as e:
-                traceback.print_exc()
-                print(f"设置开机自启动失败: {e}", file=sys.stderr)
+                self.use_parent.info_logger.error(f"设置开机自启动失败: {traceback.format_exc()}")
                 message_box_util.box_information(self.use_parent, "错误", "设置开机自启动失败")
             # 键盘唤醒
             if self.check_box_wake_up_keyboard.isChecked():

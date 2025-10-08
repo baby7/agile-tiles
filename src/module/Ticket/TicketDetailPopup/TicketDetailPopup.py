@@ -6,11 +6,12 @@ from PySide6.QtWidgets import (
     QListWidgetItem, QAbstractItemView
 )
 
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
-from src.component.ImagePreviewWidget.ImagePreviewWidget import ImagePreviewWidget
+from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.my_component.ImagePreviewWidget.ImagePreviewWidget import ImagePreviewWidget
 from src.module.Ticket.TicketPopup.TicketPopup import TicketPopup
 from src.module.Ticket.TicketSystem.TicketSystem import TicketSystem
 from src.module.Box import message_box_util
+from src.ui import style_util
 
 
 class TicketDetailPopup(AgileTilesAcrylicWindow):
@@ -35,6 +36,8 @@ class TicketDetailPopup(AgileTilesAcrylicWindow):
         self.load_ticket_details()
 
         self.showMaximized()
+        # 设置字体
+        style_util.set_font_and_right_click_style(self.use_parent, self)
 
     def init_ui(self):
         # 根据主题设置颜色

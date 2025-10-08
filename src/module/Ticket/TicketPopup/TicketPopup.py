@@ -1,6 +1,10 @@
 import os
 import json
 import mimetypes
+
+from src.ui import style_util
+from src.util import my_shiboken_util
+
 from PySide6.QtGui import Qt, QFont, QPixmap, QPainter, QBrush, QColor
 from PySide6.QtCore import Qt, Signal, QRect, Slot, QUrl, QFile, QByteArray
 from PySide6.QtWidgets import (
@@ -10,8 +14,8 @@ from PySide6.QtWidgets import (
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply, QHttpMultiPart, QHttpPart
 
 from src.client import common
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
-from src.component.ImagePreviewWidget.ImagePreviewWidget import ImagePreviewWidget
+from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.my_component.ImagePreviewWidget.ImagePreviewWidget import ImagePreviewWidget
 from src.module.Box import message_box_util
 
 
@@ -22,6 +26,7 @@ class TicketPopup(AgileTilesAcrylicWindow):
     # 添加调试模式常量
     DEBUG_MODE = False  # 设为True时显示支付状态标签
     ticket_reply = None
+    reply_reply = None
     file_ids = []
 
     def __init__(self, parent=None, use_parent=None, title=None, screen=None, current_user=None,
@@ -61,6 +66,8 @@ class TicketPopup(AgileTilesAcrylicWindow):
         except Exception as e:
             print(e)
         self.showMaximized()
+        # 设置字体
+        style_util.set_font_and_right_click_style(self.use_parent, self)
 
     def init_ui(self, ticket_title=None):
         # 主布局
@@ -521,8 +528,8 @@ class TicketPopup(AgileTilesAcrylicWindow):
         json_data = QByteArray(json.dumps(ticket_data).encode('utf-8'))
 
         # 发送网络请求
-        ticket_reply = self.ticket_manager.post(request, json_data)
-        ticket_reply.finished.connect(lambda: self.handle_ticket_response(ticket_reply))
+        self.ticket_reply = self.ticket_manager.post(request, json_data)
+        self.ticket_reply.finished.connect(self.handle_ticket_response)
 
     def submit_reply(self):
         """提交工单回复"""
@@ -552,16 +559,16 @@ class TicketPopup(AgileTilesAcrylicWindow):
         json_data = QByteArray(json.dumps(reply_data).encode('utf-8'))
 
         # 发送网络请求
-        reply_reply = self.ticket_manager.post(request, json_data)
-        reply_reply.finished.connect(lambda: self.handle_reply_response(reply_reply))
+        self.reply_reply = self.ticket_manager.post(request, json_data)
+        self.reply_reply.finished.connect(self.handle_reply_response)
 
-    def handle_ticket_response(self, reply):
+    def handle_ticket_response(self):
         """处理工单提交的响应"""
         try:
             # 获取响应
-            if reply.error() == QNetworkReply.NoError:
+            if self.ticket_reply.error() == QNetworkReply.NoError:
                 # 解析 JSON 响应
-                data = reply.readAll().data()
+                data = self.ticket_reply.readAll().data()
                 if data is None or data == b'':
                     message_box_util.box_acknowledgement(self.use_parent, "提交失败", "请稍后重试")
                 else:
@@ -573,20 +580,21 @@ class TicketPopup(AgileTilesAcrylicWindow):
                         error_msg = response_data.get("message", "未知错误，请稍后重试")
                         message_box_util.box_acknowledgement(self.use_parent, "提交失败", error_msg)
             else:
-                message_box_util.box_acknowledgement(self.use_parent, "提交失败", f"网络错误: {reply.errorString()}")
+                message_box_util.box_acknowledgement(self.use_parent, "提交失败", f"网络错误: {self.ticket_reply.errorString()}")
         except Exception as e:
             message_box_util.box_acknowledgement(self.use_parent, "处理错误", f"响应处理失败: {str(e)}")
-        finally:
-            reply.deleteLater()
-            self.ticket_reply = None  # 清除引用
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.ticket_reply is not None and my_shiboken_util.is_qobject_valid(self.ticket_reply):
+            self.ticket_reply.deleteLater()
+        self.ticket_reply = None  # 清除引用
 
-    def handle_reply_response(self, reply):
+    def handle_reply_response(self):
         """处理回复提交的响应"""
         try:
             # 获取响应
-            if reply.error() == QNetworkReply.NoError:
+            if self.reply_reply.error() == QNetworkReply.NoError:
                 # 解析 JSON 响应
-                data = reply.readAll().data()
+                data = self.reply_reply.readAll().data()
                 if data is None or data == b'':
                     message_box_util.box_acknowledgement(self.use_parent, "提交失败", "请稍后重试")
                 else:
@@ -598,12 +606,13 @@ class TicketPopup(AgileTilesAcrylicWindow):
                         error_msg = response_data.get("message", "未知错误，请稍后重试")
                         message_box_util.box_acknowledgement(self.use_parent, "提交失败", error_msg)
             else:
-                message_box_util.box_acknowledgement(self.use_parent, "提交失败", f"网络错误: {reply.errorString()}")
+                message_box_util.box_acknowledgement(self.use_parent, "提交失败", f"网络错误: {self.reply_reply.errorString()}")
         except Exception as e:
             message_box_util.box_acknowledgement(self.use_parent, "处理错误", f"响应处理失败: {str(e)}")
-        finally:
-            reply.deleteLater()
-            self.ticket_reply = None  # 清除引用
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.reply_reply is not None and my_shiboken_util.is_qobject_valid(self.reply_reply):
+            self.reply_reply.deleteLater()
+        self.reply_reply = None  # 清除引用
 
     def show_error(self, message):
         """显示错误提示"""

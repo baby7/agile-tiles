@@ -1,5 +1,8 @@
 # coding:utf-8
 import json
+import traceback
+
+from src.util import my_shiboken_util
 from functools import partial
 
 from PySide6.QtCore import Signal, QUrlQuery, QUrl, QDateTime
@@ -7,7 +10,7 @@ from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkRe
 from PySide6.QtWidgets import QVBoxLayout, QListWidget, QWidget, QHBoxLayout, QLabel, QPushButton, QListWidgetItem
 
 from src.client import common
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 import src.ui.style_util as style_util
 from src.constant import data_save_constant
 from src.module.UserData.HistoryRecover.user_data_history_recover_form import Ui_Form
@@ -22,6 +25,9 @@ class UserServerRecoverWindow(AgileTilesAcrylicWindow, Ui_Form):
     tab_list_widgets = []
     recover_btn_list = []
     delete_btn_list = []
+    reply_list = []
+    recover_reply = None
+    delete_reply = None
 
     def __init__(self, parent=None, use_parent=None):
         super(UserServerRecoverWindow, self).__init__(is_dark=use_parent.is_dark, form_theme_mode=use_parent.form_theme_mode,
@@ -49,8 +55,10 @@ class UserServerRecoverWindow(AgileTilesAcrylicWindow, Ui_Form):
         try:
             # 终止所有网络请求
             for reply in self.network_manager.findChildren(QNetworkReply):
-                reply.abort()
-                reply.deleteLater()
+                # 在执行删除操作前，检查C++对象是否存活
+                if reply is not None and my_shiboken_util.is_qobject_valid(reply):
+                    reply.abort()
+                    reply.deleteLater()
 
             # 清空引用（改为重新赋值空列表）
             self.tab_list_widgets = []
@@ -98,21 +106,30 @@ class UserServerRecoverWindow(AgileTilesAcrylicWindow, Ui_Form):
         request.setRawHeader(b"Authorization", self.use_parent.access_token.encode('utf-8'))
         reply = self.network_manager.get(request)
         reply.tab_index = tab_index  # 存储选项卡索引
-        reply.finished.connect(self.handle_response)
+        reply.finished.connect(lambda : self.handle_response(reply))
+        self.reply_list.append(reply)
 
-    def handle_response(self):
+    def handle_response(self, reply):
         """处理网络响应"""
         print("处理网络响应")
-        reply = self.sender()
-        if reply.error() == QNetworkReply.NoError:
-            data = json.loads(reply.readAll().data())
-            if data["code"] == 0:
-                self.update_tab_list(reply.tab_index, data["data"])
+        try:
+            if reply.error() == QNetworkReply.NoError:
+                data = reply.readAll().data().decode()
+                result = json.loads(data)
+                if result["code"] == 0:
+                    self.update_tab_list(reply.tab_index, result["data"])
+                else:
+                    print(f"Error fetching data: {result}")
             else:
-                print(f"Error fetching data: {data}")
-        else:
-            print(f"Error fetching data: {reply.errorString()}")
-        reply.deleteLater()
+                print(f"Error fetching data: {reply.errorString()}")
+        except Exception as e:
+            print(f"处理网络响应异常: {traceback.format_exc()}")
+        # 清理该回复对象
+        if reply is not None and my_shiboken_util.is_qobject_valid(reply):
+            reply.deleteLater()
+        # 从待处理列表中移除
+        if reply in self.reply_list:
+            self.reply_list.remove(reply)
 
     def update_tab_list(self, tab_index, data_list):
         """更新指定选项卡的列表"""
@@ -163,6 +180,9 @@ class UserServerRecoverWindow(AgileTilesAcrylicWindow, Ui_Form):
     def _handle_recover(self, data):
         """处理恢复操作"""
         print(f"Recovering data: {data['dataHash']}")
+        confirm = message_box_util.box_acknowledgement(self.use_parent, "退出", f"确定要恢复该数据吗？")
+        if not confirm:
+            return
 
         # 构造请求参数
         url = QUrl(common.BASE_URL + "/userData/normal/history/one")
@@ -175,13 +195,13 @@ class UserServerRecoverWindow(AgileTilesAcrylicWindow, Ui_Form):
         # 发送GET请求
         request = QNetworkRequest(url)
         request.setRawHeader(b"Authorization", self.use_parent.access_token.encode('utf-8'))
-        reply = self.network_manager.get(request)
-        reply.finished.connect(lambda: self._handle_recover_response(reply, data))
+        self.recover_reply = self.network_manager.get(request)
+        self.recover_reply.finished.connect(self._handle_recover_response)
 
-    def _handle_recover_response(self, reply, data):
+    def _handle_recover_response(self):
         """处理恢复响应"""
-        if reply.error() == QNetworkReply.NoError:
-            response = json.loads(reply.readAll().data())
+        if self.recover_reply.error() == QNetworkReply.NoError:
+            response = json.loads(self.recover_reply.readAll().data())
             if response["code"] == 0:
                 print(f"恢复数据成功: {response['data']}")
                 user_data_record = response["data"]
@@ -194,11 +214,18 @@ class UserServerRecoverWindow(AgileTilesAcrylicWindow, Ui_Form):
                 print(f"恢复失败: {response['msg']}")
                 message_box_util.box_information(self.use_parent, "错误信息", "恢复数据失败，请稍后重试")
         else:
-            print(f"请求失败: {reply.errorString()}")
-        reply.deleteLater()
+            print(f"恢复历史数据请求失败: {self.recover_reply.errorString()}")
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.recover_reply is not None and my_shiboken_util.is_qobject_valid(self.recover_reply):
+            self.recover_reply.deleteLater()
+        self.recover_reply = None
 
     def _handle_delete(self, data):
         """处理删除操作"""
+        confirm = message_box_util.box_acknowledgement(self.use_parent, "退出", f"确定要删除该数据吗？")
+        if not confirm:
+            return
+
         url = QUrl(common.BASE_URL + "/userData/normal/history/one")
         query = QUrlQuery()
         query.addQueryItem("username", self.use_parent.current_user["username"])
@@ -209,13 +236,13 @@ class UserServerRecoverWindow(AgileTilesAcrylicWindow, Ui_Form):
         # 发送DELETE请求
         request = QNetworkRequest(url)
         request.setRawHeader(b"Authorization", self.use_parent.access_token.encode('utf-8'))
-        reply = self.network_manager.deleteResource(request)  # 使用DELETE方法
-        reply.finished.connect(lambda: self._handle_delete_response(reply))
+        self.delete_reply = self.network_manager.deleteResource(request)  # 使用DELETE方法
+        self.delete_reply.finished.connect(self._handle_delete_response)
 
-    def _handle_delete_response(self, reply):
+    def _handle_delete_response(self):
         """处理删除响应"""
-        if reply.error() == QNetworkReply.NoError:
-            response = json.loads(reply.readAll().data())
+        if self.delete_reply.error() == QNetworkReply.NoError:
+            response = json.loads(self.delete_reply.readAll().data())
             if response["code"] == 0 and response["data"]:
                 print("删除成功，刷新列表")
                 self.request_tab_data(self.tabWidget.currentIndex())
@@ -224,15 +251,20 @@ class UserServerRecoverWindow(AgileTilesAcrylicWindow, Ui_Form):
                 print(f"删除失败: {response['msg']}")
                 message_box_util.box_information(self.use_parent, "错误信息", "删除数据失败，请稍后重试")
         else:
-            print(f"请求失败: {reply.errorString()}")
-        reply.deleteLater()
+            print(f"删除历史数据请求失败: {self.delete_reply.errorString()}")
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.delete_reply is not None and my_shiboken_util.is_qobject_valid(self.delete_reply):
+            self.delete_reply.deleteLater()
+        self.reply = None
 
     def closeEvent(self, event):
         """重写关闭事件处理"""
         # 终止所有网络请求
         for reply in self.network_manager.findChildren(QNetworkReply):
-            reply.abort()
-            reply.deleteLater()
+            # 在执行删除操作前，检查C++对象是否存活
+            if reply is not None and my_shiboken_util.is_qobject_valid(reply):
+                reply.abort()
+                reply.deleteLater()
 
         # 清空控件引用
         self.tab_list_widgets.clear()

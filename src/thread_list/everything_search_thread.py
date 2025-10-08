@@ -84,8 +84,10 @@ class EverythingSearcher:
     EVERYTHING_SORT_DATE_RUN_ASCENDING = 25
     EVERYTHING_SORT_DATE_RUN_DESCENDING = 26
 
-    def __init__(self, everything_path=None):
+    def __init__(self, everything_path=None, db_path=None, config_path=None):
         self.everything_path = everything_path
+        self.db_path = db_path
+        self.config_path = config_path
         self.dll = None
         self._load_dll()
         self._setup_function_prototypes()
@@ -172,7 +174,7 @@ class EverythingSearcher:
 
         # 如果服务未就绪，启动Everything
         if not service_ready:
-            self._start_everything_service()
+            self._start_everything_service(self.db_path, self.config_path)
 
             # 等待服务启动
             for _ in range(20):  # 最多等待10秒
@@ -180,7 +182,7 @@ class EverythingSearcher:
                 if self._is_everything_service_ready():
                     break
 
-    def _start_everything_service(self):
+    def _start_everything_service(self, db_path=None, config_path=None):
         """启动Everything服务"""
         # 查找Everything.exe路径
         everything_path = self._find_everything_path()
@@ -190,6 +192,17 @@ class EverythingSearcher:
             raise RuntimeError("Everything.exe not found.")
 
         try:
+            # 构建启动参数
+            cmd = [exe_path, "-startup"]
+
+            # 如果提供了数据库路径，则添加-db参数
+            if db_path:
+                cmd.extend(["-db", db_path])
+
+            # 如果提供了配置文件路径，则添加-config参数
+            if config_path:
+                cmd.extend(["-config", config_path])
+
             # 使用subprocess启动Everything，并隐藏窗口
             startupinfo = subprocess.STARTUPINFO()
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
@@ -197,7 +210,7 @@ class EverythingSearcher:
 
             # 保存进程引用
             self.everything_process = subprocess.Popen(
-                [exe_path, "-startup"],
+                cmd,
                 startupinfo=startupinfo,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL
@@ -371,16 +384,18 @@ class EverythingStatusThread(QThread):
     status_updated = Signal(str, bool)  # 状态消息, 是否就绪
     error_occurred = Signal(str)
 
-    def __init__(self, everything_path=None, parent=None):
+    def __init__(self, parent=None, everything_path=None, db_path=None, config_path=None):
         super().__init__(parent)
         self.everything_path = everything_path
+        self.db_path = db_path
+        self.config_path = config_path
         self._is_running = True
         self.searcher = None
 
     def run(self):
         try:
             # 创建Everything搜索器
-            self.searcher = EverythingSearcher(self.everything_path)
+            self.searcher = EverythingSearcher(everything_path=self.everything_path, db_path=self.db_path, config_path=self.config_path)
 
             # 检查数据库是否已加载
             if not self.searcher.is_db_loaded():
@@ -413,10 +428,12 @@ class EverythingSearchThread(QThread):
     search_error = Signal(str)
     indexing_status = Signal(bool)  # True表示正在索引，False表示索引完成
 
-    def __init__(self, search_text, everything_path=None, offset=0, limit=50, parent=None):
+    def __init__(self, parent=None, search_text=None, everything_path=None, db_path=None, config_path=None, offset=0, limit=50):
         super().__init__(parent)
         self.search_text = search_text
         self.everything_path = everything_path
+        self.db_path = db_path
+        self.config_path = config_path
         self.offset = offset
         self.limit = limit
         self._is_running = True
@@ -425,7 +442,9 @@ class EverythingSearchThread(QThread):
     def run(self):
         try:
             # 创建Everything搜索器
-            self.searcher = EverythingSearcher(self.everything_path)
+            self.searcher = EverythingSearcher(everything_path=self.everything_path,
+                                               db_path=self.db_path,
+                                               config_path=self.config_path)
 
             # 检查数据库是否已加载
             if not self.searcher.is_db_loaded():

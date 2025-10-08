@@ -2,6 +2,8 @@ import os
 import json
 import shutil
 import traceback
+from src.util import my_shiboken_util
+
 from PySide6.QtCore import QObject, Signal, QSaveFile, QIODevice
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
@@ -108,9 +110,10 @@ class Updater(QObject):
             self.message.emit(f"解析更新信息失败: {str(e)}")
             self.finished.emit(False, {})
             traceback.print_exc()
-        finally:
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.current_reply is not None and my_shiboken_util.is_qobject_valid(self.current_reply):
             self.current_reply.deleteLater()
-            self.current_reply = None
+        self.current_reply = None
 
     def _handle_download_data(self):
         """处理下载数据"""
@@ -141,7 +144,8 @@ class Updater(QObject):
             self.message.emit(f"保存文件失败: {str(e)}")
             self.finished.emit(False, {})
             traceback.print_exc()
-        finally:
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.current_reply is not None and my_shiboken_util.is_qobject_valid(self.current_reply):
             self.current_reply.deleteLater()
-            self.current_reply = None
-            self.download_file = None
+        self.current_reply = None
+        self.download_file = None

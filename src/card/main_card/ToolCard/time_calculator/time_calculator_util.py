@@ -476,6 +476,9 @@ class TimeCalculatorApp(QWidget):
         # 设置样式
         style_util.set_dialog_control_style(self, is_dark)
 
+        # 设置字体
+        style_util.set_font_and_right_click_style(self.main_object, self)
+
     def setup_current_time_tab(self):
         # 创建滚动区域以适应竖向布局
         scroll_area = QScrollArea()

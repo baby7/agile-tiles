@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QLineEdit, QPushButton, QWidget, QHBoxLayout, QLab
     QTextBrowser, QSizePolicy
 import src.ui.style_util as style_util
 
-from src.component.AgileTilesFramelessDialog.AgileTilesFramelessDialog import AgileTilesFramelessDialog
+from src.my_component.AgileTilesFramelessDialog.AgileTilesFramelessDialog import AgileTilesFramelessDialog
 
 
 def box_information(widget, title, content, button_ok_text="确定", close_seconds=None):
@@ -69,6 +69,9 @@ def box_information(widget, title, content, button_ok_text="确定", close_secon
     dialog.resize(360, 160)  # 更紧凑的默认尺寸
     if hasattr(widget, "toolkit"):
         dialog.refresh_geometry(widget.toolkit.resolution_util.get_screen(widget))
+
+    # 设置字体
+    style_util.set_font_and_right_click_style(widget, dialog)
 
     # 如果传入了秒参数，则设置定时器
     if close_seconds is not None and close_seconds > 0:
@@ -163,6 +166,9 @@ def box_acknowledgement(widget, title, content=None, button_ok_text="确定", bu
         dialog.resize(450, 400)
     dialog.refresh_geometry(widget.toolkit.resolution_util.get_screen(widget))
 
+    # 设置字体
+    style_util.set_font_and_right_click_style(widget, dialog)
+
     return dialog.exec() == QDialog.Accepted
 
 
@@ -245,6 +251,9 @@ def box_input(widget, title, content, button_ok_text="确定", button_no_text="�
     # 设置输入焦点
     input_field.setFocus()
 
+    # 设置字体
+    style_util.set_font_and_right_click_style(widget, dialog)
+
     if dialog.exec() == QDialog.Accepted:
         return input_field.text()
     return None
@@ -314,6 +323,9 @@ def box_progress(widget, title, label_text="正在下载更新...", cancel_text=
     dialog.resize(450, 200)
     if hasattr(widget, "toolkit"):
         dialog.refresh_geometry(widget.toolkit.resolution_util.get_screen(widget))
+
+    # 设置字体
+    style_util.set_font_and_right_click_style(widget, dialog)
 
     return dialog, progress_bar, cancel_button
 

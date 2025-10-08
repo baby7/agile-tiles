@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (QLabel, QPushButton, QLineEdit, QTextBrowser,
 from src.card.MainCardManager.MainCard import MainCard
 from src.thread_list.everything_search_thread import EverythingStatusThread, EverythingSearchThread
 from src.ui import style_util
-from src.component.LoadAnimation.LoadAnimation import LoadAnimation
+from src.my_component.LoadAnimation.LoadAnimation import LoadAnimation
 
 file_type_map_list = [
     # 音频
@@ -416,7 +416,9 @@ class FileSearchCard(MainCard):
             self.status_thread.stop()
 
         # 创建并启动状态线程
-        self.status_thread = EverythingStatusThread(self.everything_path)
+        self.status_thread = EverythingStatusThread(everything_path=self.everything_path,
+                                                    db_path=self.main_object.app_data_everything_db_path,
+                                                    config_path=self.main_object.app_data_everything_config_path)
         self.status_thread.status_updated.connect(self.on_status_updated)
         self.status_thread.error_occurred.connect(self.on_status_error)
         self.status_thread.start()
@@ -494,8 +496,10 @@ class FileSearchCard(MainCard):
 
         # 创建并启动搜索线程
         self.search_thread = EverythingSearchThread(
-            search_text,
+            search_text=search_text,
             everything_path=self.everything_path,
+            db_path=self.main_object.app_data_everything_db_path,
+            config_path=self.main_object.app_data_everything_config_path,
             offset=offset,
             limit=50
         )
@@ -559,7 +563,7 @@ class FileSearchCard(MainCard):
             # 创建可点击的链接
             html_content += f'<div style="margin-bottom: 5px;">'
             html_content += f'{icon_html}'
-            html_content += f'<a href="file:///{encoded_path}" style="font-weight: bold; text-decoration: none; font-size: 14px; vertical-align: middle;">&nbsp;{file_name}</a>'
+            html_content += f'<a href="file:///{encoded_path}" style="color: #409EFF; font-weight: bold; text-decoration: none; font-size: 14px; vertical-align: middle;">&nbsp;{file_name}</a>'
             html_content += f'</div>'
             html_content += f'<div style="color: #666; font-size: 12px; margin-bottom: 10px;">{file_path}<br>'
             html_content += f'类型: <span style="font-weight: bold; font-size: 12px;"> {file_type} </span>'

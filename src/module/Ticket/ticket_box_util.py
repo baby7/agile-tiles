@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem
 )
 
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 from src.module.Ticket.TicketDetailPopup.TicketDetailPopup import TicketDetailPopup
 from src.module.Ticket.TicketPopup.TicketPopup import TicketPopup
 from src.module.Ticket.TicketSystem.TicketSystem import TicketSystem
@@ -35,6 +35,8 @@ class TicketListPopup(AgileTilesAcrylicWindow):
         self.load_tickets()
         # 最大化
         self.showMaximized()
+        # 设置字体
+        style_util.set_font_and_right_click_style(self.use_parent, self)
 
     def init_ui(self):
         # 根据主题设置颜色
@@ -231,6 +233,9 @@ class TicketListPopup(AgileTilesAcrylicWindow):
             # 添加到列表
             self.ticket_list.addItem(item)
             self.ticket_list.setItemWidget(item, widget)
+
+        # 设置字体
+        style_util.set_font_and_right_click_style(self.use_parent, self)
 
     def open_ticket_detail_by_button(self):
         """通过按钮打开工单详情"""

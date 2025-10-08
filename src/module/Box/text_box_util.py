@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (QVBoxLayout, QLabel, QPushButton, QApplication,
                                QHBoxLayout, QTextBrowser, QSizePolicy)
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 from src.constant import dialog_constant
 from src.module.Box import message_box_util
 from src.ui import style_util
@@ -21,6 +21,8 @@ class TextPopup(AgileTilesAcrylicWindow):
         self._setup_initial_config(title)
         self._handle_content_type()
         self.center_on_screen()
+        # 设置字体
+        style_util.set_font_and_right_click_style(self.use_parent, self)
 
     def _init_components(self):
         """初始化基础组件"""
@@ -105,29 +107,27 @@ class TextPopup(AgileTilesAcrylicWindow):
 
             request = QNetworkRequest(url)
             request.setRawHeader(b"Authorization", bytes(self.use_parent.access_token, "utf-8"))
-            reply = self.network_manager.get(request)  # 获取reply对象
-            reply.finished.connect(lambda: self._handle_response(reply))  # 显式传递参数
+            self.reply = self.network_manager.get(request)  # 获取reply对象
+            self.reply.finished.connect(self._handle_response)  # 显式传递参数
         except Exception as e:
             self._show_error(str(e))
 
-    def _handle_response(self, reply):
+    def _handle_response(self):
         """处理网络响应"""
-        reply.deleteLater()
-
         print("处理网络响应")
-
         # 恢复按钮状态
         if self.refresh_button:
             self.refresh_button.setEnabled(True)
         self.copy_button.setEnabled(True)
 
-        if reply.error() != QNetworkReply.NoError:
-            self._show_error(f"请求失败: {reply.errorString()}")
+        if self.reply.error() != QNetworkReply.NoError:
+            self._show_error(f"文字请求失败: {self.reply.errorString()}")
             return
 
         try:
-            data = json.loads(bytes(reply.readAll()).decode())
-            content = data.get('data', '')
+            data = self.reply.readAll()
+            json_data = json.loads(str(data, 'utf-8'))
+            content = json_data.get('data', '')
             if not content:
                 raise ValueError("返回数据中缺少data字段")
         except Exception as e:

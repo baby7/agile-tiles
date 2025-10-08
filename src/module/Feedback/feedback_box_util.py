@@ -10,8 +10,8 @@ from PySide6.QtWidgets import (
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply, QHttpMultiPart, QHttpPart
 
 from src.client import common
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
-from src.component.ImagePreviewWidget.ImagePreviewWidget import ImagePreviewWidget
+from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.my_component.ImagePreviewWidget.ImagePreviewWidget import ImagePreviewWidget
 from src.module.Box import message_box_util
 from src.ui import style_util
 
@@ -481,16 +481,16 @@ class FeedbackPopup(AgileTilesAcrylicWindow):
         json_data = QByteArray(json.dumps(feedback_data).encode('utf-8'))
 
         # 发送网络请求
-        feedback_reply = self.feedback_manager.post(request, json_data)
-        feedback_reply.finished.connect(lambda: self.handle_feedback_response(feedback_reply))
+        self.feedback_reply = self.feedback_manager.post(request, json_data)
+        self.feedback_reply.finished.connect(self.handle_feedback_response)
 
-    def handle_feedback_response(self, reply):
+    def handle_feedback_response(self):
         """处理反馈提交的响应"""
         try:
             # 获取响应
-            if reply.error() == QNetworkReply.NoError:
+            if self.feedback_reply.error() == QNetworkReply.NoError:
                 # 解析 JSON 响应
-                data = reply.readAll().data()
+                data = self.feedback_reply.readAll().data()
                 if data is None or data == b'':
                     message_box_util.box_acknowledgement(self.use_parent, "提交失败", "请稍后重试")
                 else:
@@ -502,12 +502,11 @@ class FeedbackPopup(AgileTilesAcrylicWindow):
                         error_msg = response_data.get("message", "未知错误，请稍后重试")
                         message_box_util.box_acknowledgement(self.use_parent, "提交失败", error_msg)
             else:
-                message_box_util.box_acknowledgement(self.use_parent, "提交失败", f"网络错误: {reply.errorString()}")
+                message_box_util.box_acknowledgement(self.use_parent, "提交失败", f"网络错误: {self.feedback_reply.errorString()}")
         except Exception as e:
             message_box_util.box_acknowledgement(self.use_parent, "处理错误", f"响应处理失败: {str(e)}")
-        finally:
-            reply.deleteLater()
-            self.feedback_reply = None  # 清除引用
+        self.feedback_reply.deleteLater()
+        self.feedback_reply = None  # 清除引用
 
     def show_error(self, message):
         """显示错误提示"""
@@ -547,5 +546,6 @@ def show_feedback_dialog(main_object, title, current_user):
     screen = main_object.toolkit.resolution_util.get_screen(main_object)
     dialog = FeedbackPopup(None, use_parent=main_object, title=title, screen=screen, current_user=current_user)
     dialog.refresh_geometry(screen)
+    style_util.set_font_and_right_click_style(main_object, dialog)
     dialog.show()
     return dialog

@@ -1,14 +1,15 @@
-import datetime
 import json
 
-from PySide6.QtCore import QUrl, Slot
+from src.ui import style_util
+from src.util import my_shiboken_util
+
+from PySide6.QtCore import QUrl
 from PySide6.QtGui import QPixmap, Qt
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QPushButton, QApplication
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QApplication
 
-from src.card.component.AggregationCard.AggregationCard import AggregationCard
+from src.card.card_component.AggregationCard.AggregationCard import AggregationCard
 from src.client import common
-from src.ui import style_util
 
 
 class InformationCard(AggregationCard):
@@ -39,7 +40,10 @@ class InformationCard(AggregationCard):
     base_url = common.BASE_URL + "/textContent/normal/random"
     # 新增：记录已加载的分类
     loaded_tabs = set()
-
+    # 未完成的请求
+    text_reply = None
+    image_url_reply = None
+    image_data_reply = None
 
     def __init__(self, main_object=None, parent=None, theme=None, card=None, cache=None, data=None,
                  toolkit=None, logger=None, save_data_func=None):
@@ -250,6 +254,8 @@ class InformationCard(AggregationCard):
         layout.addStretch()
         # 切换到展示面板
         self.stacked_widget.setCurrentIndex(1)
+        # 设置字体
+        style_util.set_font_and_right_click_style(self.main_object, self.show_panel_content_panel)
 
     def copy_text(self, text, info_label):
         QApplication.clipboard().setText(text)
@@ -261,19 +267,22 @@ class InformationCard(AggregationCard):
         # 创建网络请求
         request = QNetworkRequest(QUrl(image_url))
         request.setMaximumRedirectsAllowed(5)  # 设置最大重定向次数
-        reply = self.network_manager.get(request)
-        reply.finished.connect(lambda : self.on_request_finished(reply, title, call_back=call_back))
+        self.image_data_reply = self.network_manager.get(request)
+        self.image_data_reply.finished.connect(lambda : self.on_request_finished(title, call_back=call_back))
 
-    def on_request_finished(self, reply, title, call_back=None):
-        if reply.error() == QNetworkReply.NoError:
-            data = reply.readAll()
+    def on_request_finished(self, title, call_back=None):
+        if self.image_data_reply.error() == QNetworkReply.NoError:
+            data = self.image_data_reply.readAll()
             pixmap = QPixmap()
             pixmap.loadFromData(data)
             self.show_image_in_show_panel_end(title, pixmap, call_back=call_back)
         else:
-            print(f"Request failed: {reply.errorString()}")
+            print(f"Request failed: {self.image_data_reply.errorString()}")
             self.show_text_in_show_panel("请求失败", "请检查网络连接", set_type=False)
-        reply.deleteLater()
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.image_data_reply is not None and my_shiboken_util.is_qobject_valid(self.image_data_reply):
+            self.image_data_reply.deleteLater()
+        self.image_data_reply = None
 
     def show_image_in_show_panel_end(self, title, image, call_back=None):
         # 设置标题
@@ -335,15 +344,15 @@ class InformationCard(AggregationCard):
         request = QNetworkRequest(url)
         request.setRawHeader(b"Authorization", self.main_object.access_token.encode())
         # 设置请求属性（可选）
-        reply = self.network_manager.get(request)
+        self.text_reply = self.network_manager.get(request)
         # 存储上下文信息
-        reply.finished.connect(lambda : self.process_history_data(reply))
+        self.text_reply.finished.connect(self.process_history_data)
 
     # 历史数据处理函数
-    def process_history_data(self, reply):
+    def process_history_data(self):
         try:
             # 解析数据
-            data = reply.readAll().data().decode()
+            data = self.text_reply.readAll().data().decode()
             result = json.loads(data)
             history_list = result["data"]
             history_str = ""
@@ -359,6 +368,10 @@ class InformationCard(AggregationCard):
                 self.main_object, "错误信息",
                 f"获取历史上的今天失败: {str(e)}"
             )
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.text_reply is not None and my_shiboken_util.is_qobject_valid(self.text_reply):
+            self.text_reply.deleteLater()
+        self.text_reply = None
 
     def push_button_reading_kfc_click(self):
         try:
@@ -414,14 +427,14 @@ class InformationCard(AggregationCard):
         request = QNetworkRequest(url)
         request.setRawHeader(b"Authorization", self.main_object.access_token.encode())
         # 设置请求属性（可选）
-        reply = self.network_manager.get(request)
+        self.text_reply = self.network_manager.get(request)
         # 存储上下文信息
-        reply.finished.connect(lambda : self.process_random_text_data(reply, title, call_back=call_back))
+        self.text_reply.finished.connect(lambda : self.process_random_text_data(title, call_back=call_back))
 
-    def process_random_text_data(self, reply, title, call_back):
+    def process_random_text_data(self, title, call_back):
         try:
             # 解析数据
-            data = reply.readAll().data().decode()
+            data = self.text_reply.readAll().data().decode()
             result = json.loads(data)
             data = result.get('data', {})
             content = data.get('content', '')
@@ -432,6 +445,10 @@ class InformationCard(AggregationCard):
                 self.main_object, "错误信息",
                 f"获取{title}失败: {str(e)}"
             )
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.text_reply is not None and my_shiboken_util.is_qobject_valid(self.text_reply):
+            self.text_reply.deleteLater()
+        self.text_reply = None
 
     def push_button_moyu_image_click(self):
         # 未登录的判断
@@ -442,13 +459,13 @@ class InformationCard(AggregationCard):
         request = QNetworkRequest(url)
         request.setRawHeader(b"Authorization", self.main_object.access_token.encode())
 
-        reply = self.network_manager.get(request)
-        reply.finished.connect(lambda : self.process_moyu_image(reply))
+        self.image_url_reply = self.network_manager.get(request)
+        self.image_url_reply.finished.connect(self.process_moyu_image)
 
     # 每日一图处理函数
-    def process_moyu_image(self, reply):
+    def process_moyu_image(self):
         try:
-            data = reply.readAll().data().decode()
+            data = self.image_url_reply.readAll().data().decode()
             result = json.loads(data)
             image_url = result['data']['result']
             call_back = lambda : self.toolkit.image_box_util.show_image_dialog(
@@ -460,6 +477,10 @@ class InformationCard(AggregationCard):
                 self.main_object, "错误信息",
                 f"获取摸鱼人日历失败: {str(e)}"
             )
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.image_url_reply is not None and my_shiboken_util.is_qobject_valid(self.image_url_reply):
+            self.image_url_reply.deleteLater()
+        self.image_url_reply = None
 
     def push_button_random_image_click(self, image_type, title):
         # 未登录的判断
@@ -470,13 +491,13 @@ class InformationCard(AggregationCard):
         request = QNetworkRequest(url)
         request.setRawHeader(b"Authorization", self.main_object.access_token.encode())
 
-        reply = self.network_manager.get(request)
-        reply.finished.connect(lambda : self.process_random_image(reply, image_type, title))
+        self.image_url_reply = self.network_manager.get(request)
+        self.image_url_reply.finished.connect(lambda : self.process_random_image(image_type, title))
 
 
-    def process_random_image(self, reply, image_type, title):
+    def process_random_image(self, image_type, title):
         try:
-            data = reply.readAll().data().decode()
+            data = self.image_url_reply.readAll().data().decode()
             result = json.loads(data)
             image_url = result['data']['result']
             if image_type == "kfc":
@@ -493,3 +514,7 @@ class InformationCard(AggregationCard):
                 self.main_object, "错误信息",
                 f"获取{title}失败: {str(e)}"
             )
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.image_url_reply is not None and my_shiboken_util.is_qobject_valid(self.image_url_reply):
+            self.image_url_reply.deleteLater()
+        self.image_url_reply = None

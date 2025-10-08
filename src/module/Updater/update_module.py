@@ -44,7 +44,13 @@ def handle_silent_update_result(main_object, success, update_info, tag):
     # 如果强制更新
     if tag == "Start" and update_info.get("updateTag") is not None and update_info.get("updateTag"):
         # 强制更新
-        show_force_update_dialog(main_object, update_info)
+        if main_object.run_environment == "exe":
+            show_force_update_dialog(main_object, update_info)
+        elif main_object.run_environment == "msix":
+            show_msix_force_update_dialog(main_object, update_info)
+        else:
+            main_object.agree_update = False
+            main_object.update_ready.emit()
         return
 
     # 有更新
@@ -89,6 +95,26 @@ def show_force_update_dialog(main_object, update_info):
     if result:
         main_object.agree_update = True
         start_update_process(main_object, update_info)
+    else:
+        main_object.agree_update = False
+        main_object.update_ready.emit()
+
+
+def show_msix_force_update_dialog(main_object, update_info):
+    """强制Msix更新弹窗"""
+    markdown_content = update_info["title"] + "\n" + update_info["message"]
+    result = message_box_util.box_acknowledgement(main_object,
+                                                  title="必须升级到最新版本才能继续使用", markdown_content=markdown_content,
+                                                  button_ok_text="确定更新", button_no_text="退出应用")
+    if result:
+        store_url = "ms-windows-store://downloadsandupdates"
+        try:
+            # 在Windows上
+            subprocess.Popen(f'cmd /c start "" "{store_url}"', shell=True)
+        except Exception as e:
+            message_box_util.box_information(main_object, "错误", "无法打开微软商店，请手动打开微软商店对灵卡面板进行更新")
+        main_object.agree_update = False
+        main_object.update_ready.emit()
     else:
         main_object.agree_update = False
         main_object.update_ready.emit()

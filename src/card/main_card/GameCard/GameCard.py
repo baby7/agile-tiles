@@ -1,4 +1,4 @@
-from src.card.component.AggregationCard.AggregationCard import AggregationCard
+from src.card.card_component.AggregationCard.AggregationCard import AggregationCard
 from src.card.main_card.GameCard.link import game_list, tool_list, draw_list, knowledge_list, programmer_list, interesting_list, top_list
 
 

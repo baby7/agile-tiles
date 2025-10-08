@@ -1,4 +1,5 @@
 import json
+from src.util import my_shiboken_util
 
 from PySide6.QtCore import QObject, Signal, QUrl
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
@@ -42,5 +43,6 @@ class SubscriptionPlanFetcher(QObject):
                 self.error.emit(f"网络错误: {reply.errorString()}")
         except Exception as e:
             self.error.emit(f"处理响应出错: {str(e)}")
-        finally:
+        # 在执行删除操作前，检查C++对象是否存活
+        if reply is not None and my_shiboken_util.is_qobject_valid(reply):
             reply.deleteLater()

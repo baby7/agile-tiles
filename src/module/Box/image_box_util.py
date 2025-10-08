@@ -4,8 +4,8 @@ from PySide6.QtNetwork import QNetworkReply, QNetworkAccessManager, QNetworkRequ
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QPushButton, QApplication, QFileDialog, QHBoxLayout, QScrollArea, \
     QFrame, QSizePolicy
 
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
-from src.component.LoadAnimation.LoadAnimation import LoadAnimation
+from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.my_component.LoadAnimation.LoadAnimation import LoadAnimation
 from src.ui import style_util
 
 

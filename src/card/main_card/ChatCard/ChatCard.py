@@ -1,5 +1,5 @@
-from src.card.component.AggregationCard.AggregationCard import AggregationCard
-from src.card.main_card.ChatCard.component.chat import ChatWindow
+from src.card.card_component.AggregationCard.AggregationCard import AggregationCard
+from src.card.main_card.ChatCard.chat_component.chat import ChatWindow
 
 
 class ChatCard(AggregationCard):

@@ -1,12 +1,14 @@
 from PySide6.QtWidgets import QVBoxLayout
 
-from src.card.component.AggregationCard.AggregationCard import AggregationCard
+from src.card.card_component.AggregationCard.AggregationCard import AggregationCard
 from src.card.main_card.ToolCard.bmi_calculator.bmi_calculator_util import BMICalculatorPopup
 from src.card.main_card.ToolCard.codec_tool.codec_tool_util import CodecTool
 from src.card.main_card.ToolCard.cron_generator.cron_generator_util import CronGeneratorPopup
+from src.card.main_card.ToolCard.crypto_too.crypto_tool_util import CryptoTool
 from src.card.main_card.ToolCard.file_operation import file_operation_util
 from src.card.main_card.ToolCard.hold_grudges_gen.hold_grudges_gen_util import HoldGrudgesGenPopup
 from src.card.main_card.ToolCard.housing_loan_rates import housing_loan_rates_util
+from src.card.main_card.ToolCard.ip_info.ip_info_util import IPInfoPopup
 from src.card.main_card.ToolCard.json_formatter import json_formatter_util
 from src.card.main_card.ToolCard.notebook_battery_graph import notebook_battery_graph_util
 from src.card.main_card.ToolCard.progress_bar_generator import progress_bar_generator_util
@@ -169,6 +171,16 @@ class ToolCard(AggregationCard):
             {
                 "category": self.module_category_browser,
                 "type": "程序员",
+                "title": "颜色转换器",
+                "des": "转换各种颜色格式",
+                "icon": "Components/platte",
+                "content": None,
+                "link": None,
+                "call_back_func": self.color_converter
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "程序员",
                 "title": "编解码工具",
                 "des": "URL Base64 ASCII 等",
                 "icon": "Sports/muscle",
@@ -179,12 +191,12 @@ class ToolCard(AggregationCard):
             {
                 "category": self.module_category_browser,
                 "type": "程序员",
-                "title": "颜色转换器",
-                "des": "转换各种颜色格式",
-                "icon": "Components/platte",
+                "title": "加解密工具",
+                "des": "A/DES RC4 Rabbi MD5 等",
+                "icon": "Safe/key",
                 "content": None,
                 "link": None,
-                "call_back_func": self.color_converter
+                "call_back_func": lambda : self.crypto_tool("加解密工具")
             },
             {
                 "category": self.module_category_browser,
@@ -215,6 +227,16 @@ class ToolCard(AggregationCard):
                 "content": None,
                 "link": None,
                 "call_back_func": lambda : self.uuid_generator("UUID生成器")
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "程序员",
+                "title": "本机IP信息",
+                "des": "查看本机IP详细信息",
+                "icon": "Connect/network-tree",
+                "content": None,
+                "link": None,
+                "call_back_func": lambda : self.ip_info("本机IP信息")
             },
             # 趣味
             {
@@ -316,10 +338,22 @@ class ToolCard(AggregationCard):
         self.util_app = UUIDGeneratorPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
+    def ip_info(self, title):
+        # 清理展示面板
+        self.clear_show_panel()
+        self.util_app = IPInfoPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
+        self.show_util_in_show_panel(title=title, util_app=self.util_app)
+
     def codec_tool(self, title):
         # 清理展示面板
         self.clear_show_panel()
         self.util_app = CodecTool(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
+        self.show_util_in_show_panel(title=title, util_app=self.util_app)
+
+    def crypto_tool(self, title):
+        # 清理展示面板
+        self.clear_show_panel()
+        self.util_app = CryptoTool(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def json_formatter(self):

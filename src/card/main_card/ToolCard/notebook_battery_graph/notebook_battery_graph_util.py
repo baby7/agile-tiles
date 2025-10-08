@@ -8,8 +8,8 @@ from PySide6.QtGui import Qt, QColor, QBrush
 from PySide6.QtCore import Slot, QDateTime
 from lxml import html
 
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
-from src.component.ChartWidget.DateTimeChartWidget import DateTimeChartWidget
+from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.my_component.ChartWidget.DateTimeChartWidget import DateTimeChartWidget
 from src.module.Box import message_box_util
 from src.ui import style_util
 

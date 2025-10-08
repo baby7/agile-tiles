@@ -537,5 +537,5 @@ class CronGeneratorPopup(QWidget):
             # 显示结果
             dialog_module.box_information(self.use_parent, title, result)
         except Exception as e:
-            traceback.print_exc()
+            self.use_parent.info_logger.error(f"{traceback.format_exc()}")
             dialog_module.box_information(self.use_parent, "错误", f"计算运行时间时出错: {str(e)}")

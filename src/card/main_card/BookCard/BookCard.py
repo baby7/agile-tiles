@@ -349,11 +349,27 @@ class BookCard(MainCard):
         self.push_button_book_chapter_next.clicked.connect(self.show_next)
         self.text_push_button_setting_font_size_minus.clicked.connect(self.font_size_minus)
         self.text_push_button_setting_font_size_add.clicked.connect(self.font_size_add)
+        # 初始化滚动条同步
+        self.sync_scrollbars()
         # 初始化书籍信息
         QtCore.QTimer.singleShot(100, self.init_book_info)
-        # self.init_book_info()
         # 初始化设置信息
         self.init_setting_info()
+
+    def sync_scrollbars(self):
+        # 获取 QTextBrowser 的内部垂直滚动条
+        internal_scrollbar = self.text_browser_book.verticalScrollBar()
+        # 设置外部滑块的范围与内部滚动条一致
+        self.external_scrollbar.setMinimum(internal_scrollbar.minimum())
+        self.external_scrollbar.setMaximum(internal_scrollbar.maximum())
+        # 当内部滚动条移动时，更新外部滑块
+        internal_scrollbar.valueChanged.connect(self.external_scrollbar.setValue)
+        # 当外部滑块被拖动时，滚动内部滚动条
+        self.external_scrollbar.valueChanged.connect(internal_scrollbar.setValue)
+        # 当文本区域内容变化导致内部滚动条范围改变时，更新外部滑块范围
+        internal_scrollbar.rangeChanged.connect(
+            lambda min_val, max_val: self.external_scrollbar.setRange(min_val, max_val)
+        )
 
     def refresh_data(self, date_time_str):
         super().refresh_data(date_time_str)
@@ -376,8 +392,6 @@ class BookCard(MainCard):
         self.init_book_info()
         # 初始化设置信息
         self.init_setting_info()
-        # 添加延迟确保布局完成(临时方案)
-        QtCore.QTimer.singleShot(1000, self.update_scrollbar_range)
 
     # 初始化设置
     def init_book_info(self):
@@ -392,13 +406,6 @@ class BookCard(MainCard):
         self.text_label_setting_font_size_minus.setText(self.font_size)
         self.text_interval_combo_box.setCurrentText(self.line_spacing)
         self.text_setting_edit_filtration.setPlainText(self.text_filtration)
-        # 添加延迟确保布局完成(临时方案)
-        QtCore.QTimer.singleShot(1000, self.update_scrollbar_range)
-        QtCore.QTimer.singleShot(3000, self.update_scrollbar_range)
-        QtCore.QTimer.singleShot(5000, self.update_scrollbar_range)
-        QtCore.QTimer.singleShot(7000, self.update_scrollbar_range)
-        QtCore.QTimer.singleShot(10000, self.update_scrollbar_range)
-        QtCore.QTimer.singleShot(15000, self.update_scrollbar_range)
 
     # 保存设置
     def save_info(self):
@@ -538,24 +545,10 @@ class BookCard(MainCard):
         self.text_browser_book.setFont(font)
         # 将文件内容添加到文本浏览器中
         self.text_browser_book.setText(self.to_browser_content(self.get_content()))
+        # 设置字体
+        style_util.set_font_and_right_click_style(self.main_object, self.text_browser_book)
         # 展示章节名
         self.book_chapter_title.setText(list(self.book_chapters[self.current_chapter].keys())[0])
-        # 更新滚动条范围
-        self.update_scrollbar_range()
-
-    # 更新滚动条范围
-    def update_scrollbar_range(self):
-        # 获取文本浏览器的垂直滚动条
-        v_scrollbar = self.text_browser_book.verticalScrollBar()
-        # 设置外部滚动条的范围与文本浏览器的滚动条一致
-        if self.external_scrollbar.minimum() != v_scrollbar.minimum():
-            self.external_scrollbar.setMinimum(v_scrollbar.minimum())
-        if self.external_scrollbar.maximum() != v_scrollbar.maximum():
-            self.external_scrollbar.setMaximum(v_scrollbar.maximum())
-        if self.external_scrollbar.pageStep() != v_scrollbar.pageStep():
-            self.external_scrollbar.setPageStep(v_scrollbar.pageStep())
-        if self.external_scrollbar.singleStep() != v_scrollbar.singleStep():
-            self.external_scrollbar.setSingleStep(v_scrollbar.singleStep())
 
     # 获取章节内容
     def get_content(self):
@@ -699,7 +692,7 @@ class BookCard(MainCard):
         else:
             self.external_scrollbar.setStyleSheet(style_util.scroll_bar_style)
         # 更新滚动条范围
-        self.update_scrollbar_range()
+        # self.update_scrollbar_range()
 
 
 # 书籍目录样式

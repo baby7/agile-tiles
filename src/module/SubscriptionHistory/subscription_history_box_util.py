@@ -1,11 +1,13 @@
 import json
+from src.util import my_shiboken_util
+
 from PySide6.QtWidgets import QVBoxLayout, QHeaderView, QTableWidget, QHBoxLayout, QPushButton, \
     QLabel, QTableWidgetItem
 from PySide6.QtCore import QUrl
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
 from src.client import common
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 from src.ui import style_util
 
 # 状态和来源的映射字典
@@ -29,6 +31,8 @@ PLAN_MAP = {
 
 
 class SubscriptionHistoryPopup(AgileTilesAcrylicWindow):
+
+    history_reply = None
 
     def __init__(self, parent=None, use_parent=None, screen=None, current_user=None):
         super().__init__(parent=parent, is_dark=use_parent.is_dark, form_theme_mode=use_parent.form_theme_mode,
@@ -117,13 +121,13 @@ class SubscriptionHistoryPopup(AgileTilesAcrylicWindow):
         request = QNetworkRequest(url)
         request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
         # 发送网络请求
-        history_reply = self.network_manager.get(request)
-        history_reply.finished.connect(lambda: self.handle_response(history_reply))
+        self.history_reply = self.network_manager.get(request)
+        self.history_reply.finished.connect(self.handle_response)
 
-    def handle_response(self, reply):
+    def handle_response(self):
         """处理网络响应"""
-        if reply.error() == QNetworkReply.NoError:
-            data = reply.readAll().data()
+        if self.history_reply.error() == QNetworkReply.NoError:
+            data = self.history_reply.readAll().data()
             try:
                 json_data = json.loads(data)
                 if json_data["code"] == 0:
@@ -131,9 +135,12 @@ class SubscriptionHistoryPopup(AgileTilesAcrylicWindow):
             except (json.JSONDecodeError, KeyError) as e:
                 print(f"数据处理错误: {e}")
         else:
-            print(f"网络错误: {reply.errorString()}")
+            print(f"网络错误: {self.history_reply.errorString()}")
 
-        reply.deleteLater()
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.history_reply is not None and my_shiboken_util.is_qobject_valid(self.history_reply):
+            self.history_reply.deleteLater()
+        self.history_reply = None
 
     def process_data(self, data):
         """处理并显示数据"""

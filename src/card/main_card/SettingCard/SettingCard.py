@@ -413,8 +413,19 @@ class SettingCard(MainCard):
         if not reply:
             return
 
-        # 开始下载更新包（显示进度对话框）
-        self._start_update_download(update_info)
+        if self.main_object.run_environment == "exe":
+            # 开始下载更新包（显示进度对话框）
+            self._start_update_download(update_info)
+        elif self.main_object.run_environment == "msix":
+            # 拉起微软应用商店
+            store_url = "ms-windows-store://downloadsandupdates"
+            try:
+                # 在Windows上
+                subprocess.Popen(f'cmd /c start "" "{store_url}"', shell=True)
+            except Exception as e:
+                message_box_util.box_information(self.main_object, "错误", "无法打开微软商店，请手动打开微软商店对灵卡面板进行更新")
+        else:
+            return
 
     def _start_update_download(self, update_info):
         """开始下载更新包（参考update_module.py的实现）"""

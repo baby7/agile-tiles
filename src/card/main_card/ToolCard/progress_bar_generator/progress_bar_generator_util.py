@@ -10,8 +10,8 @@ from PySide6.QtWidgets import (
 from PySide6.QtGui import QPixmap, QPainter, QColor, QFont, QImage, QFontMetrics, QMouseEvent, QWheelEvent
 from PySide6.QtCore import Qt, QRectF, QPoint, QPointF, QSettings
 
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
-from src.component.AgileTilesFramelessDialog.AgileTilesFramelessDialog import AgileTilesFramelessDialog
+from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.my_component.AgileTilesFramelessDialog.AgileTilesFramelessDialog import AgileTilesFramelessDialog
 from src.module.Box import message_box_util
 from src.ui import style_util
 

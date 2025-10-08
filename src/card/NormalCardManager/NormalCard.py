@@ -3,14 +3,13 @@ import traceback
 import uuid
 import copy
 import importlib.util
-from functools import partial
 
 from PySide6 import QtGui, QtCore, QtWidgets
 from PySide6.QtCore import QObject, Qt
 from PySide6.QtGui import QFont, QCursor
 from PySide6.QtWidgets import QLabel, QPushButton
 
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 from src.card.NormalCardManager.UiSetting import UiSetting
 from src.constant import card_constant, data_save_constant
 
@@ -118,7 +117,19 @@ class NormalCard(QObject):
             self.card.setLayout(text_layout)
             push_button_login.clicked.connect(lambda : self.main_object.show_login_tip(need_tip=False))
         else:
-            self.load_card_plugin()
+            load_result = self.load_card_plugin()
+            # 如果加载失败，则在卡片上显示错误信息
+            if not load_result:
+                text_layout = QtWidgets.QHBoxLayout()
+                text_layout.addStretch()
+                font = QFont()
+                font.setPointSize(11)
+                left_text_label = QLabel("请升级软件或卡片")
+                left_text_label.setStyleSheet("background: transparent; border: none;")
+                left_text_label.setFont(font)
+                text_layout.addWidget(left_text_label)
+                text_layout.addStretch()
+                self.card.setLayout(text_layout)
         print(f"新增卡片，uuid:{self.uuid}")
 
 
@@ -144,9 +155,10 @@ class NormalCard(QObject):
             #     self.card_plugin.AgileTilesFramelessWebEngineView = AgileTilesFramelessWebEngineView
             if hasattr(self.card_plugin, 'AgileTilesAcrylicWindow'):
                 self.card_plugin.AgileTilesAcrylicWindow = AgileTilesAcrylicWindow
+            return True
         except Exception as e:
-            traceback.print_exc()
-            print(f'load_card_plugin error:{e}')
+            self.main_object.info_logger.error(f"加载卡片插件失败: {traceback.format_exc()}")
+        return False
 
     def __del__(self):
         try:
@@ -175,7 +187,7 @@ class NormalCard(QObject):
             try:
                 self.card_plugin.init_ui()
             except Exception as e:
-                print(f'init_ui error:{e}')
+                self.main_object.info_logger.error(f"初始化卡片UI失败: {traceback.format_exc()}")
 
     def save_card_data_func(self, need_upload=True, data=None, data_type=data_save_constant.DATA_TYPE_CACHE):
         self.save_data_func(trigger_type=data_save_constant.TRIGGER_TYPE_CARD_UPDATE,
@@ -198,8 +210,7 @@ class NormalCard(QObject):
             try:
                 self.card_plugin.refresh_data(date_time_str)
             except Exception as e:
-                print(f'普通卡片刷新错误:{e}')
-                traceback.print_exc()
+                self.main_object.info_logger.error(f"普通卡片刷新数据错误: {traceback.format_exc()}")
 
     def refresh_ui(self, date_time_str):
         """
@@ -210,7 +221,7 @@ class NormalCard(QObject):
             try:
                 self.card_plugin.refresh_ui(date_time_str)
             except Exception as e:
-                print(f'refresh_ui error:{e}')
+                self.main_object.info_logger.error(f"普通卡片刷新UI错误: {traceback.format_exc()}")
         self.refresh_ui_end(date_time_str)
         self.refresh_theme()
 
@@ -272,7 +283,7 @@ class NormalCard(QObject):
             self.theme = "Dark" if is_dark else "Light"
             self.refresh_theme()
         except Exception as e:
-            print(f"Card set_theme error: {str(e)}")
+            self.main_object.info_logger.error(f"普通卡片设置主题错误: {traceback.format_exc()}")
 
     def refresh_theme(self):
         """
@@ -288,13 +299,13 @@ class NormalCard(QObject):
                 label_color = "rgba(255, 255, 255, 150)" if self.card_ui_setting.is_dark() else "rgba(0, 0, 0, 150)"
                 self.card_title_label.setStyleSheet("QLabel{ color: " + label_color + "; border: 0px solid black; background:transparent; }")
         except Exception as e:
-            print(f"Card refresh_theme error: {str(e)}")
+            self.main_object.info_logger.error(f"普通卡片刷新主题错误: {traceback.format_exc()}")
         if self.card_plugin is not None and hasattr(self.card_plugin, 'refresh_theme'):
             try:
                 print(f"{self.name}卡片:{self.uuid}刷新主题")
                 self.card_plugin.refresh_theme()
             except Exception as e:
-                print(f'refresh_theme error:{e}')
+                self.main_object.info_logger.error(f"普通卡片刷新主题错误: {traceback.format_exc()}")
         return True
 
     # 需要清理掉的时候
@@ -304,15 +315,9 @@ class NormalCard(QObject):
             if self.card_plugin is not None and hasattr(self.card_plugin, 'clear'):
                 # 时间清理
                 try:
-                    if getattr(self.card_plugin, 'timer') and self.card_plugin.timer:
+                    if hasattr(self.card_plugin, 'timer') and self.card_plugin.timer:
                         self.card_plugin.timer.stop()
                         self.card_plugin.timer.deleteLater()
-                except Exception as e:
-                    print(f"Card clear error: {str(e)}")
-                # 隐藏
-                try:
-                    self.card_plugin.hide()
-                    self.card_plugin.setVisible(False)
                 except Exception as e:
                     print(f"Card clear error: {str(e)}")
                 # 释放插件对象

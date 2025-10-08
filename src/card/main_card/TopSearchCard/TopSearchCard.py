@@ -1,6 +1,8 @@
+import datetime
 import json
 import time
 import urllib
+from src.util import my_shiboken_util
 import webbrowser
 
 from PySide6.QtCore import QCoreApplication, QRect, Qt, QUrl, Signal
@@ -14,7 +16,7 @@ from src.client import common
 from src.ui.style_util import scroll_bar_style
 from src.util import browser_util
 from src.ui import style_util
-from src.component.LoadAnimation.LoadAnimation import LoadAnimation
+from src.my_component.LoadAnimation.LoadAnimation import LoadAnimation
 
 
 # 热度标签映射
@@ -50,16 +52,25 @@ class ClickableLabel(QLabel):
 
 
 class HotSearchItem(QWidget):
-    def __init__(self, parent=None, data=None, data_type=None):
+    link = None
+    index_label = None
+    content = None
+    tag_label = None
+    left_click_func = None
+    middle_click_func = None
+
+    def __init__(self, parent=None, data=None, data_type=None, left_click_func=None, middle_click_func=None):
         super().__init__(parent)
         self.data = data
         if data_type == "weibo":
             self.link = "https://s.weibo.com/weibo?q=" + urllib.parse.quote("#" + str(data['t']) + "#")
         else:
             self.link = str(data['u'])
+        self.left_click_func = left_click_func
+        self.middle_click_func = middle_click_func
 
         # 主布局
-        main_layout = QVBoxLayout(self)
+        main_layout = QVBoxLayout()
         main_layout.setContentsMargins(10, 2, 10, 2)
         main_layout.setSpacing(0)
 
@@ -69,7 +80,7 @@ class HotSearchItem(QWidget):
         first_line_layout.setSpacing(5)  # 增加间距避免元素过于紧凑
 
         # 序号 - 根据排名设置不同颜色
-        index_label = QLabel(data["i"])
+        self.index_label = QLabel(data["i"])
         try:
             index_num = int(data["i"])
             if index_num <= 3:
@@ -78,30 +89,31 @@ class HotSearchItem(QWidget):
                 index_color = "#ff8200"  # 后面橙色
         except ValueError:
             index_color = "#ff8200"  # 默认橙色
+        self.index_label.setStyleSheet(f"min-width: 20px; color: {index_color}; padding: 2px 0px;")
+        self.index_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        first_line_layout.addWidget(self.index_label, alignment=Qt.AlignTop)
 
-        index_label.setStyleSheet(f"font-weight: bold; min-width: 20px; color: {index_color}; padding: 2px 0px;")
-        index_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        first_line_layout.addWidget(index_label, alignment=Qt.AlignTop)
-
-        # 内容（可点击）- 设置蓝色，使用统一的字体大小
+        # 内容（可点击）- 设置蓝色
         self.content = ClickableLabel(f"{data['t']} {data['n']}")
-        self.content.setStyleSheet(f"color: rgb(0, 120, 182); padding: 2px 0px;")  # 使用统一的字体大小
+        self.content.setStyleSheet(f"color: rgb(0, 120, 182); padding: 2px 0px;")
         self.content.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         self.content.setMinimumWidth(0)
         first_line_layout.addWidget(self.content, stretch=1)
 
-        # 标签 - 使用统一的字体大小
+        # 标签
+        self.tag_label = QLabel()
         if "c" in data and data["c"] in TAG_MAP:
             tag_text, tag_color = TAG_MAP[data["c"]]
-            tag_label = QLabel(tag_text)
-            tag_label.setStyleSheet(
+            self.tag_label.setText(tag_text)
+            self.tag_label.setStyleSheet(
                 f"color: white; background: {tag_color};"
-                f"border-radius: 6px; padding: 2px 6px; font-weight: bold;"
+                f"border-radius: 6px; padding: 2px 6px;"
             )
-            tag_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-            first_line_layout.addWidget(tag_label, alignment=Qt.AlignRight | Qt.AlignTop)
+        self.tag_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        first_line_layout.addWidget(self.tag_label, alignment=Qt.AlignRight | Qt.AlignTop)
 
         main_layout.addLayout(first_line_layout)
+        self.setLayout(main_layout)
 
         # 背景默认 & hover
         self.default_color = "rgb(0, 120, 182);"
@@ -113,8 +125,36 @@ class HotSearchItem(QWidget):
         self.content.leftClicked.connect(lambda: self.open_link(False))
         self.content.middleClicked.connect(lambda: self.open_link(True))
 
+    def set_data(self, data, data_type=None):
+        # 数据
+        if data_type == "weibo":
+            self.link = "https://s.weibo.com/weibo?q=" + urllib.parse.quote("#" + str(data['t']) + "#")
+        else:
+            self.link = str(data['u'])
+        # 序号 - 根据排名设置不同颜色
+        self.index_label.setText(data["i"])
+        try:
+            index_num = int(data["i"])
+            if index_num <= 3:
+                index_color = "#f26d5f"  # 前三个红色
+            else:
+                index_color = "#ff8200"  # 后面橙色
+        except ValueError:
+            index_color = "#ff8200"  # 默认橙色
+        self.index_label.setStyleSheet(f"min-width: 20px; color: {index_color}; padding: 2px 0px;")
+        # 内容（可点击）- 设置蓝色
+        self.content.setText(f"{data['t']} {data['n']}")
+        # 标签
+        if "c" in data and data["c"] in TAG_MAP:
+            tag_text, tag_color = TAG_MAP[data["c"]]
+            self.tag_label.setText(tag_text)
+            self.tag_label.setStyleSheet(
+                f"color: white; background: {tag_color};"
+                f"border-radius: 6px; padding: 2px 6px;"
+            )
+
     def update_bg(self, color: str):
-        self.content.setStyleSheet(f"color: {color}; padding: 2px 0px;")  # 使用统一的字体大小
+        self.content.setStyleSheet(f"color: {color}; padding: 2px 0px;")
 
     def enterEvent(self, event):
         self.update_bg(self.hover_color)
@@ -133,18 +173,23 @@ class HotSearchItem(QWidget):
 
     def open_link(self, new_tab=False):
         if new_tab:
-            webbrowser.open_new_tab(self.link)
+            self.middle_click_func(self.link)
         else:
-            webbrowser.open(self.link)
+            self.left_click_func(self.link)
 
 
 class HotSearchList(QWidget):
-
     """
     热搜列表
     """
-    def __init__(self, parent=None):
+    hot_search_item_list = []
+    left_click_func = None
+    middle_click_func = None
+
+    def __init__(self, parent=None, left_click_func=None, middle_click_func=None):
         super().__init__(parent)
+        self.left_click_func = left_click_func
+        self.middle_click_func = middle_click_func
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
@@ -166,14 +211,16 @@ class HotSearchList(QWidget):
         scroll.setWidget(container)
 
     def set_data_list(self, data_list: list, data_type: str):
-        try:
-            for i in reversed(range(self.vbox.count())):
-                self.vbox.itemAt(i).widget().setParent(None)
-        except Exception as e:
-            print(e)
-        for item in data_list:
-            widget = HotSearchItem(data=item, data_type=data_type)
-            self.vbox.addWidget(widget)
+        if len(self.hot_search_item_list) != 0:
+            for index, item in enumerate(data_list):
+                self.hot_search_item_list[index].set_data(data=item, data_type=data_type)
+        else:
+            for item in data_list:
+                widget = HotSearchItem(data=item, data_type=data_type,
+                                       left_click_func=self.left_click_func, middle_click_func=self.middle_click_func)
+                widget.setFont(self.font())
+                self.vbox.addWidget(widget)
+                self.hot_search_item_list.append(widget)
 
 
 class TopSearchCard(MainCard):
@@ -220,6 +267,7 @@ class TopSearchCard(MainCard):
     # 数据
     base_data_list = None
     base_time = None
+    reply = None
     # 上次刷新时间
     last_load_time = 0
     load_interval_time = 30 * 60 * 1000                 # 加载间隔30分钟
@@ -304,7 +352,7 @@ class TopSearchCard(MainCard):
         self.push_button_search_refresh.setFixedSize(32, 32)
         self.label_top_area_background_layout.addWidget(self.push_button_search_refresh)
         # 主要信息展示
-        self.text_browser_top = HotSearchList()
+        self.text_browser_top = HotSearchList(left_click_func=self.click_text_browser, middle_click_func=self.click_text_browser_not_active)
         self.text_browser_top.setObjectName(u"text_browser_top")
         self.text_browser_top.setFont(font3)
         self.main_layout.addWidget(self.text_browser_top)
@@ -394,22 +442,19 @@ class TopSearchCard(MainCard):
         self.load_animation.load()
 
         print("准备请求数据")
-        reply = self.network_manager.get(request)
-        reply.finished.connect(lambda: self.handle_network_reply(reply))
+        self.reply = self.network_manager.get(request)
+        self.reply.finished.connect(self.handle_network_reply)
 
-    def handle_network_reply(self, reply):
+    def handle_network_reply(self):
         """处理网络响应"""
         print("处理网络响应")
         try:
-            # 隐藏加载动画
-            self.load_animation_end_call_back()
-
-            if reply.error() != QtNetwork.QNetworkReply.NetworkError.NoError:
-                self.logger.card_error("主程序", f"Error: {reply.errorString()}")
+            if self.reply.error() != QtNetwork.QNetworkReply.NetworkError.NoError:
+                self.logger.card_error("主程序", f"Error: {self.reply.errorString()}")
                 return
 
             # 读取并解析数据
-            data = reply.readAll().data()
+            data = self.reply.readAll().data()
             result = json.loads(data)
 
             self.base_data_list = []
@@ -421,16 +466,23 @@ class TopSearchCard(MainCard):
             # 更新UI
             self.set_ui()
             self.logger.card_info("主程序", "数据更新成功")
-
         except Exception as e:
             self.logger.card_error("主程序", f"Error: {str(e)}")
-        finally:
-            reply.deleteLater()
+        try:
+            # 隐藏加载动画
+            self.load_animation_end_call_back()
+        except Exception as e:
+            self.logger.card_error("主程序", f"Error: {str(e)}")
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.reply is not None and my_shiboken_util.is_qobject_valid(self.reply):
+            self.reply.deleteLater()
+        self.reply = None
 
     def set_ui(self):
         try:
             self.label_weibo_time.setText(self.base_time)
             self.text_browser_top.set_data_list(self.base_data_list, self.base_data_type)
+            style_util.set_font_and_right_click_style(self.main_object, self.text_browser_top)
             self.logger.card_info("主程序", "获取微博信息完成")
         except Exception as e:
             self.logger.card_error("主程序", "获取微博信息失败,错误信息:{}".format(e))
@@ -442,16 +494,16 @@ class TopSearchCard(MainCard):
         self.label_top_mask.hide()
         self.load_animation.hide()
 
-    def click_textbrowser(self, url):
-        browser_util.open_url(url.toString())
+    def click_text_browser(self, url):
+        browser_util.open_url(url)
 
-    def click_textbrowser_not_active(self, url):
+    def click_text_browser_not_active(self, url):
         # 当前时间戳
         current_time = int(round(time.time() * 1000))
         # 修改上次动画时间戳避免触发隐藏窗口动画
         self.main_object.animation_time = current_time
         # 打开浏览器
-        browser_util.open_url(url.toString())
+        browser_util.open_url(url)
 
     def tab_widget_change(self):
         self.send_network_request()

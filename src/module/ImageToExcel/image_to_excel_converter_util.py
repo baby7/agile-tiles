@@ -13,7 +13,7 @@ from PySide6.QtCore import Signal, QObject, QThread, QUrl, QEventLoop, QMutex, Q
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
 from src.client import common
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 from src.module.Box import message_box_util
 from src.ui import style_util, image_util
 

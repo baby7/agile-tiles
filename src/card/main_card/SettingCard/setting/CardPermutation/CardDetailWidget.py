@@ -1,12 +1,13 @@
 import json
 import traceback
+from src.util import my_shiboken_util
 
-from PySide6 import QtCore, QtWidgets, QtGui
+from PySide6 import QtCore, QtWidgets
 from PySide6.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QHBoxLayout, QSizePolicy, QFrame, QTextBrowser, QTabWidget
 )
 from PySide6.QtCore import Qt, QSize, Signal
-from PySide6.QtGui import QPixmap, QTextCursor, QCursor, QColor
+from PySide6.QtGui import QTextCursor, QCursor, QColor
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
 from src.client import common
@@ -15,6 +16,7 @@ from src.ui import style_util
 
 class CardDetailWidget(QWidget):
     detailClose = Signal(dict)  # 新增信号用于传递卡片数据
+    data_reply = None
 
     def __init__(self, parent=None, use_parent=None, card_id=None, is_dark=False):
         super().__init__(parent)
@@ -27,6 +29,8 @@ class CardDetailWidget(QWidget):
         # 初始化UI
         self.init_ui()
         self.re_init(self.card_id)
+        # 设置字体
+        style_util.set_font_and_right_click_style(self.use_parent, self)
 
     def re_init(self, card_id=None):
         self.card_id = card_id
@@ -301,26 +305,31 @@ class CardDetailWidget(QWidget):
         url = f"{common.BASE_URL}/cardStore/normal/{self.card_id}"
         request = QNetworkRequest(url)
         request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
-        self.network_manager.get(request)
+        self.data_reply = self.network_manager.get(request)
 
-    def handle_response(self, reply):
+    def handle_response(self):
         """处理网络响应"""
-        if reply.error() != QNetworkReply.NoError:
-            print(f"Cloud data error: {reply.errorString()}")
-            reply.deleteLater()
+        if self.data_reply.error() != QNetworkReply.NoError:
+            print(f"Cloud data error: {self.data_reply.errorString()}")
+            if self.data_reply is not None and my_shiboken_util.is_qobject_valid(self.data_reply):
+                self.data_reply.deleteLater()
+            self.data_reply = None
             return
-
         try:
-            data = json.loads(bytes(reply.readAll()).decode('utf-8'))
-            print(data)
+            data = self.data_reply.readAll().data().decode('utf-8')
+            result = json.loads(data)
             # 确保返回的数据结构正确
-            if "data" in data:
-                result = data["data"]
-                self.parse_card_data(result)
+            if "data" in result:
+                result_data = result["data"]
+                self.parse_card_data(result_data)
             else:
                 print(f"Invalid cloud data structure: {data}")
         except Exception as e:
             print(f"Error parsing cloud data: {str(e)}")
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.data_reply is not None and my_shiboken_util.is_qobject_valid(self.data_reply):
+            self.data_reply.deleteLater()
+        self.data_reply = None
 
     def parse_card_data(self, data):
         """解析卡片数据并更新UI"""
@@ -375,7 +384,7 @@ class CardDetailWidget(QWidget):
             self.generate_version_history(data.setdefault("versionHistory", []))
 
         except Exception as e:
-            traceback.print_exc()
+            self.use_parent.info_logger.error(f"解析卡片数据并更新UI失败: {traceback.format_exc()}")
 
     def load_icon(self, data):
         """异步加载图标"""
@@ -392,14 +401,15 @@ class CardDetailWidget(QWidget):
         default_icon = style_util.get_pixmap_by_path("Abstract/application-one", is_dark=self.is_dark)
         self.icon_label.setPixmap(default_icon.scaled(80, 80, Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
-        # 如果有自定义图标URL则加载
-        if "cardIcon" not in data or data["cardIcon"] is None:
-            return
-        card_icon = data["cardIcon"]
-        if "url" not in card_icon or card_icon["url"] is None:
-            return
-        request = QNetworkRequest(card_icon["url"])
-        self.network_manager.get(request)
+        # 暂时没有图标
+        # # 如果有自定义图标URL则加载
+        # if "cardIcon" not in data or data["cardIcon"] is None:
+        #     return
+        # card_icon = data["cardIcon"]
+        # if "url" not in card_icon or card_icon["url"] is None:
+        #     return
+        # request = QNetworkRequest(card_icon["url"])
+        # self.network_manager.get(request)
 
     def generate_version_history(self, versions):
         """生成版本历史的Markdown内容"""

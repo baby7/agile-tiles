@@ -1,4 +1,5 @@
 import json
+from src.util import my_shiboken_util
 
 from PySide6 import QtCore
 from PySide6.QtCore import Slot, QUrl, Qt, QTimer
@@ -42,6 +43,9 @@ class TranslateCard(MainCard):
     today_calls = 0
     # ocr部分
     captured_pixmap = None
+    # 请求
+    reply = None
+    call_count_reply = None
 
 
     def __init__(self, main_object=None, parent=None, theme=None, card=None, cache=None, data=None,
@@ -52,6 +56,7 @@ class TranslateCard(MainCard):
         self.current_engine = "有道"
         # 网络管理器
         self.network_manager = QNetworkAccessManager(self)
+        self.call_count_manager = QNetworkAccessManager(self)
         # 从卡片缓存中获取配置
         self.engine = self.cache.setdefault("engine", "有道")
         self.source_lang = self.cache.setdefault("sourceLang", "自动")
@@ -341,20 +346,20 @@ class TranslateCard(MainCard):
         request = QNetworkRequest(url)
         request.setRawHeader(b"Authorization", bytes(self.main_object.access_token, "utf-8"))
 
-        # 使用临时网络管理器获取调用次数
-        temp_manager = QNetworkAccessManager(self)
-        reply = temp_manager.get(request)
+        # 使用网络管理器获取调用次数
+        self.call_count_reply = self.call_count_manager.get(request)
+        self.call_count_reply.finished.connect(self.handle_call_count_reply)
 
-        def handle_reply():
-            if reply.error() == QNetworkReply.NoError:
-                data = reply.readAll()
-                json_data = json.loads(str(data, 'utf-8'))
+    def handle_call_count_reply(self):
+        try:
+            if self.call_count_reply.error() == QNetworkReply.NoError:
+                data = self.call_count_reply.readAll().data()
+                json_data = json.loads(data.decode('utf-8'))
                 self.today_calls = json_data.get("data", 0)
-
                 # 根据会员状态显示不同信息
                 self.set_info_bar()
             else:
-                error = reply.errorString()
+                error = self.call_count_reply.errorString()
                 print(f"获取调用次数失败: {error}")
                 self.info_bar.setText("获取对话次数信息失败")
                 self.info_bar.setStyleSheet(
@@ -364,10 +369,12 @@ class TranslateCard(MainCard):
                     "font-weight: bold; "
                     "font-size: 12px;"
                 )
-
-            reply.deleteLater()
-
-        reply.finished.connect(handle_reply)
+        except Exception as e:
+            print(f"处理获取调用次数回复时出错: {e}")
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.call_count_reply is not None and my_shiboken_util.is_qobject_valid(self.call_count_reply):
+            self.call_count_reply.deleteLater()
+        self.call_count_reply = None
 
     def set_info_bar(self):
         # 根据会员状态显示不同信息
@@ -490,24 +497,24 @@ class TranslateCard(MainCard):
             self.status_label.setText("识图中...")
         self.translate_button.setEnabled(False)
 
-        reply = self.network_manager.post(
+        self.reply = self.network_manager.post(
             request,
             json.dumps(data).encode('utf-8')
         )
-        reply.finished.connect(lambda: self.handle_ocr_response(reply, do_job))
-        reply.errorOccurred.connect(lambda: self.handle_ocr_error(reply))
+        self.reply.finished.connect(lambda: self.handle_ocr_response(do_job))
+        self.reply.errorOccurred.connect(lambda : self.handle_ocr_error(do_job))
 
     @Slot()
-    def handle_ocr_response(self, ocr_reply, do_job):
+    def handle_ocr_response(self, do_job):
         # 检查错误
-        if ocr_reply.error() != QNetworkReply.NoError:
+        if self.reply.error() != QNetworkReply.NoError:
             if do_job == "translate":
-                self.target_text.setPlainText(f"网络错误: {ocr_reply.errorString()}")
+                self.target_text.setPlainText(f"网络错误: {self.reply.errorString()}")
                 self.status_label.setText("网络错误")
-            ocr_reply.deleteLater()
+            self.reply.deleteLater()
             return
         # 解析响应
-        data = ocr_reply.readAll().data()
+        data = self.reply.readAll().data()
         try:
             response = json.loads(data)
             if response.get("code") == 0:
@@ -541,17 +548,23 @@ class TranslateCard(MainCard):
             else:
                 self.main_object.toolkit.message_box_util.box_information(
                     self.main_object, "失败", "解析错误")
-        ocr_reply.deleteLater()
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.reply is not None and my_shiboken_util.is_qobject_valid(self.reply):
+            self.reply.deleteLater()
+        self.reply = None
 
     @Slot()
-    def handle_ocr_error(self, ocr_reply, do_job):
+    def handle_ocr_error(self, do_job):
         if do_job == "translate":
             self.target_text.setPlainText("")
             self.status_label.setText("网络错误")
         else:
             self.main_object.toolkit.message_box_util.box_information(
                 self.main_object, "失败", "网络错误")
-        ocr_reply.deleteLater()
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.reply is not None and my_shiboken_util.is_qobject_valid(self.reply):
+            self.reply.deleteLater()
+        self.reply = None
 
     def translate_text(self):
         # 未登录的判断
@@ -593,28 +606,29 @@ class TranslateCard(MainCard):
         self.status_label.setText("翻译中...")
         self.translate_button.setEnabled(False)
 
-        reply = self.network_manager.post(
+        self.reply = self.network_manager.post(
             request,
             json.dumps(data).encode('utf-8')
         )
-        reply.finished.connect(lambda: self.handle_translate_response(reply))
+        self.reply.finished.connect(self.handle_translate_response)
 
     @Slot()
-    def handle_translate_response(self, reply):
+    def handle_translate_response(self):
         # 请求并更新对话次数信息
         self.update_call_count()
 
         self.translate_button.setEnabled(True)
 
         # 检查错误
-        if reply.error() != QNetworkReply.NoError:
-            self.target_text.setPlainText(f"网络错误: {reply.errorString()}")
+        if self.reply.error() != QNetworkReply.NoError:
+            self.target_text.setPlainText(f"网络错误: {self.reply.errorString()}")
             self.status_label.setText("网络错误")
-            reply.deleteLater()
+            self.reply.deleteLater()
+            self.reply = None
             return
 
         # 解析响应
-        data = reply.readAll().data()
+        data = self.reply.readAll().data()
         try:
             response = json.loads(data)
             if response.get("code") == 0:
@@ -629,7 +643,10 @@ class TranslateCard(MainCard):
             self.target_text.setPlainText("错误: 无效的响应格式")
             self.status_label.setText("解析错误")
 
-        reply.deleteLater()
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.reply is not None and my_shiboken_util.is_qobject_valid(self.reply):
+            self.reply.deleteLater()
+        self.reply = None
 
     def copy_result(self):
         clipboard = QApplication.clipboard()

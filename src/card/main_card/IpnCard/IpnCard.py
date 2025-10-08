@@ -497,7 +497,7 @@ class IpnCard(MainCard):
                     self.server_thread = None
                     self.server_worker = None
             except Exception as e:
-                traceback.print_exc()
+                self.main_object.info_logger.error(f"{traceback.format_exc()}")
 
             # 创建服务器工作器和线程
             self.server_worker = ServerWorker(self.server)
@@ -519,7 +519,7 @@ class IpnCard(MainCard):
             self.server_thread.start()
 
         except Exception as e:
-            traceback.print_exc()
+            self.main_object.info_logger.error(f"启动服务器失败:{traceback.format_exc()}")
             self.toolkit.dialog_module.box_information(self.main_object, "错误", f"启动服务器失败: {str(e)}")
 
     def stop_server(self):
@@ -528,7 +528,7 @@ class IpnCard(MainCard):
             try:
                 self.server_worker.stop_server()
             except Exception as e:
-                traceback.print_exc()
+                self.main_object.info_logger.error(f"停止服务器失败:{traceback.format_exc()}")
                 self.toolkit.dialog_module.box_information(self.main_object, "错误", f"停止服务器失败: {str(e)}")
 
     def on_server_started(self):

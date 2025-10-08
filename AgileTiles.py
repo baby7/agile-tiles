@@ -6,7 +6,8 @@ import os, sys
 import atexit
 import subprocess
 import time, datetime
-# print(f'__启动时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+
+print(f'__启动时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
 
 print("_基础包加载完成")
 # 资源包
@@ -21,17 +22,18 @@ import gc
 # 内存跟踪 & 内存诊断
 import tracemalloc
 import faulthandler
-faulthandler.enable()
 print("_日志和调试分析包加载完成")
 # 热键监听
 from ctypes.wintypes import MSG
 print("_热键监听包加载完成")
 # 基础界面框架
+from PySide6 import QtCore
 from PySide6.QtGui import QPixmap, QFont
 from PySide6.QtCore import QEvent, Qt, qInstallMessageHandler, QSettings, Signal, QEventLoop, Q_ARG, Slot, \
     QMetaObject, QTimer, QSharedMemory
 from PySide6.QtWidgets import QApplication, QSystemTrayIcon
-from PySide6.QtNetwork import QLocalServer, QLocalSocket, QNetworkDiskCache
+from PySide6.QtNetwork import QLocalServer, QLocalSocket, QNetworkDiskCache, QNetworkReply
+
 print("_基础界面框架加载完成")
 # 我的界面内容
 from baby7_desktop_tool_form import Ui_Form
@@ -41,12 +43,12 @@ from src.card.NormalCardManager.NormalCardManager import NormalCardManager
 from src.card.MainCardManager.MainCardManager import MainCardManager
 print("_卡片管理加载完成")
 # 窗口工具
-from src.component.TutorialWindow.TutorialWindow import TutorialWindow
-from src.component.MainAcrylicWindow.MainAcrylicWindow import MainAcrylicWindow
-from src.component.ImageCacheManager.ImageCacheManager import ImageCacheManager
-from src.component.Neumorphism import QtWidgets, QtGui
-from src.component.GlobalHotkeyManager import GlobalHotkeyManager
-from src.component.TopImageAcrylicWindow import TopImageAcrylicWindow
+from src.my_component.TutorialWindow.TutorialWindow import TutorialWindow
+from src.my_component.MainAcrylicWindow.MainAcrylicWindow import MainAcrylicWindow
+from src.my_component.ImageCacheManager.ImageCacheManager import ImageCacheManager
+from src.my_component.Neumorphism import QtWidgets, QtGui
+from src.my_component.GlobalHotkeyManager import GlobalHotkeyManager
+from src.my_component.TopImageAcrylicWindow import TopImageAcrylicWindow
 print("_窗口工具包加载完成")
 # 模块
 from src.module import init_module, dialog_module
@@ -79,7 +81,6 @@ print("_工具包加载完成")
 from src.constant import data_save_constant, card_constant, version_constant
 print("_静态常量加载完成")
 
-
 # 捕获Qt的日志
 def qt_message_handler(mode, context, message):
     if "stun" in message.lower() or "dns" in message.lower():
@@ -87,7 +88,80 @@ def qt_message_handler(mode, context, message):
 qInstallMessageHandler(qt_message_handler)
 print("_捕获Qt的日志完成")
 
-# print(f'__包加载完成时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+# 获取当前阈值
+current_thresholds = gc.get_threshold()
+print(f"默认GC配置: {current_thresholds}")  # 默认通常是(700, 10, 10)
+# 设置新的阈值
+gc.set_threshold(2000, 30, 20) # 设置 threshold0=1000, threshold1=15, threshold2=10
+# 再次获取确认设置生效
+new_thresholds = gc.get_threshold()
+print(f"新的GC配置: {new_thresholds}")
+
+# # 暂停垃圾回收
+# gc.disable()
+# # 验证垃圾回收是否已关闭
+# if not gc.isenabled():  # 检查垃圾回收机制是否被禁用
+#     print("垃圾回收已关闭。")
+# else:
+#     print("垃圾回收仍然开启。")
+
+
+def handleException(exc_type, exc_value, exc_traceback):
+    '''
+    使用方法在入口位置,最开始位置(sys.exit(app.exec_())之前 )加入这一行
+    sys.excepthook = handle_exception
+    类似：import cgitb
+        cgitb.enable(format='txt')
+    Args:
+        exc_type:
+        exc_value:
+        exc_traceback:
+
+    Returns:
+    '''
+    if issubclass(exc_type, KeyboardInterrupt):
+        return sys.__excepthook__(exc_type, exc_value, exc_traceback)
+    exception = str("".join(traceback.format_exception(
+        exc_type, exc_value, exc_traceback)))
+    dialog = QtWidgets.QDialog()
+    # close对其进行删除操作
+    dialog.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+    msg = QtWidgets.QMessageBox(dialog)
+    msg.setIcon(QtWidgets.QMessageBox.Critical)
+    msg.setText('程序异常,请尝试重启或联系管理员!')
+    msg.setWindowTitle("系统异常提示请尝试重启")
+    msg.setDetailedText(exception)
+    msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
+    msg.exec()
+
+
+def is_another_instance_running():
+    """检查是否已有实例在运行"""
+    shared_memory = QSharedMemory("AgileTiles")
+    # 尝试附加到现有共享内存
+    if shared_memory.attach():
+        # 如果能附加，说明已有实例运行
+        shared_memory.detach()
+        return True
+    # 尝试创建共享内存
+    if not shared_memory.create(1):  # 创建1字节大小的共享内存
+        # 创建失败，说明已有实例运行
+        error = shared_memory.error()
+        if error == QSharedMemory.AlreadyExists:
+            # 共享内存已存在，尝试附加确认
+            if shared_memory.attach():
+                shared_memory.detach()
+                return True
+        return True  # 其他创建错误也认为已有实例
+    # 创建成功，无其他实例
+    return False
+
+
+def is_running_in_msix(current_exe_path):
+    """通过检查环境变量判断是否运行在 MSIX 容器中"""
+    assets_dir = os.path.join(os.path.dirname(current_exe_path), "Assets")
+    return os.path.exists(assets_dir)
+
 
 # 主窗口
 class AgileTilesForm(MainAcrylicWindow, Ui_Form):
@@ -101,6 +175,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
     # 设备id
     hardware_id = None
     os_version = None
+    run_environment = "exe"                 # 运行环境 exe/msix
     # 线程列表
     main_thread_object = None               # 主线程
     normal_card_thread_object_list = []     # 普通卡片线程列表
@@ -190,22 +265,29 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
     def __init__(self):
         super(AgileTilesForm, self).__init__()
         # **************** 基本初始化 ****************
-        # print(f'__窗口初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__窗口初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         # 窗口置顶
         self.setWindowFlag(Qt.WindowType.ToolTip)
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint)
         # 设置主机id和系统版本
         self.hardware_id = hardware_id_util.get_hardware_id()
         self.os_version = hardware_id_util.get_os_version()
+        # 运行环境
+        current_exe_path = os.path.abspath(sys.argv[0])
+        self.run_environment = "msix" if is_running_in_msix(current_exe_path) else "exe"
+        print(f'运行环境:{self.run_environment}')
         # 工具包
         self.toolkit = Toolkit(self, self)
         # 软件数据路径
         self.app_data_path = self.toolkit.file_util.get_app_data_path(self.app_name)
         self.app_data_db_path = self.toolkit.file_util.get_app_data_db_path(self.app_data_path, self.app_name)
+        self.app_data_everything_db_path = self.toolkit.file_util.get_app_data_everything_db_path(self.app_data_path)
+        self.app_data_everything_config_path = self.toolkit.file_util.get_app_data_everything_config_path(self.app_data_path)
         self.app_data_plugin_path = self.toolkit.file_util.get_app_data_plugin_path(self.app_data_path)
         self.app_data_network_path = self.toolkit.file_util.get_app_data_network_path(self.app_data_path)
         self.app_data_image_path = self.toolkit.file_util.get_app_data_image_path(self.app_data_path)
         self.app_data_update_path = self.toolkit.file_util.get_app_data_update_path(self.app_data_path)
+        self.app_data_logger_path = self.toolkit.file_util.get_app_data_logger_path(self.app_data_path)
         # 图片缓存管理器
         self.image_cache_manager = ImageCacheManager(image_path=self.app_data_image_path)
         # 网络缓存
@@ -213,7 +295,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         self.network_disk_cache.setCacheDirectory(self.app_data_network_path)
         self.network_disk_cache.setMaximumCacheSize(100 * 1024 * 1024)    # 设置缓存大小（单位：字节） 例如 100 MB
         # ***************** 更新检测 *****************
-        # print(f'__更新检测开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__更新检测开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         # 创建本地事件循环
         update_loop = QEventLoop()
         # 数据加载完成信号
@@ -227,7 +309,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             self.quit_before(is_hide_dialog=True)
             exit()
         # ***************** 登录检测 *****************
-        # print(f'__登录检测开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__登录检测开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         # 创建本地事件循环
         login_loop = QEventLoop()
         # 数据加载完成信号
@@ -237,7 +319,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         # 阻塞等待数据就绪
         login_loop.exec()
         # ***************** 卡片检测 *****************
-        # print(f'__卡片检测开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__卡片检测开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         # 创建本地事件循环
         card_loop = QEventLoop()
         # 数据加载完成信号
@@ -247,10 +329,10 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         # 阻塞等待数据就绪
         card_loop.exec()
         # **************** 后续初始化 ****************
-        # print(f'__后续初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__后续初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         # 同步初始化UI
         self.atomic_init()
-        # print(f'__窗口初始化结束时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__窗口初始化结束时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
 
     def init(self):
         print(f"用户状态:{self.user_data_status}")
@@ -262,61 +344,67 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             self.do_login_again()
 
     def atomic_init(self):
+        # 启用faulthandler（仅在stderr可用时）
+        try:
+            if sys.stderr is not None:
+                faulthandler.enable()
+        except Exception:
+            pass
         # 初始化分辨率参数、位置和大小
-        # print(f'__分辨率初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__分辨率初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         screen_module.init_resolution(self, out_animation_tag=False)
         # 初始化主题
-        # print(f'__主题初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__主题初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         theme_module.init_theme(self)
         # 显示加载中窗口
-        # print(f'__显示加载中窗口开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__显示加载中窗口开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.show_load_window(f"{self.app_title}启动中...")
         # 其余初始化
-        # print(f'__其余初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__其余初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         init_module.init_module(self)
         # 初始化样式
-        # print(f'__样式初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__样式初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         init_module.init_style(self)
         # 初始化模块
-        # print(f'__模块初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__模块初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         user_module.init_module(self)
         # 卡片
-        # print(f'__卡片初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__卡片初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.init_card()
         # 透明窗口和隐藏任务栏图标(使用QTimer延迟执行避免阻塞)
-        # print(f'__透明窗口初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__透明窗口初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.refresh_window_show()
         # 初始化所有请求对象
-        # print(f'__请求初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__请求初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.init_all_client()
         # 线程
-        # print(f'__线程初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__线程初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.start_thread_list()
         # 初始化鼠标检测窗口
-        # print(f'__鼠标检测初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__鼠标检测初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         QTimer.singleShot(100, lambda : screen_module.init_mouse_detect_window(self))
         # 初始化主题
-        # print(f'__主题设置开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__主题设置开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         init_module.set_theme(self, is_main=True)
         # 初始化弹窗
-        # print(f'__弹窗初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__弹窗初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         dialog_module.set_dialog(self)
         # 首次启动时，显示引导程序
-        # print(f'__引导程序初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__引导程序初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.check_first_run()
         # 更新状态
         self.is_first = False
         # 启动时，先执行一次定时任务
-        # print(f'__定时任务初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__定时任务初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.time_task()
         # 设置字体
-        # print(f'__字体初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__字体初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         style_util.set_font_and_right_click_style(self, self)
         # 退出动画
-        # print(f'__退出动画开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
-        QTimer.singleShot(100, lambda : self.toolkit.resolution_util.out_animation(self))
+        print(f'__退出动画开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        self.toolkit.resolution_util.out_animation(self)
         # 隐藏加载中窗口
-        # print(f'__隐藏加载中窗口开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__隐藏加载中窗口开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.hide_load_window()
 
     def show_load_window(self, load_title=None):
@@ -335,6 +423,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         self.label_background.resize(self.width(), self.height())
         self.label_background.show()
         self.label_background.raise_()
+        # 刷新界面
         QApplication.processEvents()
 
     def hide_load_window(self):
@@ -377,6 +466,8 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         # self.widget_dialog_base.hide()
         # 开机自启动
         winreg_util.set_auto_start(True)
+        # 刷新进程
+        QApplication.processEvents()
 
     def show_login_tip(self, need_tip=True, tip_text=None):
         if need_tip:
@@ -444,7 +535,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 else:
                     self.main_data = json.loads(main_data_str)
         except Exception as e:
-            traceback.print_exc()
+            self.info_logger.error(f"启动失败:{traceback.format_exc()}")
             print("启动失败")
             exit()
         # 判断用户是否登录，未登录则退出程序
@@ -698,7 +789,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 return
             self.user_data_client.pull_data(self.current_user["username"], self.access_token)
         except Exception:
-            traceback.print_exc()
+            self.info_logger.error(traceback.format_exc())
 
     def handle_run_pull_result(self, result):
         try:
@@ -711,7 +802,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                     if self.current_user is not None and self.current_user["username"] is not None and self.access_token is not None:
                         self.user_data_client.push_data(self.current_user["username"], self.access_token, self.main_data)
                 except Exception as e:
-                    traceback.print_exc()
+                    self.info_logger.error(traceback.format_exc())
                 return
             server_main_data = json.loads(result["data"]["data"])
             server_timestamp = int(result["data"]["timestamp"])
@@ -727,7 +818,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                     if self.current_user is not None and self.current_user["username"] is not None:
                         self.user_data_client.push_data(self.current_user["username"], self.access_token, self.main_data)
                 except Exception as e:
-                    traceback.print_exc()
+                    self.info_logger.error(traceback.format_exc())
                 return
             else:
                 print("云端数据更新，需要更新到本地")
@@ -737,7 +828,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 self.server_trigger_data_update(old_data=old_data, new_data=new_data)
                 return
         except Exception:
-            traceback.print_exc()
+            self.info_logger.error(traceback.format_exc())
 
     def handle_run_push_result(self, result):
         if result['code'] == 1:
@@ -834,7 +925,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 # 启动登录窗口
                 self.show_start_login_window()
             except Exception as e:
-                traceback.print_exc()
+                self.info_logger.error(traceback.format_exc())
                 exit()
             # 判断用户是否登录，未登录则退出程序
             if self.current_user is None:
@@ -1219,7 +1310,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 # 更新令牌
                 self.user_info_client.refresh(self.current_user["username"], self.refresh_token, self.hardware_id, self.os_version)
         except Exception:
-            traceback.print_exc()
+            self.info_logger.error(traceback.format_exc())
 
     def handle_user_detection_result(self, result):
         print("主进程 - handle_user_detection_result")
@@ -1286,15 +1377,15 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
     def init_card(self):
         # 主卡片管理
         if self.main_card_manager is None:
-            # print(f'__主卡片创建开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+            print(f'__主卡片创建开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
             self.main_card_manager = MainCardManager(self)
-        # print(f'__主卡片初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__主卡片初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.main_card_manager.init(self.main_data["card"])
         # 卡片管理
         if self.normal_card_manager is None:
-            # print(f'__小卡片创建开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+            print(f'__小卡片创建开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
             self.normal_card_manager = NormalCardManager(self.widget_base, self)
-        # print(f'__小卡片初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        print(f'__小卡片初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.normal_card_manager.set_card_map_list(self.main_data["card"], self.main_data["data"],
                                             self.toolkit, self.info_logger, self.local_trigger_data_update)
 
@@ -1304,8 +1395,6 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         # 清空卡片
         if self.normal_card_manager is not None:
             self.normal_card_manager.clear_all()
-        # 强制垃圾回收
-        gc.collect()
         # 重新初始化卡片管理器
         self.normal_card_manager.set_card_map_list(self.main_data["card"], self.main_data["data"],
                                             self.toolkit, self.info_logger, self.local_trigger_data_update)
@@ -1352,8 +1441,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 return
             self.normal_card_manager.clear_all()
         except Exception as e:
-            self.info_logger.error(e)
-            traceback.print_exc()
+            self.info_logger.error(traceback.format_exc())
 
     def clear_main_card_list(self):
         # 清空主卡片
@@ -1362,8 +1450,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 return
             self.main_card_manager.clear_all()
         except Exception as e:
-            self.info_logger.error(e)
-            traceback.print_exc()
+            self.info_logger.error(traceback.format_exc())
 
     def notify_card_show_form(self):
         """
@@ -1414,7 +1501,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                     and setting_data["searchByKeyboard"] and setting_data["searchByKeyboardType"] is not None):
                 search_keyboard_key = setting_data["searchByKeyboardType"]
         except Exception:
-            traceback.print_exc()
+            self.info_logger.error(traceback.format_exc())
         # 判断是否获取到热键
         if wake_keyboard_key is None and screenshot_keyboard_key is None:
             return
@@ -1619,8 +1706,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 del self.hotkey_manager
             self.hotkey_manager = None
         except Exception as e:
-            self.info_logger.error(e)
-            traceback.print_exc()
+            self.info_logger.error(traceback.format_exc())
 
 
     ''' **********************************其他*************************************** '''
@@ -1712,8 +1798,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             if self.main_thread_object:
                 self.main_thread_object.stop()
         except Exception as e:
-            print(e)
-            traceback.print_exc()
+            self.info_logger.error(traceback.format_exc())
 
     def change_theme(self):
         # 修改主题
@@ -1800,6 +1885,8 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
 
     def event(self, event):
         """ 处理窗口失焦事件 """
+        if type(event) == QNetworkReply:
+            return super().event(event)
         if QEvent.Type.WindowDeactivate == event.type():
             # 如果窗口显示且鼠标不在边缘区域，才隐藏
             if self.show_form:
@@ -1838,27 +1925,6 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         else:
             event.accept()
 
-
-def is_another_instance_running():
-    """检查是否已有实例在运行"""
-    shared_memory = QSharedMemory("AgileTiles")
-    # 尝试附加到现有共享内存
-    if shared_memory.attach():
-        # 如果能附加，说明已有实例运行
-        shared_memory.detach()
-        return True
-    # 尝试创建共享内存
-    if not shared_memory.create(1):  # 创建1字节大小的共享内存
-        # 创建失败，说明已有实例运行
-        error = shared_memory.error()
-        if error == QSharedMemory.AlreadyExists:
-            # 共享内存已存在，尝试附加确认
-            if shared_memory.attach():
-                shared_memory.detach()
-                return True
-        return True  # 其他创建错误也认为已有实例
-    # 创建成功，无其他实例
-    return False
 
 if __name__ == '__main__':
     # 设置工作目录为应用安装目录来修复开机自启动无法加载图片的问题(sys.frozen用来判断pyinstaller，__compiled__用来判断nuitka)
@@ -1906,6 +1972,8 @@ if __name__ == '__main__':
     # 限制单机挂载数量一个
     try:
         app = QApplication(sys.argv)
+        # 异常处理
+        sys.excepthook = handleException
         # 创建本地服务器用于实例间通信（可选）
         localServer = QLocalServer()
         localServer.listen("AgileTiles")
@@ -1921,4 +1989,4 @@ if __name__ == '__main__':
         traceback.print_exc()
         atexit.register(cleanup_shared_memory)
     atexit.register(cleanup_shared_memory)
-    exit()
+    sys.exit(0)

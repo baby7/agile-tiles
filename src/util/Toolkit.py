@@ -14,6 +14,10 @@ from src.module import dialog_module
 from src.module.Pay import qr_code_box_util
 import psutil, calendar, webbrowser, lunardate
 from lxml import html
+# 普通卡片引入用
+import csv
+from dataclasses import dataclass
+import importlib.util
 
 
 class Toolkit(QObject):

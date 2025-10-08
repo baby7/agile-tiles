@@ -45,7 +45,7 @@ class WeatherManager(QObject):
             else:
                 print(result)
         except Exception as e:
-            traceback.print_exc()
+            self.use_parent.info_logger.error(f"天气获取失败: {traceback.format_exc()}")
         self.current_get = None
 
     def handle_error(self, current_get):

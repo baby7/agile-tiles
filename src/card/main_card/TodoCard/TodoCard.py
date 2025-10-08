@@ -2,13 +2,13 @@ from functools import partial
 
 from PySide6.QtWidgets import QLabel, QFrame, QApplication
 
-from src.card.main_card.TodoCard.component.CategoryListWidget import CategoryListWidget
+from src.card.main_card.TodoCard.todo_component.CategoryListWidget import CategoryListWidget
 from src.card.MainCardManager.MainCard import MainCard
-from src.card.main_card.TodoCard.component.TodoBody import TodoBody
+from src.card.main_card.TodoCard.todo_component.TodoBody import TodoBody
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import Qt, QRect, QTimer
 
-from src.card.main_card.TodoCard.component.TodoEditWidget import TodoEditWidget
+from src.card.main_card.TodoCard.todo_component.TodoEditWidget import TodoEditWidget
 from src.constant import data_save_constant
 from src.module import dialog_module
 from src.thread_list import todo_thread

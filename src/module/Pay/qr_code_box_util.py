@@ -6,8 +6,8 @@ from PySide6.QtCore import Signal, QTimer
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QLayout, QStackedLayout, QWidget
 
 from src.client import common
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
-from src.component.LoadAnimation.LoadAnimation import LoadAnimation
+from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.my_component.LoadAnimation.LoadAnimation import LoadAnimation
 from src.module.Pay.payment_result_page import PaymentResultPage
 from src.module.Pay.payment_websocket_client import PaymentWebSocketClient
 from src.module.Pay.plan_card import PlanCard
@@ -69,6 +69,8 @@ class QrPopup(AgileTilesAcrylicWindow):
         self.load_timeout_timer = QTimer(self)
         self.load_timeout_timer.setSingleShot(True)
         self.load_timeout_timer.timeout.connect(self.handle_load_timeout)
+        # 设置字体
+        style_util.set_font_and_right_click_style(self.use_parent, self)
 
     def create_qr_manager(self):
         """创建二维码管理器"""
@@ -276,6 +278,8 @@ class QrPopup(AgileTilesAcrylicWindow):
             card.mousePressEvent = lambda event, p=plan: self.plan_changed(p['code'])
             self.cards_container.addWidget(card)
             self.plan_cards[plan['code']] = card
+            # 设置字体
+            style_util.set_font_and_right_click_style(self.use_parent, card)
 
         # 默认选中第一个计划
         if plans:

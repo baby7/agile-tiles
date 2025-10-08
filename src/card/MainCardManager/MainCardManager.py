@@ -1,13 +1,14 @@
 import copy
+import datetime
 from functools import partial
 
 from PySide6 import QtGui, QtCore
 from PySide6.QtCore import QObject, Qt, QSize, QRect, QTimer
 from PySide6.QtGui import QIcon, QFont, QCursor, QAction
 from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QScrollArea, QFrame, QMenu, \
-    QToolButton
+    QToolButton, QApplication
 
-from src.card.component.ThemeSwitchButton.ThemeSwitchButton import ThemeSwitchButton
+from src.card.card_component.ThemeSwitchButton.ThemeSwitchButton import ThemeSwitchButton
 from src.card.main_card.FileSearchCard.FileSearchCard import FileSearchCard
 from src.card.main_card.IpnCard.IpnCard import IpnCard
 from src.card.main_card.SettingCard.setting.card_permutation import CardPermutationWindow
@@ -404,7 +405,7 @@ class MainCardManager(QObject):
             card_area.hide()
         # 卡片初始化
         for card in self.main_object.main_card_list:
-            # print(f'__主卡片初始化对应主卡片 {card.name} 初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+            print(f'__主卡片初始化对应主卡片 {card.name} 初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
             card.init_ui()
             if self.main_object.is_dark:
                 card.card.setStyleSheet(self.main_object.toolkit.style_util.card_dark_style)
@@ -412,7 +413,9 @@ class MainCardManager(QObject):
             else:
                 card.card.setStyleSheet(self.main_object.toolkit.style_util.card_style)
                 style_util.remove_card_shadow_effect(card.card)     # 移除外部阴影效果
-            # print(f'__主卡片初始化对应主卡片 {card.name} 初始化结束时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+            print(f'__主卡片初始化对应主卡片 {card.name} 初始化结束时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+            # 刷新进程
+            QApplication.processEvents()
 
     def save_card_data_func(self, trigger_type=data_save_constant.TRIGGER_TYPE_CARD_UPDATE, need_upload=True, in_data=None,
                             data_type=data_save_constant.DATA_TYPE_ENDURING, card_name=None):

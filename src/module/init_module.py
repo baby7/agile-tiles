@@ -1,5 +1,6 @@
 # 基础包
 import logging
+import os
 import winreg
 
 from PySide6.QtCore import Qt
@@ -19,9 +20,8 @@ def init_module(main_object):
     main_object.app_version = current_version_info.current_version
     main_object.setWindowTitle(main_object.app_title)
     # 初始化日志
-    # config_path = str(os.getcwd()) + r"\log.log"
-    config_path = None
-    main_object.info_logger = logger.Logger(config_path, logging.INFO, logging.DEBUG, logging.DEBUG)
+    config_path = os.path.join(str(main_object.app_data_logger_path), "app.log")
+    main_object.info_logger = logger.Logger(config_path, logging.DEBUG, logging.DEBUG, logging.DEBUG)
     main_object.info_logger.info(main_object.app_title + "启动中...")
     # 隐藏标题栏
     main_object.titleBar.raise_()
@@ -35,6 +35,8 @@ def init_module(main_object):
     main_object.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
     # 其他
     main_object.info_logger.info(main_object.app_title + "启动完成")
+    # 运行环境
+    main_object.info_logger.info(f'运行环境:{main_object.run_environment}')
 
 
 def init_style(main_object):
@@ -78,7 +80,7 @@ def set_theme(main_object, is_main=False):
     # 2. 背景中的label_background设置
     if main_object.is_dark:
         # 深色
-        print(f"{'主窗口' if is_main else '子窗口'}:set_theme:深色")
+        # print(f"{'主窗口' if is_main else '子窗口'}:set_theme:深色")
         # 背景
         if hasattr(main_object, 'label_background'):
             if is_main:
@@ -91,10 +93,10 @@ def set_theme(main_object, is_main=False):
             main_object.label_background.show()
     else:
         # 浅色
-        print(f"{'主窗口' if is_main else '子窗口'}:set_theme:浅色")
+        # print(f"{'主窗口' if is_main else '子窗口'}:set_theme:浅色")
         if hasattr(main_object, 'label_background'):
             if hasattr(main_object, 'form_theme_transparency'):
-                print(f"{'主窗口' if is_main else '子窗口'}:set_theme:浅色:背景")
+                # print(f"{'主窗口' if is_main else '子窗口'}:set_theme:浅色:背景")
                 transparency = int(main_object.form_theme_transparency * 2.55)
                 if is_main:
                     main_object.label_background.setStyleSheet(f"background-color: rgba(200, 200, 200, {transparency}); border: none;")
@@ -106,14 +108,14 @@ def set_theme(main_object, is_main=False):
                 main_object.label_background.show()
         if hasattr(main_object, 'form_theme_mode') and main_object.form_theme_mode == "Acrylic":
             # 亚克力
-            print(f"{'主窗口' if is_main else '子窗口'}:set_theme:浅色:亚克力")
+            # print(f"{'主窗口' if is_main else '子窗口'}:set_theme:浅色:亚克力")
             # 背景
             if hasattr(main_object, 'label_background'):
                 main_object.label_background.hide()
             main_object.setStyleSheet("*{ outline: none; background:transparent; color:rgb(0, 0, 0) };")
         else:
             # 半透明
-            print(f"{'主窗口' if is_main else '子窗口'}:set_theme:浅色:半透明")
+            # print(f"{'主窗口' if is_main else '子窗口'}:set_theme:浅色:半透明")
             main_object.setStyleSheet("*{ outline: none; background:transparent; color:rgb(0, 0, 0) };")
 
     # 3. 背景中的windowEffect设置(需要幂等控制，主要为了注销再登录时出现的重复设置windowEffect问题，引入theme_idempotence[开始是false，注销前是true])
@@ -127,5 +129,3 @@ def set_theme(main_object, is_main=False):
     if hasattr(main_object, 'form_theme_mode'):
         form_theme_mode = main_object.form_theme_mode
     main_object.setFrameless(is_main=is_main, is_dark=main_object.is_dark, form_theme_mode=form_theme_mode)
-
-    print(f"styleSheet:{main_object.styleSheet()}")

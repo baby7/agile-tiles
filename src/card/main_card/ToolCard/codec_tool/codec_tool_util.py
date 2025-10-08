@@ -665,3 +665,7 @@ class CodecTool(QWidget):
         self.tabs.addTab(self.encoding_tab, "字符编码")
 
         main_layout.addWidget(self.tabs)
+
+    def refresh_theme(self, main_object):
+        # 设置样式
+        style_util.set_dialog_control_style(self, main_object.is_dark)

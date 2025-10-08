@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (QWidget, QLabel, QVBoxLayout, QHBoxLayout,
 from PySide6.QtGui import QPainter, QColor, QPolygonF, QIcon, QPolygonF, QPixmap
 from PySide6.QtCore import Qt, QRect, QPoint, Signal, QSettings, QPointF, QSize
 
-from src.component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
+from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 from src.module.Box import message_box_util
 from src.ui import style_util
 
@@ -53,7 +53,7 @@ class ColorPickerWidget(QWidget):
         if self.color_wheel_pixmap:
             # 使用平滑变换缩放图像
             painter.setRenderHint(QPainter.SmoothPixmapTransform)
-            target_rect = QRect(0, 0, current_size.width(), current_size.height())
+            target_rect = QRect(-5, -5, current_size.width() + 10, current_size.height() + 10)
             painter.drawPixmap(target_rect, self.color_wheel_pixmap)
 
         # 绘制当前选择的颜色指示器（这部分需要动态绘制）
@@ -93,7 +93,7 @@ class ColorPickerWidget(QWidget):
                 if sector == sectors - 1:
                     angle2 = 2 * math.pi
 
-                overlap = 10  # 像素重叠
+                overlap = 0  # 像素重叠
 
                 # 计算三角形的四个顶点（使用2倍坐标）
                 x1 = center.x() + inner_radius * math.cos(angle1) - overlap * math.cos(angle1)

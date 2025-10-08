@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+from src.util import my_shiboken_util
 from PySide6.QtCore import QObject, Signal, QUrl
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 import src.client.common as common
@@ -67,7 +68,8 @@ class DataClient(QObject):
             error_result = {"code": 1, "msg": f"处理响应时出错: {str(e)}"}
             if current_callback:  # 额外安全检查
                 current_callback.emit(error_result)
-        finally:
+        # 在执行删除操作前，检查C++对象是否存活
+        if reply is not None and my_shiboken_util.is_qobject_valid(reply):
             reply.deleteLater()
-            self.request_type = None
-            self.current_callback = None
+        self.request_type = None
+        self.current_callback = None

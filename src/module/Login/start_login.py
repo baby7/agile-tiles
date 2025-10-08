@@ -17,7 +17,7 @@ from src.module.UserData.Sync.data_client import DataClient
 from src.util import browser_util, winreg_util
 import src.ui.style_util as style_util
 import src.module.Box.message_box_util as message_box_util
-from src.component.AgileTilesFramelessDialog.AgileTilesFramelessDialog import AgileTilesFramelessDialog
+from src.my_component.AgileTilesFramelessDialog.AgileTilesFramelessDialog import AgileTilesFramelessDialog
 
 
 class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
@@ -222,9 +222,6 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
         """
         登录
         """
-
-        # TODO 1.登录后保存到数据库然后重启程序   2.退出登录时也是弹出登录窗口   3.用户名可以下拉选择
-
         try:
             # 先进行输入校验
             if not self.validate_login_phone():
@@ -250,7 +247,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 显示加载层
             self.show_overlay("登录中...")
         except Exception as e:
-            traceback.print_exc()
+            self.use_parent.info_logger.error(f"登录失败:{traceback.format_exc()}")
             message_box_util.box_information(self, "错误信息", "登录失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
             self.hide_overlay()
 
@@ -296,7 +293,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             #     # 显示加载层
             #     self.show_overlay("vip用户数据同步中...")
         except Exception as e:
-            traceback.print_exc()
+            self.use_parent.info_logger.error(f"登录解析失败:{traceback.format_exc()}")
             message_box_util.box_information(self, "错误信息", "登录失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
             self.hide_overlay()
 
@@ -338,7 +335,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 显示加载层
             self.show_overlay("注册中...")
         except Exception as e:
-            traceback.print_exc()
+            self.use_parent.info_logger.error(f"注册失败:{traceback.format_exc()}")
             message_box_util.box_information(self, "错误信息", "注册失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
             self.hide_overlay()
 
@@ -361,6 +358,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 切换到登录页面
             self.tab_widget_login.setCurrentIndex(0)
         except Exception as e:
+            self.use_parent.info_logger.error(f"注册解析失败:{traceback.format_exc()}")
             message_box_util.box_information(self, "错误信息", "注册失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
             self.hide_overlay()
 
@@ -378,6 +376,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 发送验证码
             self.start_user_login_client.send_validator_code(phone_number)
         except Exception as e:
+            self.use_parent.info_logger.error(f"发送注册验证码失败:{traceback.format_exc()}")
             message_box_util.box_information(self, "错误", "验证码发送失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
             self.hide_overlay()
 
@@ -395,6 +394,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 发送验证码
             self.start_user_login_client.send_validator_code(phone_number)
         except Exception as e:
+            self.use_parent.info_logger.error(f"发送忘记验证码失败:{traceback.format_exc()}")
             message_box_util.box_information(self, "错误", "验证码发送失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
             self.hide_overlay()
 
@@ -450,6 +450,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
 
             message_box_util.box_information(self, "提示", "验证码已发送")
         except Exception as e:
+            self.use_parent.info_logger.error(f"发送验证码解析失败:{traceback.format_exc()}")
             message_box_util.box_information(self, "错误", "验证码发送失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
             self.hide_overlay()
 
@@ -471,6 +472,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             if login_name != "":
                 self.line_edit_user_forget_username.setText(self.line_edit_user_login_username.text())
         except Exception as e:
+            self.use_parent.info_logger.error(f"切换忘记密码失败:{traceback.format_exc()}")
             message_box_util.box_information(self, "错误信息", "切换到忘记密码界面失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
             self.hide_overlay()
 
@@ -496,6 +498,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 显示加载层
             self.show_overlay("重置密码中...")
         except Exception as e:
+            self.use_parent.info_logger.error(f"忘记密码失败:{traceback.format_exc()}")
             message_box_util.box_information(self, "错误信息", "密码修改失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
             self.hide_overlay()
 
@@ -516,6 +519,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
             # 切换到登录页面
             self.tab_widget_login.setCurrentIndex(0)
         except Exception as e:
+            self.use_parent.info_logger.error(f"忘记密码解析失败:{traceback.format_exc()}")
             message_box_util.box_information(self, "错误信息", "密码修改失败，您可以尝试更新版本，若还有问题请联系我们:service@agiletiles.com")
             self.hide_overlay()
 

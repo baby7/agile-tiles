@@ -48,14 +48,21 @@ class NormalCardManager(QWidget):
 
     def set_card_map_list(self, user_card_list, user_long_time_data,
                           toolkit=None, info_logger=None, save_data_func=None):
+        # 加载插件列表
         self.reload_plugin_file()
+        # 先更新插件信息
+        self.scan_plugins()
+        # 清理旧版本
         self.cleanup_old_versions()
+        # 调整大小
         self.resize(self.parent.width(), self.parent.height())
+        # 设置数据
         self.user_card_data_list = user_card_list
         self.user_long_time_data = user_long_time_data
         self.toolkit = toolkit
         self.info_logger = info_logger
         self.save_data_func = save_data_func
+        # 渲染
         self.render_card_list()
 
     def reload_plugin_file(self):
@@ -101,33 +108,33 @@ class NormalCardManager(QWidget):
         """
         遍历插件目录并建立插件信息索引
         """
+        # 清空索引
         self.plugin_info.clear()
+        # 获取插件目录
         plugin_dir = self.parent.app_data_plugin_path
-
+        # 遍历目录
         for dir_name in os.listdir(plugin_dir):
+            # 插件目录
             dir_path = os.path.join(plugin_dir, dir_name)
+            # 插件配置文件
             config_path = os.path.join(dir_path, 'config.json')
-
+            # 忽略无效目录
             if not os.path.isdir(dir_path) or not os.path.exists(config_path):
                 continue
-
             try:
+                # 读取配置文件
                 with open(config_path, 'r', encoding='utf-8') as f:
                     config = json.load(f)
                     plugin_name = config.get('name', '').strip()
                     version = config.get('version', '').strip().lower()
-
                     if not plugin_name or not version:
                         continue
-
                     # 统一版本格式（移除可能存在的v前缀）
                     version = version.lstrip('v')
-
                     # 存储结构：插件名称 -> 版本 -> 目录路径
                     if plugin_name not in self.plugin_info:
                         self.plugin_info[plugin_name] = {}
                     self.plugin_info[plugin_name][version] = dir_path
-
             except Exception as e:
                 print(f"读取插件配置失败：{dir_path} - {str(e)}")
 
@@ -135,7 +142,6 @@ class NormalCardManager(QWidget):
         """
         清理旧版本插件（保留每个插件的最新版本）
         """
-        self.scan_plugins()  # 先更新插件信息
         for plugin_name, versions in self.plugin_info.items():
             if len(versions) <= 1:
                 continue

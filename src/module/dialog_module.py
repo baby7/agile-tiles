@@ -122,6 +122,8 @@ def box_information(main_object, title, content, button_ok_text="确定"):
     main_object.widget_dialog_content.setLayout(layout)
     # 按钮事件
     main_object.push_button_dialog_confirm.clicked.connect(accept)
+    # 设置字体
+    style_util.set_font_and_right_click_style(main_object, main_object.widget_dialog_content)
     # 展示
     main_object.widget_dialog_base.show()
     # 创建一个局部事件循环实现阻塞效果
@@ -188,6 +190,8 @@ def box_acknowledgement(main_object, title, content, button_ok_text="确定", bu
     # 按钮事件
     main_object.push_button_dialog_cancel.clicked.connect(reject)
     main_object.push_button_dialog_confirm.clicked.connect(accept)
+    # 设置字体
+    style_util.set_font_and_right_click_style(main_object, main_object.widget_dialog_content)
     # 展示
     main_object.widget_dialog_base.show()
     # 创建一个局部事件循环实现阻塞效果
@@ -283,6 +287,8 @@ def box_input(main_object, title, content, button_ok_text="确定", button_no_te
     main_object.push_button_dialog_confirm.clicked.connect(accept)
     # 设置输入焦点
     input_field.setFocus()
+    # 设置字体
+    style_util.set_font_and_right_click_style(main_object, main_object.widget_dialog_content)
     # 展示
     main_object.widget_dialog_base.show()
     # 创建一个局部事件循环实现阻塞效果

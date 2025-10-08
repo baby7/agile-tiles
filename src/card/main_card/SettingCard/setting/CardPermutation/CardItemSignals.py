@@ -1,4 +1,5 @@
 # coding:utf-8
+from src.util import my_shiboken_util
 from PySide6.QtWidgets import QGraphicsRectItem, QGraphicsItem, QStyle, QGraphicsProxyWidget, QLabel
 from PySide6.QtCore import Signal, QObject, Qt, QUrl
 from PySide6.QtGui import QColor, QPen, QPainter, QPixmap
@@ -18,6 +19,7 @@ class CardDesignItem(QGraphicsRectItem, QObject):
     card_data = None
     is_dark = None
     card_store_client = None
+    reply = None
 
     def __init__(self, use_parent, card_data, col, row, cols, rows, grid_size, is_dark=False):
         # 显式调用父类构造函数
@@ -88,23 +90,27 @@ class CardDesignItem(QGraphicsRectItem, QObject):
         """异步加载网络图片"""
         image_url = response["darkUrl" if self.is_dark else "lightUrl"]
         request = QNetworkRequest(QUrl(image_url))
-        reply = self.network_manager.get(request)
-        reply.finished.connect(lambda: self.on_image_loaded(reply, image_url))  # 通过lambda传递reply
+        self.reply = self.network_manager.get(request)
+        self.reply.finished.connect(lambda: self.on_image_loaded(image_url))  # 通过lambda传递reply
 
-    def on_image_loaded(self, reply, image_url):
+    def on_image_loaded(self, image_url):
         """图片加载完成回调"""
         try:
-            if reply.error() == QNetworkReply.NoError:
-                data = reply.readAll()
+            if self.reply.error() == QNetworkReply.NoError:
+                data = self.reply.readAll()
                 pixmap = QPixmap()
                 if pixmap.loadFromData(data) and self is not None and hasattr(self, 'label'):
                     self.label.setPixmap(pixmap)
                     # 缓存图片
                     self.use_parent.image_cache_manager.save_pixmap_by_url(image_url, pixmap)
             else:
-                print(f"图片加载失败: {reply.errorString()}")
-        finally:
-            reply.deleteLater()
+                print(f"图片加载失败: {self.reply.errorString()}")
+        except Exception as e:
+            print(f"图片加载异常: {str(e)}")
+        # 在执行删除操作前，检查C++对象是否存活
+        if self.reply is not None and my_shiboken_util.is_qobject_valid(self.reply):
+            self.reply.deleteLater()
+        self.reply = None
 
     # 以下原有方法保持不变
     def get_card_data(self):

@@ -1,3 +1,6 @@
+from src.constant import version_constant
+
+
 def analyze_card_list(user_card_list, cloud_card_list, local_card_list):
     delete_list = []
     download_list = []
@@ -12,6 +15,13 @@ def analyze_card_list(user_card_list, cloud_card_list, local_card_list):
         # 剔除MainCard
         if card_name == "MainCard":
             continue
+
+        # 卡片版本如果小于v3.0.0则需要下载
+        if card_name in local_card_list:
+            local_version = local_card_list[card_name]["version"]
+            if version_constant.compare_version(local_version, "v3.0.0") < 0:
+                download_list.append(card_name)
+                continue
 
         # 用户需要但本地没有
         if card_name not in local_card_list:

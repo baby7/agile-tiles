@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 import json
+from src.util import my_shiboken_util
+
 from PySide6.QtCore import QObject, Signal, QUrl
 from PySide6.QtNetwork import QNetworkRequest, QNetworkReply
+
 import src.client.common as common
 from src.constant import version_constant
 from src.network_manager.ExtendedNetworkManager.ExtendedNetworkManager import ExtendedNetworkManager
@@ -15,6 +18,14 @@ class UserClient(QObject):
     sendCodeFinished = Signal(dict)     # 发送验证码完成信号
     infoFinished = Signal(dict)         # 用户信息获取完成信号
     refreshFinished = Signal(dict)      # 刷新令牌完成信号
+
+    login_reply = None        # 登录请求
+    register_reply = None     # 注册请求
+    logout_reply = None       # 注销请求
+    forget_reply = None       # 忘记密码请求
+    send_code_reply = None     # 发送验证码请求
+    info_reply = None         # 用户信息获取请求
+    refresh_reply = None      # 刷新令牌请求
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -49,7 +60,7 @@ class UserClient(QObject):
         if os_version is not None:
             data['osVersion'] = os_version
         # 发送异步请求
-        self.network_manager_login.post(request, json.dumps(data).encode('utf-8'))
+        self.login_reply = self.network_manager_login.post(request, json.dumps(data).encode('utf-8'))
 
     def register(self, username, password, nickname, validator_code, invite_code):
         """用户注册"""
@@ -65,7 +76,7 @@ class UserClient(QObject):
             'nickName': nickname
         }
         # 发送异步请求
-        self.network_manager_register.post(request, json.dumps(data).encode('utf-8'))
+        self.register_reply = self.network_manager_register.post(request, json.dumps(data).encode('utf-8'))
 
     def logout(self, user_id, hardware_id):
         """用户注销"""
@@ -78,7 +89,7 @@ class UserClient(QObject):
             'deviceId': hardware_id
         }
         # 发送异步请求
-        self.network_manager_register.post(request, json.dumps(data).encode('utf-8'))
+        self.logout_reply = self.network_manager_register.post(request, json.dumps(data).encode('utf-8'))
 
     def forget_password(self, username, password, validator_code, hardware_id):
         """忘记密码"""
@@ -92,7 +103,7 @@ class UserClient(QObject):
             'deviceId': hardware_id
         }
         # 发送异步请求
-        self.network_manager_forget.patch(request, json.dumps(data).encode('utf-8'))
+        self.forget_reply = self.network_manager_forget.patch(request, json.dumps(data).encode('utf-8'))
 
     def send_validator_code(self, phone):
         """发送验证码"""
@@ -104,7 +115,7 @@ class UserClient(QObject):
             'phone': phone
         }
         # 发送异步请求
-        self.network_manager_send_code.post(request, json.dumps(data).encode('utf-8'))
+        self.send_code_reply = self.network_manager_send_code.post(request, json.dumps(data).encode('utf-8'))
 
     def get_user_info(self, username, token):
         """获取用户信息"""
@@ -115,7 +126,7 @@ class UserClient(QObject):
             request = QNetworkRequest(QUrl(url))
             request.setRawHeader(b"Authorization", token.encode())
             # 发送异步请求
-            self.network_manager_info.get(request)
+            self.info_reply = self.network_manager_info.get(request)
         except Exception as e:
             print(e)
 
@@ -137,28 +148,49 @@ class UserClient(QObject):
         if os_version is not None:
             data['osVersion'] = os_version
         # 发送异步请求
-        self.network_manager_refresh.post(request, json.dumps(data).encode('utf-8'))
+        self.refresh_reply = self.network_manager_refresh.post(request, json.dumps(data).encode('utf-8'))
 
-    def _handle_reply_login(self, reply: QNetworkReply):
-        self._handle_reply(reply, self.loginFinished)
+    def _handle_reply_login(self):
+        self._handle_reply(self.login_reply, self.loginFinished)
+        if self.login_reply is not None and my_shiboken_util.is_qobject_valid(self.login_reply):
+            self.login_reply.deleteLater()
+        self.login_reply = None
 
-    def _handle_reply_register(self, reply: QNetworkReply):
-        self._handle_reply(reply, self.registerFinished)
+    def _handle_reply_register(self):
+        self._handle_reply(self.register_reply, self.registerFinished)
+        if self.register_reply is not None and my_shiboken_util.is_qobject_valid(self.register_reply):
+            self.register_reply.deleteLater()
+        self.register_reply = None
 
-    def _handle_reply_logout(self, reply: QNetworkReply):
-        self._handle_reply(reply, self.logoutFinished)
+    def _handle_reply_logout(self):
+        self._handle_reply(self.logout_reply, self.logoutFinished)
+        if self.logout_reply is not None and my_shiboken_util.is_qobject_valid(self.logout_reply):
+            self.logout_reply.deleteLater()
+        self.logout_reply = None
 
-    def _handle_reply_forget(self, reply: QNetworkReply):
-        self._handle_reply(reply, self.forgetFinished)
+    def _handle_reply_forget(self):
+        self._handle_reply(self.forget_reply, self.forgetFinished)
+        if self.forget_reply is not None and my_shiboken_util.is_qobject_valid(self.forget_reply):
+            self.forget_reply.deleteLater()
+        self.forget_reply = None
 
-    def _handle_reply_send_code(self, reply: QNetworkReply):
-        self._handle_reply(reply, self.sendCodeFinished)
+    def _handle_reply_send_code(self):
+        self._handle_reply(self.send_code_reply, self.sendCodeFinished)
+        if self.send_code_reply is not None and my_shiboken_util.is_qobject_valid(self.send_code_reply):
+            self.send_code_reply.deleteLater()
+        self.send_code_reply = None
 
-    def _handle_reply_info(self, reply: QNetworkReply):
-        self._handle_reply(reply, self.infoFinished)
+    def _handle_reply_info(self):
+        self._handle_reply(self.info_reply, self.infoFinished)
+        if self.info_reply is not None and my_shiboken_util.is_qobject_valid(self.info_reply):
+            self.info_reply.deleteLater()
+        self.info_reply = None
 
-    def _handle_reply_refresh(self, reply: QNetworkReply):
-        self._handle_reply(reply, self.refreshFinished)
+    def _handle_reply_refresh(self):
+        self._handle_reply(self.refresh_reply, self.refreshFinished)
+        if self.refresh_reply is not None and my_shiboken_util.is_qobject_valid(self.refresh_reply):
+            self.refresh_reply.deleteLater()
+        self.refresh_reply = None
 
     def _handle_reply(self, reply: QNetworkReply, finished):
         """统一处理网络响应"""
@@ -194,5 +226,3 @@ class UserClient(QObject):
             error_result = {"code": 1, "msg": f"处理响应时出错: {str(e)}"}
             if finished:  # 额外安全检查
                 finished.emit(error_result)
-        finally:
-            reply.deleteLater()

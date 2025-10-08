@@ -118,6 +118,28 @@ def get_app_data_db_path(app_data_path, app_name):
         shutil.rmtree(old_db_dir)
     return db_file
 
+def get_app_data_everything_db_path(app_data_path):
+    # 跨平台安全拼接路径
+    everything_dir = os.path.join(app_data_path, "DB")
+    print(f"程序Everything目录:{everything_dir}")
+    try:
+        os.makedirs(everything_dir, exist_ok=True)
+    except OSError as e:
+        print(f"无法创建目录 {everything_dir}: {e}")
+        return None  # 或抛出异常
+    return os.path.join(str(everything_dir), "everything.db")
+
+def get_app_data_everything_config_path(app_data_path):
+    # 跨平台安全拼接路径
+    everything_dir = os.path.join(app_data_path, "DB")
+    print(f"程序Everything目录:{everything_dir}")
+    try:
+        os.makedirs(everything_dir, exist_ok=True)
+    except OSError as e:
+        print(f"无法创建目录 {everything_dir}: {e}")
+        return None  # 或抛出异常
+    return os.path.join(str(everything_dir), "everything.ini")
+
 def get_app_data_plugin_path(app_data_path):
     # 跨平台安全拼接路径
     plugin_dir = os.path.join(app_data_path, "Plugin")
@@ -161,3 +183,14 @@ def get_app_data_update_path(app_data_path):
         print(f"无法创建目录 {update_dir}: {e}")
         return None  # 或抛出异常
     return update_dir
+
+def get_app_data_logger_path(app_data_path):
+    # 跨平台安全拼接路径
+    logger_dir = os.path.join(app_data_path, "LoggerCache")
+    print(f"程序日志目录:{logger_dir}")
+    try:
+        os.makedirs(logger_dir, exist_ok=True)
+    except OSError as e:
+        print(f"无法创建目录 {logger_dir}: {e}")
+        return None  # 或抛出异常
+    return logger_dir

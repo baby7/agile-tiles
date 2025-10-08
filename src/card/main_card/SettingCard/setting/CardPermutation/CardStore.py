@@ -1,6 +1,9 @@
 # coding:utf-8
 import json
 import os
+import traceback
+
+from src.util import my_shiboken_util
 from weakref import ref
 
 from PySide6 import QtCore, QtWidgets, QtGui, QtNetwork
@@ -9,7 +12,7 @@ from PySide6.QtGui import QCursor
 from PySide6.QtWidgets import QLabel
 
 from src.card.main_card.SettingCard.setting.CardPermutation.CardDetailWidget import CardDetailWidget
-from src.component.LoadAnimation.LoadAnimation import LoadAnimation
+from src.my_component.LoadAnimation.LoadAnimation import LoadAnimation
 from src.ui import style_util
 from src.client import card_store_client
 from src.ui.style_util import get_icon_by_path
@@ -19,6 +22,8 @@ class CardStore(QtWidgets.QWidget):
     cardAdded = Signal(dict)  # 信号用于传递卡片数据
     before_plugin_map = []
     card_store_client = None
+    reply_list = []
+    download_reply = None
 
     def __init__(self, parent=None, use_parent=None, is_dark=False):
         super(CardStore, self).__init__(parent)
@@ -255,6 +260,9 @@ class CardStore(QtWidgets.QWidget):
         scroll_area.setWidget(content_widget)
         # 存储内容引用
         self.tab_contents[tab_name] = content_widget
+
+        # 设置字体
+        style_util.set_font_and_right_click_style(self.use_parent, content_widget)
 
         # 隐藏加载动画
         self.load_animation_end_call_back()
@@ -619,6 +627,7 @@ class CardStore(QtWidgets.QWidget):
                 return
 
             if url in self.image_cache:
+                print("缓存命中")
                 pixmap = self.image_cache[url]
                 # 检查QLabel是否仍然有效
                 try:
@@ -629,8 +638,10 @@ class CardStore(QtWidgets.QWidget):
                     pass
                 self.load_next_image()
             else:
+                print(f"缓存未命中，尝试从本地加载图片: {url}")
                 pixmap = self.use_parent.image_cache_manager.get_pixmap_by_url(url)
                 if pixmap is not None:
+                    print("本地图片加载成功")
                     self.image_cache[url] = pixmap
                     # 检查QLabel是否仍然有效
                     try:
@@ -641,40 +652,53 @@ class CardStore(QtWidgets.QWidget):
                         pass
                     self.load_next_image()
                 else:
+                    print(f"本地图片不存在，准备加载网络图片: {url}")
                     # 发起网络请求
                     request = QtNetwork.QNetworkRequest(QtCore.QUrl(url))
                     request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
                     reply = self.network_manager.get(request)
                     # 使用弱引用包装widget，避免引用循环
                     reply.finished.connect(lambda: self.handle_image_reply(reply, url, weak_widget))
+                    self.reply_list.append(reply)
 
     def handle_image_reply(self, reply, url, weak_widget):
-        widget = weak_widget()  # 获取实际对象
+        try:
+            widget = weak_widget()  # 获取实际对象
+            # 检查widget是否仍然存在
+            if widget is None:
+                # 对象已被删除，跳过处理
+                # 在执行删除操作前，检查C++对象是否存活
+                if reply is not None and my_shiboken_util.is_qobject_valid(reply):
+                    reply.deleteLater()
+                # 处理下一个图片
+                self.load_next_image()
+                return
 
-        # 检查widget是否仍然存在
-        if widget is None:
-            # 对象已被删除，跳过处理
+            if reply.error() == QtNetwork.QNetworkReply.NoError:
+                data = reply.readAll()
+                pixmap = QtGui.QPixmap()
+                pixmap.loadFromData(data)
+                if not pixmap.isNull():
+                    # 缓存图片
+                    self.image_cache[url] = pixmap
+                    # 检查QLabel是否仍然有效
+                    try:
+                        if widget.img_label and widget.img_label.isVisible():
+                            widget.img_label.setPixmap(pixmap)
+                    except RuntimeError:
+                        # 对象已被删除，跳过设置
+                        pass
+                    # 保存到本地缓存
+                    self.use_parent.image_cache_manager.save_pixmap_by_url(url, pixmap)
+        except Exception as e:
+            print(f"加载卡片商店图片失败:{traceback.format_exc()}")
+        # 清理该回复对象
+        if reply is not None and my_shiboken_util.is_qobject_valid(reply):
             reply.deleteLater()
-            self.load_next_image()
-            return
-
-        if reply.error() == QtNetwork.QNetworkReply.NoError:
-            data = reply.readAll()
-            pixmap = QtGui.QPixmap()
-            pixmap.loadFromData(data)
-            if not pixmap.isNull():
-                # 缓存图片
-                self.image_cache[url] = pixmap
-                # 检查QLabel是否仍然有效
-                try:
-                    if widget.img_label and widget.img_label.isVisible():
-                        widget.img_label.setPixmap(pixmap)
-                except RuntimeError:
-                    # 对象已被删除，跳过设置
-                    pass
-                # 保存到本地缓存
-                self.use_parent.image_cache_manager.save_pixmap_by_url(url, pixmap)
-        reply.deleteLater()
+        # 从待处理列表中移除
+        if reply in self.reply_list:
+            self.reply_list.remove(reply)
+        # 处理下一个图片
         self.load_next_image()
 
     def update_dots(self, widget):
@@ -712,38 +736,35 @@ class CardStore(QtWidgets.QWidget):
 
         request = QtNetwork.QNetworkRequest(QtCore.QUrl(url))
         request.setRawHeader(b"Authorization", self.use_parent.access_token.encode())
-        reply = self.network_manager.get(request)
+        self.download_reply = self.network_manager.get(request)
+        self.download_reply.finished.connect(lambda : self.on_download_finished(card_data, zip_path, btn, widget))
 
-        def on_download_finished():
-            card_name = card_data["name"]
-            if reply.error() == QtNetwork.QNetworkReply.NetworkError.NoError:
-                with open(zip_path, 'wb') as f:
-                    f.write(reply.readAll().data())
-                btn.setText("添加")
-                print(f"插件 {card_name} 下载完成")
-                self.before_plugin_map = get_plugin_folder_map(self.use_parent)  # 仍需要刷新插件列表
-                # 对于新增的插件，需要新增到插件列表中，对于更新的插件，需要更新插件列表中该插件的版本
-                if card_name in self.before_plugin_map:
-                    self.before_plugin_map[card_name]["version"] = card_data["currentVersion"]["version"]
-                else:
-                    self.before_plugin_map[card_name] = card_data
-                    self.before_plugin_map[card_name]["version"] = card_data["currentVersion"]["version"]
-                self.update_action_btn(widget)
-                # 加载相同卡片的其他分类的按钮
-                self.update_card_install_buttons(card_name, "添加", btn, card_data)
-                # 关闭卡片设计器时需要重新加载插件列表
-                self.parent().is_install_or_update = True
+    def on_download_finished(self, card_data, zip_path, btn, widget):
+        card_name = card_data["name"]
+        if self.download_reply.error() == QtNetwork.QNetworkReply.NetworkError.NoError:
+            with open(zip_path, 'wb') as f:
+                f.write(self.download_reply.readAll().data())
+            btn.setText("添加")
+            print(f"插件 {card_name} 下载完成")
+            self.before_plugin_map = get_plugin_folder_map(self.use_parent)  # 仍需要刷新插件列表
+            # 对于新增的插件，需要新增到插件列表中，对于更新的插件，需要更新插件列表中该插件的版本
+            if card_name in self.before_plugin_map:
+                self.before_plugin_map[card_name]["version"] = card_data["currentVersion"]["version"]
             else:
-                btn.setText(f"失败: {reply.errorString()}")
-                print(f"插件 {card_name} 下载失败: {reply.errorString()}")
-            btn.setEnabled(True)
-            reply.deleteLater()
-            # 更新所有同卡片的widget状态
-            # if card_name in self.card_widgets:
-            #     for w in self.card_widgets[card_name]:
-            #         self.update_action_btn(w)
-
-        reply.finished.connect(on_download_finished)
+                self.before_plugin_map[card_name] = card_data
+                self.before_plugin_map[card_name]["version"] = card_data["currentVersion"]["version"]
+            self.update_action_btn(widget)
+            # 加载相同卡片的其他分类的按钮
+            self.update_card_install_buttons(card_name, "添加", btn, card_data)
+            # 关闭卡片设计器时需要重新加载插件列表
+            self.parent().is_install_or_update = True
+        else:
+            btn.setText(f"失败: {self.download_reply.errorString()}")
+            print(f"插件 {card_name} 下载失败: {self.download_reply.errorString()}")
+        btn.setEnabled(True)
+        if self.download_reply is not None and my_shiboken_util.is_qobject_valid(self.download_reply):
+            self.download_reply.deleteLater()
+        self.download_reply = None
 
     def open_view_card_detail(self, card_id):
         if self.view_card_detail_widget is None:
