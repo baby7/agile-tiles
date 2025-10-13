@@ -53,6 +53,7 @@ class TodoBody(object):
             widget = MyQListWidgetItemWidget(self.proceed_list_widget, self.todo_card, todo_id, title, success, degree, warn, time_str)
             self.proceed_widget_map[todo_id] = widget
             widget.delete_button.clicked.connect(partial(self.delete_click, todo_id, True))
+            widget.edit_button.clicked.connect(partial(self.edit_click, todo_id, True))
             widget.check_push_button.clicked.connect(partial(self.checked_click, todo_id, True))
             widget_item = QListWidgetItem(self.proceed_list_widget)
             widget_item.setSizeHint(widget.sizeHint())
@@ -64,6 +65,7 @@ class TodoBody(object):
             widget = MyQListWidgetItemWidget(self.complete_list_widget, self.todo_card, todo_id, title, success, degree, warn, time_str)
             self.complete_widget_map[todo_id] = widget
             widget.delete_button.clicked.connect(partial(self.delete_click, todo_id, False))
+            widget.edit_button.clicked.connect(partial(self.edit_click, todo_id, False))
             widget.check_push_button.clicked.connect(partial(self.checked_click, todo_id, False))
             widget_item = QListWidgetItem(self.complete_list_widget)
             widget_item.setSizeHint(widget.sizeHint())
@@ -92,15 +94,15 @@ class TodoBody(object):
         if not dialog_module.box_acknowledgement(self.main_object, "注意", f"确定要删除该待办事项吗？"):
             return
         if todo_state:
-            print("[双击]从待办中删除id:{},数据列表:{}".format(todo_id, self.proceed_data_list))
+            print("[删除]从待办中删除id:{},数据列表:{}".format(todo_id, self.proceed_data_list))
             self.delete_one(todo_id, self.proceed_data_list, self.proceed_item_map, self.proceed_widget_map,
                        self.proceed_list_widget)
-            print("[双击]从待办中删除完成id:{},数据列表:{}".format(todo_id, self.proceed_data_list))
+            print("[删除]从待办中删除完成id:{},数据列表:{}".format(todo_id, self.proceed_data_list))
         else:
-            print("[双击]从完成中删除id:{},数据列表:{}".format(todo_id, self.complete_data_list))
+            print("[删除]从完成中删除id:{},数据列表:{}".format(todo_id, self.complete_data_list))
             self.delete_one(todo_id, self.complete_data_list, self.complete_item_map, self.complete_widget_map,
                        self.complete_list_widget)
-            print("[双击]从完成中删除完成id:{},数据列表:{}".format(todo_id, self.complete_data_list))
+            print("[删除]从完成中删除完成id:{},数据列表:{}".format(todo_id, self.complete_data_list))
         self.todo_card.data_process_call_back(self.proceed_data_list, self.complete_data_list, self.todo_type)
     
     def checked_click(self, todo_id, todo_state):
@@ -141,6 +143,26 @@ class TodoBody(object):
             print("[单选]添加到待办完成id:{},数据列表:{}".format(todo_id, self.proceed_data_list))
         self.todo_card.data_process_call_back(self.proceed_data_list, self.complete_data_list, self.todo_type)
     
+    def edit_click(self, todo_id, todo_state):
+        # 未登录的判断
+        self.main_object.show_login_tip()
+        if self.main_object.current_user['username'] == "LocalUser":
+            return
+        data_list = None
+        if todo_state:
+            print("[编辑]从待办中编辑id:{},数据列表:{}".format(todo_id, self.proceed_data_list))
+            data_list = self.proceed_data_list
+        else:
+            print("[编辑]从完成中编辑id:{},数据列表:{}".format(todo_id, self.complete_data_list))
+            data_list = self.complete_data_list
+        # 获取数据
+        edit_data = None
+        for todo_data_index in range(len(data_list)):
+            if str(todo_id) == str(data_list[todo_data_index][0]):
+                edit_data = data_list[todo_data_index]
+        # 显示
+        self.open_new_todo_view(input_data=edit_data)
+
     def double_click(self, item):
         if int(self.tab_widget_todo.currentIndex()) == 0:
             double_index = self.proceed_list_widget.currentRow()
@@ -244,10 +266,12 @@ class TodoBody(object):
         if input_data[2]:
             print("编辑待办id:{},添加到待办单机触发:{}".format(input_data[0], self.proceed_data_list))
             widget_map[todo_id].delete_button.clicked.connect(partial(self.delete_click, todo_id, False))
+            widget_map[todo_id].edit_button.clicked.connect(partial(self.edit_click, todo_id, False))
             widget_map[todo_id].check_push_button.clicked.connect(partial(self.checked_click, todo_id, False))
         else:
             print("编辑待办id:{},添加到完成单机触发:{}".format(input_data[0], self.proceed_data_list))
             widget_map[todo_id].delete_button.clicked.connect(partial(self.delete_click, todo_id, True))
+            widget_map[todo_id].edit_button.clicked.connect(partial(self.edit_click, todo_id, True))
             widget_map[todo_id].check_push_button.clicked.connect(partial(self.checked_click, todo_id, True))
         if data_list[checked_index][4]:
             item_map[input_data[0]].setSizeHint(QSize(self.todo_card.card.width() - 20, 59))
@@ -290,10 +314,12 @@ class TodoBody(object):
         if create_data[2]:
             print("新增待办id:{},添加到待办单机触发:{}".format(create_data[0], self.proceed_data_list))
             item.delete_button.clicked.connect(partial(self.delete_click, todo_id, False))
+            item.edit_button.clicked.connect(partial(self.edit_click, todo_id, False))
             item.check_push_button.clicked.connect(partial(self.checked_click, todo_id, False))
         else:
             print("新增待办id:{},添加到完成单机触发:{}".format(create_data[0], self.proceed_data_list))
             item.delete_button.clicked.connect(partial(self.delete_click, todo_id, True))
+            item.edit_button.clicked.connect(partial(self.edit_click, todo_id, True))
             item.check_push_button.clicked.connect(partial(self.checked_click, todo_id, True))
         widget_item = QListWidgetItem(list_widget)
         widget_item.setSizeHint(item.sizeHint())

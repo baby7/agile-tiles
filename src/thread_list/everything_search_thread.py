@@ -193,7 +193,11 @@ class EverythingSearcher:
 
         try:
             # 构建启动参数
-            cmd = [exe_path, "-startup"]
+            cmd = [
+                exe_path,                   # Everything.exe路径
+                "-startup",                 # 后台运行
+                # "-disable-run-as-admin",    # 禁用管理员权限
+            ]
 
             # 如果提供了数据库路径，则添加-db参数
             if db_path:

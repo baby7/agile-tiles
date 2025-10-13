@@ -7,6 +7,9 @@ import atexit
 import subprocess
 import time, datetime
 
+# 忽略PyDevd的错误
+os.environ['PYDEVD_DISABLE_FILE_VALIDATION'] = '1'
+
 print(f'__启动时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
 
 print("_基础包加载完成")
@@ -255,6 +258,8 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
     # 其他
     theme_switch_button = None
     silent_updater = None
+    # 窗口
+    dialog_map = {}
     # 截图
     show_overlay_status = False
 
@@ -896,10 +901,13 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
 
 
     ''' **********************************退出登录*************************************** '''
-    def logout(self, need_dialog=True):
+    def logout(self, need_dialog=True, dialog_content=None):
         # 显示对话框来确认
         if need_dialog:
-            confirm = self.toolkit.message_box_util.box_acknowledgement(self, "退出", f"确定要退出登录吗？")
+            if dialog_content is None:
+                dialog_content = "确定要退出登录吗？"
+            confirm = self.toolkit.message_box_util.box_acknowledgement(self, "退出", dialog_content,
+                                                                        dialog_map=self.dialog_map, dialog_key="logout")
             if not confirm:
                 return
         # 获取login_helper的路径（假设在同一目录下）
@@ -1291,6 +1299,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
     ''' **********************************定时检测*************************************** '''
     def time_task(self):
         print("主进程 - time_task")
+        # 获取用户信息和更新部分
         try:
             if self.current_user is None or self.current_user["username"] is None:
                 return
@@ -1298,16 +1307,26 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             self.user_info_client.get_user_info(self.current_user["username"], self.access_token)
             # 检查更新
             update_module.check_update_normal(self)
+        except Exception:
+            self.info_logger.error(traceback.format_exc())
+        # 刷新token部分
+        try:
+            # 当前时间
+            datetime_now = datetime.datetime.now()
             # 如果登录界面正在显示，则不进行令牌刷新避免登录界面的闪退
             if self.start_login_view:
+                # 但是超过18小时就进行强制刷新
+                if self.refresh_token_datetime is None or datetime_now - self.refresh_token_datetime >= datetime.timedelta(hours=18):
+                    self.user_info_client.refresh(self.current_user["username"], self.refresh_token, self.hardware_id, self.os_version)
                 return
             # 如果支付界面正在显示，则不进行令牌刷新避免闪退
             if self.qr_code_dialog is not None and self.qr_code_dialog.isVisible():
+                # 但是超过18小时就进行强制刷新
+                if self.refresh_token_datetime is None or datetime_now - self.refresh_token_datetime >= datetime.timedelta(hours=18):
+                    self.user_info_client.refresh(self.current_user["username"], self.refresh_token, self.hardware_id, self.os_version)
                 return
             # 判断时间，如果时间超过12个小时就更新令牌
-            datetime_now = datetime.datetime.now()
             if self.refresh_token_datetime is None or datetime_now - self.refresh_token_datetime >= datetime.timedelta(hours=12):
-                # 更新令牌
                 self.user_info_client.refresh(self.current_user["username"], self.refresh_token, self.hardware_id, self.os_version)
         except Exception:
             self.info_logger.error(traceback.format_exc())
@@ -1360,7 +1379,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             self.info_logger.error(f"刷新令牌失败，原因：{result['msg']}")
             if result["msg"] == "无效刷新令牌" or result["msg"] == "刷新令牌过期" or result["msg"] == "用户不存在":
                 # 重新登录
-                self.logout()
+                self.logout(dialog_content="很抱歉，您的登录已过期，请重新登录")
             return
         self.info_logger.info(f"刷新令牌成功")
         print(f"刷新令牌结果:{result}")
@@ -1839,7 +1858,8 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             exit()
         else:
             # 显示对话框来确认
-            confirm = self.toolkit.message_box_util.box_acknowledgement(self, "退出", f"确定要退出{self.app_title}吗？")
+            confirm = self.toolkit.message_box_util.box_acknowledgement(self, "退出", f"确定要退出{self.app_title}吗？",
+                                                                        dialog_map=self.dialog_map, dialog_key="quit")
             if confirm:
                 self.quit_before_do()
                 self.run_exit_helper()

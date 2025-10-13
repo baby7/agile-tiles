@@ -83,7 +83,7 @@ def box_information(widget, title, content, button_ok_text="确定", close_secon
     dialog.exec()
 
 
-def box_acknowledgement(widget, title, content=None, button_ok_text="确定", button_no_text="取消", markdown_content=None):
+def box_acknowledgement(widget, title, content=None, button_ok_text="确定", button_no_text="取消", markdown_content=None, dialog_map=None, dialog_key=None):
     """
     消息确认弹窗
     :param widget: 需要绑定的widget
@@ -108,12 +108,20 @@ def box_acknowledgement(widget, title, content=None, button_ok_text="确定", bu
         app_name = "AgileTiles"
         settings = QSettings(app_name, "Theme")
         is_dark = settings.value("IsDark", False, type=bool)
+    if dialog_map is not None and dialog_key in dialog_map and dialog_map[dialog_key] is not None:
+        try:
+            dialog_map[dialog_key].close()
+            dialog_map[dialog_key] = None
+        except Exception:
+            pass
     # 构建窗口
-    dialog = AgileTilesFramelessDialog(is_dark=is_dark, form_theme_mode=form_theme_mode,
+    dialog_object = AgileTilesFramelessDialog(is_dark=is_dark, form_theme_mode=form_theme_mode,
                                        form_theme_transparency=form_theme_transparency)
-    dialog.setWindowTitle(title)
+    if dialog_map is not None:
+        dialog_map[dialog_key] = dialog_object
+    dialog_object.setWindowTitle(title)
 
-    layout = QVBoxLayout(dialog.widget_base)
+    layout = QVBoxLayout(dialog_object.widget_base)
     layout.setContentsMargins(20, 15, 20, 15)
     layout.setSpacing(15)
 
@@ -146,30 +154,30 @@ def box_acknowledgement(widget, title, content=None, button_ok_text="确定", bu
     btn_cancel = QPushButton(button_no_text)
     style_util.set_button_style(btn_cancel, is_dark)
     btn_cancel.setFixedSize(80, 32)
-    btn_cancel.clicked.connect(dialog.reject)
+    btn_cancel.clicked.connect(dialog_object.reject)
 
     # 确定按钮
     btn_confirm = QPushButton(button_ok_text)
     style_util.set_button_style(btn_confirm, is_dark)
     btn_confirm.setFixedSize(80, 32)
-    btn_confirm.clicked.connect(dialog.accept)
+    btn_confirm.clicked.connect(dialog_object.accept)
 
     btn_layout.addWidget(btn_cancel)
     btn_layout.addWidget(btn_confirm)
     layout.addWidget(btn_container)
 
     # 尺寸设置
-    dialog.setMinimumSize(300, 200)
+    dialog_object.setMinimumSize(300, 200)
     if markdown_content is None:
-        dialog.resize(360, 200)
+        dialog_object.resize(360, 200)
     else:
-        dialog.resize(450, 400)
-    dialog.refresh_geometry(widget.toolkit.resolution_util.get_screen(widget))
+        dialog_object.resize(450, 400)
+    dialog_object.refresh_geometry(widget.toolkit.resolution_util.get_screen(widget))
 
     # 设置字体
-    style_util.set_font_and_right_click_style(widget, dialog)
+    style_util.set_font_and_right_click_style(widget, dialog_object)
 
-    return dialog.exec() == QDialog.Accepted
+    return dialog_object.exec() == QDialog.Accepted
 
 
 def box_input(widget, title, content, button_ok_text="确定", button_no_text="取消", old_text=None):

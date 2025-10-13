@@ -185,30 +185,34 @@ class HotSearchList(QWidget):
     hot_search_item_list = []
     left_click_func = None
     middle_click_func = None
+    # 布局
+    main_layout = None
+    main_scroll = None
+    main_container = None
 
     def __init__(self, parent=None, left_click_func=None, middle_click_func=None):
         super().__init__(parent)
         self.left_click_func = left_click_func
         self.middle_click_func = middle_click_func
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(0)
+        self.main_layout = QVBoxLayout(self)
+        self.main_layout.setContentsMargins(0, 0, 0, 0)
+        self.main_layout.setSpacing(0)
         # 滚动区域
-        scroll = QScrollArea()
-        scroll.setStyleSheet("""
+        self.main_scroll = QScrollArea()
+        self.main_scroll.setStyleSheet("""
         QScrollArea {
             background: transparent;
             border: none;
         }
         """ + scroll_bar_style)
-        scroll.setWidgetResizable(True)
-        layout.addWidget(scroll)
-        container = QWidget()
-        container.setStyleSheet("background: transparent;")
-        self.vbox = QVBoxLayout(container)
+        self.main_scroll.setWidgetResizable(True)
+        self.main_layout.addWidget(self.main_scroll)
+        self.main_container = QWidget()
+        self.main_container.setStyleSheet("background: transparent;")
+        self.vbox = QVBoxLayout(self.main_container)
         self.vbox.setContentsMargins(0, 0, 0, 0)
         self.vbox.setSpacing(4)
-        scroll.setWidget(container)
+        self.main_scroll.setWidget(self.main_container)
 
     def set_data_list(self, data_list: list, data_type: str):
         if len(self.hot_search_item_list) != 0:
@@ -221,6 +225,9 @@ class HotSearchList(QWidget):
                 widget.setFont(self.font())
                 self.vbox.addWidget(widget)
                 self.hot_search_item_list.append(widget)
+        # 滚动到顶部
+        if self.main_scroll is not None:
+            self.main_scroll.verticalScrollBar().setValue(0)
 
 
 class TopSearchCard(MainCard):

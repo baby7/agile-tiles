@@ -340,6 +340,8 @@ class TodoCard(MainCard):
         self.label_todo_type_title.setText(todo_type)
         # 切换到待办列表视图
         self.stacked_widget.setCurrentIndex(1)  # 待办列表视图
+        # 代办列表切换到待办分类
+        self.tab_widget_todo.setCurrentIndex(0)
 
     def data_process_call_back(self, proceed_data_list, complete_data_list, todo_type):
         # 剔除类型为todo_type的

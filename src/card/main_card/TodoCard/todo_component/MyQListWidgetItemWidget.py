@@ -18,6 +18,7 @@ class MyQListWidgetItemWidget(QWidget):
     label_title = None
     blank_left_label = None
     check_push_button = None
+    edit_button = None
     delete_button = None
     degree_line = None
     blank_label = None
@@ -42,22 +43,25 @@ class MyQListWidgetItemWidget(QWidget):
         self.success = success
         self.init_ui(title, success, degree, warn, time_str)
         self.refresh_theme(self.is_dark)
+        self.setMaximumWidth(self.parent.width() - 20)
 
     def init_ui(self, title, success, degree, warn, time_str):
         # 标题
-        self.label_title = self.create_label(title, 11, 260, 23)
+        self.label_title = self.create_label(title, 11, 23)
         # 勾选框左边的占位
-        self.blank_left_label = self.create_label("", 0, 5, 10)
+        self.blank_left_label = self.create_label("", 0, 10)
         # 勾选框
         self.check_push_button = self.create_check_button(success)
+        # 编辑按钮
+        self.edit_button = self.create_edit_button()
         # 删除按钮
         self.delete_button = self.create_delete_button()
         # 程度条
         self.degree_line = self.create_degree_line(degree, warn)
         # 提醒时间
         if warn:
-            self.blank_label = self.create_label("", 0, 1, 10)
-            self.warn_label = self.create_label("🔔 " + time_str, 9, 160, 18)
+            self.blank_label = self.create_label("", 0, 10)
+            self.warn_label = self.create_label("🔔 " + time_str, 9, 18)
         else:
             self.blank_label = None
             self.warn_label = None
@@ -66,10 +70,11 @@ class MyQListWidgetItemWidget(QWidget):
         # 布局
         self.setup_layout(warn)
 
-    def create_label(self, text, font_size, width, height):
+    def create_label(self, text, font_size, height):
         label = QtWidgets.QLabel(self.parent)
         label.setFont(get_font(font_size))
-        label.setFixedSize(width, height)
+        label.setMinimumHeight(height)
+        label.setMaximumHeight(height)
         label.setStyleSheet("background-color: rgba(0, 0, 0, 0);")
         label.setText(text)
         return label
@@ -94,6 +99,12 @@ class MyQListWidgetItemWidget(QWidget):
             button.setIcon(style_util.get_icon_by_path("Character/check-one", is_dark=self.is_dark))
         else:
             button.setIcon(style_util.get_icon_by_path("Graphics/round", is_dark=self.is_dark))
+        return button
+
+    def create_edit_button(self):
+        button = QtWidgets.QPushButton(self.parent)
+        button.setFixedSize(22, 22)
+        button.setCursor(Qt.CursorShape.PointingHandCursor)
         return button
 
     def create_delete_button(self):
@@ -142,7 +153,8 @@ class MyQListWidgetItemWidget(QWidget):
 
     def setup_layout(self, warn):
         self.main_layout = QtWidgets.QHBoxLayout()
-        self.main_layout.setContentsMargins(3, 4, 3, 0)
+        self.main_layout.setContentsMargins(3, 4, 10, 0)
+        self.main_layout.setSpacing(3)
         self.main_layout.addWidget(self.degree_line)
         self.main_layout.addWidget(self.blank_left_label)
 
@@ -160,9 +172,9 @@ class MyQListWidgetItemWidget(QWidget):
         if warn:
             self.title_and_warn_layout.addWidget(self.warn_label)
 
-        self.main_layout.addLayout(self.title_and_warn_layout)
+        self.main_layout.addLayout(self.title_and_warn_layout, 1)
+        self.main_layout.addWidget(self.edit_button)
         self.main_layout.addWidget(self.delete_button)
-        self.main_layout.setAlignment(self.delete_button, Qt.AlignmentFlag.AlignCenter)
 
         self.layout = QtWidgets.QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
@@ -178,8 +190,8 @@ class MyQListWidgetItemWidget(QWidget):
         self.update_degree_line(self.degree_line, degree, warn)
         if warn:
             if self.blank_label is None:
-                self.blank_label = self.create_label("", 0, 1, 10)
-                self.warn_label = self.create_label("🔔 " + time_str, 9, 160, 18)
+                self.blank_label = self.create_label("", 0, 10)
+                self.warn_label = self.create_label("🔔 " + time_str, 9, 18)
                 self.check_and_blank_layout.addWidget(self.blank_label)
                 self.title_and_warn_layout.addWidget(self.warn_label)
             else:
@@ -232,6 +244,9 @@ class MyQListWidgetItemWidget(QWidget):
             self.check_push_button.setIcon(style_util.get_icon_by_path("Character/check-one", is_dark=self.is_dark))
         else:
             self.check_push_button.setIcon(style_util.get_icon_by_path("Graphics/round", is_dark=self.is_dark))
+        # 更新编辑按钮样式
+        self.edit_button.setStyleSheet(push_button_style)
+        self.edit_button.setIcon(style_util.get_icon_by_path("Edit/write", is_dark=self.is_dark))
         # 更新删除按钮样式
         self.delete_button.setStyleSheet(push_button_style)
         self.delete_button.setIcon(style_util.get_icon_by_path("Character/close-one", custom_color="#FF0000"))
