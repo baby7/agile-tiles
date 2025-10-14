@@ -1,7 +1,9 @@
 from PySide6.QtWidgets import QVBoxLayout
 
 from src.card.card_component.AggregationCard.AggregationCard import AggregationCard
+from src.card.main_card.ToolCard.base64_image_tool.base64_image_tool_util import Base64ImageTool
 from src.card.main_card.ToolCard.bmi_calculator.bmi_calculator_util import BMICalculatorPopup
+from src.card.main_card.ToolCard.calorie_calculator.calorie_calculator_util import CalorieCalculatorPopup
 from src.card.main_card.ToolCard.codec_tool.codec_tool_util import CodecTool
 from src.card.main_card.ToolCard.cron_generator.cron_generator_util import CronGeneratorPopup
 from src.card.main_card.ToolCard.crypto_too.crypto_tool_util import CryptoTool
@@ -9,7 +11,9 @@ from src.card.main_card.ToolCard.file_operation import file_operation_util
 from src.card.main_card.ToolCard.hold_grudges_gen.hold_grudges_gen_util import HoldGrudgesGenPopup
 from src.card.main_card.ToolCard.housing_loan_rates import housing_loan_rates_util
 from src.card.main_card.ToolCard.ip_info.ip_info_util import IPInfoPopup
+from src.card.main_card.ToolCard.ip_location_query.ip_location_query_util import IPLocationQueryPopup
 from src.card.main_card.ToolCard.json_formatter import json_formatter_util
+from src.card.main_card.ToolCard.jwt_tool.jwt_tool_util import JWTEncoderDecoderPopup
 from src.card.main_card.ToolCard.notebook_battery_graph import notebook_battery_graph_util
 from src.card.main_card.ToolCard.progress_bar_generator import progress_bar_generator_util
 from src.card.main_card.ToolCard.relationship_calculator import relationship_calculator_util
@@ -127,36 +131,6 @@ class ToolCard(AggregationCard):
                 "link": None,
                 "call_back_func": self.notebook_battery_graph
             },
-            {
-                "category": self.module_category_browser,
-                "type": "工具",
-                "title": "中国房贷计算器",
-                "des": "混合、商贷、混合贷计算",
-                "icon": "Base/home",
-                "content": None,
-                "link": None,
-                "call_back_func": self.housing_loan_rates
-            },
-            {
-                "category": self.module_category_browser,
-                "type": "工具",
-                "title": "个人所得税计算器",
-                "des": "个人所得税计算",
-                "icon": "Sports/muscle",
-                "content": None,
-                "link": None,
-                "call_back_func": lambda : self.tax_calculator("个人所得税计算器")
-            },
-            {
-                "category": self.module_category_browser,
-                "type": "工具",
-                "title": "BMI计算器",
-                "des": "身体质量指数计算",
-                "icon": "Sports/muscle",
-                "content": None,
-                "link": None,
-                "call_back_func": lambda : self.bmi_calculator("BMI计算器")
-            },
             # 程序员
             {
                 "category": self.module_category_browser,
@@ -187,6 +161,16 @@ class ToolCard(AggregationCard):
                 "content": None,
                 "link": None,
                 "call_back_func": lambda : self.codec_tool("编解码工具")
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "程序员",
+                "title": "Base64图片编解码",
+                "des": "Base64文本和图片互转",
+                "icon": "Office/file-conversion",
+                "content": None,
+                "link": None,
+                "call_back_func": lambda : self.base64_image_tool("Base64图片编解码工具")
             },
             {
                 "category": self.module_category_browser,
@@ -237,6 +221,67 @@ class ToolCard(AggregationCard):
                 "content": None,
                 "link": None,
                 "call_back_func": lambda : self.ip_info("本机IP信息")
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "程序员",
+                "title": "JWT编解码工具",
+                "des": "JWT头部、载荷、签名",
+                "icon": "Connect/network-tree",
+                "content": None,
+                "link": None,
+                "call_back_func": lambda : self.jwt_tool("JWT编解码工具")
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "程序员",
+                "title": "IP归属地",
+                "des": "查询IP地址的地理位置",
+                "icon": "Connect/network-tree",
+                "content": None,
+                "link": None,
+                "call_back_func": lambda : self.ip_location_query("IP归属地")
+            },
+            # 生活
+            {
+                "category": self.module_category_browser,
+                "type": "生活",
+                "title": "中国房贷计算器",
+                "des": "混合、商贷、混合贷计算",
+                "icon": "Base/home",
+                "content": None,
+                "link": None,
+                "call_back_func": self.housing_loan_rates
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "生活",
+                "title": "个人所得税计算器",
+                "des": "个人所得税计算",
+                "icon": "Money/paper-money",
+                "content": None,
+                "link": None,
+                "call_back_func": lambda : self.tax_calculator("个人所得税计算器")
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "生活",
+                "title": "BMI计算器",
+                "des": "身体质量指数计算",
+                "icon": "Sports/muscle",
+                "content": None,
+                "link": None,
+                "call_back_func": lambda : self.bmi_calculator("BMI计算器")
+            },
+            {
+                "category": self.module_category_browser,
+                "type": "生活",
+                "title": "热量计算器",
+                "des": "卡路里、大卡、千焦转换",
+                "icon": "Foods/chicken-leg",
+                "content": None,
+                "link": None,
+                "call_back_func": lambda : self.calorie_calculator("热量计算器")
             },
             # 趣味
             {
@@ -326,6 +371,12 @@ class ToolCard(AggregationCard):
         self.util_app = BMICalculatorPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
+    def calorie_calculator(self, title):
+        # 清理展示面板
+        self.clear_show_panel()
+        self.util_app = CalorieCalculatorPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
+        self.show_util_in_show_panel(title=title, util_app=self.util_app)
+
     def cron_generator(self, title):
         # 清理展示面板
         self.clear_show_panel()
@@ -338,6 +389,18 @@ class ToolCard(AggregationCard):
         self.util_app = UUIDGeneratorPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
+    def jwt_tool(self, title):
+        # 清理展示面板
+        self.clear_show_panel()
+        self.util_app = JWTEncoderDecoderPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
+        self.show_util_in_show_panel(title=title, util_app=self.util_app)
+
+    def ip_location_query(self, title):
+        # 清理展示面板
+        self.clear_show_panel()
+        self.util_app = IPLocationQueryPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
+        self.show_util_in_show_panel(title=title, util_app=self.util_app)
+
     def ip_info(self, title):
         # 清理展示面板
         self.clear_show_panel()
@@ -348,6 +411,12 @@ class ToolCard(AggregationCard):
         # 清理展示面板
         self.clear_show_panel()
         self.util_app = CodecTool(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
+        self.show_util_in_show_panel(title=title, util_app=self.util_app)
+
+    def base64_image_tool(self, title):
+        # 清理展示面板
+        self.clear_show_panel()
+        self.util_app = Base64ImageTool(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def crypto_tool(self, title):

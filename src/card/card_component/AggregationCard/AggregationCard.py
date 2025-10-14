@@ -213,11 +213,11 @@ class AggregationCard(MainCard):
         try:
             self.show_panel_hide_button.clicked.disconnect()
         except Exception as e:
-            print(e)
+            pass
         try:
             self.show_panel_hide_button_2.clicked.disconnect()
         except Exception as e:
-            print(e)
+            pass
         # 删除子控件
         layout = self.show_panel_content_panel.layout()
         if layout is not None:
