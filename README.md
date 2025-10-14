@@ -1,6 +1,12 @@
- > # 灵卡面板
+<p align="center">
+  <a href="https://www.agiletiles.com/" target="_blank">
+    <img width="120" src="resources/img/icon/icon.png">
+  </a>
+</p>
+<h1 align="center">灵卡面板</h1>
+<p align="center">电脑侧边栏工具，摸鱼办公神器</p>
 
-### 介绍
+# 介绍
 
 Windows桌面端软件，摸鱼办公神器
 
@@ -8,7 +14,7 @@ Windows桌面端软件，摸鱼办公神器
 
 打造你的自定义专属摸鱼办公面板
 
-#### 主卡片
+## 主卡片
 * 本地文件快捷搜索（基于everything）
 * 快捷键截图、屏幕取色
 * 翻译（同时接入截图识别并翻译）
@@ -19,7 +25,7 @@ Windows桌面端软件，摸鱼办公神器
 * 有趣图文（摸鱼人日历、kfc梗图文案、萌宠图片、历史上的今天、随机心语）
 * 热门网站链接聚合
 
-#### 小卡片
+## 小卡片
 * 台风、系统加速球、翻页时钟
 * 月相、笔记本电池电量
 * 基金、股票、金价
@@ -33,7 +39,7 @@ Windows桌面端软件，摸鱼办公神器
 * 灵感提示词、时间进度条、搜索
 * 古诗词、答案之书、一言
 
-#### 工具箱模块
+## 工具箱模块
 * 文件批量操作工具、屏幕取色工具
 * Json格式化工具、编解码工具、颜色转换器
 * 时间 时区 时间戳的计算器
@@ -43,20 +49,18 @@ Windows桌面端软件，摸鱼办公神器
 * 中国房贷计算器、中国家庭称谓计算器
 * BMI计算器
 
-### 运行展示（双主题）
+## 运行展示（双主题）
 
-![https://index.agiletiles.com/website/images/screenshot/screenshot-music-theme.png](https://index.agiletiles.com/website/images/screenshot/screenshot-music-theme.png)
+<p align="center">
+    <img width="500" src="https://index.agiletiles.com/website/images/screenshot/screenshot-music-theme.png">
+</p>
 
-## Star History
+# 下载
 
-[![Star History Chart](https://api.star-history.com/svg?repos=baby7/agile-tiles&type=Date)](https://www.star-history.com/#baby7/agile-tiles&Date)
-
-### 下载
-
-#### 官网
+### 官网
 
 [https://www.agiletiles.com](https://www.agiletiles.com)
 
-#### 蓝奏云
+### 蓝奏云
 
-链接: [https://agiletiles.lanzoue.com/s/agiletiles](https://agiletiles.lanzoue.com/s/agiletiles)
+[https://agiletiles.lanzoue.com/s/agiletiles](https://agiletiles.lanzoue.com/s/agiletiles)
