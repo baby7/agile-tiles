@@ -210,6 +210,12 @@ class FileOperationDialog(AgileTilesAcrylicWindow):
         self.widget_base.setLayout(main_layout)
         main_layout.setContentsMargins(10, 10, 10, 10)
 
+        # 顶部label
+        self.label_title = QLabel("注意！建议运行前备份数据！")
+        self.label_title.setStyleSheet("background: transparent; border: none;")
+        main_layout.addWidget(self.label_title)
+
+
         # 创建选项卡
         self.tabs = QTabWidget()
         self.rename_tab = QWidget()
@@ -225,7 +231,7 @@ class FileOperationDialog(AgileTilesAcrylicWindow):
 
         # 日志区域
         log_group = QGroupBox("操作日志")
-        log_group.setStyleSheet("QGroupBox{border: 1px solid rgba(125, 125, 125, 125); padding-top: 8px;}")
+        log_group.setStyleSheet("QGroupBox{border: 1px solid rgba(125, 125, 125, 125); padding-top: 8px; background: transparent;}")
         log_layout = QVBoxLayout()
         self.log_text = QTextEdit()
         self.log_text.setReadOnly(True)

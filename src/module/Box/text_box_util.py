@@ -1,4 +1,6 @@
 import json
+import webbrowser
+
 from PySide6.QtCore import Qt, QUrl
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (QVBoxLayout, QLabel, QPushButton, QApplication,
@@ -176,7 +178,12 @@ class TextPopup(AgileTilesAcrylicWindow):
         browser = QTextBrowser()
         browser.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         browser.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+        browser.anchorClicked.connect(self._open_link_in_browser)
+        browser.setFocusPolicy(Qt.NoFocus)
+        browser.setOpenLinks(False)
+        browser.setOpenExternalLinks(False)
         self._setup_browser_font(browser)
+        self._set_browser_stylesheet(browser)
         content = str(self.content.get('content', ''))
         {
             dialog_constant.DIALOG_TEXT_HTML: lambda: browser.setHtml(content),
@@ -185,6 +192,10 @@ class TextPopup(AgileTilesAcrylicWindow):
         }[content_type]()
 
         return browser
+
+    def _open_link_in_browser(self, link:QUrl):
+        """处理链接点击事件"""
+        webbrowser.open(link.toString())
 
     def _create_label(self):
         """创建普通文本标签"""
@@ -234,6 +245,40 @@ class TextPopup(AgileTilesAcrylicWindow):
         font = QFont()
         font.setPointSize(10)
         browser.setFont(font)
+
+    def _set_browser_stylesheet(self, browser):
+        """设置浏览器样式表，包括链接颜色"""
+        if self.is_dark:
+            # 暗色主题下的链接样式
+            stylesheet = """
+                QTextBrowser {
+                    selection-background-color: #264f78;
+                    selection-color: white;
+                }
+                QTextBrowser a {
+                    color: #4fc3f7;  /* 调整为较暗的蓝色 */
+                    text-decoration: underline;
+                }
+                QTextBrowser a:hover {
+                    color: #29b6f6;  /* 悬停时稍微亮一点 */
+                }
+            """
+        else:
+            # 亮色主题下的链接样式
+            stylesheet = """
+                QTextBrowser {
+                    selection-background-color: #0078d4;
+                    selection-color: white;
+                }
+                QTextBrowser a {
+                    color: #0066cc;  /* 深蓝色链接 */
+                    text-decoration: underline;
+                }
+                QTextBrowser a:hover {
+                    color: #0033aa;  /* 悬停时更深的蓝色 */
+                }
+            """
+        browser.setStyleSheet(stylesheet)
 
     def _set_button_style(self, button):
         """设置按钮样式"""

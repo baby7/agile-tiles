@@ -26,7 +26,7 @@ class Ui_Form(object):
         Form.resize(2069, 1255)
         self.setting_area = QScrollArea(Form)
         self.setting_area.setObjectName(u"setting_area")
-        self.setting_area.setGeometry(QRect(490, 10, 386, 461))
+        self.setting_area.setGeometry(QRect(490, 10, 386, 531))
         font = QFont()
         font.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
         font.setBold(True)
@@ -39,12 +39,12 @@ class Ui_Form(object):
 "border-color:rgba(255, 255, 255, 0);\n"
 "background-color:rgba(255, 255, 255, 100);\n"
 "")
-        self.setting_area.setFrameShape(QFrame.StyledPanel)
+        self.setting_area.setFrameShape(QFrame.Shape.StyledPanel)
         self.setting_area.setLineWidth(1)
         self.setting_area.setWidgetResizable(True)
         self.scrollAreaWidgetContents_37 = QWidget()
         self.scrollAreaWidgetContents_37.setObjectName(u"scrollAreaWidgetContents_37")
-        self.scrollAreaWidgetContents_37.setGeometry(QRect(0, 0, 386, 461))
+        self.scrollAreaWidgetContents_37.setGeometry(QRect(0, 0, 386, 531))
         self.gridLayout = QGridLayout(self.scrollAreaWidgetContents_37)
         self.gridLayout.setObjectName(u"gridLayout")
         self.verticalLayout = QVBoxLayout()
@@ -185,6 +185,13 @@ class Ui_Form(object):
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.push_button_setting_faq = QPushButton(self.widget_setting_about)
+        self.push_button_setting_faq.setObjectName(u"push_button_setting_faq")
+        self.push_button_setting_faq.setMinimumSize(QSize(70, 70))
+        self.push_button_setting_faq.setStyleSheet(u"")
+
+        self.horizontalLayout_3.addWidget(self.push_button_setting_faq)
+
         self.push_button_setting_service_agreement = QPushButton(self.widget_setting_about)
         self.push_button_setting_service_agreement.setObjectName(u"push_button_setting_service_agreement")
         self.push_button_setting_service_agreement.setMinimumSize(QSize(70, 70))
@@ -198,13 +205,6 @@ class Ui_Form(object):
         self.push_button_setting_privacy_agreement.setStyleSheet(u"")
 
         self.horizontalLayout_3.addWidget(self.push_button_setting_privacy_agreement)
-
-        self.push_button_setting_open_source = QPushButton(self.widget_setting_about)
-        self.push_button_setting_open_source.setObjectName(u"push_button_setting_open_source")
-        self.push_button_setting_open_source.setMinimumSize(QSize(70, 70))
-        self.push_button_setting_open_source.setStyleSheet(u"")
-
-        self.horizontalLayout_3.addWidget(self.push_button_setting_open_source)
 
         self.push_button_setting_about_us = QPushButton(self.widget_setting_about)
         self.push_button_setting_about_us.setObjectName(u"push_button_setting_about_us")
@@ -222,6 +222,49 @@ class Ui_Form(object):
 
 
         self.verticalLayout.addWidget(self.widget_setting_about)
+
+        self.label_21 = QLabel(self.scrollAreaWidgetContents_37)
+        self.label_21.setObjectName(u"label_21")
+        self.label_21.setFont(font1)
+        self.label_21.setStyleSheet(u"background: transparent;")
+
+        self.verticalLayout.addWidget(self.label_21)
+
+        self.widget_setting_open_source = QWidget(self.scrollAreaWidgetContents_37)
+        self.widget_setting_open_source.setObjectName(u"widget_setting_open_source")
+        self.widget_setting_open_source.setStyleSheet(u"QWidget {\n"
+"border-style: solid;\n"
+"border-radius: 10px;\n"
+"border: 1px solid white;\n"
+"background-color:rgba(255, 255, 255, 200);\n"
+"}")
+        self.gridLayout_13 = QGridLayout(self.widget_setting_open_source)
+        self.gridLayout_13.setObjectName(u"gridLayout_13")
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.push_button_setting_open_source_link = QPushButton(self.widget_setting_open_source)
+        self.push_button_setting_open_source_link.setObjectName(u"push_button_setting_open_source_link")
+        self.push_button_setting_open_source_link.setMinimumSize(QSize(70, 70))
+        self.push_button_setting_open_source_link.setStyleSheet(u"")
+
+        self.horizontalLayout_7.addWidget(self.push_button_setting_open_source_link)
+
+        self.push_button_setting_open_source_list = QPushButton(self.widget_setting_open_source)
+        self.push_button_setting_open_source_list.setObjectName(u"push_button_setting_open_source_list")
+        self.push_button_setting_open_source_list.setMinimumSize(QSize(70, 70))
+        self.push_button_setting_open_source_list.setStyleSheet(u"")
+
+        self.horizontalLayout_7.addWidget(self.push_button_setting_open_source_list)
+
+        self.horizontalSpacer_9 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_7.addItem(self.horizontalSpacer_9)
+
+
+        self.gridLayout_13.addLayout(self.horizontalLayout_7, 1, 0, 1, 1)
+
+
+        self.verticalLayout.addWidget(self.widget_setting_open_source)
 
 
         self.gridLayout.addLayout(self.verticalLayout, 0, 1, 1, 1)
@@ -244,7 +287,7 @@ class Ui_Form(object):
         self.label_background.setGeometry(QRect(0, 0, 451, 1041))
         self.user_area = QScrollArea(Form)
         self.user_area.setObjectName(u"user_area")
-        self.user_area.setGeometry(QRect(480, 480, 1051, 781))
+        self.user_area.setGeometry(QRect(480, 560, 1051, 781))
         self.user_area.setStyleSheet(u"border-style:solid; border-radius:10px; border:0px groove gray; color:rgb(0, 0, 0);\n"
 "border-color:rgba(255, 255, 255, 0); background-color:rgba(255, 255, 255, 100);")
         self.user_area.setWidgetResizable(True)
@@ -286,10 +329,10 @@ class Ui_Form(object):
 "QTabBar::tab:!selected {\n"
 "    background: rgba(255, 255, 255, 100);\n"
 "}")
-        self.tab_widget_user.setTabPosition(QTabWidget.North)
-        self.tab_widget_user.setTabShape(QTabWidget.Rounded)
+        self.tab_widget_user.setTabPosition(QTabWidget.TabPosition.North)
+        self.tab_widget_user.setTabShape(QTabWidget.TabShape.Rounded)
         self.tab_widget_user.setIconSize(QSize(16, 16))
-        self.tab_widget_user.setElideMode(Qt.ElideLeft)
+        self.tab_widget_user.setElideMode(Qt.TextElideMode.ElideLeft)
         self.tab_widget_user.setUsesScrollButtons(True)
         self.tab_widget_user.setMovable(False)
         self.tab_widget_user.setTabBarAutoHide(False)
@@ -331,7 +374,7 @@ class Ui_Form(object):
         font3.setBold(False)
         self.label_area_user_message_nick_name.setFont(font3)
         self.label_area_user_message_nick_name.setStyleSheet(u"border: none; background-color: transparent;")
-        self.label_area_user_message_nick_name.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.label_area_user_message_nick_name.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
         self.verticalLayout_16.addWidget(self.label_area_user_message_nick_name)
 
@@ -348,7 +391,7 @@ class Ui_Form(object):
         self.label_area_user_message_username.setStyleSheet(u"border: none;\n"
 "background-color: rgba(0, 0, 0, 0);\n"
 "color: rgba(0, 0, 0, 0.5);")
-        self.label_area_user_message_username.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.label_area_user_message_username.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
         self.verticalLayout_16.addWidget(self.label_area_user_message_username)
 
@@ -503,7 +546,7 @@ class Ui_Form(object):
 "border-radius: 0px;\n"
 "background-color: rgba(0, 0, 0, 0);\n"
 "color: rgb(254, 232, 67);")
-        self.label_user_login_title_14.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.label_user_login_title_14.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
         self.horizontalLayout_18.addWidget(self.label_user_login_title_14)
 
@@ -583,7 +626,7 @@ class Ui_Form(object):
 
         self.label_27 = QLabel(self.widget_area_user_vip_power_content)
         self.label_27.setObjectName(u"label_27")
-        self.label_27.setAlignment(Qt.AlignCenter)
+        self.label_27.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout_7.addWidget(self.label_27)
 
@@ -612,7 +655,7 @@ class Ui_Form(object):
 
         self.label_30 = QLabel(self.widget_area_user_vip_power_content)
         self.label_30.setObjectName(u"label_30")
-        self.label_30.setAlignment(Qt.AlignCenter)
+        self.label_30.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout_9.addWidget(self.label_30)
 
@@ -641,7 +684,7 @@ class Ui_Form(object):
 
         self.label_29 = QLabel(self.widget_area_user_vip_power_content)
         self.label_29.setObjectName(u"label_29")
-        self.label_29.setAlignment(Qt.AlignCenter)
+        self.label_29.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout_8.addWidget(self.label_29)
 
@@ -675,7 +718,7 @@ class Ui_Form(object):
 
         self.label_32 = QLabel(self.widget_area_user_vip_power_content)
         self.label_32.setObjectName(u"label_32")
-        self.label_32.setAlignment(Qt.AlignCenter)
+        self.label_32.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout_11.addWidget(self.label_32)
 
@@ -704,7 +747,7 @@ class Ui_Form(object):
 
         self.label_33 = QLabel(self.widget_area_user_vip_power_content)
         self.label_33.setObjectName(u"label_33")
-        self.label_33.setAlignment(Qt.AlignCenter)
+        self.label_33.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout_12.addWidget(self.label_33)
 
@@ -733,7 +776,7 @@ class Ui_Form(object):
 
         self.label_31 = QLabel(self.widget_area_user_vip_power_content)
         self.label_31.setObjectName(u"label_31")
-        self.label_31.setAlignment(Qt.AlignCenter)
+        self.label_31.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout_10.addWidget(self.label_31)
 
@@ -808,7 +851,7 @@ class Ui_Form(object):
 "border-radius: 0px;\n"
 "background-color: rgba(0, 0, 0, 0);\n"
 "color: rgb(0, 0, 0);")
-        self.label_user_login_invite_title.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.label_user_login_invite_title.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
         self.horizontalLayout_24.addWidget(self.label_user_login_invite_title)
 
@@ -1164,10 +1207,13 @@ class Ui_Form(object):
         self.push_button_setting_ticket.setText(QCoreApplication.translate("Form", u"\u4f1a\u5458\u5de5\u5355", None))
         self.push_button_setting_feedback_opinion.setText(QCoreApplication.translate("Form", u"\u610f\u89c1\u53cd\u9988", None))
         self.label_19.setText(QCoreApplication.translate("Form", u"\u5173\u4e8e", None))
+        self.push_button_setting_faq.setText(QCoreApplication.translate("Form", u"\u5e38\u89c1\u95ee\u9898", None))
         self.push_button_setting_service_agreement.setText(QCoreApplication.translate("Form", u"\u670d\u52a1\u534f\u8bae", None))
         self.push_button_setting_privacy_agreement.setText(QCoreApplication.translate("Form", u"\u9690\u79c1\u534f\u8bae", None))
-        self.push_button_setting_open_source.setText(QCoreApplication.translate("Form", u"\u5f00\u6e90\u8bb8\u53ef", None))
         self.push_button_setting_about_us.setText(QCoreApplication.translate("Form", u"\u5173\u4e8e\u6211\u4eec", None))
+        self.label_21.setText(QCoreApplication.translate("Form", u"\u5f00\u6e90", None))
+        self.push_button_setting_open_source_link.setText(QCoreApplication.translate("Form", u"\u5f00\u6e90\u5730\u5740", None))
+        self.push_button_setting_open_source_list.setText(QCoreApplication.translate("Form", u"\u5f00\u6e90\u8bb8\u53ef", None))
         self.label_background.setText("")
         self.label_user_avatar.setText("")
         self.label_area_user_message_nick_name.setText(QCoreApplication.translate("Form", u"\u6635\u79f0", None))

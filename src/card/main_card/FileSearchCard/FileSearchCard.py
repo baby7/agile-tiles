@@ -671,9 +671,11 @@ class FileSearchCard(MainCard):
             # 浅色主题样式
             self.text_browser_results.setStyleSheet("""
                 QTextBrowser {
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
+                    border: 1px solid white;
+                    border-radius: 15px;
                     background-color: transparent;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
                 }
             """ + style_util.scroll_bar_style)
             self.label_ready_status.setStyleSheet("background: transparent;")
@@ -684,10 +686,12 @@ class FileSearchCard(MainCard):
             # 深色主题样式
             self.text_browser_results.setStyleSheet("""
                 QTextBrowser {
-                    border: 1px solid #555;
-                    border-radius: 4px;
+                    border: 1px solid black;
+                    border-radius: 15px;
                     background-color: transparent;
                     color: white;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
                 }
             """ + style_util.scroll_bar_style)
             self.label_ready_status.setStyleSheet("color: #aaa;")

@@ -105,10 +105,13 @@ class SettingCard(MainCard):
             [self.parent.push_button_setting_ticket, "会员工单", "Money", "transaction", None, None],
             [self.parent.push_button_setting_feedback_opinion, "意见反馈", "Hands", "concept-sharing", None, None],
             # 关于
+            [self.parent.push_button_setting_faq, "常见问题", "Character", "help", None, None],
             [self.parent.push_button_setting_service_agreement, "服务协议", "Office", "agreement", None, None],
             [self.parent.push_button_setting_privacy_agreement, "隐私协议", "Peoples", "personal-privacy", None, None],
-            [self.parent.push_button_setting_open_source, "开源许可", "Brand", "github-one", None, None],
             [self.parent.push_button_setting_about_us, "关于我们", "Character", "info", None, None],
+            # 开源
+            [self.parent.push_button_setting_open_source_link, "开源地址", "Brand", "github-one", None, None],
+            [self.parent.push_button_setting_open_source_list, "开源许可", "Others", "certificate", None, None],
         ]
 
     def init_ui(self):
@@ -129,6 +132,9 @@ class SettingCard(MainCard):
             icon_label.setStyleSheet("""margin-left: 20px;margin-top: 10px;border: 0px solid black;background: transparent;""")
             text_label = QLabel(title)  # 创建一个标签用于显示文字
             text_label.setAlignment(Qt.AlignmentFlag.AlignCenter)  # 设置文字居中对齐
+            # 设置标签可点击
+            icon_label.setAttribute(Qt.WA_TransparentForMouseEvents, True)
+            text_label.setAttribute(Qt.WA_TransparentForMouseEvents, True)
             button_layout.addWidget(icon_label)  # 将图标标签添加到按钮的垂直布局中
             button_layout.addWidget(text_label)
             setting_card_button[4] = icon_label
@@ -144,10 +150,13 @@ class SettingCard(MainCard):
         self.parent.push_button_setting_ticket.clicked.connect(self.push_button_setting_ticket_click)
         self.parent.push_button_setting_feedback_opinion.clicked.connect(self.push_button_setting_feedback_opinion_click)
         # 关于
+        self.parent.push_button_setting_faq.clicked.connect(self.push_button_setting_faq_click)
         self.parent.push_button_setting_service_agreement.clicked.connect(self.push_button_setting_service_agreement_click)
         self.parent.push_button_setting_privacy_agreement.clicked.connect(self.push_button_setting_privacy_agreement_click)
-        self.parent.push_button_setting_open_source.clicked.connect(self.push_button_setting_open_source_click)
         self.parent.push_button_setting_about_us.clicked.connect(self.push_button_setting_about_us_click)
+        # 开源
+        self.parent.push_button_setting_open_source_link.clicked.connect(self.push_button_setting_open_source_link_click)
+        self.parent.push_button_setting_open_source_list.clicked.connect(self.push_button_setting_open_source_list_click)
         # 设置快捷键
         self.main_object.keyboard_re_init()
 
@@ -276,6 +285,7 @@ class SettingCard(MainCard):
         self.parent.widget_setting_setting.setStyleSheet(panel_style)
         self.parent.widget_setting_update.setStyleSheet(panel_style)
         self.parent.widget_setting_about.setStyleSheet(panel_style)
+        self.parent.widget_setting_open_source.setStyleSheet(panel_style)
         # 在按钮右上角添加/显示更新提示
         button_width = 70
         button_interval = 10
@@ -289,6 +299,10 @@ class SettingCard(MainCard):
         except Exception as e:
             print(f"设置界面:{e}")
 
+    def push_button_setting_faq_click(self):
+        self.toolkit.resolution_util.out_animation(self.main_object)
+        browser_util.open_url(common.help_url)
+
     def push_button_setting_service_agreement_click(self):
         self.toolkit.resolution_util.out_animation(self.main_object)
         browser_util.open_url(common.user_agreement_url)
@@ -297,11 +311,15 @@ class SettingCard(MainCard):
         self.toolkit.resolution_util.out_animation(self.main_object)
         browser_util.open_url(common.privacy_policy_url)
 
-    def push_button_setting_open_source_click(self):
+    def push_button_setting_open_source_link_click(self):
+        self.toolkit.resolution_util.out_animation(self.main_object)
+        browser_util.open_url(common.open_source_url)
+
+    def push_button_setting_open_source_list_click(self):
         self.toolkit.resolution_util.out_animation(self.main_object)
         text_box_util.show_text_dialog(self.main_object, "开源许可", {
             "content": open_source_constant.open_source,
-            "size": [600, 600],
+            "size": [500, 660],
             "longText": True,
             "markdown": True
         })

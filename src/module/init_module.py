@@ -111,7 +111,12 @@ def set_theme(main_object, is_main=False):
             # print(f"{'主窗口' if is_main else '子窗口'}:set_theme:浅色:亚克力")
             # 背景
             if hasattr(main_object, 'label_background'):
-                main_object.label_background.hide()
+                # 渐变半透明底色，避免太单调
+                main_object.label_background.setStyleSheet(f"background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(204, 240, 255, 80), stop:1 rgba(244, 186, 254, 80)); border-radius: 10px; border: none;")
+                main_object.label_background.lower()
+                main_object.label_background.resize(main_object.width(), main_object.height())
+                main_object.label_background.move(0, 0)
+                main_object.label_background.show()
             main_object.setStyleSheet("*{ outline: none; background:transparent; color:rgb(0, 0, 0) };")
         else:
             # 半透明

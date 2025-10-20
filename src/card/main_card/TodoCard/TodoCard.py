@@ -205,7 +205,7 @@ class TodoCard(MainCard):
         self.label_todo_type_title.setText("生活")
         self.push_button_todo_back.clicked.connect(partial(self.show_hide_todo_group, None))
         # 待办事项时间线程
-        self.todo_thread_object = todo_thread.TodoThread()
+        self.todo_thread_object = todo_thread.TodoThread(use_parent=self.main_object)
         self.todo_thread_object.set_task_list(self.todo_list)
         self.todo_thread_object.start()
         # 待办事项分类标题

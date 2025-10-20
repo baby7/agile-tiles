@@ -11,7 +11,7 @@ from win32api import GetMonitorInfo, MonitorFromPoint
 from PySide6.QtCore import QSequentialAnimationGroup, QPropertyAnimation, QRect, QEasingCurve
 from PySide6.QtWidgets import QApplication
 
-ANIMATION_RUN_TIME = 100    # 动画执行时间
+ANIMATION_RUN_TIME = 150    # 动画执行时间
 
 
 def start_line_y_animation(control, start_y, end_y, run_time=ANIMATION_RUN_TIME):

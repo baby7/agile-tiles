@@ -695,7 +695,7 @@ class TranslateCard(MainCard):
             text_edit_style = """
             QPlainTextEdit {
                 border-radius: 10px;
-                border: 1px solid white;
+                border: 1px solid black;
                 background: transparent;
                 selection-color: white;
                 selection-background-color: #0078d4;
@@ -704,7 +704,7 @@ class TranslateCard(MainCard):
             text_edit_style = """
             QPlainTextEdit {
                 border-radius: 10px;
-                border: 1px solid black;
+                border: 1px solid white;
                 background: transparent;
                 selection-color: white;
                 selection-background-color: #0078d4;
