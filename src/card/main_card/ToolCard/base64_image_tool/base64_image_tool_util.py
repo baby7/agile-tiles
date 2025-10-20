@@ -75,7 +75,7 @@ class Base64ImageTool(QWidget):
         self.preview_label = QLabel()
         self.preview_label.setAlignment(Qt.AlignCenter)
         self.preview_label.setMinimumHeight(150)
-        self.preview_label.setStyleSheet("border: 1px solid #ccc; background: #f8f8f8;")
+        self.preview_label.setStyleSheet("border: 1px solid #ccc;")
         self.preview_label.setText("预览将显示在这里")
         layout.addWidget(self.preview_label)
 
@@ -133,7 +133,7 @@ class Base64ImageTool(QWidget):
 
         self.image_result_label = QLabel()
         self.image_result_label.setAlignment(Qt.AlignCenter)
-        self.image_result_label.setStyleSheet("border: 1px solid #ccc; background: #f8f8f8;")
+        self.image_result_label.setStyleSheet("border: 1px solid #ccc;")
         self.image_result_label.setText("解码后的图片将显示在这里")
         self.image_result_label.setMinimumSize(200, 150)
 

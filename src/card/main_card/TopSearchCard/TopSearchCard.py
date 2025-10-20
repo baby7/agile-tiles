@@ -6,7 +6,7 @@ from src.util import my_shiboken_util
 import webbrowser
 
 from PySide6.QtCore import QCoreApplication, QRect, Qt, QUrl, Signal
-from PySide6.QtGui import QFont, QCursor
+from PySide6.QtGui import QFont, QCursor, QPalette
 from PySide6.QtWidgets import QLabel, QPushButton, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, \
     QSizePolicy, QScrollArea
 from PySide6 import QtNetwork
@@ -95,7 +95,7 @@ class HotSearchItem(QWidget):
 
         # 内容（可点击）- 设置蓝色
         self.content = ClickableLabel(f"{data['t']} {data['n']}")
-        self.content.setStyleSheet(f"color: rgb(0, 120, 182); padding: 2px 0px;")
+        self.content.setStyleSheet(f"color: rgb(64, 158, 255); padding: 2px 0px;")
         self.content.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         self.content.setMinimumWidth(0)
         first_line_layout.addWidget(self.content, stretch=1)
@@ -109,15 +109,15 @@ class HotSearchItem(QWidget):
                 f"color: white; background: {tag_color};"
                 f"border-radius: 6px; padding: 2px 6px;"
             )
-        self.tag_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.tag_label.setFixedSize(30, 24)
         first_line_layout.addWidget(self.tag_label, alignment=Qt.AlignRight | Qt.AlignTop)
 
         main_layout.addLayout(first_line_layout)
         self.setLayout(main_layout)
 
         # 背景默认 & hover
-        self.default_color = "rgb(0, 120, 182);"
-        self.hover_color = "rgb(64, 160, 182)"
+        self.default_color = "rgb(64, 158, 255);"
+        self.hover_color = "rgb(121, 187, 255)"
         self.update_bg(self.default_color)
         self.setCursor(QCursor(Qt.PointingHandCursor))
 
@@ -152,6 +152,9 @@ class HotSearchItem(QWidget):
                 f"color: white; background: {tag_color};"
                 f"border-radius: 6px; padding: 2px 6px;"
             )
+            self.tag_label.show()
+        else:
+            self.tag_label.hide()
 
     def update_bg(self, color: str):
         self.content.setStyleSheet(f"color: {color}; padding: 2px 0px;")
@@ -195,7 +198,7 @@ class HotSearchList(QWidget):
         self.left_click_func = left_click_func
         self.middle_click_func = middle_click_func
         self.main_layout = QVBoxLayout(self)
-        self.main_layout.setContentsMargins(0, 0, 0, 0)
+        self.main_layout.setContentsMargins(0, 0, 0, 10)
         self.main_layout.setSpacing(0)
         # 滚动区域
         self.main_scroll = QScrollArea()
@@ -523,7 +526,7 @@ class TopSearchCard(MainCard):
             self.label_top_area_background.setStyleSheet("background: rgb(255, 255, 255); border-radius: 10px;")
         else:
             text_color = "background-color: rgba(0, 0, 0, 0);color: rgba(255, 255, 255, 0.4);"
-            self.label_top_area_background.setStyleSheet("background: rgb(0, 0, 0); border-radius: 10px;")
+            self.label_top_area_background.setStyleSheet("background: rgb(12, 12, 12); border-radius: 10px;")
         style_util.set_card_button_style(self.push_button_search_refresh, "Arrows/redo", is_dark=self.main_object.is_dark)
         self.label_top_mask.setStyleSheet(u"background-color: transparent;")
         self.label_top_area_number.setStyleSheet(text_color)

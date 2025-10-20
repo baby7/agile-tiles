@@ -688,13 +688,13 @@ class IpnCard(MainCard):
             self.service_frame.setStyleSheet("""
                 QFrame {
                     background: transparent;
-                    border: 1px solid rgba(255, 255, 255, 50);
+                    border: 1px solid black;
                 }""")
         else:
             self.service_frame.setStyleSheet("""
                 QFrame {
                     background: transparent;
-                    border: 1px solid rgba(0, 0, 0, 50);
+                    border: 1px solid white;
                 }""")
 
     def refresh_data(self, date_time_str):

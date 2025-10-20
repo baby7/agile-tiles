@@ -68,7 +68,6 @@ def get_pixmap_by_svg(svg_data: str, size=None, is_dark=False, custom_color=None
 transparent_style = "background: transparent; border: none;"
 
 scroll_bar_style = """
-/******** 滚动条  *********/
 /* 垂直滚动条 */
 QScrollBar:vertical {
     border-width: 0px;
@@ -78,35 +77,32 @@ QScrollBar:vertical {
     background-color: transparent;
 }
 QScrollBar::handle:vertical {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0 rgba(179, 179, 179, 125), stop: 0.5 rgba(179, 179, 179, 125), stop:1 rgba(179, 179, 179, 125));
+    background: rgba(179, 179, 179, 125);
     min-height: 20px;
     max-height: 20px;
     margin: 0px 0px 0px 0px;
     border-radius: 5px;
 }
 QScrollBar::add-line:vertical {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-    stop: 0 rgba(179, 179, 179, 0), stop: 0.5 rgba(179, 179, 179, 0),  stop:1 rgba(179, 179, 179, 0));
+    background: transparent;
     height: 0px;
     border: none;
     subcontrol-position: bottom;
     subcontrol-origin: margin;
 }
 QScrollBar::sub-line:vertical {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-    stop: 0  rgba(179, 179, 179, 0), stop: 0.5 rgba(179, 179, 179, 0),  stop:1 rgba(179, 179, 179, 0));
+    background: transparent;
     height: 0 px;
     border: none;
     subcontrol-position: top;
     subcontrol-origin: margin;
 }
 QScrollBar::sub-page:vertical {
-    background: rgba(179, 179, 179, 0);
+    background: transparent;
 }
 QScrollBar::add-page:vertical {
-    background: rgba(179, 179, 179, 0);
+    background: transparent;
 }
-
 /* 水平滚动条 */
 QScrollBar:horizontal {
     border-width: 0px;
@@ -116,33 +112,31 @@ QScrollBar:horizontal {
     background-color: transparent;
 }
 QScrollBar::handle:horizontal {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0 rgba(179, 179, 179, 125), stop: 0.5 rgba(179, 179, 179, 125), stop:1 rgba(179, 179, 179, 125));
+    background: rgba(179, 179, 179, 125);
     min-width: 20px;
     max-width: 20px;
     margin: 0px 0px 0px 0px;
     border-radius: 5px;
 }
 QScrollBar::add-line:horizontal {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-    stop: 0 rgba(179, 179, 179, 0), stop: 0.5 rgba(179, 179, 179, 0),  stop:1 rgba(179, 179, 179, 0));
+    background: transparent;
     width: 0px;
     border: none;
     subcontrol-position: right;
     subcontrol-origin: margin;
 }
 QScrollBar::sub-line:horizontal {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-    stop: 0  rgba(179, 179, 179, 0), stop: 0.5 rgba(179, 179, 179, 0),  stop:1 rgba(179, 179, 179, 0));
+    background: transparent;
     width: 0px;
     border: none;
     subcontrol-position: left;
     subcontrol-origin: margin;
 }
 QScrollBar::sub-page:horizontal {
-    background: rgba(179, 179, 179, 0);
+    background: transparent;
 }
 QScrollBar::add-page:horizontal {
-    background: rgba(179, 179, 179, 0);
+    background: transparent;
 }
 """
 
@@ -169,7 +163,7 @@ QScrollArea {
 }
 border-style: solid;
 border-radius: 15px;
-background-color:rgba(34, 34, 34, 255);
+background-color:rgba(34, 34, 34, 254);
 """
 '''
 ↑                                                                                ↑
@@ -867,9 +861,9 @@ QWidget {
 }
 QTabWidget::pane {
     margin: 10px;
-    background: rgba(0, 0, 0, 150);
+    background: rgb(34, 34, 34);
     color: rgb(255, 255, 255);
-    border: none;
+    border: 1px solid black;
     border-radius: 12px;
 }
 QTabBar::tab {

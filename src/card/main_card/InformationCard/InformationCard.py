@@ -6,7 +6,7 @@ from src.util import my_shiboken_util
 from PySide6.QtCore import QUrl
 from PySide6.QtGui import QPixmap, Qt
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QApplication
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QApplication, QTextBrowser, QSizePolicy
 
 from src.card.card_component.AggregationCard.AggregationCard import AggregationCard
 from src.client import common
@@ -131,6 +131,26 @@ class InformationCard(AggregationCard):
                 "link": "https://tieba.baidu.com/p/5005825360?pn=1",
                 "call_back_func": None
             },
+            {
+                "category": self.module_category_image,
+                "type": "瞅瞅图",
+                "title": "中国地图",
+                "des": "如有争议以中国地图为准",
+                "icon": "Travel/local-two",
+                "content": "https://server.agiletiles.com/file_cdn/map/ChinaMap.jpg",
+                "link": "https://map.tianditu.gov.cn/",
+                "call_back_func": None
+            },
+            {
+                "category": self.module_category_image,
+                "type": "瞅瞅图",
+                "title": "世界地图",
+                "des": "如有争议以中国地图为准",
+                "icon": "Travel/international",
+                "content": "https://server.agiletiles.com/file_cdn/map/WorldMap.jpg",
+                "link": "https://map.tianditu.gov.cn/",
+                "call_back_func": None
+            },
             # 文字类
             {
                 "category": self.module_category_text,
@@ -213,6 +233,15 @@ class InformationCard(AggregationCard):
                 "content": None,
                 "call_back_func": self.push_button_reading_cheesy_love_click
             },
+            {
+                "category": self.module_category_text,
+                "type": "看看字",
+                "title": "血型遗传规律表",
+                "des": "父母和子女的血型关系",
+                "icon": "Charts/chart-graph",
+                "content": None,
+                "call_back_func": self.push_button_reading_blood_click
+            },
         ]
         self.init_tab_widget()
 
@@ -245,6 +274,7 @@ class InformationCard(AggregationCard):
         label_content = QLabel()
         label_content.setWordWrap(True)
         label_content.setText(text)
+        label_content.setStyleSheet("background-color: transparent; border: none;")
         layout.addWidget(label_content)
         # 增加一个展示信息的状态
         label_info = QLabel()
@@ -252,6 +282,53 @@ class InformationCard(AggregationCard):
         layout.addWidget(label_info)
         # 伸缩条
         layout.addStretch()
+        # 切换到展示面板
+        self.stacked_widget.setCurrentIndex(1)
+        # 设置字体
+        style_util.set_font_and_right_click_style(self.main_object, self.show_panel_content_panel)
+
+    def push_button_reading_blood_click(self):
+        markdown_content = """| 父母血型  | 子女会出现的血型 | 子女不会出现的血型 |
+|-------|----------|-----------|
+| O与O   | O        | A、B、AB    |
+| A与O   | A、O      | B、AB      |
+| A与A   | A、O      | B、AB      |
+| A与B   | A、B、AB、O | ——        |
+| A与AB  | A、B、AB   | O         |
+| B与O   | B、O      | A、AB      |
+| B与B   | B、O      | A、AB      |
+| B与AB  | A、B、AB   | O         |
+| AB与O  | A、B      | O、AB      |
+| AB与AB | A、B、AB   | O         |
+
+仅供参考，不可作为任何证明的依据
+"""
+        self.show_markdown_in_show_panel("血型遗传规律表", markdown_content)
+
+    def show_markdown_in_show_panel(self, title, markdown):
+        # 设置标题
+        self.show_panel_label_title.setText(title)
+        # 设置右上角按钮内容
+        self.show_panel_hide_button.hide()
+        # 设置右上角2按钮内容
+        self.show_panel_hide_button_2.show()
+        self.show_panel_hide_button_2.setText("复制")
+        self.show_panel_hide_button_2.clicked.connect(lambda : self.copy_text(markdown, label_info))
+        # 面板增加布局
+        layout = QVBoxLayout(self.show_panel_content_panel)
+        layout.setSpacing(0)
+        layout.setContentsMargins(0, 0, 0, 0)
+        # 增加展示文字
+        browser = QTextBrowser()
+        browser.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        browser.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+        browser.setMarkdown(markdown)
+        browser.setStyleSheet("background-color: transparent; border: none;")
+        layout.addWidget(browser, stretch=1)
+        # 增加一个展示信息的状态
+        label_info = QLabel()
+        label_info.hide()
+        layout.addWidget(label_info)
         # 切换到展示面板
         self.stacked_widget.setCurrentIndex(1)
         # 设置字体

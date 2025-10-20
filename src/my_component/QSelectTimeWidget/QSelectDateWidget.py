@@ -1,10 +1,10 @@
 from PySide6.QtWidgets import QWidget
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QPainter, QColor
 from PySide6 import QtGui, QtWidgets
 from PySide6.QtCore import Signal
 from src.my_component.QSelectTimeWidget.single.QSingleSelectTimeWidget import QSingleSelectTimeWidget
 from src.my_component.QSelectTimeWidget.single.QSingleSelectTimeWidget import ENUM_TimeMode
+from src.ui import style_util
 
 
 class QSelectDateWidget(QWidget):
@@ -17,6 +17,9 @@ class QSelectDateWidget(QWidget):
     commit_cancel = Signal(str)
 
     is_dark = None
+
+    top_button_icon = None
+    bottom_button_icon = None
 
     def __init__(self, parent=None, is_dark=False):
         super(QSelectDateWidget, self).__init__(parent)
@@ -87,13 +90,15 @@ class QSelectDateWidget(QWidget):
         self.setStyleSheet("background: transparent;")
 
     def InitDialogData(self):
+        self.top_button_icon = style_util.get_icon_by_path("Arrows/up", is_dark=self.is_dark)
+        self.bottom_button_icon = style_util.get_icon_by_path("Arrows/down", is_dark=self.is_dark)
         #  < widget > 年
         if self.m_widgetYear is not None:
             self.m_widgetYear.clear()
             self.m_widgetYear = None
         self.m_widgetYear = QSingleSelectTimeWidget(self)
         self.m_widgetYear.setGeometry(20, 30, 60, 200)
-        self.m_widgetYear.refresh_theme(self.is_dark)
+        self.m_widgetYear.refresh_theme(self.is_dark, self.top_button_icon, self.bottom_button_icon)
         self.m_widgetYear.show()
         #  < widget > 月
         if self.m_widgetMonth is not None:
@@ -101,7 +106,7 @@ class QSelectDateWidget(QWidget):
             self.m_widgetMonth = None
         self.m_widgetMonth = QSingleSelectTimeWidget(self)
         self.m_widgetMonth.setGeometry(80, 30, 60, 200)
-        self.m_widgetMonth.refresh_theme(self.is_dark)
+        self.m_widgetMonth.refresh_theme(self.is_dark, self.top_button_icon, self.bottom_button_icon)
         self.m_widgetMonth.show()
         #  < widget > 日
         if self.m_widgetDay is not None:
@@ -109,7 +114,7 @@ class QSelectDateWidget(QWidget):
             self.m_widgetDay = None
         self.m_widgetDay = QSingleSelectTimeWidget(self)
         self.m_widgetDay.setGeometry(140, 30, 60, 200)
-        self.m_widgetDay.refresh_theme(self.is_dark)
+        self.m_widgetDay.refresh_theme(self.is_dark, self.top_button_icon, self.bottom_button_icon)
         self.m_widgetDay.show()
 
     def LoadConnectMsg(self):
@@ -119,6 +124,8 @@ class QSelectDateWidget(QWidget):
         self.btnCancel.clicked.connect(self.OnBnClickedCanel)
 
     def refresh_theme(self, is_dark):
-        self.m_widgetYear.refresh_theme(is_dark)
-        self.m_widgetMonth.refresh_theme(is_dark)
-        self.m_widgetDay.refresh_theme(is_dark)
+        self.top_button_icon = style_util.get_icon_by_path("Arrows/up", is_dark=is_dark)
+        self.bottom_button_icon = style_util.get_icon_by_path("Arrows/down", is_dark=is_dark)
+        self.m_widgetYear.refresh_theme(is_dark, self.top_button_icon, self.bottom_button_icon)
+        self.m_widgetMonth.refresh_theme(is_dark, self.top_button_icon, self.bottom_button_icon)
+        self.m_widgetDay.refresh_theme(is_dark, self.top_button_icon, self.bottom_button_icon)

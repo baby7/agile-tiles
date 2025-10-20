@@ -293,10 +293,10 @@ def refresh_theme(main_object):
         main_object.label_area_user_message_username.setStyleSheet("border: none;background-color: rgba(0, 0, 0, 0);color: rgba(255, 255, 255, 0.5);")
         main_object.label_user_last_backup_time.setStyleSheet("border: none;background-color: rgba(0, 0, 0, 0);color: rgba(255, 255, 255, 0.5);")
         main_object.label_user_last_backup_time_title.setStyleSheet("border: none;background-color: rgba(0, 0, 0, 0);color: rgba(255, 255, 255, 0.5);")
-        main_object.widget_area_user_vip_power_content.setStyleSheet("background-color: black;")
-        vip_linear_gradient_top = "background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,stop:0 rgb(34, 34, 34), stop:1 rgb(71, 153, 253));"
-        vip_linear_gradient_bottom = "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(34, 34, 34), stop:1 rgb(71, 153, 253));"
-        invite_linear_gradient = "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(34, 34, 34), stop:1 rgb(71, 153, 253));"
+        main_object.widget_area_user_vip_power_content.setStyleSheet("background-color: rgb(34, 34, 34);")
+        vip_linear_gradient_top = "background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,stop:0 rgb(100, 150, 160), stop:1 rgb(71, 153, 253));"
+        vip_linear_gradient_bottom = "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(100, 150, 160), stop:1 rgb(71, 153, 253));"
+        invite_linear_gradient = "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(100, 150, 160), stop:1 rgb(71, 153, 253));"
         user_data_style = "border-radius: 10px; border: 1px solid black; background-color:rgba(0, 0, 0, 200);"
         title_info_style = "border: 0px solid #FF8D16; border-radius: 0px; background-color: rgba(0, 0, 0, 0); color: rgb(255, 255, 255);"
     else:

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from PySide6.QtGui import QIcon, QAction
+from PySide6.QtGui import QIcon, QAction, QPixmap
 from PySide6.QtWidgets import QMenu, QSystemTrayIcon
 
 from src.client import common
@@ -10,6 +10,7 @@ from src.util import browser_util
 # 设置图标
 def set_icon(main_object):
     main_object.sys_icon = QIcon(":static/img/icon/icon.ico")
+    main_object.sys_icon_pixmap = QPixmap(":static/img/icon/icon.png")
     main_object.setWindowIcon(main_object.sys_icon)
 
 

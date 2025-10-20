@@ -1,5 +1,4 @@
 import copy
-import datetime
 from functools import partial
 
 from PySide6 import QtGui, QtCore
@@ -145,19 +144,17 @@ class MainCardManager(QObject):
         """
         self.main_object.main_card_list = []
         # 初始化区域
-        # print(f'__主卡片初始化区域开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        self.main_object.update_load_window("正在初始化主卡片区域...")
         self.init_area()
         # 初始化顶部导航栏部分
-        # print(f'__主卡片初始化导航栏开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        self.main_object.update_load_window("正在初始化主卡片导航栏...")
         self.init_header()
         # 菜单位置
-        # print(f'__主卡片初始化区域开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.menu_position = self.main_object.form_menu_locate
         # 初始化菜单部分
-        # print(f'__主卡片初始化菜单开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        self.main_object.update_load_window("正在初始化主卡片菜单背景...")
         self.init_menu_bg_and_slider()
         # 设置菜单样式
-        # print(f'__主卡片初始化菜单样式开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
         self.menu_button_map = {
             "user": [self.main_object.push_button_user, "Peoples/people", self.main_object.user_area, "用户管理"],
             "setting": [self.main_object.push_button_setting, "Base/setting-two", self.main_object.setting_area, "设置"],
@@ -175,19 +172,19 @@ class MainCardManager(QObject):
             "game": [self.main_object.push_button_game, "Travel/planet", self.main_object.game_area, "更多"],
         }
         # 初始化卡片位置数据
-        # print(f'__主卡片初始化卡片位置开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        self.main_object.update_load_window("正在初始化主卡片位置...")
         self.init_geometry_data(card_data)
         # 初始化主题
-        # print(f'__主卡片初始化主题开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        self.main_object.update_load_window("正在初始化主卡片主题...")
         self.set_theme()
         # 初始化主卡片区域中的菜单区域
-        # print(f'__主卡片初始化菜单区域开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        self.main_object.update_load_window("正在初始化主卡片菜单...")
         self.init_menu()
         # 初始化主卡片区域中的主区域
-        # print(f'__主卡片初始化主区域开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        self.main_object.update_load_window("正在初始化主卡片主区域...")
         self.init_main_card()
         # 初始化菜单
-        # print(f'__主卡片初始化菜单开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        self.main_object.update_load_window("正在初始化主卡片菜单位置...")
         self.show_change(is_init=True)
 
     def init_area(self):
@@ -309,7 +306,7 @@ class MainCardManager(QObject):
             # 获取卡片数据
             card_data = self.main_object.main_data["bigCard"][card_data_index]
             card_area = None
-            # print(f'__主卡片初始化对应主卡片 {card_data["name"]} 创建时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+            self.main_object.update_load_window(f"正在创建主卡片-{card_data['name']}...")
             # 初始化数据
             if card_data["name"] in self.main_object.main_data["data"]:
                 long_time_data = self.main_object.main_data["data"][card_data["name"]]
@@ -404,18 +401,16 @@ class MainCardManager(QObject):
             # 隐藏
             card_area.hide()
         # 卡片初始化
-        for card in self.main_object.main_card_list:
-            print(f'__主卡片初始化对应主卡片 {card.name} 初始化开始时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
+        main_card_list_length = len(self.main_object.main_card_list)
+        for index, card in enumerate(self.main_object.main_card_list):
+            self.main_object.update_load_window(f"正在初始化主卡片({index + 1}/{main_card_list_length})...")
             card.init_ui()
             if self.main_object.is_dark:
                 card.card.setStyleSheet(self.main_object.toolkit.style_util.card_dark_style)
-                style_util.set_card_shadow_effect(card.card)        # 添加外部阴影效果
+                # style_util.set_card_shadow_effect(card.card)        # 添加外部阴影效果
             else:
                 card.card.setStyleSheet(self.main_object.toolkit.style_util.card_style)
-                style_util.remove_card_shadow_effect(card.card)     # 移除外部阴影效果
-            print(f'__主卡片初始化对应主卡片 {card.name} 初始化结束时间:{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}')
-            # 刷新进程
-            QApplication.processEvents()
+                # style_util.remove_card_shadow_effect(card.card)     # 移除外部阴影效果
 
     def save_card_data_func(self, trigger_type=data_save_constant.TRIGGER_TYPE_CARD_UPDATE, need_upload=True, in_data=None,
                             data_type=data_save_constant.DATA_TYPE_ENDURING, card_name=None):
@@ -1024,31 +1019,31 @@ class MainCardManager(QObject):
     def set_theme(self):
         # 菜单样式
         if self.main_object.is_dark:
-            self.main_object.label_menu.setStyleSheet("border-radius: 15px; border: 1px solid #2C2E39; background-color: transparent;")
-            self.main_object.label_menu_background.setStyleSheet("border-radius: 15px; border: none; background-color: rgba(34, 34, 34, 255);")
+            self.main_object.label_menu.setStyleSheet("border-radius: 15px; border: 1px solid #2C2E39; background-color: rgba(34, 34, 34, 254);")
+            self.main_object.label_menu_background.setStyleSheet("border-radius: 15px; border: none; background-color: rgba(34, 34, 34, 254);")
             self.main_object.label_current_menu.setStyleSheet("border-radius: 2px; border: 0px solid white; background-color: white;")
-            style_util.set_card_shadow_effect(self.main_object.label_menu_background)       # 添加外部阴影效果
+            # style_util.set_card_shadow_effect(self.main_object.label_menu_background)       # 添加外部阴影效果
         else:
             self.main_object.label_menu.setStyleSheet("border-radius: 15px; border: none; background-color:rgba(255, 255, 255, 160);")
             self.main_object.label_menu_background.setStyleSheet("border-radius: 15px; border: 1px solid rgba(255, 255, 255, 170); background-color: transparent;")
             self.main_object.label_current_menu.setStyleSheet("border-radius: 2px; border: 0px solid black; background-color: black;")
-            style_util.remove_card_shadow_effect(self.main_object.label_menu_background)    # 移除外部阴影效果
+            # style_util.remove_card_shadow_effect(self.main_object.label_menu_background)    # 移除外部阴影效果
         self.set_menu_theme()
         # 卡片样式
         for card in self.main_object.main_card_list:
             if self.main_object.is_dark:
                 card.card.setStyleSheet(self.main_object.toolkit.style_util.card_dark_style)
-                style_util.set_card_shadow_effect(card.card)        # 添加外部阴影效果
+                # style_util.set_card_shadow_effect(card.card)        # 添加外部阴影效果
             else:
                 card.card.setStyleSheet(self.main_object.toolkit.style_util.card_style)
-                style_util.remove_card_shadow_effect(card.card)     # 移除外部阴影效果
+                # style_util.remove_card_shadow_effect(card.card)     # 移除外部阴影效果
             card.set_theme(self.main_object.is_dark)
         if self.main_object.is_dark:
             self.main_object.user_area.setStyleSheet(self.main_object.toolkit.style_util.card_dark_style)
-            style_util.set_card_shadow_effect(self.main_object.user_area)        # 添加外部阴影效果
+            # style_util.set_card_shadow_effect(self.main_object.user_area)        # 添加外部阴影效果
         else:
             self.main_object.user_area.setStyleSheet(self.main_object.toolkit.style_util.card_style)
-            style_util.remove_card_shadow_effect(self.main_object.user_area)     # 移除外部阴影效果
+            # style_util.remove_card_shadow_effect(self.main_object.user_area)     # 移除外部阴影效果
         # 设置标题栏按钮样式
         self.set_header_button_theme()
 

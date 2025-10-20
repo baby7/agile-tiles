@@ -2,18 +2,18 @@
 import datetime
 from PySide6.QtCore import QObject, QThread, QTimer, Signal, Slot, QMutex, QMutexLocker
 
-from src.util import send_win_message_util
-
 
 class TodoWorker(QObject):
     # 停止请求信号
     stop_requested = Signal()
 
-    def __init__(self, parent=None, task_list=None):
+    def __init__(self, parent=None, use_parent=None, task_list=None):
         super().__init__(parent)
         self.task_list = task_list if task_list is not None else []
         self.mutex = QMutex()
+        self.use_parent = use_parent
         self._active = True
+        self.last_check_time = None  # 新增：记录上次检查时间
         # 连接停止信号
         self.stop_requested.connect(self.stop)
 
@@ -47,17 +47,20 @@ class TodoWorker(QObject):
         try:
             datetime_now = datetime.datetime.now()
             current_time_str = datetime_now.strftime("%Y-%m-%d %H:%M:%S")
-
+            # 如果与上次检查时间相同，则跳过本次执行
+            if self.last_check_time == current_time_str:
+                return
+            # 更新上次检查时间
+            self.last_check_time = current_time_str
             with QMutexLocker(self.mutex):
                 if not self.task_list:
                     return
-
                 for task in self.task_list:
                     if task['complete'] or not task['remind']:
                         continue
                     if task['remindTime'] == current_time_str:
                         # 发出提醒信号
-                        send_win_message_util.send_message("灵卡面板", "待办事项任务提醒", task["title"])
+                        self.use_parent.send_message(title=f'待办事项 - {task["title"]}', descript=task["desc"])
         except Exception as e:
             print(f"TodoWorker error: {str(e)}")
 
@@ -71,12 +74,12 @@ class TodoWorker(QObject):
 class TodoThread(QObject):
     """待办事项线程管理器"""
 
-    def __init__(self, parent=None, task_list=None):
+    def __init__(self, parent=None, use_parent=None, task_list=None):
         super().__init__(parent)
         self.task_list = task_list
         # 创建线程和工作对象
         self.thread = QThread()
-        self.worker = TodoWorker(task_list=self.task_list)
+        self.worker = TodoWorker(use_parent=use_parent, task_list=self.task_list)
         # 将worker移至新线程
         self.worker.moveToThread(self.thread)
         # 设置线程启动时启动定时器

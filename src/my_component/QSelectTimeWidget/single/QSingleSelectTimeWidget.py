@@ -2,10 +2,7 @@
 import enum
 from PySide6.QtWidgets import QWidget
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QPainter, QColor
-from PySide6 import QtGui, QtWidgets
-
-from src.ui import style_util
+from PySide6 import QtWidgets
 
 
 class ENUM_TimeMode(enum.Enum):
@@ -63,12 +60,20 @@ class QSingleSelectTimeWidget(QWidget):
         self.labNext.setAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
         self.labNext.setText("0")
 
-    def refresh_theme(self, is_dark):
+    def refresh_theme(self, is_dark, top_button_icon, bottom_button_icon):
         if is_dark:
-            qsCurrent = "QLabel{border: none; font-size:16px; font:blod; color:rgb(255, 255, 255);background-color: transparent;}"
+            qsCurrent = "QLabel{border: none; font-size:16px; font:blod; color:rgb(255, 255, 255); background-color: transparent;}"
         else:
-            qsCurrent = "QLabel{border: none; font-size:16px; font:blod; color:rgb(0, 0, 0);background-color: transparent;}"
+            qsCurrent = "QLabel{border: none; font-size:16px; font:blod; color:rgb(0, 0, 0); background-color: transparent;}"
         self.labCurrent.setStyleSheet(qsCurrent)
+        # 图标
+        self.btnUp.setIcon(top_button_icon)
+        self.btnDown.setIcon(bottom_button_icon)
+        # qsBtnStyle = "QPushButton{border: none; background-color: transparent; outline:none;}"
+        # self.btnUp.setStyleSheet(qsBtnStyle)
+        # self.btnDown.setStyleSheet(qsBtnStyle)
+        self.btnUp.setText("")
+        self.btnDown.setText("")
 
     def SetCurrentShowTime(self, enumTime, data):
         self.m_enumTime = enumTime

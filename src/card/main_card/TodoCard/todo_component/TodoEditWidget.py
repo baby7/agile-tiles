@@ -294,11 +294,11 @@ class TodoEditWidget(QtWidgets.QWidget, Ui_Form):
         """刷新编辑视图的主题"""
         self.set_background_style()
 
+        # 刷新其他控件的样式
+        style_util.set_dialog_control_style(self, self.todo_card.is_dark())
+
         # 刷新时间选择器和日期选择器的主题
         self.m_pTimeWidget.refresh_theme(self.todo_card.is_dark())
         self.m_pDateWidget.refresh_theme(self.todo_card.is_dark())
         self.time_choice.setStyleSheet(group_box_style if not self.todo_card.is_dark() else group_box_dark_style)
         self.date_choice.setStyleSheet(group_box_style if not self.todo_card.is_dark() else group_box_dark_style)
-
-        # 刷新其他控件的样式
-        style_util.set_dialog_control_style(self, self.todo_card.is_dark())

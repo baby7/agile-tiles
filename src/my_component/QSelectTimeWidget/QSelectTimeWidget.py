@@ -5,6 +5,7 @@ from PySide6 import QtGui, QtWidgets
 from PySide6.QtCore import Signal
 from src.my_component.QSelectTimeWidget.single.QSingleSelectTimeWidget import QSingleSelectTimeWidget
 from src.my_component.QSelectTimeWidget.single.QSingleSelectTimeWidget import ENUM_TimeMode
+from src.ui import style_util
 
 
 class QSelectTimeWidget(QWidget):
@@ -17,6 +18,9 @@ class QSelectTimeWidget(QWidget):
     commit_cancel = Signal(str)
 
     is_dark = None
+
+    top_button_icon = None
+    bottom_button_icon = None
 
     def __init__(self, parent=None, is_dark=False):
         super(QSelectTimeWidget, self).__init__(parent)
@@ -87,13 +91,15 @@ class QSelectTimeWidget(QWidget):
         self.setStyleSheet("background: transparent;")
 
     def InitDialogData(self):
+        self.top_button_icon = style_util.get_icon_by_path("Arrows/up", is_dark=self.is_dark)
+        self.bottom_button_icon = style_util.get_icon_by_path("Arrows/down", is_dark=self.is_dark)
         #  < widget > 时
         if self.m_widgetHour is not None:
             self.m_widgetHour.clear()
             self.m_widgetHour = None
         self.m_widgetHour = QSingleSelectTimeWidget(self)
         self.m_widgetHour.setGeometry(20, 30, 60, 200)
-        self.m_widgetHour.refresh_theme(self.is_dark)
+        self.m_widgetHour.refresh_theme(self.is_dark, self.top_button_icon, self.bottom_button_icon)
         self.m_widgetHour.show()
         #  < widget > 分
         if self.m_widgetMinute is not None:
@@ -101,7 +107,7 @@ class QSelectTimeWidget(QWidget):
             self.m_widgetMinute = None
         self.m_widgetMinute = QSingleSelectTimeWidget(self)
         self.m_widgetMinute.setGeometry(80, 30, 60, 200)
-        self.m_widgetMinute.refresh_theme(self.is_dark)
+        self.m_widgetMinute.refresh_theme(self.is_dark, self.top_button_icon, self.bottom_button_icon)
         self.m_widgetMinute.show()
         #  < widget > 秒
         if self.m_widgetSecond is not None:
@@ -109,7 +115,7 @@ class QSelectTimeWidget(QWidget):
             self.m_widgetSecond = None
         self.m_widgetSecond = QSingleSelectTimeWidget(self)
         self.m_widgetSecond.setGeometry(140, 30, 60, 200)
-        self.m_widgetSecond.refresh_theme(self.is_dark)
+        self.m_widgetSecond.refresh_theme(self.is_dark, self.top_button_icon, self.bottom_button_icon)
         self.m_widgetSecond.show()
 
     def LoadConnectMsg(self):
@@ -119,6 +125,8 @@ class QSelectTimeWidget(QWidget):
         self.btnCancel.clicked.connect(self.OnBnClickedCanel)
 
     def refresh_theme(self, is_dark):
-        self.m_widgetHour.refresh_theme(is_dark)
-        self.m_widgetMinute.refresh_theme(is_dark)
-        self.m_widgetSecond.refresh_theme(is_dark)
+        self.top_button_icon = style_util.get_icon_by_path("Arrows/up", is_dark=self.is_dark)
+        self.bottom_button_icon = style_util.get_icon_by_path("Arrows/down", is_dark=self.is_dark)
+        self.m_widgetHour.refresh_theme(is_dark, self.top_button_icon, self.bottom_button_icon)
+        self.m_widgetMinute.refresh_theme(is_dark, self.top_button_icon, self.bottom_button_icon)
+        self.m_widgetSecond.refresh_theme(is_dark, self.top_button_icon, self.bottom_button_icon)
