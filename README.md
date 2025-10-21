@@ -13,7 +13,6 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/baby7/agile-tiles?logo=github)
 [![Python Version](https://img.shields.io/badge/Python-3.10-blue?logo=python)](https://www.python.org/)
 [![PySide Version](https://img.shields.io/badge/PySide-6.9-blue?logo=qt)](https://doc.qt.io/qtforpython/index.html)
-[![Nuitka Version](https://img.shields.io/badge/Nuitka-2.7-blue)](https://nuitka.net/)
 
 # 介绍
 
@@ -23,7 +22,7 @@ Windows桌面端软件，摸鱼办公神器
 
 打造你的自定义专属摸鱼办公面板
 
-## 主卡片
+## ⭐ 主卡片
 * 本地文件快捷搜索（基于everything）
 * 快捷键截图、屏幕取色
 * 翻译（同时接入截图识别并翻译）
@@ -34,7 +33,7 @@ Windows桌面端软件，摸鱼办公神器
 * 有趣图文（摸鱼人日历、kfc梗图文案、萌宠图片、历史上的今天、随机心语）
 * 热门网站链接聚合
 
-## 小卡片
+## 🚀 小卡片
 * 台风、系统加速球、翻页时钟
 * 月相、笔记本电池电量
 * 基金、股票、金价
@@ -48,7 +47,7 @@ Windows桌面端软件，摸鱼办公神器
 * 灵感提示词、时间进度条、搜索
 * 古诗词、答案之书、一言
 
-## 工具箱模块
+## 🔧 工具箱模块
 * 文件批量操作工具、屏幕取色工具
 * Json格式化工具、编解码工具、颜色转换器
 * 时间 时区 时间戳的计算器
