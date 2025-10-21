@@ -287,7 +287,7 @@
                  <string notr="true">background: transparent;</string>
                 </property>
                 <property name="text">
-                 <string>闹钟(不重复)：</string>
+                 <string>闹钟（不重复）：</string>
                 </property>
                </widget>
               </item>
@@ -313,7 +313,7 @@
                  </size>
                 </property>
                 <property name="text">
-                 <string>启用闹钟</string>
+                 <string>启用闹钟（桌面右下角弹窗）</string>
                 </property>
                </widget>
               </item>
@@ -385,7 +385,7 @@
               <item>
                <spacer name="horizontalSpacer">
                 <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
+                 <enum>Qt::Orientation::Horizontal</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -428,7 +428,7 @@
               <item>
                <spacer name="horizontalSpacer_2">
                 <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
+                 <enum>Qt::Orientation::Horizontal</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -471,7 +471,7 @@
               <item>
                <spacer name="horizontalSpacer_3">
                 <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
+                 <enum>Qt::Orientation::Horizontal</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
