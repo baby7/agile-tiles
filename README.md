@@ -13,6 +13,7 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/baby7/agile-tiles?logo=github)
 [![Python Version](https://img.shields.io/badge/Python-3.10-blue?logo=python)](https://www.python.org/)
 [![PySide Version](https://img.shields.io/badge/PySide-6.9-blue?logo=qt)](https://doc.qt.io/qtforpython/index.html)
+[![Nuitka Version](https://img.shields.io/badge/Nuitka-2.7-blue)](https://nuitka.net/)
 
 # 介绍
 
@@ -60,7 +61,7 @@ Windows桌面端软件，摸鱼办公神器
 ## 运行展示（双主题）
 
 <p align="center">
-    <img width="500" src="https://index.agiletiles.com/website/images/screenshot/screenshot-music-theme.png">
+    <img width="550" src="https://index.agiletiles.com/website/images/screenshot/screenshot-music-theme.png">
 </p>
 
 # 下载
