@@ -6,14 +6,19 @@
 <h1 align="center">灵卡面板</h1>
 <p align="center">电脑侧边栏工具，摸鱼办公神器</p>
 
+<div align="center">
+
 ![GitHub Repo stars](https://img.shields.io/github/stars/baby7/agile-tiles)
 ![License](https://img.shields.io/github/license/baby7/agile-tiles)
-[![Version](https://img.shields.io/github/v/tag/baby7/agile-tiles?label=Version&style=flat)](https://github.com/baby7/agile-tiles/releases)
 ![GitHub last commit](https://img.shields.io/github/last-commit/baby7/agile-tiles?logo=github)
+[![Version](https://img.shields.io/github/v/tag/baby7/agile-tiles?label=Version&style=flat)](https://github.com/baby7/agile-tiles/releases)
+
 ![GitHub top language](https://img.shields.io/github/languages/top/baby7/agile-tiles?logo=github)
 [![Python Version](https://img.shields.io/badge/Python-3.10-blue?logo=python)](https://www.python.org/)
 [![PySide Version](https://img.shields.io/badge/PySide-6.9-blue?logo=qt)](https://doc.qt.io/qtforpython/index.html)
 [![Nuitka Version](https://img.shields.io/badge/Nuitka-2.7-blue)](https://nuitka.net/)
+
+</div>
 
 # 介绍
 
