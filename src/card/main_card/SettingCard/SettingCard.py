@@ -106,7 +106,7 @@ class SettingCard(MainCard):
             [self.parent.push_button_setting_feedback_opinion, "意见反馈", "Hands", "concept-sharing", None, None],
             # 关于
             [self.parent.push_button_setting_faq, "常见问题", "Character", "help", None, None],
-            [self.parent.push_button_setting_service_agreement, "服务协议", "Office", "agreement", None, None],
+            [self.parent.push_button_setting_service_agreement, "用户协议", "Office", "agreement", None, None],
             [self.parent.push_button_setting_privacy_agreement, "隐私协议", "Peoples", "personal-privacy", None, None],
             [self.parent.push_button_setting_about_us, "关于我们", "Character", "info", None, None],
             # 开源

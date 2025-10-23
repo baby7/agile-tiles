@@ -95,7 +95,7 @@ class HotSearchItem(QWidget):
 
         # 内容（可点击）- 设置蓝色
         self.content = ClickableLabel(f"{data['t']} {data['n']}")
-        self.content.setStyleSheet(f"color: rgb(64, 158, 255); padding: 2px 0px;")
+        self.content.setStyleSheet(f"color: rgb(20, 161, 248); padding: 2px 0px;")
         self.content.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         self.content.setMinimumWidth(0)
         first_line_layout.addWidget(self.content, stretch=1)
@@ -116,7 +116,7 @@ class HotSearchItem(QWidget):
         self.setLayout(main_layout)
 
         # 背景默认 & hover
-        self.default_color = "rgb(64, 158, 255);"
+        self.default_color = "rgb(20, 161, 248);"
         self.hover_color = "rgb(121, 187, 255)"
         self.update_bg(self.default_color)
         self.setCursor(QCursor(Qt.PointingHandCursor))

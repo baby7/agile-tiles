@@ -32,7 +32,7 @@ from PySide6 import QtCore
 from PySide6.QtGui import QPixmap, QFont
 from PySide6.QtCore import QEvent, Qt, qInstallMessageHandler, QSettings, Signal, QEventLoop, Q_ARG, Slot, \
     QMetaObject, QTimer, QSharedMemory
-from PySide6.QtWidgets import QApplication, QSystemTrayIcon
+from PySide6.QtWidgets import QApplication, QSystemTrayIcon, QStyleFactory
 from PySide6.QtNetwork import QLocalServer, QLocalSocket, QNetworkDiskCache, QNetworkReply
 
 print("_基础界面框架加载完成")
@@ -2006,6 +2006,8 @@ if __name__ == '__main__':
     # 限制单机挂载数量一个
     try:
         app = QApplication(sys.argv)
+        # 延用旧样式
+        app.setStyle(QStyleFactory.create('windowsvista'))
         # 异常处理
         sys.excepthook = handleException
         # 创建本地服务器用于实例间通信（可选）

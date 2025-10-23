@@ -7,6 +7,7 @@
     annotation: 分辨率参数初始化和动画执行
 """
 import time
+import traceback
 from functools import partial
 
 from PySide6 import QtCore, QtGui
@@ -22,10 +23,36 @@ def get_windows_width_and_height(main_window):
     return desktop.size().width(), desktop.size().height()
 
 def get_screen(main_window):
-    desktop = QApplication.screens()[0]
-    for screen in QApplication.screens():
-        if not hasattr(main_window, 'form_screen_name'):
+    # 默认选择第0个屏幕
+    screen_list = QApplication.screens()
+    desktop = screen_list[0]
+    for screen in screen_list:
+        if not hasattr(main_window, 'form_screen_name') or main_window.form_screen_name is None:
+            # 如果配置中没有屏幕名称，则尽量选择最左侧的屏幕
+            try:
+                # 查找最左侧的屏幕，如果有多个最左侧屏幕，选择高度最高的
+                leftmost_screens = []
+                min_x = float('inf')
+                # 找到最左侧的x坐标
+                for screen_in in screen_list:
+                    screen_x = screen_in.geometry().x()
+                    if screen_x < min_x:
+                        min_x = screen_x
+                # 收集所有最左侧的屏幕
+                for screen_in in screen_list:
+                    if screen_in.geometry().x() == min_x:
+                        leftmost_screens.append(screen_in)
+                # 在最左侧的屏幕中选择高度最高的
+                if leftmost_screens:
+                    selected_screen = max(leftmost_screens, key=lambda s: s.size().height())
+                    print(f"选择最左侧且高度最高的屏幕: {selected_screen.name()}")
+                    return selected_screen
+                else:
+                    print("未找到最左侧的屏幕")
+            except Exception as e:
+                print(f"获取屏幕信息失败：{traceback.format_exc()}")
             break
+        # 选择配置对应的屏幕
         if screen.name() == main_window.form_screen_name:
             return screen
     return desktop
@@ -44,16 +71,45 @@ def init_resolution(main_window, is_first=True, out_animation_tag=True, is_show=
         main_window.setupUi(main_window)
     # 先加载初始值
     load_data(main_window)
-    # 显示屏幕
+    # 屏幕列表
+    screen_list = QApplication.screens()
+    # 默认选择第0个屏幕
+    desktop_size = screen_list[0].size()                 # 屏幕大小
+    desktop_geometry = screen_list[0].geometry()         # 屏幕区域
+    # 然后尽量选择最左侧的屏幕（如果最左侧有多块屏幕就选择高度最高的那块屏幕）
+    try:
+        # 查找最左侧的屏幕，如果有多个最左侧屏幕，选择高度最高的
+        leftmost_screens = []
+        min_x = float('inf')
+        # 找到最左侧的x坐标
+        for screen in screen_list:
+            screen_x = screen.geometry().x()
+            if screen_x < min_x:
+                min_x = screen_x
+        # 收集所有最左侧的屏幕
+        for screen in screen_list:
+            if screen.geometry().x() == min_x:
+                leftmost_screens.append(screen)
+        # 在最左侧的屏幕中选择高度最高的
+        if leftmost_screens:
+            selected_screen = max(leftmost_screens, key=lambda s: s.size().height())
+            desktop_size = selected_screen.size()
+            desktop_geometry = selected_screen.geometry()
+            print(f"选择最左侧且高度最高的屏幕: {selected_screen.name()}")
+        else:
+            print("未找到最左侧的屏幕")
+    except Exception as e:
+        print(f"获取屏幕信息失败：{traceback.format_exc()}")
+    # 获取配置中的屏幕
     screen_name = main_window.form_screen_name
-    desktop_size = QApplication.screens()[0].size()
-    desktop_geometry = QApplication.screens()[0].geometry()
     if screen_name is not None:
-        for screen in QApplication.screens():
+        # 如果配置中的屏幕存在，则选择该屏幕
+        for screen in screen_list:
             if screen.name() == screen_name:
                 print(f"显示器信息：{screen.name()}")
                 desktop_size = screen.size()
                 desktop_geometry = screen.geometry()
+    # 屏幕大小
     main_window.desktop_width = desktop_size.width()
     main_window.desktop_height = desktop_size.height()
     # 屏幕信息
@@ -148,6 +204,7 @@ def in_animation(main_window):
     # 记录动画时间戳
     main_window.animation_time = current_time
     main_window.show_form = True
+    main_window.is_show = True
     # 加载动画类型
     if main_window.form_animation_type == "Line":
         animation_type = QEasingCurve.Linear
@@ -199,6 +256,7 @@ def out_animation(main_window):
     # 记录动画时间戳
     main_window.animation_time = current_time
     main_window.show_form = False
+    main_window.is_show = False
     # 加载动画类型
     if main_window.form_animation_type == "Line":
         animation_type = QEasingCurve.Linear
