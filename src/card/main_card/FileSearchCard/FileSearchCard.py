@@ -523,7 +523,8 @@ class FileSearchCard(MainCard):
         self.current_offset += len(results)
 
         if self.displayed_results == 0:
-            self.label_status.setText("未找到匹配的文件")
+            self.label_status.setOpenExternalLinks(True)
+            self.label_status.setText("未找到匹配的文件(可能是everything安装问题,<a href=\"https://www.agiletiles.com/help/help.html#%E6%9C%AC%E5%9C%B0%E6%90%9C%E7%B4%A2\" style=\"color:rgb(20, 161, 248);\">点击这里</a>查看帮助)")
         else:
             more_text = "，还有更多结果..." if has_more else ""
             self.label_status.setText(f"已找到 {total_results} 个结果，已显示 {self.displayed_results} 个{more_text}")

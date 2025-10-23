@@ -297,7 +297,7 @@ def refresh_theme(main_object):
         vip_linear_gradient_top = "background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,stop:0 rgb(100, 150, 160), stop:1 rgb(71, 153, 253));"
         vip_linear_gradient_bottom = "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(100, 150, 160), stop:1 rgb(71, 153, 253));"
         invite_linear_gradient = "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(100, 150, 160), stop:1 rgb(71, 153, 253));"
-        user_data_style = "border-radius: 10px; border: 1px solid black; background-color:rgba(0, 0, 0, 200);"
+        user_data_style = "border-radius: 10px; border: 0px solid rgba(0, 0, 0, 220); background-color: rgba(0, 0, 0, 60);"
         title_info_style = "border: 0px solid #FF8D16; border-radius: 0px; background-color: rgba(0, 0, 0, 0); color: rgb(255, 255, 255);"
     else:
         main_object.label_area_user_message_logout.setStyleSheet("background: black;color:white;border-radius: 8px; padding:2px;")

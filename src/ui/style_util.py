@@ -759,7 +759,7 @@ QComboBox QAbstractItemView {
     margin-top: 4px;
     padding: 5px 5px 5px 5px;
     height: 21px;
-    outline: 0px solid gray;    /*取消选中虚线*/
+    outline: none;
     border: 1px solid rgb(66, 66, 66);
     color: rgb(0, 0, 0);
     background-color: rgb(255, 255, 255);
@@ -783,8 +783,8 @@ QComboBox::drop-down {
     width: 20px;
     border-left-width: 0px;
     border-left-color: darkgray;
-    border-left-style: solid; /* just a single line */
-    border-top-right-radius: 3px; /* same radius as the QComboBox */
+    border-left-style: solid;
+    border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
 }
 /*下拉箭头样式*/
@@ -803,20 +803,20 @@ QComboBox::down-arrow:on {
 }
 """
 def set_combo_box_style(combo_box, is_dark=False):
-    style = combo_box_style + scroll_bar_style
+    style = combo_box_style
     if is_dark:
         style = style.replace("black", "white")
         style = style.replace('color: rgb(0, 0, 0);', 'color: rgb(239, 240, 241);')
         style = style.replace('color: rgb(255, 255, 255);', 'color: rgb(0, 0, 0);')
         style = style.replace('IconPark/dark', 'IconPark/light')
-    combo_box.setStyleSheet(style)
+    combo_box.setStyleSheet(style + scroll_bar_style)
+    # 根据弧度设置最小高度
+    if combo_box.minimumHeight() == 0:
+        combo_box.setMinimumHeight(20)
     # 不设置Popup则列表不能弹出；不设置FramelessWindowHint则不能无边框；不设置NoDropShadowWindowHint则右下角有默认三角形阴影。
     combo_box.view().parentWidget().setWindowFlags(Qt.WindowType.Popup | Qt.WindowType.FramelessWindowHint | Qt.WindowType.NoDropShadowWindowHint)
     # 设置背景透明，否则qss透明度不生效
     combo_box.view().parentWidget().setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-    # 根据弧度设置最小高度
-    if combo_box.minimumHeight() == 0:
-        combo_box.setMinimumHeight(20)
 '''
 ↑                                                                                ↑
 **********************************下拉框 · 结束***************************************
