@@ -4,8 +4,7 @@ from functools import partial
 from PySide6 import QtGui, QtCore
 from PySide6.QtCore import QObject, Qt, QSize, QRect, QTimer
 from PySide6.QtGui import QIcon, QFont, QCursor, QAction
-from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QScrollArea, QFrame, QMenu, \
-    QToolButton, QApplication
+from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QScrollArea, QFrame, QMenu, QToolButton
 
 from src.card.card_component.ThemeSwitchButton.ThemeSwitchButton import ThemeSwitchButton
 from src.card.main_card.FileSearchCard.FileSearchCard import FileSearchCard
@@ -25,7 +24,6 @@ from src.client import common
 from src.constant import card_constant, data_save_constant
 from src.module.Theme import theme_module
 from src.module.UserData.DataBase import user_data_common
-from src.module.About.about_us import AboutUsWindow
 from src.util import browser_util
 from src.ui import style_util
 
@@ -165,7 +163,7 @@ class MainCardManager(QObject):
             "tool": [self.main_object.push_button_tool, "Others/toolkit", self.main_object.tool_area, "工具箱"],
             "looking": [self.main_object.push_button_looking, "Base/preview-open", self.main_object.looking_area, "信息聚合"],
             "search": [self.main_object.push_button_search, "Base/search", self.main_object.search_area, "本地搜索"],
-            "ipn": [self.main_object.push_button_ipn, "Arrows/transfer-data", self.main_object.ipn_area, "局域网文件传输"],
+            "ipn": [self.main_object.push_button_ipn, "Office/file-conversion-one", self.main_object.ipn_area, "局域网文件传输"],
             "todo": [self.main_object.push_button_todo, "Edit/plan", self.main_object.todo_area, "待办事项"],
             "book": [self.main_object.push_button_book, "Office/book-one", self.main_object.book_area, "阅读"],
             "music": [self.main_object.push_button_music, "Music/music-one", self.main_object.music_area, "音乐"],
@@ -1214,6 +1212,7 @@ class MainCardManager(QObject):
         browser_util.open_url(common.index_url)
 
     def open_about_us_url(self):
+        from src.module.About.about_us import AboutUsWindow
         self.main_object.setting_about_us_win = AboutUsWindow(None, self.main_object)
         self.main_object.setting_about_us_win.refresh_geometry(self.main_object.toolkit.resolution_util.get_screen(self.main_object))
         self.main_object.setting_about_us_win.show()

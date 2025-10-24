@@ -1,0 +1,8 @@
+<!DOCTYPE RCC>
+<RCC>
+    <qresource>
+        <file alias="static/img/tutorial/tutorial_1.png">resources/img/tutorial/tutorial_1.png</file>
+        <file alias="static/img/tutorial/tutorial_2.png">resources/img/tutorial/tutorial_2.png</file>
+        <file alias="static/img/tutorial/tutorial_3.png">resources/img/tutorial/tutorial_3.png</file>
+    </qresource>
+</RCC>

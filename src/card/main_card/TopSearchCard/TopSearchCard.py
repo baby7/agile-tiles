@@ -1,14 +1,11 @@
-import datetime
 import json
 import time
 import urllib
 from src.util import my_shiboken_util
-import webbrowser
 
 from PySide6.QtCore import QCoreApplication, QRect, Qt, QUrl, Signal
-from PySide6.QtGui import QFont, QCursor, QPalette
-from PySide6.QtWidgets import QLabel, QPushButton, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, \
-    QSizePolicy, QScrollArea
+from PySide6.QtGui import QFont, QCursor
+from PySide6.QtWidgets import QLabel, QPushButton, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QSizePolicy, QScrollArea
 from PySide6 import QtNetwork
 # 获取信息
 from src.card.MainCardManager.MainCard import MainCard
@@ -440,18 +437,15 @@ class TopSearchCard(MainCard):
         """发送网络请求"""
         current_tab_title = self.tab_widget_toggle.tabText(self.tab_widget_toggle.currentIndex())
         current_tab_name = self.tab_map[current_tab_title]
-
         url = QUrl(common.BASE_URL + "/trending/normal/last?company=" + str(current_tab_name))
         request = QtNetwork.QNetworkRequest(url)
         # 存储token
         request.setRawHeader(b"Authorization", bytes(self.main_object.access_token, "utf-8"))
-
         # 显示加载动画
         self.label_top_mask.show()
         self.load_animation.show()
         self.load_animation.load()
-
-        print("准备请求数据")
+        # 发送网络请求
         self.reply = self.network_manager.get(request)
         self.reply.finished.connect(self.handle_network_reply)
 
@@ -462,11 +456,9 @@ class TopSearchCard(MainCard):
             if self.reply.error() != QtNetwork.QNetworkReply.NetworkError.NoError:
                 self.logger.card_error("主程序", f"Error: {self.reply.errorString()}")
                 return
-
             # 读取并解析数据
             data = self.reply.readAll().data()
             result = json.loads(data)
-
             self.base_data_list = []
             self.base_data_type = ""
             for data_entry in result["data"]:
@@ -487,6 +479,8 @@ class TopSearchCard(MainCard):
         if self.reply is not None and my_shiboken_util.is_qobject_valid(self.reply):
             self.reply.deleteLater()
         self.reply = None
+        self.base_data_list = None
+        self.base_data_type = None
 
     def set_ui(self):
         try:

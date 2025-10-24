@@ -2,7 +2,6 @@
 from PySide6.QtCore import Qt, Signal, QDateTime
 
 from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
-from src.card.main_card.SettingCard.setting.CardPermutation.CardStore import CardStore
 from src.card.main_card.SettingCard.setting.card_permutation_form import Ui_Form
 from src.card.main_card.SettingCard.setting.CardPermutation.CardItemSignals import CardDesignItem
 from src.card.main_card.SettingCard.setting.CardPermutation.GridScene import GridScene
@@ -46,6 +45,7 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
     def __init__(self, parent=None, use_parent=None, user_card_list=None, main_config=None):
         super(CardPermutationWindow, self).__init__(is_dark=use_parent.is_dark, form_theme_mode=use_parent.form_theme_mode,
                                                  form_theme_transparency=use_parent.form_theme_transparency)
+        from src.card.main_card.SettingCard.setting.CardPermutation.CardStore import CardStore
         self.parent = parent
         self.use_parent = use_parent
         # 初始化UI

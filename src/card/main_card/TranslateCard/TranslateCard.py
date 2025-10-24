@@ -2,7 +2,7 @@ import json
 from src.util import my_shiboken_util
 
 from PySide6 import QtCore
-from PySide6.QtCore import Slot, QUrl, Qt, QTimer
+from PySide6.QtCore import Slot, QUrl, Qt
 from PySide6.QtGui import QIcon, QAction, QCursor
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QMenu, QPlainTextEdit

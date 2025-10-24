@@ -1,8 +1,5 @@
 import json
 
-from src.ui import style_util
-from src.util import my_shiboken_util
-
 from PySide6.QtCore import QUrl
 from PySide6.QtGui import QPixmap, Qt
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
@@ -10,6 +7,8 @@ from PySide6.QtWidgets import QVBoxLayout, QLabel, QApplication, QTextBrowser, Q
 
 from src.card.card_component.AggregationCard.AggregationCard import AggregationCard
 from src.client import common
+from src.ui import style_util
+from src.util import my_shiboken_util
 
 
 class InformationCard(AggregationCard):

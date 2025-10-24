@@ -24,5 +24,5 @@ qrc_str += """    </qresource>
 print(qrc_str)
 
 # 写入qrc文件
-with open("D:/project/python/agile-tiles/compiled_resources.qrc", "w", encoding="utf-8") as f:
+with open("/resources_qrc/compiled_resources.qrc", "w", encoding="utf-8") as f:
     f.write(qrc_str)

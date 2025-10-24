@@ -1,26 +1,6 @@
 from PySide6.QtWidgets import QVBoxLayout
 
 from src.card.card_component.AggregationCard.AggregationCard import AggregationCard
-from src.card.main_card.ToolCard.base64_image_tool.base64_image_tool_util import Base64ImageTool
-from src.card.main_card.ToolCard.bmi_calculator.bmi_calculator_util import BMICalculatorPopup
-from src.card.main_card.ToolCard.calorie_calculator.calorie_calculator_util import CalorieCalculatorPopup
-from src.card.main_card.ToolCard.codec_tool.codec_tool_util import CodecTool
-from src.card.main_card.ToolCard.cron_generator.cron_generator_util import CronGeneratorPopup
-from src.card.main_card.ToolCard.crypto_too.crypto_tool_util import CryptoTool
-from src.card.main_card.ToolCard.file_operation import file_operation_util
-from src.card.main_card.ToolCard.hold_grudges_gen.hold_grudges_gen_util import HoldGrudgesGenPopup
-from src.card.main_card.ToolCard.housing_loan_rates import housing_loan_rates_util
-from src.card.main_card.ToolCard.ip_info.ip_info_util import IPInfoPopup
-from src.card.main_card.ToolCard.ip_location_query.ip_location_query_util import IPLocationQueryPopup
-from src.card.main_card.ToolCard.json_formatter import json_formatter_util
-from src.card.main_card.ToolCard.jwt_tool.jwt_tool_util import JWTEncoderDecoderPopup
-from src.card.main_card.ToolCard.notebook_battery_graph import notebook_battery_graph_util
-from src.card.main_card.ToolCard.progress_bar_generator import progress_bar_generator_util
-from src.card.main_card.ToolCard.relationship_calculator import relationship_calculator_util
-from src.card.main_card.ToolCard.salary_calculator import salary_calculator_util
-from src.card.main_card.ToolCard.tax_calculator.tax_calculator_util import TaxCalculatorPopup
-from src.card.main_card.ToolCard.time_calculator.time_calculator_util import TimeCalculatorApp
-from src.card.main_card.ToolCard.uuid_generator.uuid_generator_util import UUIDGeneratorPopup
 
 
 class ToolCard(AggregationCard):
@@ -334,108 +314,128 @@ class ToolCard(AggregationCard):
         self.main_object.color_picker_captured()
 
     def salary_calculator(self):
+        from src.card.main_card.ToolCard.salary_calculator import salary_calculator_util
         self.toolkit.resolution_util.out_animation(self.main_object)
         salary_calculator_util.show_salary_calculator_dialog(self.main_object, "这班上得值不值·测算版", None)
 
     def file_operation(self):
+        from src.card.main_card.ToolCard.file_operation import file_operation_util
         self.toolkit.resolution_util.out_animation(self.main_object)
         file_operation_util.show_file_operation_dialog(self.main_object, "文件批量操作", None)
 
     def hold_grudges_gen(self, title):
+        from src.card.main_card.ToolCard.hold_grudges_gen.hold_grudges_gen_util import HoldGrudgesGenPopup
         # 清理展示面板
         self.clear_show_panel()
         self.util_app = HoldGrudgesGenPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def relationship_calculator(self):
+        from src.card.main_card.ToolCard.relationship_calculator import relationship_calculator_util
         self.toolkit.resolution_util.out_animation(self.main_object)
         relationship_calculator_util.show_relationship_calculator_dialog(self.main_object, "中国家庭称谓计算器", None)
 
     def progress_bar_generator(self):
+        from src.card.main_card.ToolCard.progress_bar_generator import progress_bar_generator_util
         self.toolkit.resolution_util.out_animation(self.main_object)
         progress_bar_generator_util.show_progress_bar_generator_dialog(self.main_object, "视频进度条生成器", None)
 
     def notebook_battery_graph(self):
+        from src.card.main_card.ToolCard.notebook_battery_graph import notebook_battery_graph_util
         self.toolkit.resolution_util.out_animation(self.main_object)
         notebook_battery_graph_util.show_notebook_battery_graph_dialog(self.main_object, "笔记本电池健康报告", None)
 
     def tax_calculator(self, title):
+        from src.card.main_card.ToolCard.tax_calculator.tax_calculator_util import TaxCalculatorPopup
         # 清理展示面板
         self.clear_show_panel()
         self.util_app = TaxCalculatorPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def bmi_calculator(self, title):
+        from src.card.main_card.ToolCard.bmi_calculator.bmi_calculator_util import BMICalculatorPopup
         # 清理展示面板
         self.clear_show_panel()
         self.util_app = BMICalculatorPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def calorie_calculator(self, title):
+        from src.card.main_card.ToolCard.calorie_calculator.calorie_calculator_util import CalorieCalculatorPopup
         # 清理展示面板
         self.clear_show_panel()
         self.util_app = CalorieCalculatorPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def cron_generator(self, title):
+        from src.card.main_card.ToolCard.cron_generator.cron_generator_util import CronGeneratorPopup
         # 清理展示面板
         self.clear_show_panel()
         self.util_app = CronGeneratorPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def uuid_generator(self, title):
+        from src.card.main_card.ToolCard.uuid_generator.uuid_generator_util import UUIDGeneratorPopup
         # 清理展示面板
         self.clear_show_panel()
         self.util_app = UUIDGeneratorPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def jwt_tool(self, title):
+        from src.card.main_card.ToolCard.jwt_tool.jwt_tool_util import JWTEncoderDecoderPopup
         # 清理展示面板
         self.clear_show_panel()
         self.util_app = JWTEncoderDecoderPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def ip_location_query(self, title):
+        from src.card.main_card.ToolCard.ip_location_query.ip_location_query_util import IPLocationQueryPopup
         # 清理展示面板
         self.clear_show_panel()
         self.util_app = IPLocationQueryPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def ip_info(self, title):
+        from src.card.main_card.ToolCard.ip_info.ip_info_util import IPInfoPopup
         # 清理展示面板
         self.clear_show_panel()
         self.util_app = IPInfoPopup(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def codec_tool(self, title):
+        from src.card.main_card.ToolCard.codec_tool.codec_tool_util import CodecTool
         # 清理展示面板
         self.clear_show_panel()
         self.util_app = CodecTool(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def base64_image_tool(self, title):
+        from src.card.main_card.ToolCard.base64_image_tool.base64_image_tool_util import Base64ImageTool
         # 清理展示面板
         self.clear_show_panel()
         self.util_app = Base64ImageTool(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def crypto_tool(self, title):
+        from src.card.main_card.ToolCard.crypto_too.crypto_tool_util import CryptoTool
         # 清理展示面板
         self.clear_show_panel()
         self.util_app = CryptoTool(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def json_formatter(self):
+        from src.card.main_card.ToolCard.json_formatter import json_formatter_util
         self.toolkit.resolution_util.out_animation(self.main_object)
         json_formatter_util.show_json_formatter_dialog(self.main_object, "Json格式化工具", None)
 
     def time_calculator(self, title):
+        from src.card.main_card.ToolCard.time_calculator.time_calculator_util import TimeCalculatorApp
         # 清理展示面板
         self.clear_show_panel()
         self.util_app = TimeCalculatorApp(self.card, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.show_util_in_show_panel(title=title, util_app=self.util_app)
 
     def housing_loan_rates(self):
+        from src.card.main_card.ToolCard.housing_loan_rates import housing_loan_rates_util
         self.toolkit.resolution_util.out_animation(self.main_object)
         housing_loan_rates_util.show_housing_loan_rates_dialog(self.main_object, "中国房贷计算器", None)
 

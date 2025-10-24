@@ -115,10 +115,11 @@ class MainAcrylicWindow(WindowsFramelessWindow):
 
     def nativeEvent(self, eventType, message):
         """ Handle the Windows message """
+        # 获取消息
         msg = MSG.from_address(message.__int__())
         if not msg.hWnd:
             return super().nativeEvent(eventType, message)
-
+        # 处理缩放和移动
         if msg.message == win32con.WM_NCHITTEST and self._isResizeEnabled:
             if self._isHoverMaxBtn():
                 self.titleBar.maxBtn.setState(TitleBarButtonState.HOVER)
@@ -132,14 +133,12 @@ class MainAcrylicWindow(WindowsFramelessWindow):
         elif msg.message in [win32con.WM_NCLBUTTONUP, win32con.WM_NCRBUTTONUP] and self._isHoverMaxBtn():
             e = QMouseEvent(QEvent.MouseButtonRelease, QPoint(), Qt.LeftButton, Qt.LeftButton, Qt.NoModifier)
             QApplication.sendEvent(self.titleBar.maxBtn, e)
-
-        # handle resize and move
+        # 处理缩放
         if msg.message == win32con.WM_ENTERSIZEMOVE or msg.message == win32con.WM_ENTERSIZEMOVE:
             self.windowEffect.resetAcrylicEffect(self.winId())
         if msg.message == win32con.WM_EXITSIZEMOVE or msg.message == win32con.WM_EXITSIZEMOVE:
             self.windowEffect.setAcrylicEffect(self.winId())
-
-        # handle Alt+F4
+        # 处理快捷键
         if msg.message == win32con.WM_SYSKEYDOWN:
             if msg.wParam == win32con.VK_F4:
                 self.__closedByKey = True

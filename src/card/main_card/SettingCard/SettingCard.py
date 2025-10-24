@@ -5,26 +5,20 @@ import sys
 
 from PySide6.QtGui import QCursor
 
-from src.card.MainCardManager.MainCard import MainCard
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QApplication
 
-from src.card.main_card.SettingCard.setting.card_permutation import CardPermutationWindow
-from src.card.main_card.SettingCard.setting.setting_system import SettingSystemWindow
-from src.card.main_card.SettingCard.setting.setting_screen import SettingScreenWindow
-from src.card.main_card.SettingCard.setting.setting_theme import SettingThemeWindow
 from src.client import common
 from src.constant import version_constant, data_save_constant, open_source_constant
 from src.module import dialog_module
-from src.module.About.about_us import AboutUsWindow
 from src.module.Feedback import feedback_box_util
 from src.module.Ticket import ticket_box_util
 from src.module.Updater.Updater import Updater
 from src.module.UserData.DataBase import user_data_common
-from src.ui import style_util
-# 获取信息
-from src.util import browser_util
 from src.module.Box import text_box_util, message_box_util
+from src.card.MainCardManager.MainCard import MainCard
+from src.util import browser_util
+from src.ui import style_util
 
 
 def get_pixmap_park_path(icon_position, is_dark, is_yellow=False):
@@ -188,6 +182,7 @@ class SettingCard(MainCard):
         QTimer.singleShot(100, self.show_card_permutation_win)
 
     def show_card_permutation_win(self):
+        from src.card.main_card.SettingCard.setting.card_permutation import CardPermutationWindow
         user_card_list = copy.deepcopy(self.main_object.main_data["card"])
         main_config = copy.deepcopy(self.main_object.main_data)
         self.card_permutation_win = CardPermutationWindow(self, self.main_object, user_card_list, main_config)
@@ -209,6 +204,7 @@ class SettingCard(MainCard):
 
     # 打开设置快捷键窗口
     def push_button_setting_system_click(self):
+        from src.card.main_card.SettingCard.setting.setting_system import SettingSystemWindow
         self.toolkit.resolution_util.out_animation(self.main_object)
         self.setting_system_win = SettingSystemWindow(self, self.main_object, self.setting_data)
         self.setting_system_win.refresh_geometry(self.toolkit.resolution_util.get_screen(self.main_object))
@@ -217,6 +213,7 @@ class SettingCard(MainCard):
 
     # 打开设置界面窗口
     def push_button_setting_screen_click(self):
+        from src.card.main_card.SettingCard.setting.setting_screen import SettingScreenWindow
         self.toolkit.resolution_util.out_animation(self.main_object)
         self.setting_screen_win = SettingScreenWindow(self, self.main_object, self.setting_data)
         self.setting_screen_win.refresh_geometry(self.toolkit.resolution_util.get_screen(self.main_object))
@@ -225,6 +222,7 @@ class SettingCard(MainCard):
 
     # 打开设置主题窗口
     def push_button_setting_theme_click(self):
+        from src.card.main_card.SettingCard.setting.setting_theme import SettingThemeWindow
         self.toolkit.resolution_util.out_animation(self.main_object)
         self.setting_theme_win = SettingThemeWindow(self, self.main_object, self.setting_data)
         self.setting_theme_win.refresh_geometry(self.toolkit.resolution_util.get_screen(self.main_object))
@@ -325,6 +323,7 @@ class SettingCard(MainCard):
         })
 
     def push_button_setting_about_us_click(self):
+        from src.module.About.about_us import AboutUsWindow
         self.toolkit.resolution_util.out_animation(self.main_object)
         self.setting_about_us_win = AboutUsWindow(None, self.main_object)
         self.setting_about_us_win.refresh_geometry(self.toolkit.resolution_util.get_screen(self.main_object))

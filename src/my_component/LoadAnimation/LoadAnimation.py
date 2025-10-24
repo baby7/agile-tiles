@@ -42,6 +42,7 @@ class LoadAnimation(QLabel):
         # 创建动画
         if self.animation is not None:
             self.animation.stop()
+            self.animation.deleteLater()
             del self.animation
         self.animation = QPropertyAnimation(self, b'angle')
         self.animation.setDuration(2000)  # 2秒完成一圈

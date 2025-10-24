@@ -1,16 +1,12 @@
 import os
-import qrcode
 import socket
 import traceback
 from io import BytesIO
 from PySide6.QtCore import Qt, QThread, QRect, QTimer
 from PySide6.QtGui import QFont, QPixmap
-from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit,
-                               QListWidget, QListWidgetItem, QFileDialog, QTabWidget, QFrame, QApplication, QSpinBox)
+from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QListWidget,
+                               QListWidgetItem, QFileDialog, QTabWidget, QFrame, QApplication, QSpinBox)
 from src.card.MainCardManager.MainCard import MainCard
-from src.card.main_card.IpnCard.server.FileServer import FileServer
-from src.card.main_card.IpnCard.server.HttpServerHandler import HttpServerHandler
-from src.card.main_card.IpnCard.server.ServerWorker import ServerWorker
 from src.constant import data_save_constant
 from src.ui import style_util
 from src.util import browser_util
@@ -411,6 +407,7 @@ class IpnCard(MainCard):
 
     def generate_qr_code(self, text):
         """生成二维码并显示"""
+        import qrcode
         try:
             qr = qrcode.QRCode(
                 version=1,
@@ -464,6 +461,9 @@ class IpnCard(MainCard):
                     return
 
     def start_server(self):
+        from src.card.main_card.IpnCard.server.HttpServerHandler import HttpServerHandler
+        from src.card.main_card.IpnCard.server.ServerWorker import ServerWorker
+        from src.card.main_card.IpnCard.server.FileServer import FileServer
         try:
             if self.upload_dir is None or self.upload_dir == "" or not os.path.exists(self.upload_dir):
                 self.toolkit.dialog_module.box_information(self.main_object, "错误", "请选择上传目录")
