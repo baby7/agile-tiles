@@ -1,11 +1,11 @@
 from src.card.card_component.AggregationCard.AggregationCard import AggregationCard
-from src.card.main_card.GameCard.link import game_list, tool_list, draw_list, knowledge_list, programmer_list, interesting_list, top_list
+from src.card.main_card.WebsiteCard.link import game_list, tool_list, draw_list, knowledge_list, programmer_list, interesting_list, top_list
 
 
-class GameCard(AggregationCard):
+class WebsiteCard(AggregationCard):
 
-    title = "游戏"
-    name = "GameCard"
+    title = "网址导航"
+    name = "WebsiteCard"
     support_size_list = ["Big"]
     # 只读参数
     x = None                # 坐标x

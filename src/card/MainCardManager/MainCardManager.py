@@ -6,7 +6,7 @@ from PySide6.QtCore import QObject, Qt, QSize, QRect, QTimer
 from PySide6.QtGui import QIcon, QFont, QCursor, QAction
 from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QScrollArea, QFrame, QMenu, QToolButton
 
-from src.card.card_component.ThemeSwitchButton.ThemeSwitchButton import ThemeSwitchButton
+from src.card.MainCardManager.MenuManager.MenuManager import MenuCard, MenuNormalButton, MenuThemeButton
 from src.card.main_card.FileSearchCard.FileSearchCard import FileSearchCard
 from src.card.main_card.IpnCard.IpnCard import IpnCard
 from src.card.main_card.SettingCard.setting.card_permutation import CardPermutationWindow
@@ -14,7 +14,7 @@ from src.card.main_card.ToolCard.ToolCard import ToolCard
 from src.card.main_card.TodoCard.TodoCard import TodoCard
 from src.card.main_card.BookCard.BookCard import BookCard
 from src.card.main_card.ChatCard.ChatCard import ChatCard
-from src.card.main_card.GameCard.GameCard import GameCard
+from src.card.main_card.WebsiteCard.WebsiteCard import WebsiteCard
 from src.card.main_card.MusicCard.MusicCard import MusicCard
 from src.card.main_card.SettingCard.SettingCard import SettingCard
 from src.card.main_card.TopSearchCard.TopSearchCard import TopSearchCard
@@ -26,6 +26,15 @@ from src.module.Theme import theme_module
 from src.module.UserData.DataBase import user_data_common
 from src.util import browser_util
 from src.ui import style_util
+
+
+# 菜单常量
+MENU_DEFAULT_WIDTH = 38     # 菜单默认宽度
+MENU_SPREAD_WIDTH = 100     # 菜单展开宽度
+MENU_MARGIN_WIDTH = 4       # 菜单按钮外间距
+MENU_PADDING_WIDTH = 4      # 菜单按钮内间距
+MENU_BUTTON_HEIGHT = 34     # 菜单按钮高度
+MENU_BUTTON_ICON_SIZE = 22  # 菜单按钮图标大小
 
 
 def get_position(control):
@@ -51,7 +60,7 @@ class MainCardManager(QObject):
     main_card_y = 1
     main_card_width = 6
     main_card_height = 8
-    # 菜单
+    # 菜单按钮宽度
     menu_button_width = 34
 
     def __init__(self, main_object):
@@ -70,7 +79,6 @@ class MainCardManager(QObject):
             # 隐藏菜单
             self.main_object.label_menu.hide()
             self.main_object.label_current_menu.hide()
-            self.main_object.label_menu_background.hide()
             self.main_object.theme_switch_button.hide()
             # 删除窗口
             if self.main_object.card_permutation_win is not None:
@@ -93,7 +101,7 @@ class MainCardManager(QObject):
                 self.main_object.music_area,
                 self.main_object.looking_area,
                 self.main_object.tool_area,
-                self.main_object.game_area,
+                self.main_object.website_area,
             ]
             for card_area in area_list:
                 # 清理内容
@@ -154,20 +162,20 @@ class MainCardManager(QObject):
         self.init_menu_bg_and_slider()
         # 设置菜单样式
         self.menu_button_map = {
-            "user": [self.main_object.push_button_user, "Peoples/people", self.main_object.user_area, "用户管理"],
-            "setting": [self.main_object.push_button_setting, "Base/setting-two", self.main_object.setting_area, "设置"],
-            # "exit": [self.main_object.push_button_exit, "Base/power", None],
-            "trending": [self.main_object.push_button_weibo_info, "Energy/fire", self.main_object.top_area, "热搜"],
-            "translate": [self.main_object.push_button_translate, "Base/translate", self.main_object.translate_area, "翻译"],
-            "chat": [self.main_object.push_button_chat, "Abstract/smart-optimization", self.main_object.chat_area, "智能助手"],
-            "tool": [self.main_object.push_button_tool, "Others/toolkit", self.main_object.tool_area, "工具箱"],
-            "looking": [self.main_object.push_button_looking, "Base/preview-open", self.main_object.looking_area, "信息聚合"],
-            "search": [self.main_object.push_button_search, "Base/search", self.main_object.search_area, "本地搜索"],
-            "ipn": [self.main_object.push_button_ipn, "Office/file-conversion-one", self.main_object.ipn_area, "局域网文件传输"],
-            "todo": [self.main_object.push_button_todo, "Edit/plan", self.main_object.todo_area, "待办事项"],
-            "book": [self.main_object.push_button_book, "Office/book-one", self.main_object.book_area, "阅读"],
-            "music": [self.main_object.push_button_music, "Music/music-one", self.main_object.music_area, "音乐"],
-            "game": [self.main_object.push_button_game, "Travel/planet", self.main_object.game_area, "更多"],
+            # 菜单名称     菜单按钮                                   菜单图标                        菜单区域                           菜单标题
+            "user":      [self.main_object.push_button_user,       "Peoples/people",              self.main_object.user_area,      "用户管理"],
+            "setting":   [self.main_object.push_button_setting,    "Base/setting-two",            self.main_object.setting_area,   "面板设置"],
+            "trending":  [self.main_object.push_button_trending,   "Energy/fire",                 self.main_object.top_area,       "全网热搜"],
+            "translate": [self.main_object.push_button_translate,  "Base/translate",              self.main_object.translate_area, "快捷翻译"],
+            "chat":      [self.main_object.push_button_chat,       "Abstract/smart-optimization", self.main_object.chat_area,      "AI对话"],
+            "tool":      [self.main_object.push_button_tool,       "Others/toolkit",              self.main_object.tool_area,      "工具箱"],
+            "looking":   [self.main_object.push_button_looking,    "Base/preview-open",           self.main_object.looking_area,   "信息聚合"],
+            "search":    [self.main_object.push_button_search,     "Base/search",                 self.main_object.search_area,    "本地搜索"],
+            "ipn":       [self.main_object.push_button_ipn,        "Office/file-conversion-one",  self.main_object.ipn_area,       "文件传输"],
+            "todo":      [self.main_object.push_button_todo,       "Edit/plan",                   self.main_object.todo_area,      "待办事项"],
+            "book":      [self.main_object.push_button_book,       "Office/book-one",             self.main_object.book_area,      "文本阅读"],
+            "music":     [self.main_object.push_button_music,      "Music/music-one",             self.main_object.music_area,     "本地音乐"],
+            "website":   [self.main_object.push_button_website,    "Travel/planet",               self.main_object.website_area,   "网址导航"],
         }
         # 初始化卡片位置数据
         self.main_object.update_load_window("正在初始化主卡片位置...")
@@ -197,7 +205,7 @@ class MainCardManager(QObject):
             self.main_object.todo_area = QScrollArea(self.main_object.widget_base)
             self.main_object.book_area = QScrollArea(self.main_object.widget_base)
             self.main_object.music_area = QScrollArea(self.main_object.widget_base)
-            self.main_object.game_area = QScrollArea(self.main_object.widget_base)
+            self.main_object.website_area = QScrollArea(self.main_object.widget_base)
             # 初始化主卡片区域
             area_list = [
                 self.main_object.top_area,
@@ -210,7 +218,7 @@ class MainCardManager(QObject):
                 self.main_object.todo_area,
                 self.main_object.book_area,
                 self.main_object.music_area,
-                self.main_object.game_area,
+                self.main_object.website_area,
             ]
             for area in area_list:
                 font = QFont()
@@ -242,7 +250,7 @@ class MainCardManager(QObject):
             self.main_object.todo_area,
             self.main_object.book_area,
             self.main_object.music_area,
-            self.main_object.game_area,
+            self.main_object.website_area,
         ]
         for area in self.area_list:
             area.setParent(self.main_object.widget_base)
@@ -257,7 +265,7 @@ class MainCardManager(QObject):
         self.main_object.push_button_user.clicked.connect(self.push_button_user_click)
         self.main_object.push_button_setting.clicked.connect(self.push_button_setting_click)
         # self.main_object.push_button_exit.clicked.connect(partial(self.main_object.quit_before,  False))
-        self.main_object.push_button_weibo_info.clicked.connect(self.push_button_weibo_click)
+        self.main_object.push_button_trending.clicked.connect(self.push_button_weibo_click)
         self.main_object.push_button_translate.clicked.connect(self.push_button_translate_click)
         self.main_object.push_button_chat.clicked.connect(self.push_button_chat_click)
         self.main_object.push_button_tool.clicked.connect(self.push_button_tool_click)
@@ -267,13 +275,13 @@ class MainCardManager(QObject):
         self.main_object.push_button_todo.clicked.connect(self.push_button_todo_click)
         self.main_object.push_button_book.clicked.connect(self.push_button_book_click)
         self.main_object.push_button_music.clicked.connect(self.push_button_music_click)
-        self.main_object.push_button_game.clicked.connect(self.push_button_game_click)
+        self.main_object.push_button_website.clicked.connect(self.push_button_website_click)
 
     def init_main_card(self):
         """
         初始化主卡片区域中的主区域
         """
-        width  = self.main_card_width - self.main_object.label_menu.width() - self.CARD_INTERVAL
+        width  = self.main_card_width - MENU_DEFAULT_WIDTH - self.CARD_INTERVAL
         height = self.main_card_height
         for area in self.area_list:
             area.hide()
@@ -361,9 +369,9 @@ class MainCardManager(QObject):
                                 cache=in_card_cache, data=in_card_data,
                                 toolkit=self.main_object.toolkit, logger=self.main_object.info_logger,
                                 save_data_func=self.save_card_data_func)
-            elif card_data["name"] == "GameCard":
-                card_area = self.main_object.game_area
-                card = GameCard(main_object=self.main_object, parent=self.main_object, theme=theme, card=card_area,
+            elif card_data["name"] == "WebsiteCard":
+                card_area = self.main_object.website_area
+                card = WebsiteCard(main_object=self.main_object, parent=self.main_object, theme=theme, card=card_area,
                                 cache=in_card_cache, data=in_card_data,
                                 toolkit=self.main_object.toolkit, logger=self.main_object.info_logger,
                                 save_data_func=self.save_card_data_func)
@@ -427,12 +435,11 @@ class MainCardManager(QObject):
             menu_x = self.main_card_x + self.main_card_width - self.main_object.label_menu.width()
             menu_y = self.main_card_y
         else:
-            menu_x = self.main_card_x - self.main_object.label_menu.width() - self.CARD_INTERVAL
+            menu_x = self.main_card_x - MENU_DEFAULT_WIDTH - self.CARD_INTERVAL
             menu_y = self.main_card_y
         width  = self.main_object.label_menu.width()
         height = self.main_card_height
         self.main_object.label_menu.setGeometry(QtCore.QRect(menu_x, menu_y, width, height))
-        self.main_object.label_menu_background.setGeometry(QtCore.QRect(menu_x, menu_y, width, height))
         # 调整菜单按钮指示位置
         if is_init:
             button_pos = get_position(self.main_object.label_menu)
@@ -454,7 +461,6 @@ class MainCardManager(QObject):
                 value[2].show()
             else:
                 value[2].hide()
-            button.setToolTip(value[3])
             button.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
         return 0, 0, width, height
 
@@ -466,6 +472,44 @@ class MainCardManager(QObject):
             self.main_object.toolkit.animation_util.start_line_y_animation(
                 self.main_object.label_current_menu, self.main_object.label_current_menu.y(), get_position(button).y() + 6)
             print("设置菜单按钮指示位置")
+
+    def change_menu_label_width(self, enter: bool):
+        # 当前菜单宽度
+        current_menu_width = self.main_object.label_menu.width()
+        # 菜单内容位置
+        # 总长 - 默认菜单宽度 - 外边距
+        left_menu_content_x = -(MENU_SPREAD_WIDTH - MENU_DEFAULT_WIDTH - MENU_MARGIN_WIDTH)
+        right_menu_content_x = MENU_MARGIN_WIDTH
+        # 菜单默认情况下的横轴位置(最窄宽度)
+        if self.menu_position == card_constant.MENU_POSITION_RIGHT:
+            menu_x = self.main_card_x + self.main_card_width - MENU_DEFAULT_WIDTH
+        else:
+            menu_x = self.main_card_x - MENU_DEFAULT_WIDTH - self.CARD_INTERVAL
+        # 判断鼠标是进入还是退出菜单
+        if enter:
+            end_width = MENU_SPREAD_WIDTH
+            if self.menu_position == card_constant.MENU_POSITION_RIGHT:
+                end_x = menu_x - (MENU_SPREAD_WIDTH - MENU_DEFAULT_WIDTH)
+                end_content_x = right_menu_content_x
+            else:
+                end_x = menu_x
+                end_content_x = right_menu_content_x
+        else:
+            end_width = MENU_DEFAULT_WIDTH
+            if self.menu_position == card_constant.MENU_POSITION_RIGHT:
+                end_x = menu_x
+                end_content_x = left_menu_content_x
+            else:
+                end_x = menu_x
+                end_content_x = right_menu_content_x
+        if end_width == current_menu_width:
+            return
+        # 从动画改为直接修改位置
+        self.main_object.label_menu.setGeometry(
+            QtCore.QRect(end_x, self.main_object.label_menu.y(), end_width, self.main_object.label_menu.height()))
+        self.main_object.label_menu_content.setGeometry(
+            QtCore.QRect(end_content_x, self.main_object.label_menu_content.y(),
+                         self.main_object.label_menu_content.width(), self.main_object.label_menu_content.height()))
 
     def theme_switch_button_click(self):
         theme_module.change_theme_data(self.main_object)
@@ -564,15 +608,15 @@ class MainCardManager(QObject):
             self.main_object.info_logger.card_error("主程序", "切换翻译失败,错误信息:{}".format(e))
             self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换翻译失败,请稍后重试")
 
-    def push_button_game_click(self):
-        print("点击Game按钮")
+    def push_button_website_click(self):
+        print("点击Website按钮")
         try:
-            self.main_object.info_logger.card_info("主程序", "切换游戏完成")
-            self.see_card = "game"
+            self.main_object.info_logger.card_info("主程序", "切换网址导航完成")
+            self.see_card = "website"
             self.show_change()
         except Exception as e:
-            self.main_object.info_logger.card_error("主程序", "切换游戏失败,错误信息:{}".format(e))
-            self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换游戏失败,请稍后重试")
+            self.main_object.info_logger.card_error("主程序", "切换网址导航失败,错误信息:{}".format(e))
+            self.main_object.toolkit.dialog_module.box_information(self.main_object, "错误信息", "切换网址导航失败,请稍后重试")
 
     def push_button_user_click(self):
         print("点击User按钮")
@@ -649,7 +693,7 @@ class MainCardManager(QObject):
             self.main_card_x = all_card_x
             self.main_card_y = all_card_y
         else:
-            self.main_card_x = all_card_x + self.main_object.label_menu.width() + self.CARD_INTERVAL
+            self.main_card_x = all_card_x + MENU_DEFAULT_WIDTH + self.CARD_INTERVAL
             self.main_card_y = all_card_y
         width = int(card_map["size"].split("_")[0])
         height = int(card_map["size"].split("_")[1])
@@ -661,13 +705,25 @@ class MainCardManager(QObject):
         self.menu_position = self.main_object.form_menu_locate
         self.init_geometry_data(card_data)
         # 重新设置主卡片区域位置
-        width  = self.main_card_width - self.main_object.label_menu.width() - self.CARD_INTERVAL
+        width  = self.main_card_width - MENU_DEFAULT_WIDTH - self.CARD_INTERVAL
         height = self.main_card_height
         for area in self.area_list:
             area.setGeometry(QtCore.QRect(self.main_card_x, self.main_card_y, width, height))
         self.main_object.tab_widget_user.setGeometry(QtCore.QRect(0, 0, width, height))
         # 初始化菜单
         self.show_change(is_init=True)
+        # 菜单左右位置调整
+        for key, value in self.menu_button_map.items():
+            button = value[0]
+            button.refresh_ui(menu_location=self.menu_position)
+        self.main_object.theme_switch_button.refresh_ui(menu_location=self.menu_position)
+        # 菜单内容位置调整
+        if self.menu_position == card_constant.MENU_POSITION_RIGHT:
+            # 总长 - 默认菜单宽度 - 外边距
+            content_left = -(MENU_SPREAD_WIDTH - MENU_DEFAULT_WIDTH - MENU_MARGIN_WIDTH)
+            self.main_object.label_menu_content.setGeometry(QRect(content_left, 0, MENU_SPREAD_WIDTH, 590))
+        else:
+            self.main_object.label_menu_content.setGeometry(QRect(MENU_MARGIN_WIDTH, 0, MENU_SPREAD_WIDTH, 590))
         # 设置标题栏样式
         self.set_header_button_theme()
 
@@ -932,116 +988,92 @@ class MainCardManager(QObject):
         if hasattr(self.main_object, "label_menu") and self.main_object.label_menu is not None:
             self.main_object.label_menu.show()
             self.main_object.label_current_menu.show()
-            self.main_object.label_menu_background.show()
             self.main_object.theme_switch_button.show()
             return
         # 菜单栏
-        self.main_object.label_menu = QWidget(self.main_object.widget_base)
+        self.main_object.label_menu = MenuCard(parent=self.main_object.widget_base, main_object=self.main_object, is_dark=self.main_object.is_dark)
         self.main_object.label_menu.setObjectName(u"label_menu")
-        self.main_object.label_menu.setGeometry(QRect(0, 0, 38, 590))
-        self.main_object.label_menu.setStyleSheet("""
-        QWidget {
-            border-style: solid;
-            border-radius: 15px;
-            border: none;
-            background-color: rgba(255, 255, 255, 160);
-        }""")
-        # 菜单栏底部的背景专用层(为了防止加了阴影效果导致主题切换按钮的图标显示不出来)
-        self.main_object.label_menu_background = QWidget(self.main_object.widget_base)
-        self.main_object.label_menu_background.setObjectName(u"label_menu_background")
-        self.main_object.label_menu_background.setGeometry(QRect(0, 0, 38, 590))
-        self.main_object.label_menu_background.setStyleSheet("""
-        QWidget {
-            border-style: solid;
-            border-radius: 15px;
-            border: none;
-            background-color: transparent;
-        }""")
+        self.main_object.label_menu.setGeometry(QRect(0, 0, MENU_DEFAULT_WIDTH, 590))
+        self.main_object.label_menu.set_theme(self.main_object.is_dark)
+        # 菜单栏内容
+        self.main_object.label_menu_content = QWidget(self.main_object.label_menu)
+        self.main_object.label_menu_content.setObjectName(u"label_menu_content")
+        self.main_object.label_menu_content.setStyleSheet("background-color: transparent; border: none;")
+        if self.menu_position == card_constant.MENU_POSITION_RIGHT:
+            # 总长 - 默认菜单宽度 - 外边距
+            content_left = -(MENU_SPREAD_WIDTH - MENU_DEFAULT_WIDTH - MENU_MARGIN_WIDTH)
+            self.main_object.label_menu_content.setGeometry(QRect(content_left, 0, MENU_SPREAD_WIDTH, 590))
+        else:
+            self.main_object.label_menu_content.setGeometry(QRect(MENU_MARGIN_WIDTH, 0, MENU_SPREAD_WIDTH, 590))
         # 菜单栏布局
-        self.main_object.layout_menu_background = QVBoxLayout(self.main_object.label_menu)
-        self.main_object.layout_menu_background.setContentsMargins(2, 10, 4, 10)
+        self.main_object.layout_menu_background = QVBoxLayout(self.main_object.label_menu_content)
+        self.main_object.layout_menu_background.setContentsMargins(0, MENU_MARGIN_WIDTH, 0, 0)
         self.main_object.layout_menu_background.setSpacing(2)
         # 菜单栏指示按钮位置的指示条
-        self.main_object.label_menu.lower()
-        self.main_object.label_menu_background.lower()
+        # self.main_object.label_menu.lower()
         self.main_object.label_current_menu = QLabel(self.main_object.widget_base)
         self.main_object.label_current_menu.setObjectName(u"label_current_menu")
         self.main_object.label_current_menu.setGeometry(QRect(0, 0, 4, 21))
-        # 菜单栏按钮列表
-        font = QFont()
-        font.setPointSize(11)
-        font.setBold(True)
-        font.setKerning(True)
-        button_names = [
-            'user', 'setting',
-            'weibo_info', 'translate', 'chat', 'tool', 'looking', 'search', 'ipn', 'todo', 'book', 'music', 'game'
-        ]
-        for name in button_names:
+        # 菜单map
+        menu_button_map = {
+            "user": "用户管理",
+            "setting": "面板设置",
+            "trending": "全网热搜",
+            "translate": "快捷翻译",
+            "chat": "AI对话",
+            "tool": "工具箱",
+            "looking": "信息聚合",
+            "search": "本地搜索",
+            "ipn": "文件传输",
+            "todo": "待办事项",
+            "book": "文本阅读",
+            "music": "本地音乐",
+            "website": "网址导航",
+        }
+        # 菜单按钮
+        for key in menu_button_map.keys():
+            button_name = key
+            button_title = menu_button_map[key]
             # 创建按钮
-            menu_button = QPushButton(self.main_object.label_menu)
-            setattr(self.main_object, f'push_button_{name}', menu_button)
-            # 设置按钮属性
-            menu_button.setFixedSize(self.menu_button_width, self.menu_button_width)
-            menu_button.setObjectName(f'push_button_{name}')
-            menu_button.setStyleSheet("""
-            QPushButton {
-                color: #FFFFFF;
-                border: 10px solid #000000;
-                background-color: rgba(0, 0, 0, 0);
-            }
-            QPushButton:hover {
-                background: rgba(255, 255, 255, 160);
-                color: rgb(0, 0, 0);
-            }""")
-            menu_button.setFont(font)
-            menu_button.setIconSize(QSize(22, 22))
+            menu_button = MenuNormalButton(parent=self.main_object.label_menu, main_object=self.main_object,
+                                     name=button_name, title=button_title, menu_location=self.menu_position,
+                                     is_dark=self.main_object.is_dark)
             self.main_object.layout_menu_background.addWidget(menu_button)
             # 上下半部分需要增加伸缩条和主题切换按钮
-            if name == 'setting':
+            if button_name == 'setting':
                 # 主题切换按钮
-                print(f"self.main_object.is_dark:{self.main_object.is_dark}")
-                self.main_object.theme_switch_button = ThemeSwitchButton(default_theme=not self.main_object.is_dark)
+                self.main_object.theme_switch_button = MenuThemeButton(parent=self.main_object.label_menu,
+                                   main_object=self.main_object, menu_location=self.menu_position, is_dark=self.main_object.is_dark)
                 self.main_object.theme_switch_button.clicked.connect(self.theme_switch_button_click)
-                self.main_object.theme_switch_button.setFixedSize(QSize(self.main_object.label_menu.width() - self.CARD_INTERVAL + 5, 58))
-                self.main_object.theme_switch_button.resize(self.main_object.theme_switch_button.size())
-                self.main_object.theme_switch_button.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
+                self.main_object.theme_switch_button.setStyleSheet(self.main_object.toolkit.style_util.get_menu_button_style(False))
+                self.main_object.theme_switch_button.setCursor(QCursor(Qt.PointingHandCursor))  # 鼠标手形
                 self.main_object.layout_menu_background.addWidget(self.main_object.theme_switch_button)
                 # 伸缩条
                 self.main_object.layout_menu_background.addStretch()
-            # 底部伸缩条
-            if name == button_names[-1]:
-                self.main_object.layout_menu_background.addStretch()
+        # 底部伸缩条
+        self.main_object.layout_menu_background.addStretch()
         # 强制刷新
         self.main_object.label_menu.update()
 
     def set_theme(self):
         # 菜单样式
+        self.main_object.label_menu.set_theme(self.main_object.is_dark)
         if self.main_object.is_dark:
-            self.main_object.label_menu.setStyleSheet("border-radius: 15px; border: 1px solid #2C2E39; background-color: rgba(34, 34, 34, 254);")
-            self.main_object.label_menu_background.setStyleSheet("border-radius: 15px; border: none; background-color: rgba(34, 34, 34, 254);")
-            self.main_object.label_current_menu.setStyleSheet("border-radius: 2px; border: 0px solid white; background-color: white;")
-            # style_util.set_card_shadow_effect(self.main_object.label_menu_background)       # 添加外部阴影效果
+            self.main_object.label_current_menu.setStyleSheet("border-radius: 2px; border: none; background: white;")
         else:
-            self.main_object.label_menu.setStyleSheet("border-radius: 15px; border: none; background-color:rgba(255, 255, 255, 160);")
-            self.main_object.label_menu_background.setStyleSheet("border-radius: 15px; border: 1px solid rgba(255, 255, 255, 170); background-color: transparent;")
-            self.main_object.label_current_menu.setStyleSheet("border-radius: 2px; border: 0px solid black; background-color: black;")
-            # style_util.remove_card_shadow_effect(self.main_object.label_menu_background)    # 移除外部阴影效果
+            self.main_object.label_current_menu.setStyleSheet("border-radius: 2px; border: none; background: black;")
         self.set_menu_theme()
         # 卡片样式
         for card in self.main_object.main_card_list:
             if self.main_object.is_dark:
                 card.card.setStyleSheet(self.main_object.toolkit.style_util.card_dark_style)
-                # style_util.set_card_shadow_effect(card.card)        # 添加外部阴影效果
             else:
                 card.card.setStyleSheet(self.main_object.toolkit.style_util.card_style)
-                # style_util.remove_card_shadow_effect(card.card)     # 移除外部阴影效果
             card.set_theme(self.main_object.is_dark)
         if self.main_object.is_dark:
             self.main_object.user_area.setStyleSheet(self.main_object.toolkit.style_util.card_dark_style)
-            # style_util.set_card_shadow_effect(self.main_object.user_area)        # 添加外部阴影效果
         else:
             self.main_object.user_area.setStyleSheet(self.main_object.toolkit.style_util.card_style)
-            # style_util.remove_card_shadow_effect(self.main_object.user_area)     # 移除外部阴影效果
         # 设置标题栏按钮样式
         self.set_header_button_theme()
 
@@ -1130,7 +1162,6 @@ class MainCardManager(QObject):
                 value[2].show()
             else:
                 value[2].hide()
-            button.setToolTip(value[3])
 
     def show_form(self):
         for card in self.main_object.main_card_list:

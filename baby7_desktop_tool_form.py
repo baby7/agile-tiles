@@ -71,19 +71,26 @@ class Ui_Form(object):
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.push_button_setting_system = QPushButton(self.widget_setting_setting)
-        self.push_button_setting_system.setObjectName(u"push_button_setting_system")
-        self.push_button_setting_system.setMinimumSize(QSize(70, 70))
-        self.push_button_setting_system.setStyleSheet(u"")
-
-        self.horizontalLayout.addWidget(self.push_button_setting_system)
-
         self.push_button_setting_card_permutation = QPushButton(self.widget_setting_setting)
         self.push_button_setting_card_permutation.setObjectName(u"push_button_setting_card_permutation")
         self.push_button_setting_card_permutation.setMinimumSize(QSize(70, 70))
         self.push_button_setting_card_permutation.setStyleSheet(u"")
 
         self.horizontalLayout.addWidget(self.push_button_setting_card_permutation)
+
+        self.push_button_setting_menu = QPushButton(self.widget_setting_setting)
+        self.push_button_setting_menu.setObjectName(u"push_button_setting_menu")
+        self.push_button_setting_menu.setMinimumSize(QSize(70, 70))
+        self.push_button_setting_menu.setStyleSheet(u"")
+
+        self.horizontalLayout.addWidget(self.push_button_setting_menu)
+
+        self.push_button_setting_location = QPushButton(self.widget_setting_setting)
+        self.push_button_setting_location.setObjectName(u"push_button_setting_location")
+        self.push_button_setting_location.setMinimumSize(QSize(70, 70))
+        self.push_button_setting_location.setStyleSheet(u"")
+
+        self.horizontalLayout.addWidget(self.push_button_setting_location)
 
         self.push_button_setting_screen = QPushButton(self.widget_setting_setting)
         self.push_button_setting_screen.setObjectName(u"push_button_setting_screen")
@@ -92,19 +99,35 @@ class Ui_Form(object):
 
         self.horizontalLayout.addWidget(self.push_button_setting_screen)
 
-        self.push_button_setting_theme = QPushButton(self.widget_setting_setting)
-        self.push_button_setting_theme.setObjectName(u"push_button_setting_theme")
-        self.push_button_setting_theme.setMinimumSize(QSize(70, 70))
-        self.push_button_setting_theme.setStyleSheet(u"")
-
-        self.horizontalLayout.addWidget(self.push_button_setting_theme)
-
         self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout.addItem(self.horizontalSpacer_2)
 
 
         self.gridLayout_3.addLayout(self.horizontalLayout, 0, 0, 1, 1)
+
+        self.horizontalLayout_8 = QHBoxLayout()
+        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
+        self.push_button_setting_system = QPushButton(self.widget_setting_setting)
+        self.push_button_setting_system.setObjectName(u"push_button_setting_system")
+        self.push_button_setting_system.setMinimumSize(QSize(70, 70))
+        self.push_button_setting_system.setStyleSheet(u"")
+
+        self.horizontalLayout_8.addWidget(self.push_button_setting_system)
+
+        self.push_button_setting_theme = QPushButton(self.widget_setting_setting)
+        self.push_button_setting_theme.setObjectName(u"push_button_setting_theme")
+        self.push_button_setting_theme.setMinimumSize(QSize(70, 70))
+        self.push_button_setting_theme.setStyleSheet(u"")
+
+        self.horizontalLayout_8.addWidget(self.push_button_setting_theme)
+
+        self.horizontalSpacer_10 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_8.addItem(self.horizontalSpacer_10)
+
+
+        self.gridLayout_3.addLayout(self.horizontalLayout_8, 1, 0, 1, 1)
 
 
         self.verticalLayout.addWidget(self.widget_setting_setting)
@@ -1211,9 +1234,11 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
         self.label_17.setText(QCoreApplication.translate("Form", u"\u8bbe\u7f6e\u76f8\u5173", None))
-        self.push_button_setting_system.setText(QCoreApplication.translate("Form", u"\u7cfb\u7edf\u8bbe\u7f6e", None))
         self.push_button_setting_card_permutation.setText(QCoreApplication.translate("Form", u"\u5361\u7247\u8bbe\u8ba1", None))
+        self.push_button_setting_menu.setText(QCoreApplication.translate("Form", u"\u83dc\u5355\u8bbe\u7f6e", None))
+        self.push_button_setting_location.setText(QCoreApplication.translate("Form", u"\u5c4f\u5e55\u548c\u4f4d\u7f6e", None))
         self.push_button_setting_screen.setText(QCoreApplication.translate("Form", u"\u754c\u9762\u8bbe\u7f6e", None))
+        self.push_button_setting_system.setText(QCoreApplication.translate("Form", u"\u7cfb\u7edf\u8bbe\u7f6e", None))
         self.push_button_setting_theme.setText(QCoreApplication.translate("Form", u"\u4e3b\u9898\u8bbe\u7f6e", None))
         self.label_20.setText(QCoreApplication.translate("Form", u"\u66f4\u65b0\u548c\u534f\u8bae", None))
         self.push_button_setting_version_info.setText(QCoreApplication.translate("Form", u"\u7248\u672c\u4fe1\u606f", None))

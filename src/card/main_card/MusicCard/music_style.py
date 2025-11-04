@@ -94,27 +94,27 @@ QSlider::handle:vertical {
 
 music_progress_style = """
 QSlider {
-    background: transparent
+    background: transparent;
 }
 QSlider::groove:horizontal {
-    background-color: #444444;
-    height: 4px;
-    border-radius: 2px;
+    background-color: rgba(125, 125, 125, 125);
+    height: 6px;
+    border-radius: 3px;
 }
 QSlider::sub-page:horizontal {
-    background-color: #666666;
-    border-radius: 2px;
+    background-color: rgba(200, 200, 200, 200);
+    border-radius: 3px;
 }
 QSlider::add-page:horizontal {
-    background-color: #333333;
-    border-radius: 2px;
+    background-color: rgba(125, 125, 125, 80);
+    border-radius: 3px;
 }
 QSlider::handle:horizontal {
-    background: #666666;
-    width: 8px;      /* 竖条宽度 */
-    height: 8px;    /* 竖条高度 */
+    background: transparent;
+    width: 10px;      /* 竖条宽度 */
+    height: 10px;    /* 竖条高度 */
     margin: -4px 0;  /* 垂直居中 */
     border-radius: 5px;
-    border: 1px solid #888888;  /* 添加边框 */
+    border: none;  /* 添加边框 */
 }
 """

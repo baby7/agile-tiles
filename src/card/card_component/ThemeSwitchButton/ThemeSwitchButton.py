@@ -149,7 +149,7 @@ class ThemeSwitchButton(QWidget):
         painter.drawEllipse(slider_rect)
         painter.restore()
 
-    def mousePressEvent(self, event: QMouseEvent):
+    def mouse_press_event(self):
         self.m_checked = not self.m_checked
         self.clicked.emit(self.m_checked)
         rect = self.rect().adjusted(self.BORDER_OFFSET, self.BORDER_OFFSET, -self.BORDER_OFFSET, -self.BORDER_OFFSET)

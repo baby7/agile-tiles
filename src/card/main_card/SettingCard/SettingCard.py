@@ -4,7 +4,6 @@ import subprocess
 import sys
 
 from PySide6.QtGui import QCursor
-
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QApplication
 
@@ -88,11 +87,12 @@ class SettingCard(MainCard):
         self.setting_data = self.data.setdefault(self.hardware_id, user_data_common.setting_config)
         self.setting_card_button_list = [
             # 设置
-            [self.parent.push_button_setting_system, "系统设置", "Base", "setting-two", None, None],
             [self.parent.push_button_setting_card_permutation, "卡片设计", "Build", "application", None, None],
+            [self.parent.push_button_setting_menu, "菜单设置", "Base", "hamburger-button", None, None],
+            [self.parent.push_button_setting_location, "屏幕和位置", "Abstract", "app-switch", None, None],
             [self.parent.push_button_setting_screen, "界面设置", "Components", "page", None, None],
+            [self.parent.push_button_setting_system, "系统设置", "Base", "setting-two", None, None],
             [self.parent.push_button_setting_theme, "主题设置", "Clothes", "theme", None, None],
-            # [self.parent.push_button_setting_file, "文件管理", "Office", "folder-open", None, None],
             # 更新和协议
             [self.parent.push_button_setting_version_info, "版本信息", "Communicate", "message", None, None],
             [self.parent.push_button_setting_version, "检查更新", "Base", "refresh", None, None],
@@ -137,9 +137,11 @@ class SettingCard(MainCard):
             setting_card_button[5] = text_label
         # 设置
         self.parent.push_button_setting_card_permutation.clicked.connect(self.push_button_setting_card_permutation_click)
-        self.parent.push_button_setting_theme.clicked.connect(self.push_button_setting_theme_click)
-        self.parent.push_button_setting_system.clicked.connect(self.push_button_setting_system_click)
+        self.parent.push_button_setting_menu.clicked.connect(self.push_button_setting_menu_click)
+        self.parent.push_button_setting_location.clicked.connect(self.push_button_setting_location_click)
         self.parent.push_button_setting_screen.clicked.connect(self.push_button_setting_screen_click)
+        self.parent.push_button_setting_system.clicked.connect(self.push_button_setting_system_click)
+        self.parent.push_button_setting_theme.clicked.connect(self.push_button_setting_theme_click)
         # 更新和协议
         self.parent.push_button_setting_version_info.clicked.connect(self.push_button_setting_version_info_click)
         self.parent.push_button_setting_version.clicked.connect(self.push_button_setting_version_click)
@@ -214,6 +216,24 @@ class SettingCard(MainCard):
         self.setting_system_win.refresh_geometry(self.toolkit.resolution_util.get_screen(self.main_object))
         # self.setting_system_win.set_top()
         self.setting_system_win.show()
+
+    # 打开设置菜单窗口
+    def push_button_setting_menu_click(self):
+        from src.card.main_card.SettingCard.setting.setting_menu import SettingMenuWindow
+        self.toolkit.resolution_util.out_animation(self.main_object)
+        self.setting_menu_win = SettingMenuWindow(self, self.main_object, self.setting_data)
+        self.setting_menu_win.refresh_geometry(self.toolkit.resolution_util.get_screen(self.main_object))
+        # self.setting_menu_win.set_top()
+        self.setting_menu_win.show()
+
+    # 打开设置屏幕和位置窗口
+    def push_button_setting_location_click(self):
+        from src.card.main_card.SettingCard.setting.setting_location import SettingLocationWindow
+        self.toolkit.resolution_util.out_animation(self.main_object)
+        self.setting_location_win = SettingLocationWindow(self, self.main_object, self.setting_data)
+        self.setting_location_win.refresh_geometry(self.toolkit.resolution_util.get_screen(self.main_object))
+        # self.setting_location_win.set_top()
+        self.setting_location_win.show()
 
     # 打开设置界面窗口
     def push_button_setting_screen_click(self):

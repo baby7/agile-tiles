@@ -100,22 +100,6 @@ background-color:rgba(255, 255, 255, 200);
           <item row="0" column="0">
            <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
-             <widget class="QPushButton" name="push_button_setting_system">
-              <property name="minimumSize">
-               <size>
-                <width>70</width>
-                <height>70</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true"/>
-              </property>
-              <property name="text">
-               <string>系统设置</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QPushButton" name="push_button_setting_card_permutation">
               <property name="minimumSize">
                <size>
@@ -128,6 +112,38 @@ background-color:rgba(255, 255, 255, 200);
               </property>
               <property name="text">
                <string>卡片设计</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="push_button_setting_menu">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>70</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string>菜单设置</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="push_button_setting_location">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>70</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string>屏幕和位置</string>
               </property>
              </widget>
             </item>
@@ -148,6 +164,39 @@ background-color:rgba(255, 255, 255, 200);
              </widget>
             </item>
             <item>
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <item>
+             <widget class="QPushButton" name="push_button_setting_system">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>70</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string>系统设置</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="push_button_setting_theme">
               <property name="minimumSize">
                <size>
@@ -164,7 +213,7 @@ background-color:rgba(255, 255, 255, 200);
              </widget>
             </item>
             <item>
-             <spacer name="horizontalSpacer_2">
+             <spacer name="horizontalSpacer_10">
               <property name="orientation">
                <enum>Qt::Orientation::Horizontal</enum>
               </property>
