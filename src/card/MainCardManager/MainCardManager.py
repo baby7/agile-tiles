@@ -2,7 +2,7 @@ import copy
 from functools import partial
 
 from PySide6 import QtGui, QtCore
-from PySide6.QtCore import QObject, Qt, QSize, QRect, QTimer
+from PySide6.QtCore import QObject, Qt, QSize, QRect, QTimer, QParallelAnimationGroup, QEasingCurve
 from PySide6.QtGui import QIcon, QFont, QCursor, QAction
 from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QScrollArea, QFrame, QMenu, QToolButton
 
@@ -473,9 +473,11 @@ class MainCardManager(QObject):
                 self.main_object.label_current_menu, self.main_object.label_current_menu.y(), get_position(button).y() + 6)
             print("设置菜单按钮指示位置")
 
-    def change_menu_label_width(self, enter: bool):
-        # 当前菜单宽度
+    def change_menu_label_width(self, enter: bool, animation_time: int):
+        # 当前菜单和内容的位置和大小
         current_menu_width = self.main_object.label_menu.width()
+        current_menu_x = self.main_object.label_menu.x()
+        current_menu_content_x = self.main_object.label_menu_content.x()
         # 菜单内容位置
         # 总长 - 默认菜单宽度 - 外边距
         left_menu_content_x = -(MENU_SPREAD_WIDTH - MENU_DEFAULT_WIDTH - MENU_MARGIN_WIDTH)
@@ -504,12 +506,19 @@ class MainCardManager(QObject):
                 end_content_x = right_menu_content_x
         if end_width == current_menu_width:
             return
-        # 从动画改为直接修改位置
-        self.main_object.label_menu.setGeometry(
-            QtCore.QRect(end_x, self.main_object.label_menu.y(), end_width, self.main_object.label_menu.height()))
-        self.main_object.label_menu_content.setGeometry(
-            QtCore.QRect(end_content_x, self.main_object.label_menu_content.y(),
-                         self.main_object.label_menu_content.width(), self.main_object.label_menu_content.height()))
+        # 动画方式
+        curve = QEasingCurve.Type.Linear
+        animation_group = QParallelAnimationGroup(self.main_object)
+        menu_animation = self.main_object.toolkit.animation_util.get_line_x_and_width_animation(self.main_object.label_menu,
+               start_x=current_menu_x, end_x=end_x, start_width=current_menu_width, end_width=end_width,
+               run_time=animation_time, curve=curve)
+        content_animation = self.main_object.toolkit.animation_util.get_line_x_and_width_animation(self.main_object.label_menu_content,
+               start_x=current_menu_content_x, end_x=end_content_x, start_width=MENU_SPREAD_WIDTH, end_width=MENU_SPREAD_WIDTH,
+               run_time=animation_time, curve=curve
+        )
+        animation_group.addAnimation(content_animation)
+        animation_group.addAnimation(menu_animation)
+        animation_group.start()
 
     def theme_switch_button_click(self):
         theme_module.change_theme_data(self.main_object)

@@ -7,6 +7,7 @@ from PySide6.QtWidgets import QListWidget, QListWidgetItem
 from PySide6.QtCore import Qt, Signal
 
 from src.card.main_card.SettingCard.setting.setting_menu_form import Ui_Form
+from src.constant import data_save_constant
 from src.module.Box import message_box_util
 from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 import src.ui.style_util as style_util
@@ -140,7 +141,10 @@ class SettingMenuWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.setWindowTitle("灵卡面板 - 菜单设置")
         self.titleBar.minBtn.close()
         self.titleBar.maxBtn.close()
-        # 数据初始化
+        # 加载数据
+        self.load_date()
+        # 点击事件
+        self.push_button_ok.clicked.connect(self.push_button_submit_clicked)
         # 官方菜单数据
         self.official_menu_data = [
             {"name": "user", "title": "用户管理", "fixed": True},
@@ -462,6 +466,38 @@ class SettingMenuWindow(AgileTilesAcrylicWindow, Ui_Form):
                     border-radius: 3px;
                 }
             """)
+
+    def load_date(self):
+        """
+        加载数据到界面
+        """
+        try:
+            # 菜单栏位置
+            if self.setting_config['menuPosition'] == "Left":
+                self.radio_button_menu_location_left.setChecked(True)
+            else:
+                self.radio_button_menu_location_right.setChecked(True)
+        except Exception as e:
+            print(f"setting_screen load_date 2 error: {str(e)}")
+
+
+    def push_button_submit_clicked(self):
+        confirm = message_box_util.box_acknowledgement(self.use_parent, "注意", "确定要保存界面设置吗？")
+        if confirm:
+            try:
+                # 菜单栏位置
+                if self.radio_button_menu_location_left.isChecked():
+                    self.setting_config['menuPosition'] = "Left"
+                else:
+                    self.setting_config['menuPosition'] = "Right"
+                # 保存数据
+                self.parent.save_setting_to_main(trigger_type=data_save_constant.TRIGGER_TYPE_SETTING_SCREEN, in_data=self.setting_config)
+                self.close()
+            except Exception as e:
+                print(f"setting_screen push_button_submit_clicked 1 error: {str(e)}")
+            return
+        else:
+            return
 
     def closeEvent(self, event):
         # 继续正常的关闭流程

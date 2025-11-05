@@ -1432,6 +1432,8 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             self.normal_card_manager.show_form()
         if self.main_card_manager is not None:
             self.main_card_manager.show_form()
+        # 如果菜单在展开状态就切换到默认状态
+        self.label_menu.other_condition()
 
     def notify_card_hide_form(self):
         """
