@@ -70,7 +70,8 @@ def init_resolution(main_window, is_first=True, out_animation_tag=True, is_show=
     if is_first:
         main_window.setupUi(main_window)
     # 先加载初始值
-    load_data(main_window)
+    load_setting_data(main_window)
+    load_menu_data(main_window)
     # 屏幕列表
     screen_list = QApplication.screens()
     # 默认选择第0个屏幕
@@ -150,9 +151,9 @@ def init_resolution(main_window, is_first=True, out_animation_tag=True, is_show=
         out_animation(main_window)
 
 
-def load_data(main_window):
+def load_setting_data(main_window):
     """
-    加载初始值
+    加载设置初始值
     :param main_window: 主窗口
     """
     if (main_window.main_data is None or main_window.main_data["data"] is None
@@ -177,6 +178,10 @@ def load_data(main_window):
     main_window.form_hide_type = setting_data["wakeUpByMouseHide"]
     # 菜单栏位置
     main_window.form_menu_locate = setting_data['menuPosition']
+    # 菜单栏是否展开
+    if 'menuUnfold' not in setting_data:
+        setting_data["menuUnfold"] = True
+    main_window.form_menu_unfold = setting_data['menuUnfold']
     # 字体
     main_window.form_font_name = setting_data['fontName']
     # 大小
@@ -185,6 +190,17 @@ def load_data(main_window):
         main_window.main_data["height"] = setting_data["height"]
     main_window.form_width = main_window.main_data["width"]
     main_window.form_height = main_window.main_data["height"]
+
+
+def load_menu_data(main_window):
+    """
+    加载菜单初始值
+    :param main_window: 主窗口
+    """
+    if main_window.main_data is None:
+        return
+    if "menu" not in main_window.main_data or len(main_window.main_data["menu"]) < 3:
+        main_window.main_data["menu"] = user_data_common.menu_name_list
 
 
 def in_animation(main_window):

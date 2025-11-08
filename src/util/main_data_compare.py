@@ -1,3 +1,6 @@
+import copy
+
+
 def card_has_change(old_data, new_data):
     """
     判断卡片是否有新增、删除、位置改变
@@ -31,6 +34,11 @@ def card_has_change(old_data, new_data):
     old_big_card_list = old_data["bigCard"]
     new_big_card_list = new_data["bigCard"]
     if len(old_big_card_list) != len(new_big_card_list):
+        return True
+    # 判断菜单数量是否相等
+    old_menu_list = old_data["menu"]
+    new_menu_list = new_data["menu"]
+    if len(old_menu_list) != len(new_menu_list):
         return True
 
     def compare_card_lists(list1, list2):
@@ -72,6 +80,12 @@ def card_has_change(old_data, new_data):
     # 判断主要卡片是否改变
     if compare_card_lists(old_big_card_list, new_big_card_list):
         return True
+    # 判断菜单是否改变
+    old_menu_list_copy = copy.deepcopy(old_menu_list)
+    new_menu_list_copy = copy.deepcopy(new_menu_list)
+    if old_menu_list_copy != new_menu_list_copy:
+        return True
+    # 如果均没有改变
     return False
 
 
@@ -316,7 +330,7 @@ def setting_has_change(old_data, new_data):
                         "screenshotByKeyboard", "screenshotByKeyboardType",
                         "searchByKeyboard", "searchByKeyboardType",
                         "screenName", "windowPosition", "formAnimationType", "formAnimationTime", "wakeUpByMouse",
-                        "wakeUpByMouseTime", "wakeUpByMouseHide", "menuPosition", "fontName", "messageNotification",
+                        "wakeUpByMouseTime", "wakeUpByMouseHide", "menuPosition", "menuUnfold", "fontName", "messageNotification",
                         "autoUpdate"]
     for setting_key in setting_key_list:
         if old_setting.get(setting_key) != new_setting.get(setting_key):
@@ -333,7 +347,7 @@ def setting_screen_has_change(old_data, new_data):
     old_setting = old_data["data"]["SettingCard"]
     new_setting = new_data["data"]["SettingCard"]
     setting_key_list = ["screenName", "windowPosition", "formAnimationType", "formAnimationTime", "wakeUpByMouse",
-                        "wakeUpByMouseTime", "wakeUpByMouseHide", "menuPosition", "fontName"]
+                        "wakeUpByMouseTime", "wakeUpByMouseHide", "menuPosition", "menuUnfold", "fontName"]
     for setting_key in setting_key_list:
         if old_setting.get(setting_key) != new_setting.get(setting_key):
             return True

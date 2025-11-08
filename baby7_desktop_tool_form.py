@@ -1238,7 +1238,7 @@ class Ui_Form(object):
         self.push_button_setting_menu.setText(QCoreApplication.translate("Form", u"\u83dc\u5355\u8bbe\u7f6e", None))
         self.push_button_setting_location.setText(QCoreApplication.translate("Form", u"\u5c4f\u5e55\u548c\u4f4d\u7f6e", None))
         self.push_button_setting_screen.setText(QCoreApplication.translate("Form", u"\u754c\u9762\u8bbe\u7f6e", None))
-        self.push_button_setting_system.setText(QCoreApplication.translate("Form", u"\u7cfb\u7edf\u8bbe\u7f6e", None))
+        self.push_button_setting_system.setText(QCoreApplication.translate("Form", u"\u5feb\u6377\u952e", None))
         self.push_button_setting_theme.setText(QCoreApplication.translate("Form", u"\u4e3b\u9898\u8bbe\u7f6e", None))
         self.label_20.setText(QCoreApplication.translate("Form", u"\u66f4\u65b0\u548c\u534f\u8bae", None))
         self.push_button_setting_version_info.setText(QCoreApplication.translate("Form", u"\u7248\u672c\u4fe1\u606f", None))

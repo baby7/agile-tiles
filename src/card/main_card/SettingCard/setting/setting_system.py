@@ -35,7 +35,7 @@ class SettingSystemWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.widget_base.setLayout(self.gridLayout_5)
         self.gridLayout_5.setContentsMargins(10, 10, 10, 10)
         # 设置标题栏
-        self.setWindowTitle("灵卡面板 - 系统设置")
+        self.setWindowTitle("灵卡面板 - 快捷键")
         self.titleBar.minBtn.close()
         self.titleBar.maxBtn.close()
         # 重新设置QListView,否则qss QComboBox QAbstractItemView不生效

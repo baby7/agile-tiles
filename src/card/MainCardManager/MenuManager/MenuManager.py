@@ -21,14 +21,16 @@ class MenuCard(QLabel):
 
     animation_run_time = 40  # 动画执行时间
     is_dark = None
+    unfold = None
     dark_style_sheet = "border-radius: 15px; border: 1px solid #2C2E39; background-color: rgba(34, 34, 34, 254);"
     light_min_style_sheet = "border-radius: 15px; border: 1px solid rgba(255, 255, 255, 170); background-color: rgba(255, 255, 255, 160);"
     light_max_style_sheet = "border-radius: 15px; border: 1px solid rgba(255, 255, 255, 170); background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(220, 245, 255), stop:1 rgb(250, 215, 254));"
 
-    def __init__(self, parent, main_object, is_dark):
+    def __init__(self, parent, main_object, is_dark: bool, unfold: bool):
         super(MenuCard, self).__init__(parent)
         self.main_object = main_object
         self.is_dark = is_dark
+        self.unfold = unfold
 
     def enterEvent(self, event: QEnterEvent):
         """重写鼠标进入事件"""
@@ -36,6 +38,8 @@ class MenuCard(QLabel):
         super().enterEvent(event)
 
     def show_menu(self):
+        if not self.unfold:
+            return
         if not self.is_dark:
             self.setStyleSheet(self.light_max_style_sheet)
         self.main_object.main_card_manager.change_menu_label_width(enter=True, animation_time=self.animation_run_time)
@@ -50,7 +54,8 @@ class MenuCard(QLabel):
             self.setStyleSheet(self.light_min_style_sheet)
         self.main_object.main_card_manager.change_menu_label_width(enter=False, animation_time=self.animation_run_time)
 
-    def set_theme(self, is_dark: bool):
+    def set_theme(self, is_dark: bool, unfold: bool):
+        self.unfold = unfold
         self.is_dark = is_dark
         if self.is_dark:
             self.setStyleSheet(self.dark_style_sheet)

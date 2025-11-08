@@ -126,7 +126,7 @@ class SettingMenuWindow(AgileTilesAcrylicWindow, Ui_Form):
     user_list = None
     fixed_menu_ids = []
 
-    def __init__(self, parent=None, use_parent=None, setting_config=None):
+    def __init__(self, parent=None, use_parent=None, setting_config=None, menu_data=None):
         super(SettingMenuWindow, self).__init__(is_dark=use_parent.is_dark, form_theme_mode=use_parent.form_theme_mode,
                                                   form_theme_transparency=use_parent.form_theme_transparency)
         self.setupUi(self)
@@ -134,6 +134,7 @@ class SettingMenuWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.parent = parent
         self.use_parent = use_parent
         self.setting_config = setting_config
+        self.user_menu_config = menu_data
         # 初始化布局
         self.widget_base.setLayout(self.gridLayout)
         self.gridLayout.setContentsMargins(10, 10, 10, 10)
@@ -147,27 +148,27 @@ class SettingMenuWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.push_button_ok.clicked.connect(self.push_button_submit_clicked)
         # 官方菜单数据
         self.official_menu_data = [
-            {"name": "user", "title": "用户管理", "fixed": True},
-            {"name": "setting", "title": "设置", "fixed": True},
-            {"name": "trending", "title": "热搜", "fixed": False},
-            {"name": "translate", "title": "翻译", "fixed": False},
-            {"name": "chat", "title": "智能助手", "fixed": False},
-            {"name": "tool", "title": "工具箱", "fixed": False},
-            {"name": "looking", "title": "信息聚合", "fixed": False},
-            {"name": "search", "title": "本地搜索", "fixed": False},
-            {"name": "ipn", "title": "局域网文件传输", "fixed": False},
-            {"name": "todo", "title": "待办事项", "fixed": False},
-            {"name": "book", "title": "阅读", "fixed": False},
-            {"name": "music", "title": "音乐", "fixed": False},
-            {"name": "website", "title": "更多", "fixed": False},
+            {"name": "UserCard", "title": "用户管理", "fixed": True},
+            {"name": "SettingCard", "title": "设置", "fixed": True},
+            {"name": "TopSearchCard", "title": "热搜", "fixed": False},
+            {"name": "TranslateCard", "title": "翻译", "fixed": False},
+            {"name": "ChatCard", "title": "智能助手", "fixed": False},
+            {"name": "ToolCard", "title": "工具箱", "fixed": False},
+            {"name": "InformationCard", "title": "信息聚合", "fixed": False},
+            {"name": "FileSearchCard", "title": "本地搜索", "fixed": False},
+            {"name": "IpnCard", "title": "局域网文件传输", "fixed": False},
+            {"name": "TodoCard", "title": "待办事项", "fixed": False},
+            {"name": "BookCard", "title": "阅读", "fixed": False},
+            {"name": "MusicCard", "title": "音乐", "fixed": False},
+            {"name": "WebsiteCard", "title": "更多", "fixed": False},
         ]
         # 用户菜单配置（不包含固定菜单）
-        self.user_menu_config = [
-            {"name": "trending", "sort": 1},
-            {"name": "translate", "sort": 2},
-            {"name": "chat", "sort": 3}
-        ]
-        self.fixed_menu_ids = ["user", "setting"]
+        # self.user_menu_config = [
+        #     {"name": "trending", "sort": 1},
+        #     {"name": "translate", "sort": 2},
+        #     {"name": "chat", "sort": 3}
+        # ]
+        self.fixed_menu_ids = ["UserCard", "SettingCard"]
         # 初始化控件
         self.init_ui()
         # 加载菜单数据
@@ -477,9 +478,13 @@ class SettingMenuWindow(AgileTilesAcrylicWindow, Ui_Form):
                 self.radio_button_menu_location_left.setChecked(True)
             else:
                 self.radio_button_menu_location_right.setChecked(True)
+            # 是否启用菜单展开(默认展开)
+            if self.setting_config["menuUnfold"]:
+                self.check_box_menu_unfold.setChecked(True)
+            else:
+                self.check_box_menu_unfold.setChecked(False)
         except Exception as e:
-            print(f"setting_screen load_date 2 error: {str(e)}")
-
+            print(f"setting_menu load_date 2 error: {str(e)}")
 
     def push_button_submit_clicked(self):
         confirm = message_box_util.box_acknowledgement(self.use_parent, "注意", "确定要保存界面设置吗？")
@@ -490,11 +495,16 @@ class SettingMenuWindow(AgileTilesAcrylicWindow, Ui_Form):
                     self.setting_config['menuPosition'] = "Left"
                 else:
                     self.setting_config['menuPosition'] = "Right"
+                # 是否启用侧边弹出功能
+                if self.check_box_menu_unfold.isChecked():
+                    self.setting_config["menuUnfold"] = True
+                else:
+                    self.setting_config["menuUnfold"] = False
                 # 保存数据
                 self.parent.save_setting_to_main(trigger_type=data_save_constant.TRIGGER_TYPE_SETTING_SCREEN, in_data=self.setting_config)
                 self.close()
             except Exception as e:
-                print(f"setting_screen push_button_submit_clicked 1 error: {str(e)}")
+                print(f"setting_menu push_button_submit_clicked 1 error: {str(e)}")
             return
         else:
             return

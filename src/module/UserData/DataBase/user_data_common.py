@@ -23,8 +23,10 @@ setting_config = {
     "wakeUpByMouse": True,              # 是否启用鼠标唤醒
     "wakeUpByMouseTime": 200,           # 鼠标唤醒时间
     "wakeUpByMouseHide": "OnlyMouse",   # 鼠标唤醒隐藏
-    "menuPosition": "Right",            # 菜单位置
     "fontName": "微软雅黑",              # 字体名称
+
+    "menuPosition": "Left",             # 菜单位置
+    "menuUnfold": True,                 # 菜单是否展开
 
     "messageNotification": True,        # 消息通知
     "autoUpdate": True,                 # 自动更新
@@ -121,6 +123,7 @@ DEFAULT_DATA_MODEL = {
         },
     ],
     "bigCard": [],
+    "menu": [],
     "data": {}
 }
 DEFAULT_MINI_DATA_MODEL = {
@@ -191,10 +194,36 @@ DEFAULT_MINI_DATA_MODEL = {
         },
     ],
     "bigCard": [],
+    "menu": [],
     "data": {}
 }
-big_card_name_list = ["GameCard", "BookCard", "ToolCard", "TodoCard", "ChatCard", "FileSearchCard", "MusicCard", "SettingCard",
+big_card_name_list = ["WebsiteCard", "GameCard", "BookCard", "ToolCard", "TodoCard", "ChatCard", "FileSearchCard", "MusicCard", "SettingCard",
                       "TopSearchCard", "InformationCard", "TranslateCard", "IpnCard"]
+menu_name_list = [
+    # { "sort": 1,  "name": "trending" },
+    # { "sort": 2,  "name": "translate" },
+    # { "sort": 3,  "name": "chat" },
+    # { "sort": 4,  "name": "tool" },
+    # { "sort": 5,  "name": "looking" },
+    # { "sort": 6,  "name": "search" },
+    # { "sort": 7,  "name": "ipn" },
+    # { "sort": 8,  "name": "todo" },
+    # { "sort": 9,  "name": "book" },
+    # { "sort": 10, "name": "music" },
+    # { "sort": 11, "name": "website" },
+
+    {"sort": 1, "name": "TopSearchCard"},
+    {"sort": 2, "name": "TranslateCard"},
+    {"sort": 3, "name": "ChatCard"},
+    {"sort": 4, "name": "ToolCard"},
+    {"sort": 5, "name": "InformationCard"},
+    {"sort": 6, "name": "FileSearchCard"},
+    {"sort": 7, "name": "IpnCard"},
+    {"sort": 8, "name": "TodoCard"},
+    {"sort": 9, "name": "BookCard"},
+    {"sort": 10, "name": "MusicCard"},
+    {"sort": 11, "name": "WebsiteCard"},
+]
 
 def get_data(hardware_id):
     # 获取屏幕高度
@@ -221,6 +250,9 @@ def get_data(hardware_id):
             "size": "Big",
             "data": {}
         })
+    # 判断该菜单是否已存在或是否少于三个
+    if "menu" not in data or len(data["menu"]) < 3:
+        data["menu"] = menu_name_list
     # hardware_id是为了区分不同设备
     complete_setting_config = {
         hardware_id: setting_config

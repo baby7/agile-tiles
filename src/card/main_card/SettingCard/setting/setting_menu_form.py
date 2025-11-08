@@ -155,14 +155,14 @@ class Ui_Form(object):
         self.horizontalLayout_7 = QHBoxLayout()
         self.horizontalLayout_7.setSpacing(0)
         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
-        self.check_box_side_popup = QCheckBox(Form)
-        self.check_box_side_popup.setObjectName(u"check_box_side_popup")
-        self.check_box_side_popup.setMinimumSize(QSize(0, 20))
-        self.check_box_side_popup.setFont(font)
-        self.check_box_side_popup.setStyleSheet(u"background: transparent;")
-        self.check_box_side_popup.setChecked(True)
+        self.check_box_menu_unfold = QCheckBox(Form)
+        self.check_box_menu_unfold.setObjectName(u"check_box_menu_unfold")
+        self.check_box_menu_unfold.setMinimumSize(QSize(0, 20))
+        self.check_box_menu_unfold.setFont(font)
+        self.check_box_menu_unfold.setStyleSheet(u"background: transparent;")
+        self.check_box_menu_unfold.setChecked(True)
 
-        self.horizontalLayout_7.addWidget(self.check_box_side_popup)
+        self.horizontalLayout_7.addWidget(self.check_box_menu_unfold)
 
 
         self.horizontalLayout_3.addLayout(self.horizontalLayout_7)
@@ -217,7 +217,7 @@ class Ui_Form(object):
         self.radio_button_menu_location_left.setText(QCoreApplication.translate("Form", u"\u5de6\u4fa7", None))
         self.radio_button_menu_location_right.setText(QCoreApplication.translate("Form", u"\u53f3\u4fa7", None))
         self.label_10.setText(QCoreApplication.translate("Form", u"\u81ea\u52a8\u5c55\u5f00\u6587\u5b57\uff1a", None))
-        self.check_box_side_popup.setText(QCoreApplication.translate("Form", u"\u542f\u7528", None))
+        self.check_box_menu_unfold.setText(QCoreApplication.translate("Form", u"\u542f\u7528", None))
         self.push_button_ok.setText(QCoreApplication.translate("Form", u"\u786e\u5b9a", None))
     # retranslateUi
 

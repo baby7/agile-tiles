@@ -1268,18 +1268,18 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             datetime_now = datetime.datetime.now()
             # 如果登录界面正在显示，则不进行令牌刷新避免登录界面的闪退
             if self.start_login_view:
-                # 但是超过18小时就进行强制刷新
-                if self.refresh_token_datetime is None or datetime_now - self.refresh_token_datetime >= datetime.timedelta(hours=18):
+                # 但是超过12小时就进行强制刷新
+                if self.refresh_token_datetime is None or datetime_now - self.refresh_token_datetime >= datetime.timedelta(hours=12):
                     self.user_info_client.refresh(self.current_user["username"], self.refresh_token, self.hardware_id, self.os_version)
                 return
             # 如果支付界面正在显示，则不进行令牌刷新避免闪退
             if self.qr_code_dialog is not None and self.qr_code_dialog.isVisible():
-                # 但是超过18小时就进行强制刷新
-                if self.refresh_token_datetime is None or datetime_now - self.refresh_token_datetime >= datetime.timedelta(hours=18):
+                # 但是超过12小时就进行强制刷新
+                if self.refresh_token_datetime is None or datetime_now - self.refresh_token_datetime >= datetime.timedelta(hours=12):
                     self.user_info_client.refresh(self.current_user["username"], self.refresh_token, self.hardware_id, self.os_version)
                 return
-            # 判断时间，如果时间超过12个小时就更新令牌
-            if self.refresh_token_datetime is None or datetime_now - self.refresh_token_datetime >= datetime.timedelta(hours=12):
+            # 判断时间，如果时间超过6个小时就更新令牌
+            if self.refresh_token_datetime is None or datetime_now - self.refresh_token_datetime >= datetime.timedelta(hours=6):
                 self.user_info_client.refresh(self.current_user["username"], self.refresh_token, self.hardware_id, self.os_version)
         except Exception:
             self.info_logger.error(traceback.format_exc())

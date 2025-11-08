@@ -279,7 +279,7 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QCheckBox" name="check_box_side_popup">
+          <widget class="QCheckBox" name="check_box_menu_unfold">
            <property name="minimumSize">
             <size>
              <width>0</width>

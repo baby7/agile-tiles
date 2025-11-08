@@ -36,6 +36,39 @@ MENU_PADDING_WIDTH = 4      # 菜单按钮内间距
 MENU_BUTTON_HEIGHT = 34     # 菜单按钮高度
 MENU_BUTTON_ICON_SIZE = 22  # 菜单按钮图标大小
 
+# 菜单按钮-文字映射
+MENU_BUTTON_MAP = {
+    "user":         "用户管理",
+    "setting":      "面板设置",
+    "trending":     "全网热搜",
+    "translate":    "快捷翻译",
+    "chat":         "AI对话",
+    "tool":         "工具箱",
+    "looking":      "信息聚合",
+    "search":       "本地搜索",
+    "ipn":          "文件传输",
+    "todo":         "待办事项",
+    "book":         "文本阅读",
+    "music":        "本地音乐",
+    "website":      "网址导航",
+}
+# 卡片-菜单按钮映射
+CARD_MENU_MAP = {
+    "UserCard":         "user",
+    "SettingCard":      "setting",
+    "TopSearchCard":    "trending",
+    "TranslateCard":    "translate",
+    "ChatCard":         "chat",
+    "ToolCard":         "tool",
+    "InformationCard":  "looking",
+    "FileSearchCard":   "search",
+    "IpnCard":          "ipn",
+    "TodoCard":         "todo",
+    "BookCard":         "book",
+    "MusicCard":        "music",
+    "WebsiteCard":      "website",
+}
+
 
 def get_position(control):
     # 获取按钮相对于窗口的坐标
@@ -163,19 +196,19 @@ class MainCardManager(QObject):
         # 设置菜单样式
         self.menu_button_map = {
             # 菜单名称     菜单按钮                                   菜单图标                        菜单区域                           菜单标题
-            "user":      [self.main_object.push_button_user,       "Peoples/people",              self.main_object.user_area,      "用户管理"],
-            "setting":   [self.main_object.push_button_setting,    "Base/setting-two",            self.main_object.setting_area,   "面板设置"],
-            "trending":  [self.main_object.push_button_trending,   "Energy/fire",                 self.main_object.top_area,       "全网热搜"],
-            "translate": [self.main_object.push_button_translate,  "Base/translate",              self.main_object.translate_area, "快捷翻译"],
-            "chat":      [self.main_object.push_button_chat,       "Abstract/smart-optimization", self.main_object.chat_area,      "AI对话"],
-            "tool":      [self.main_object.push_button_tool,       "Others/toolkit",              self.main_object.tool_area,      "工具箱"],
-            "looking":   [self.main_object.push_button_looking,    "Base/preview-open",           self.main_object.looking_area,   "信息聚合"],
-            "search":    [self.main_object.push_button_search,     "Base/search",                 self.main_object.search_area,    "本地搜索"],
-            "ipn":       [self.main_object.push_button_ipn,        "Office/file-conversion-one",  self.main_object.ipn_area,       "文件传输"],
-            "todo":      [self.main_object.push_button_todo,       "Edit/plan",                   self.main_object.todo_area,      "待办事项"],
-            "book":      [self.main_object.push_button_book,       "Office/book-one",             self.main_object.book_area,      "文本阅读"],
-            "music":     [self.main_object.push_button_music,      "Music/music-one",             self.main_object.music_area,     "本地音乐"],
-            "website":   [self.main_object.push_button_website,    "Travel/planet",               self.main_object.website_area,   "网址导航"],
+            "user":      [self.main_object.push_button_user,       "Peoples/people",              self.main_object.user_area,      MENU_BUTTON_MAP["user"]],
+            "setting":   [self.main_object.push_button_setting,    "Base/setting-two",            self.main_object.setting_area,   MENU_BUTTON_MAP["setting"]],
+            "trending":  [self.main_object.push_button_trending,   "Energy/fire",                 self.main_object.top_area,       MENU_BUTTON_MAP["trending"]],
+            "translate": [self.main_object.push_button_translate,  "Base/translate",              self.main_object.translate_area, MENU_BUTTON_MAP["translate"]],
+            "chat":      [self.main_object.push_button_chat,       "Abstract/smart-optimization", self.main_object.chat_area,      MENU_BUTTON_MAP["chat"]],
+            "tool":      [self.main_object.push_button_tool,       "Others/toolkit",              self.main_object.tool_area,      MENU_BUTTON_MAP["tool"]],
+            "looking":   [self.main_object.push_button_looking,    "Base/preview-open",           self.main_object.looking_area,   MENU_BUTTON_MAP["looking"]],
+            "search":    [self.main_object.push_button_search,     "Base/search",                 self.main_object.search_area,    MENU_BUTTON_MAP["search"]],
+            "ipn":       [self.main_object.push_button_ipn,        "Office/file-conversion-one",  self.main_object.ipn_area,       MENU_BUTTON_MAP["ipn"]],
+            "todo":      [self.main_object.push_button_todo,       "Edit/plan",                   self.main_object.todo_area,      MENU_BUTTON_MAP["todo"]],
+            "book":      [self.main_object.push_button_book,       "Office/book-one",             self.main_object.book_area,      MENU_BUTTON_MAP["book"]],
+            "music":     [self.main_object.push_button_music,      "Music/music-one",             self.main_object.music_area,     MENU_BUTTON_MAP["music"]],
+            "website":   [self.main_object.push_button_website,    "Travel/planet",               self.main_object.website_area,   MENU_BUTTON_MAP["website"]],
         }
         # 初始化卡片位置数据
         self.main_object.update_load_window("正在初始化主卡片位置...")
@@ -307,10 +340,27 @@ class MainCardManager(QObject):
                     "data": {}
                 })
                 break
+        # 菜单按钮列表
+        menu_list = self.main_object.main_data["menu"]
+        # 排序
+        menu_list = [{"sort":-2,"name":"UserCard"},{"sort":-1,"name":"SettingCard"}] + sorted(menu_list, key=lambda x: x["sort"])
         # 获取卡片数据
-        for card_data_index in range(len(self.main_object.main_data["bigCard"])):
+        for menu in menu_list:
+            card_name = menu["name"]
             # 获取卡片数据
-            card_data = self.main_object.main_data["bigCard"][card_data_index]
+            card_data = None
+            for card_data_index in range(len(self.main_object.main_data["bigCard"])):
+                card_data_cache = self.main_object.main_data["bigCard"][card_data_index]
+                if card_name == card_data_cache["name"]:
+                    card_data = card_data_cache
+                    break
+            if card_data is None:
+                card_data = {
+                    "name": card_name,
+                    "size": "Big",
+                    "data": {}
+                }
+                self.main_object.main_data["bigCard"].append(card_data)
             card_area = None
             self.main_object.update_load_window(f"正在创建主卡片-{card_data['name']}...")
             # 初始化数据
@@ -531,7 +581,9 @@ class MainCardManager(QObject):
             font.setPointSize(11)
             if not is_init:
                 self.main_object.toolkit.animation_util.start_line_y_animation(
-                    self.main_object.label_current_menu, self.main_object.label_current_menu.y(), get_position(button).y() + 6)
+                    control=self.main_object.label_current_menu,
+                    start_y=self.main_object.label_current_menu.y(), end_y=get_position(button).y() + 6,
+                    curve=QEasingCurve.Type.Linear)
         else:
             font.setPointSize(10)
         font.setBold(state)
@@ -726,6 +778,8 @@ class MainCardManager(QObject):
             button = value[0]
             button.refresh_ui(menu_location=self.menu_position)
         self.main_object.theme_switch_button.refresh_ui(menu_location=self.menu_position)
+        # 菜单展开调整
+        self.main_object.label_menu.set_theme(self.main_object.is_dark, unfold=self.main_object.form_menu_unfold)
         # 菜单内容位置调整
         if self.menu_position == card_constant.MENU_POSITION_RIGHT:
             # 总长 - 默认菜单宽度 - 外边距
@@ -1000,10 +1054,11 @@ class MainCardManager(QObject):
             self.main_object.theme_switch_button.show()
             return
         # 菜单栏
-        self.main_object.label_menu = MenuCard(parent=self.main_object.widget_base, main_object=self.main_object, is_dark=self.main_object.is_dark)
+        self.main_object.label_menu = MenuCard(parent=self.main_object.widget_base, main_object=self.main_object,
+                                               is_dark=self.main_object.is_dark, unfold=self.main_object.form_menu_unfold)
         self.main_object.label_menu.setObjectName(u"label_menu")
         self.main_object.label_menu.setGeometry(QRect(0, 0, MENU_DEFAULT_WIDTH, 590))
-        self.main_object.label_menu.set_theme(self.main_object.is_dark)
+        self.main_object.label_menu.set_theme(self.main_object.is_dark, unfold=self.main_object.form_menu_unfold)
         # 菜单栏内容
         self.main_object.label_menu_content = QWidget(self.main_object.label_menu)
         self.main_object.label_menu_content.setObjectName(u"label_menu_content")
@@ -1023,26 +1078,15 @@ class MainCardManager(QObject):
         self.main_object.label_current_menu = QLabel(self.main_object.widget_base)
         self.main_object.label_current_menu.setObjectName(u"label_current_menu")
         self.main_object.label_current_menu.setGeometry(QRect(0, 0, 4, 21))
-        # 菜单map
-        menu_button_map = {
-            "user": "用户管理",
-            "setting": "面板设置",
-            "trending": "全网热搜",
-            "translate": "快捷翻译",
-            "chat": "AI对话",
-            "tool": "工具箱",
-            "looking": "信息聚合",
-            "search": "本地搜索",
-            "ipn": "文件传输",
-            "todo": "待办事项",
-            "book": "文本阅读",
-            "music": "本地音乐",
-            "website": "网址导航",
-        }
+        # 菜单按钮列表
+        menu_list = self.main_object.main_data["menu"]
+        # 排序
+        menu_list = [{"sort":-2,"name":"UserCard"},{"sort":-1,"name":"SettingCard"}] + sorted(menu_list, key=lambda x: x["sort"])
         # 菜单按钮
-        for key in menu_button_map.keys():
-            button_name = key
-            button_title = menu_button_map[key]
+        for menu_sort in menu_list:
+            card_name = menu_sort["name"]
+            button_name = CARD_MENU_MAP[card_name]
+            button_title = MENU_BUTTON_MAP[button_name]
             # 创建按钮
             menu_button = MenuNormalButton(parent=self.main_object.label_menu, main_object=self.main_object,
                                      name=button_name, title=button_title, menu_location=self.menu_position,
@@ -1066,7 +1110,7 @@ class MainCardManager(QObject):
 
     def set_theme(self):
         # 菜单样式
-        self.main_object.label_menu.set_theme(self.main_object.is_dark)
+        self.main_object.label_menu.set_theme(self.main_object.is_dark, unfold=self.main_object.form_menu_unfold)
         if self.main_object.is_dark:
             self.main_object.label_current_menu.setStyleSheet("border-radius: 2px; border: none; background: white;")
         else:

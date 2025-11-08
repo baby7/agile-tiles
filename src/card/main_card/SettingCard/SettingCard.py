@@ -91,7 +91,7 @@ class SettingCard(MainCard):
             [self.parent.push_button_setting_menu, "菜单设置", "Base", "hamburger-button", None, None],
             [self.parent.push_button_setting_location, "屏幕和位置", "Abstract", "app-switch", None, None],
             [self.parent.push_button_setting_screen, "界面设置", "Components", "page", None, None],
-            [self.parent.push_button_setting_system, "系统设置", "Base", "setting-two", None, None],
+            [self.parent.push_button_setting_system, "快捷键", "Hardware", "keyboard-one", None, None],
             [self.parent.push_button_setting_theme, "主题设置", "Clothes", "theme", None, None],
             # 更新和协议
             [self.parent.push_button_setting_version_info, "版本信息", "Communicate", "message", None, None],
@@ -221,7 +221,8 @@ class SettingCard(MainCard):
     def push_button_setting_menu_click(self):
         from src.card.main_card.SettingCard.setting.setting_menu import SettingMenuWindow
         self.toolkit.resolution_util.out_animation(self.main_object)
-        self.setting_menu_win = SettingMenuWindow(self, self.main_object, self.setting_data)
+        menu_data = copy.deepcopy(self.main_object.main_data["menu"])
+        self.setting_menu_win = SettingMenuWindow(self, self.main_object, self.setting_data, menu_data)
         self.setting_menu_win.refresh_geometry(self.toolkit.resolution_util.get_screen(self.main_object))
         # self.setting_menu_win.set_top()
         self.setting_menu_win.show()
