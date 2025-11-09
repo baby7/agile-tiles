@@ -1,4 +1,6 @@
 # coding:utf-8
+import traceback
+
 from PySide6.QtCore import Signal
 
 from src.constant import data_save_constant
@@ -6,6 +8,7 @@ from src.card.main_card.SettingCard.setting.setting_screen_form import Ui_Form
 from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 import src.ui.style_util as style_util
 from src.module.Box import message_box_util
+from src.util import winreg_util
 
 
 class SettingScreenWindow(AgileTilesAcrylicWindow, Ui_Form):
@@ -25,8 +28,8 @@ class SettingScreenWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.use_parent = use_parent
         self.setting_config = setting_config
         # 布局初始化
-        self.widget_base.setLayout(self.gridLayout_2)
-        self.gridLayout_2.setContentsMargins(10, 10, 10, 10)
+        self.widget_base.setLayout(self.gridLayout)
+        self.gridLayout.setContentsMargins(10, 10, 10, 10)
         # 设置标题栏
         self.setWindowTitle("灵卡面板 - 界面设置")
         self.titleBar.minBtn.close()
@@ -43,6 +46,11 @@ class SettingScreenWindow(AgileTilesAcrylicWindow, Ui_Form):
         加载数据到界面
         """
         try:
+            # 开机自启动
+            if winreg_util.is_auto_start_enabled():
+                self.check_box_self_starting.setChecked(True)
+            else:
+                self.check_box_self_starting.setChecked(False)
             # 窗口弹出动画类型
             if self.setting_config['formAnimationType'] == "Line":
                 self.radio_button_form_animation_line.setChecked(True)
@@ -69,9 +77,22 @@ class SettingScreenWindow(AgileTilesAcrylicWindow, Ui_Form):
 
 
     def push_button_submit_clicked(self):
+        if not self.check_box_self_starting.isChecked():
+            start_confirm = message_box_util.box_acknowledgement(self.use_parent, "注意", "确定要取消开机自启动吗？")
+            if not start_confirm:
+                self.check_box_self_starting.setChecked(True)
         confirm = message_box_util.box_acknowledgement(self.use_parent, "注意", "确定要保存界面设置吗？")
         if confirm:
             try:
+                # 开机自启动
+                try:
+                    if self.check_box_self_starting.isChecked():
+                        winreg_util.set_auto_start(True)
+                    else:
+                        winreg_util.set_auto_start(False)
+                except Exception as e:
+                    self.use_parent.info_logger.error(f"设置开机自启动失败: {traceback.format_exc()}")
+                    message_box_util.box_information(self.use_parent, "错误", "设置开机自启动失败")
                 # 窗口弹出动画类型
                 if self.radio_button_form_animation_line.isChecked():
                     self.setting_config['formAnimationType'] = "Line"

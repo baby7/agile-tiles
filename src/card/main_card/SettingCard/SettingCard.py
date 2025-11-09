@@ -91,7 +91,7 @@ class SettingCard(MainCard):
             [self.parent.push_button_setting_menu, "菜单设置", "Base", "hamburger-button", None, None],
             [self.parent.push_button_setting_location, "屏幕和位置", "Abstract", "app-switch", None, None],
             [self.parent.push_button_setting_screen, "界面设置", "Components", "page", None, None],
-            [self.parent.push_button_setting_system, "快捷键", "Hardware", "keyboard-one", None, None],
+            [self.parent.push_button_setting_keyboard, "快捷键", "Hardware", "keyboard-one", None, None],
             [self.parent.push_button_setting_theme, "主题设置", "Clothes", "theme", None, None],
             # 更新和协议
             [self.parent.push_button_setting_version_info, "版本信息", "Communicate", "message", None, None],
@@ -140,7 +140,7 @@ class SettingCard(MainCard):
         self.parent.push_button_setting_menu.clicked.connect(self.push_button_setting_menu_click)
         self.parent.push_button_setting_location.clicked.connect(self.push_button_setting_location_click)
         self.parent.push_button_setting_screen.clicked.connect(self.push_button_setting_screen_click)
-        self.parent.push_button_setting_system.clicked.connect(self.push_button_setting_system_click)
+        self.parent.push_button_setting_keyboard.clicked.connect(self.push_button_setting_keyboard_click)
         self.parent.push_button_setting_theme.clicked.connect(self.push_button_setting_theme_click)
         # 更新和协议
         self.parent.push_button_setting_version_info.clicked.connect(self.push_button_setting_version_info_click)
@@ -209,13 +209,13 @@ class SettingCard(MainCard):
         self.main_object.refresh_card_version()
 
     # 打开设置快捷键窗口
-    def push_button_setting_system_click(self):
-        from src.card.main_card.SettingCard.setting.setting_system import SettingSystemWindow
+    def push_button_setting_keyboard_click(self):
+        from src.card.main_card.SettingCard.setting.setting_keyboard import SettingKeyboardWindow
         self.toolkit.resolution_util.out_animation(self.main_object)
-        self.setting_system_win = SettingSystemWindow(self, self.main_object, self.setting_data)
-        self.setting_system_win.refresh_geometry(self.toolkit.resolution_util.get_screen(self.main_object))
-        # self.setting_system_win.set_top()
-        self.setting_system_win.show()
+        self.setting_keyboard_win = SettingKeyboardWindow(self, self.main_object, self.setting_data)
+        self.setting_keyboard_win.refresh_geometry(self.toolkit.resolution_util.get_screen(self.main_object))
+        # self.setting_keyboard_win.set_top()
+        self.setting_keyboard_win.show()
 
     # 打开设置菜单窗口
     def push_button_setting_menu_click(self):

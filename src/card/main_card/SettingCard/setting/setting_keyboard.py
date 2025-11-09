@@ -1,20 +1,16 @@
 # coding:utf-8
-import sys
-import traceback
-
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QListView
 
-from src.card.main_card.SettingCard.setting.setting_system_form import Ui_Form
+from src.card.main_card.SettingCard.setting.setting_keyboard_form import Ui_Form
 import src.ui.style_util as style_util
 import src.constant.data_save_constant as data_save_constant
 from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
 from src.my_component.GlobalHotkeyManager.GlobalHotkeyManager import GlobalHotkeyManager
-from src.util import winreg_util
 from src.module.Box import message_box_util
 
 
-class SettingSystemWindow(AgileTilesAcrylicWindow, Ui_Form):
+class SettingKeyboardWindow(AgileTilesAcrylicWindow, Ui_Form):
 
     use_parent = None
     setting_config = None
@@ -24,18 +20,18 @@ class SettingSystemWindow(AgileTilesAcrylicWindow, Ui_Form):
     old_search_keyboard = None
 
     def __init__(self, parent=None, use_parent=None, setting_config=None):
-        super(SettingSystemWindow, self).__init__(is_dark=use_parent.is_dark, form_theme_mode=use_parent.form_theme_mode,
-                                                  form_theme_transparency=use_parent.form_theme_transparency)
+        super(SettingKeyboardWindow, self).__init__(is_dark=use_parent.is_dark, form_theme_mode=use_parent.form_theme_mode,
+                                                    form_theme_transparency=use_parent.form_theme_transparency)
         self.setupUi(self)
         # 初始化
         self.parent = parent
         self.use_parent = use_parent
         self.setting_config = setting_config
         # 初始化布局
-        self.widget_base.setLayout(self.gridLayout_5)
-        self.gridLayout_5.setContentsMargins(10, 10, 10, 10)
+        self.widget_base.setLayout(self.gridLayout)
+        self.gridLayout.setContentsMargins(10, 10, 10, 10)
         # 设置标题栏
-        self.setWindowTitle("灵卡面板 - 快捷键")
+        self.setWindowTitle("灵卡面板 - 快捷键设置")
         self.titleBar.minBtn.close()
         self.titleBar.maxBtn.close()
         # 重新设置QListView,否则qss QComboBox QAbstractItemView不生效
@@ -58,11 +54,6 @@ class SettingSystemWindow(AgileTilesAcrylicWindow, Ui_Form):
         """
         加载数据到界面
         """
-        # 开机自启动
-        if winreg_util.is_auto_start_enabled():
-            self.check_box_self_starting.setChecked(True)
-        else:
-            self.check_box_self_starting.setChecked(False)
         # 键盘唤醒是否启用
         if "wakeUpByKeyboard" in self.setting_config and self.setting_config["wakeUpByKeyboard"]:
             self.check_box_wake_up_keyboard.setChecked(True)
@@ -166,22 +157,9 @@ class SettingSystemWindow(AgileTilesAcrylicWindow, Ui_Form):
                                     self.combo_box_search_main_keyboard, self.combo_box_screenshot_main_keyboard,
                                     self.combo_box_search_vice_keyboard, self.combo_box_screenshot_vice_keyboard):
             return
-        if not self.check_box_self_starting.isChecked():
-            start_confirm = message_box_util.box_acknowledgement(self.use_parent, "注意", "确定要取消开机自启动吗？")
-            if not start_confirm:
-                self.check_box_self_starting.setChecked(True)
         # 确认
         confirm = message_box_util.box_acknowledgement(self.use_parent, "注意", "确定要保存吗？")
         if confirm:
-            # 开机自启动
-            try:
-                if self.check_box_self_starting.isChecked():
-                    winreg_util.set_auto_start(True)
-                else:
-                    winreg_util.set_auto_start(False)
-            except Exception as e:
-                self.use_parent.info_logger.error(f"设置开机自启动失败: {traceback.format_exc()}")
-                message_box_util.box_information(self.use_parent, "错误", "设置开机自启动失败")
             # 键盘唤醒
             if self.check_box_wake_up_keyboard.isChecked():
                 self.setting_config["wakeUpByKeyboard"] = True

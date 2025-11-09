@@ -108,12 +108,12 @@ class Ui_Form(object):
 
         self.horizontalLayout_8 = QHBoxLayout()
         self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
-        self.push_button_setting_system = QPushButton(self.widget_setting_setting)
-        self.push_button_setting_system.setObjectName(u"push_button_setting_system")
-        self.push_button_setting_system.setMinimumSize(QSize(70, 70))
-        self.push_button_setting_system.setStyleSheet(u"")
+        self.push_button_setting_keyboard = QPushButton(self.widget_setting_setting)
+        self.push_button_setting_keyboard.setObjectName(u"push_button_setting_keyboard")
+        self.push_button_setting_keyboard.setMinimumSize(QSize(70, 70))
+        self.push_button_setting_keyboard.setStyleSheet(u"")
 
-        self.horizontalLayout_8.addWidget(self.push_button_setting_system)
+        self.horizontalLayout_8.addWidget(self.push_button_setting_keyboard)
 
         self.push_button_setting_theme = QPushButton(self.widget_setting_setting)
         self.push_button_setting_theme.setObjectName(u"push_button_setting_theme")
@@ -1238,7 +1238,7 @@ class Ui_Form(object):
         self.push_button_setting_menu.setText(QCoreApplication.translate("Form", u"\u83dc\u5355\u8bbe\u7f6e", None))
         self.push_button_setting_location.setText(QCoreApplication.translate("Form", u"\u5c4f\u5e55\u548c\u4f4d\u7f6e", None))
         self.push_button_setting_screen.setText(QCoreApplication.translate("Form", u"\u754c\u9762\u8bbe\u7f6e", None))
-        self.push_button_setting_system.setText(QCoreApplication.translate("Form", u"\u5feb\u6377\u952e", None))
+        self.push_button_setting_keyboard.setText(QCoreApplication.translate("Form", u"\u5feb\u6377\u952e", None))
         self.push_button_setting_theme.setText(QCoreApplication.translate("Form", u"\u4e3b\u9898\u8bbe\u7f6e", None))
         self.label_20.setText(QCoreApplication.translate("Form", u"\u66f4\u65b0\u548c\u534f\u8bae", None))
         self.push_button_setting_version_info.setText(QCoreApplication.translate("Form", u"\u7248\u672c\u4fe1\u606f", None))

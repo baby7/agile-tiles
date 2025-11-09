@@ -24,9 +24,9 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(492, 361)
-        self.gridLayout_2 = QGridLayout(Form)
-        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        Form.resize(498, 418)
+        self.gridLayout = QGridLayout(Form)
+        self.gridLayout.setObjectName(u"gridLayout")
         self.verticalLayout_3 = QVBoxLayout()
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(10, 10, 10, 10)
@@ -35,16 +35,31 @@ class Ui_Form(object):
         self.formLayout.setLabelAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
         self.formLayout.setHorizontalSpacing(6)
         self.formLayout.setVerticalSpacing(20)
-        self.label = QLabel(Form)
-        self.label.setObjectName(u"label")
-        self.label.setMinimumSize(QSize(0, 20))
+        self.label_7 = QLabel(Form)
+        self.label_7.setObjectName(u"label_7")
+        self.label_7.setStyleSheet(u"background: transparent;")
+        self.label_7.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label_7)
+
+        self.check_box_self_starting = QCheckBox(Form)
+        self.check_box_self_starting.setObjectName(u"check_box_self_starting")
+        self.check_box_self_starting.setMinimumSize(QSize(0, 20))
         font = QFont()
         font.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
         font.setPointSize(10)
+        self.check_box_self_starting.setFont(font)
+        self.check_box_self_starting.setChecked(True)
+
+        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.check_box_self_starting)
+
+        self.label = QLabel(Form)
+        self.label.setObjectName(u"label")
+        self.label.setMinimumSize(QSize(0, 20))
         self.label.setFont(font)
         self.label.setStyleSheet(u"background: transparent;")
 
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label)
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label)
 
         self.frame_4 = QFrame(Form)
         self.frame_4.setObjectName(u"frame_4")
@@ -81,7 +96,7 @@ class Ui_Form(object):
         self.gridLayout_6.addLayout(self.horizontalLayout_7, 0, 0, 1, 1)
 
 
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.frame_4)
+        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.frame_4)
 
         self.label_3 = QLabel(Form)
         self.label_3.setObjectName(u"label_3")
@@ -89,7 +104,7 @@ class Ui_Form(object):
         self.label_3.setFont(font)
         self.label_3.setStyleSheet(u"background: transparent;")
 
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label_3)
+        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_3)
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
@@ -104,24 +119,7 @@ class Ui_Form(object):
         self.horizontalLayout_2.addWidget(self.spin_box_form_animation_time)
 
 
-        self.formLayout.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout_2)
-
-        self.label_5 = QLabel(Form)
-        self.label_5.setObjectName(u"label_5")
-        self.label_5.setMinimumSize(QSize(0, 20))
-        self.label_5.setFont(font)
-        self.label_5.setStyleSheet(u"background: transparent;")
-
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label_5)
-
-        self.check_box_side_popup = QCheckBox(Form)
-        self.check_box_side_popup.setObjectName(u"check_box_side_popup")
-        self.check_box_side_popup.setMinimumSize(QSize(0, 20))
-        self.check_box_side_popup.setFont(font)
-        self.check_box_side_popup.setStyleSheet(u"background: transparent;")
-        self.check_box_side_popup.setChecked(True)
-
-        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.check_box_side_popup)
+        self.formLayout.setLayout(3, QFormLayout.FieldRole, self.horizontalLayout_2)
 
         self.label_6 = QLabel(Form)
         self.label_6.setObjectName(u"label_6")
@@ -129,7 +127,7 @@ class Ui_Form(object):
         self.label_6.setFont(font)
         self.label_6.setStyleSheet(u"background: transparent;")
 
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_6)
+        self.formLayout.setWidget(4, QFormLayout.LabelRole, self.label_6)
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
@@ -144,7 +142,7 @@ class Ui_Form(object):
         self.horizontalLayout_3.addWidget(self.spin_box_side_popup_animation_time)
 
 
-        self.formLayout.setLayout(3, QFormLayout.FieldRole, self.horizontalLayout_3)
+        self.formLayout.setLayout(4, QFormLayout.FieldRole, self.horizontalLayout_3)
 
         self.label_8 = QLabel(Form)
         self.label_8.setObjectName(u"label_8")
@@ -152,7 +150,7 @@ class Ui_Form(object):
         self.label_8.setFont(font)
         self.label_8.setStyleSheet(u"background: transparent;")
 
-        self.formLayout.setWidget(4, QFormLayout.LabelRole, self.label_8)
+        self.formLayout.setWidget(5, QFormLayout.LabelRole, self.label_8)
 
         self.frame_2 = QFrame(Form)
         self.frame_2.setObjectName(u"frame_2")
@@ -190,7 +188,7 @@ class Ui_Form(object):
         self.gridLayout_3.addLayout(self.horizontalLayout_4, 0, 0, 1, 1)
 
 
-        self.formLayout.setWidget(4, QFormLayout.FieldRole, self.frame_2)
+        self.formLayout.setWidget(5, QFormLayout.FieldRole, self.frame_2)
 
         self.label_10 = QLabel(Form)
         self.label_10.setObjectName(u"label_10")
@@ -198,13 +196,30 @@ class Ui_Form(object):
         self.label_10.setFont(font)
         self.label_10.setStyleSheet(u"background: transparent;")
 
-        self.formLayout.setWidget(5, QFormLayout.LabelRole, self.label_10)
+        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.label_10)
 
         self.font_combo_box = QFontComboBox(Form)
         self.font_combo_box.setObjectName(u"font_combo_box")
         self.font_combo_box.setEditable(False)
 
-        self.formLayout.setWidget(5, QFormLayout.FieldRole, self.font_combo_box)
+        self.formLayout.setWidget(6, QFormLayout.FieldRole, self.font_combo_box)
+
+        self.label_5 = QLabel(Form)
+        self.label_5.setObjectName(u"label_5")
+        self.label_5.setMinimumSize(QSize(0, 20))
+        self.label_5.setFont(font)
+        self.label_5.setStyleSheet(u"background: transparent;")
+
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label_5)
+
+        self.check_box_side_popup = QCheckBox(Form)
+        self.check_box_side_popup.setObjectName(u"check_box_side_popup")
+        self.check_box_side_popup.setMinimumSize(QSize(0, 20))
+        self.check_box_side_popup.setFont(font)
+        self.check_box_side_popup.setStyleSheet(u"background: transparent;")
+        self.check_box_side_popup.setChecked(True)
+
+        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.check_box_side_popup)
 
 
         self.verticalLayout_3.addLayout(self.formLayout)
@@ -232,7 +247,7 @@ class Ui_Form(object):
         self.verticalLayout_3.addLayout(self.horizontalLayout_6)
 
 
-        self.gridLayout_2.addLayout(self.verticalLayout_3, 0, 0, 1, 1)
+        self.gridLayout.addLayout(self.verticalLayout_3, 0, 0, 1, 1)
 
 
         self.retranslateUi(Form)
@@ -242,17 +257,19 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
+        self.label_7.setText(QCoreApplication.translate("Form", u"\u5f00\u673a\u81ea\u542f\u52a8\uff1a", None))
+        self.check_box_self_starting.setText(QCoreApplication.translate("Form", u"\u542f\u7528", None))
         self.label.setText(QCoreApplication.translate("Form", u"\u7a97\u53e3\u5f39\u51fa\u52a8\u753b\u7c7b\u578b\uff1a", None))
         self.radio_button_form_animation_line.setText(QCoreApplication.translate("Form", u"\u7ebf\u6027", None))
         self.radio_button_form_animation_elastic.setText(QCoreApplication.translate("Form", u"\u5f39\u529b\u5341\u8db3", None))
         self.label_3.setText(QCoreApplication.translate("Form", u"\u7a97\u53e3\u5f39\u51fa\u52a8\u753b\u65f6\u95f4(\u6beb\u79d2)\uff1a", None))
-        self.label_5.setText(QCoreApplication.translate("Form", u"\u662f\u5426\u542f\u52a8\u4fa7\u8fb9\u5f39\u51fa\u529f\u80fd\uff1a", None))
-        self.check_box_side_popup.setText(QCoreApplication.translate("Form", u"\u542f\u7528", None))
         self.label_6.setText(QCoreApplication.translate("Form", u"\u4fa7\u8fb9\u5f39\u51fa\u5ef6\u8fdf\u65f6\u95f4(\u6beb\u79d2)\uff1a", None))
         self.label_8.setText(QCoreApplication.translate("Form", u"\u9f20\u6807\u79bb\u5f00\u9690\u85cf\u7a97\u53e3\uff1a", None))
         self.radio_button_form_hide_by_mouse_forever.setText(QCoreApplication.translate("Form", u"\u6c38\u8fdc", None))
         self.radio_button_form_hide_by_mouse_only_mouse.setText(QCoreApplication.translate("Form", u"\u4ec5\u9f20\u6807\u89e6\u53d1\u5f39\u51fa\u60c5\u51b5", None))
         self.label_10.setText(QCoreApplication.translate("Form", u"\u5b57\u4f53\u8bbe\u7f6e\uff1a", None))
+        self.label_5.setText(QCoreApplication.translate("Form", u"\u662f\u5426\u542f\u52a8\u4fa7\u8fb9\u5f39\u51fa\u529f\u80fd\uff1a", None))
+        self.check_box_side_popup.setText(QCoreApplication.translate("Form", u"\u542f\u7528", None))
         self.push_button_ok.setText(QCoreApplication.translate("Form", u"\u786e\u5b9a", None))
     # retranslateUi
 
